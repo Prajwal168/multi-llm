@@ -1,6 +1,10 @@
 from ollama import Client
+import json
 
-client = Client(host="http://172.26.20.244:11434")
+# NEW: Retrieval Planner
+from retrieval.planner import RetrievalPlanner
+
+client = Client(host="http://10.239.211.48:11434")
 
 SYSTEM_PROMPT = """
 You are a Mediator AI whose ONLY responsibility is understanding user intent and producing a structured task decomposition.
@@ -402,4 +406,42 @@ response = client.chat(
     ]
 )
 
-print(response["message"]["content"])
+# Get Mediator output
+mediator_output = response["message"]["content"].strip()
+
+
+# -------------------------------------------------
+# Try to interpret Mediator output as a task list
+# -------------------------------------------------
+
+try:
+    mediated_tasks = json.loads(mediator_output)
+
+except json.JSONDecodeError:
+
+    # Conversational responses are plain text,
+    # so they do not enter the retrieval pipeline.
+    print(mediator_output)
+
+else:
+
+    # Safety check: task-oriented Mediator output
+    # should always be a JSON list.
+    if not isinstance(mediated_tasks, list):
+        print("Invalid Mediator output: expected a task list.")
+
+    else:
+
+        print("\nMediator Output:")
+        print(json.dumps(mediated_tasks, indent=4))
+
+        # ---------------------------------------------
+        # Send Mediator tasks to Retrieval Planner
+        # ---------------------------------------------
+
+        planner = RetrievalPlanner()
+
+        retrieval_plan = planner.create_plan(mediated_tasks)
+
+        print("\nRetrieval Plan:")
+        print(json.dumps(retrieval_plan, indent=4))

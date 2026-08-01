@@ -1,12 +1,22 @@
 import os
 import sys
+import json
 
 try:
     from .rules import RuleEngine
+    from .planner_llm import PlannerLLM
+
 except ImportError:
-    # Allow running this module directly with `python retrieval/planner.py` from the project root.
-    sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+    # Allow running this module directly with:
+    # python retrieval/planner.py
+
+    sys.path.insert(
+        0,
+        os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    )
+
     from retrieval.rules import RuleEngine
+    from retrieval.planner_llm import PlannerLLM
 
 
 class RetrievalPlanner:
@@ -15,21 +25,33 @@ class RetrievalPlanner:
     """
 
     def __init__(self):
+
+        # Rule Engine
         self.rule_engine = RuleEngine()
+
+        # Planner LLM
+        self.planner_llm = PlannerLLM()
+
+        # Confidence Threshold
         self.CONFIDENCE_THRESHOLD = 0.70
 
     def create_plan(self, tasks):
+
         retrieval_plan = []
 
         for task in tasks:
+
             # Skip tasks that don't require retrieval
             if not task["retrieval"]["required"]:
                 continue
 
+            # Classify using Rule Engine
             classification = self.rule_engine.classify(task["task"])
 
-            # Rule Engine is confident
+            # Use Rule Engine for known domains.
+            # Otherwise delegate to the Planner LLM.
             if classification["confidence"] >= self.CONFIDENCE_THRESHOLD:
+
                 retrieval_plan.append({
                     "task_id": task["task_id"],
                     "task": task["task"],
@@ -38,12 +60,28 @@ class RetrievalPlanner:
                     "priority": task["priority"],
                     "planner": "rule_engine"
                 })
-            # Rule Engine is NOT confident
+
             else:
+
+                llm_output = self.planner_llm.plan(task["task"])
+
+                try:
+                    llm_plan = json.loads(llm_output)
+
+                except json.JSONDecodeError:
+
+                    llm_plan = {
+                        "knowledge_type": "unknown",
+                        "query": task["task"]
+                    }
+
                 retrieval_plan.append({
                     "task_id": task["task_id"],
                     "task": task["task"],
-                    "planner": "llm_required"
+                    "knowledge_type": llm_plan.get("knowledge_type", "unknown"),
+                    "query": llm_plan.get("query", task["task"]),
+                    "priority": task["priority"],
+                    "planner": "planner_llm"
                 })
 
         return retrieval_plan

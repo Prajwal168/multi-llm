@@ -1,4 +1,7 @@
+import json
+
 from ollama import Client
+import httpx
 
 
 class PlannerLLM:
@@ -6,50 +9,69 @@ class PlannerLLM:
     def __init__(self):
 
         self.client = Client(
-            host="http://10.134.108.244:11434"
+            host="http://10.239.211.48:11434"
         )
 
         self.model = "qwen3:8b"
 
     def plan(self, task):
 
-        response = self.client.chat(
-            model=self.model,
-            messages=[
-                {
-                    "role": "system",
-                    "content": """
+        try:
+            response = self.client.chat(
+                model=self.model,
+                messages=[
+                    {
+                        "role": "system",
+                        "content": """
 You are a Retrieval Planner.
 
-Your ONLY responsibility is to create a retrieval plan.
+Your job is to classify the task into the most appropriate knowledge domain and generate a concise retrieval query.
 
-For every task:
+Return ONLY valid JSON.
 
-1. Identify the knowledge domain.
-2. Rewrite the task into the best retrieval query.
-3. Return ONLY valid JSON.
-
-Do NOT answer the user's question.
-Do NOT explain your reasoning.
-Do NOT use markdown.
-Do NOT include extra text.
-
-Return exactly this format:
+Schema:
 
 {
-    "knowledge_type": "...",
-    "query": "..."
+    "knowledge_type": "<domain>",
+    "query": "<optimized retrieval query>"
+}
+
+Examples:
+
+Task:
+Explain quantum entanglement.
+
+Output:
+{
+    "knowledge_type": "physics",
+    "query": "Quantum entanglement explained"
+}
+
+Task:
+Describe climate change.
+
+Output:
+{
+    "knowledge_type": "environment",
+    "query": "Causes of climate change"
 }
 """
-                },
-                {
-                    "role": "user",
-                    "content": task
-                }
-            ]
-        )
+                    },
+                    {
+                        "role": "user",
+                        "content": task
+                    }
+                ]
+            )
 
-        return response["message"]["content"]
+            return response["message"]["content"]
+
+        except (httpx.HTTPError, OSError):
+
+            return json.dumps({
+                "knowledge_type": "unknown",
+                "query": task
+            })
 
 
 if __name__ == "__main__":
