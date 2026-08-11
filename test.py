@@ -1,10 +1,14 @@
 from ollama import Client
 import json
+from retrieval.planner import RetrievalPlanner
+from retrieval.source_selector import SourceSelector
+from retrieval.retrieval_manager import RetrievalManager
+from retrieval.context_builder import ContextBuilder
 
 # NEW: Retrieval Planner
 from retrieval.planner import RetrievalPlanner
 
-client = Client(host="http://10.239.211.48:11434")
+client = Client(host="http://10.239.211.244:11434")
 
 SYSTEM_PROMPT = """
 You are a Mediator AI whose ONLY responsibility is understanding user intent and producing a structured task decomposition.
@@ -431,17 +435,58 @@ else:
         print("Invalid Mediator output: expected a task list.")
 
     else:
+            print("\nMediator Output:")
+            print(json.dumps(mediated_tasks, indent=4))
 
-        print("\nMediator Output:")
-        print(json.dumps(mediated_tasks, indent=4))
+            # ---------------------------------------------
+            # 1. Retrieval Planner
+            # ---------------------------------------------
 
-        # ---------------------------------------------
-        # Send Mediator tasks to Retrieval Planner
-        # ---------------------------------------------
+            planner = RetrievalPlanner()
 
-        planner = RetrievalPlanner()
+            retrieval_plan = planner.create_plan(
+                mediated_tasks
+            )
 
-        retrieval_plan = planner.create_plan(mediated_tasks)
+            print("\nRetrieval Plan:")
+            print(json.dumps(retrieval_plan, indent=4))
 
-        print("\nRetrieval Plan:")
-        print(json.dumps(retrieval_plan, indent=4))
+            # ---------------------------------------------
+            # 2. Source Selector
+            # ---------------------------------------------
+
+            selector = SourceSelector()
+
+            routed_plan = selector.select_source(
+                retrieval_plan
+            )
+
+            print("\nRouted Retrieval Plan:")
+            print(json.dumps(routed_plan, indent=4))
+
+            # ---------------------------------------------
+            # 3. Retrieval Manager
+            # ---------------------------------------------
+
+            manager = RetrievalManager()
+
+            retrieval_results = manager.retrieve(
+                routed_plan
+            )
+
+            print("\nRetrieval Results:")
+            print(json.dumps(retrieval_results, indent=4))
+
+            # ---------------------------------------------
+            # 4. Context Builder
+            # ---------------------------------------------
+
+            builder = ContextBuilder()
+
+            execution_packages = builder.build(
+                mediated_tasks,
+                retrieval_results
+            )
+
+            print("\nFinal Execution Packages:")
+            print(json.dumps(execution_packages, indent=4))

@@ -1,86 +1,118 @@
+from pathlib import Path
+import sys
 import json
+
+# Allow direct execution:
+# python retrieval/static_retriever.py
+sys.path.append(str(Path(__file__).resolve().parent))
+
+from embedder import Embedder
+from vector_store import VectorStore
 
 
 class StaticRetriever:
     """
-    Retrieves context from the Static Knowledge Base.
+    Retrieves relevant context from the static Vector Database.
 
-    Version 1:
-    Uses a simple in-memory knowledge base.
-
-    Later:
-    This will be replaced with a Vector Database.
+    Responsibilities:
+    - Convert task queries into embeddings.
+    - Search ChromaDB.
+    - Apply a relevance threshold.
+    - Return retrieved context.
+    - Return [] when no sufficiently relevant context is found.
     """
 
-    def __init__(self):
+    def __init__(self, top_k=5, distance_threshold=1.0):
 
-        self.knowledge_base = {
+        self.top_k = top_k
+        self.distance_threshold = distance_threshold
 
-            "programming": [
-                "Recursion is a programming technique where a function calls itself.",
-                "A recursive algorithm consists of a base case and a recursive case.",
-                "Python supports recursion through function calls.",
-                "Factorial is a common example of recursion."
-            ],
+        self.embedder = Embedder()
+        self.vector_store = VectorStore()
 
-            "networking": [
-                "TCP uses a three-way handshake to establish a connection.",
-                "TCP congestion control prevents excessive packet loss.",
-                "UDP is a connectionless protocol."
-            ],
-
-            "database": [
-                "SQL is used to query relational databases.",
-                "Normalization reduces redundancy in databases.",
-                "MongoDB is a NoSQL database."
-            ],
-
-            "machine_learning": [
-                "Machine Learning enables systems to learn from data.",
-                "Neural Networks are inspired by the human brain.",
-                "RAG combines retrieval with generation."
-            ]
-        }
-
-    def retrieve(self, routed_plan):
+    def retrieve(self, tasks):
 
         retrieval_results = []
 
-        for task in routed_plan:
+        for task in tasks:
 
-            # Skip tasks that are not meant for Static RAG
-            if task["retrieval_source"] != "static":
+            task_result = task.copy()
+
+            query = task.get("query")
+
+            # --------------------------------------------------
+            # No query
+            # --------------------------------------------------
+
+            if not query:
+
+                task_result["retrieved_context"] = []
+
+                retrieval_results.append(task_result)
+
                 continue
 
-            # Create a copy of the task
-            retrieved_task = task.copy()
+            # --------------------------------------------------
+            # Create query embedding
+            # --------------------------------------------------
 
-            knowledge_type = task["knowledge_type"]
+            query_embedding = self.embedder.model.encode(
+                query,
+                convert_to_numpy=True
+            ).tolist()
 
-            # Retrieve context
-            context = self.knowledge_base.get(
-                knowledge_type,
-                []
+            # --------------------------------------------------
+            # Search Vector DB
+            # --------------------------------------------------
+
+            search_results = self.vector_store.search(
+                query_embedding,
+                top_k=self.top_k
             )
 
-            # Add retrieved context
-            retrieved_task["retrieved_context"] = context
+            retrieved_context = []
 
-            retrieval_results.append(retrieved_task)
+            # --------------------------------------------------
+            # Apply relevance threshold
+            # --------------------------------------------------
+
+            for result in search_results:
+
+                distance = result["score"]
+
+                # Lower distance = better match
+                if distance <= self.distance_threshold:
+
+                    retrieved_context.append({
+                        "content": result["content"],
+                        "domain": result["domain"],
+                        "source": result["source"],
+                        "score": distance
+                    })
+
+            # --------------------------------------------------
+            # Attach context to task
+            # --------------------------------------------------
+
+            task_result["retrieved_context"] = retrieved_context
+
+            retrieval_results.append(task_result)
 
         return retrieval_results
 
 
-# ----------------------------------------------------
+# ==========================================================
 # Standalone Testing
-# ----------------------------------------------------
+# ==========================================================
 
 if __name__ == "__main__":
 
-    retriever = StaticRetriever()
+    retriever = StaticRetriever(
+        top_k=3,
+        distance_threshold=1.0
+    )
 
-    routed_plan = [
-
+    test_tasks = [
         {
             "task_id": 1,
             "task": "Explain recursion.",
@@ -90,17 +122,15 @@ if __name__ == "__main__":
             "planner": "rule_engine",
             "retrieval_source": "static"
         },
-
         {
             "task_id": 2,
-            "task": "Explain TCP.",
-            "knowledge_type": "networking",
-            "query": "Explain TCP.",
+            "task": "Explain SQL joins.",
+            "knowledge_type": "programming",
+            "query": "Explain SQL joins.",
             "priority": "high",
             "planner": "rule_engine",
             "retrieval_source": "static"
         },
-
         {
             "task_id": 3,
             "task": "Explain quantum tunneling.",
@@ -109,19 +139,9 @@ if __name__ == "__main__":
             "priority": "medium",
             "planner": "rule_engine",
             "retrieval_source": "static"
-        },
-        {
-    "task_id": 3,
-    "task": "Explain Flask Blueprints.",
-    "knowledge_type": "programming",
-    "query": "Explain Flask Blueprints.",
-    "priority": "medium",
-    "planner": "rule_engine",
-    "retrieval_source": "static"
-}
-
+        }
     ]
 
-    retrieval_results = retriever.retrieve(routed_plan)
+    results = retriever.retrieve(test_tasks)
 
-    print(json.dumps(retrieval_results, indent=4))
+    print(json.dumps(results, indent=4))

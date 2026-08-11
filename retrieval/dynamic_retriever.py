@@ -1,48 +1,170 @@
 import json
+import requests
 
 
 class DynamicRetriever:
     """
     Retrieves context from a Dynamic Knowledge Source.
 
-    Version 1:
-    Uses a simple in-memory knowledge base.
+    Version 2:
+    Uses Wikipedia's public API as the dynamic knowledge source.
 
-    Later:
-    This will be replaced with
-    - Web Search
-    - Search APIs
-    - Online Knowledge Sources
+    The task's query is used for searching.
     """
 
-    def __init__(self):
+    def __init__(self, top_k=3):
 
-        self.dynamic_knowledge = {
+        self.top_k = top_k
 
-            "physics": [
-                "Quantum tunneling is a quantum mechanical phenomenon in which particles pass through a potential energy barrier.",
-                "Quantum tunneling occurs because particles exhibit wave-like behavior."
-            ],
+        self.api_url = "https://en.wikipedia.org/w/api.php"
 
-            "biology": [
-                "Photosynthesis converts light energy into chemical energy.",
-                "Chlorophyll absorbs sunlight for photosynthesis."
-            ],
+        # Identify our application when accessing Wikipedia
+        self.headers = {
+            "User-Agent": "MultiLLM-RAG/1.0 (educational project)"
+        }
 
-            "environment": [
-                "Climate change is mainly caused by greenhouse gas emissions.",
-                "Global warming results in rising average temperatures."
-            ],
+    # ==========================================================
+    # Wikipedia Search
+    # ==========================================================
 
-            "history": [
-                "The Industrial Revolution began in Britain during the 18th century."
-            ],
+    def search_wikipedia(self, query):
 
-            "economics": [
-                "Inflation is a sustained increase in the general price level."
+        try:
+
+            # --------------------------------------------------
+            # Search Wikipedia
+            # --------------------------------------------------
+
+            search_params = {
+                "action": "query",
+                "list": "search",
+                "srsearch": query,
+                "srlimit": self.top_k,
+                "format": "json"
+            }
+
+            response = requests.get(
+                self.api_url,
+                params=search_params,
+                headers=self.headers,
+                timeout=10
+            )
+
+            response.raise_for_status()
+
+            search_data = response.json()
+
+            search_results = search_data.get(
+                "query",
+                {}
+            ).get(
+                "search",
+                []
+            )
+
+            if not search_results:
+                return []
+
+            # --------------------------------------------------
+            # Get page IDs
+            # --------------------------------------------------
+
+            page_ids = [
+                str(result["pageid"])
+                for result in search_results
             ]
 
-        }
+            # --------------------------------------------------
+            # Retrieve page content
+            # --------------------------------------------------
+
+            content_params = {
+                "action": "query",
+                "pageids": "|".join(page_ids),
+                "prop": "extracts",
+                "explaintext": True,
+                "exintro": True,
+                "format": "json"
+            }
+
+            content_response = requests.get(
+                self.api_url,
+                params=content_params,
+                headers=self.headers,
+                timeout=10
+            )
+
+            content_response.raise_for_status()
+
+            content_data = content_response.json()
+
+            pages = content_data.get(
+                "query",
+                {}
+            ).get(
+                "pages",
+                {}
+            )
+
+            contexts = []
+
+            # --------------------------------------------------
+            # Build Retrieved Context
+            # --------------------------------------------------
+
+            for result in search_results:
+
+                page_id = str(result["pageid"])
+
+                page = pages.get(
+                    page_id,
+                    {}
+                )
+
+                extract = page.get(
+                    "extract",
+                    ""
+                ).strip()
+
+                if not extract:
+                    continue
+
+                title = page.get(
+                    "title",
+                    ""
+                )
+
+                contexts.append({
+                    "content": extract,
+                    "source": "Wikipedia",
+                    "title": title,
+                    "url": (
+                        "https://en.wikipedia.org/wiki/"
+                        + title.replace(" ", "_")
+                    )
+                })
+
+            return contexts
+
+        except requests.RequestException as error:
+
+            print(
+                f"Dynamic retrieval error: {error}"
+            )
+
+            return []
+
+        except Exception as error:
+
+            print(
+                f"Unexpected dynamic retrieval error: {error}"
+            )
+
+            return []
+
+    # ==========================================================
+    # Main Retrieval Function
+    # ==========================================================
 
     def retrieve(self, routed_plan):
 
@@ -50,36 +172,72 @@ class DynamicRetriever:
 
         for task in routed_plan:
 
-            # Skip tasks that are not meant for Dynamic RAG
+            # --------------------------------------------------
+            # Only process Dynamic tasks
+            # --------------------------------------------------
+
             if task["retrieval_source"] != "dynamic":
                 continue
 
-            # Create a copy of the task
+            # --------------------------------------------------
+            # Copy original task
+            # --------------------------------------------------
+
             retrieved_task = task.copy()
 
-            knowledge_type = task["knowledge_type"]
+            # --------------------------------------------------
+            # Get query
+            # --------------------------------------------------
 
-            # Retrieve context
-            context = self.dynamic_knowledge.get(
-                knowledge_type,
-                []
+            query = task.get(
+                "query",
+                ""
             )
 
-            # Add retrieved context
+            # --------------------------------------------------
+            # No query
+            # --------------------------------------------------
+
+            if not query:
+
+                retrieved_task["retrieved_context"] = []
+
+                retrieval_results.append(
+                    retrieved_task
+                )
+
+                continue
+
+            # --------------------------------------------------
+            # Perform Dynamic Retrieval
+            # --------------------------------------------------
+
+            context = self.search_wikipedia(
+                query
+            )
+
+            # --------------------------------------------------
+            # Attach retrieved context
+            # --------------------------------------------------
+
             retrieved_task["retrieved_context"] = context
 
-            retrieval_results.append(retrieved_task)
+            retrieval_results.append(
+                retrieved_task
+            )
 
         return retrieval_results
 
 
-# ----------------------------------------------------
+# ==========================================================
 # Standalone Testing
-# ----------------------------------------------------
+# ==========================================================
 
 if __name__ == "__main__":
 
-    retriever = DynamicRetriever()
+    retriever = DynamicRetriever(
+        top_k=3
+    )
 
     routed_plan = [
 
@@ -87,7 +245,7 @@ if __name__ == "__main__":
             "task_id": 1,
             "task": "Explain quantum tunneling.",
             "knowledge_type": "physics",
-            "query": "Quantum tunneling explained",
+            "query": "Quantum tunneling",
             "priority": "high",
             "planner": "planner_llm",
             "retrieval_source": "dynamic"
@@ -97,7 +255,7 @@ if __name__ == "__main__":
             "task_id": 2,
             "task": "Describe photosynthesis.",
             "knowledge_type": "biology",
-            "query": "Photosynthesis process",
+            "query": "Photosynthesis",
             "priority": "high",
             "planner": "planner_llm",
             "retrieval_source": "dynamic"
@@ -107,24 +265,31 @@ if __name__ == "__main__":
             "task_id": 3,
             "task": "Explain recursion.",
             "knowledge_type": "programming",
-            "query": "Explain recursion",
+            "query": "Python recursion",
             "priority": "high",
             "planner": "rule_engine",
             "retrieval_source": "static"
         },
 
         {
-    "task_id": 4,
-    "task": "Explain dark matter.",
-    "knowledge_type": "astronomy",
-    "query": "Dark matter explained",
-    "priority": "medium",
-    "planner": "planner_llm",
-    "retrieval_source": "dynamic"
-}
-
+            "task_id": 4,
+            "task": "Explain dark matter.",
+            "knowledge_type": "astronomy",
+            "query": "Dark matter",
+            "priority": "medium",
+            "planner": "planner_llm",
+            "retrieval_source": "dynamic"
+        }
     ]
 
-    retrieval_results = retriever.retrieve(routed_plan)
+    retrieval_results = retriever.retrieve(
+        routed_plan
+    )
 
-    print(json.dumps(retrieval_results, indent=4))
+    print(
+        json.dumps(
+            retrieval_results,
+            indent=4,
+            ensure_ascii=False
+        )
+    )
