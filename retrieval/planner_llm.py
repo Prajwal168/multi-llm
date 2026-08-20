@@ -9,7 +9,7 @@ class PlannerLLM:
     def __init__(self):
 
         self.client = Client(
-            host="http://10.239.211.244:11434"
+            host="http://10.10.8.147:11434"
         )
 
         self.model = "qwen3:8b"

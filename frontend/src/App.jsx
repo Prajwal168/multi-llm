@@ -17,6 +17,7 @@ function App() {
 
   const [expandedStage, setExpandedStage] = useState("mediator");
   const [retrievalTasks, setRetrievalTasks] = useState([]);
+  const [routedTasks, setRoutedTasks] = useState([]);
   const [retrievalResults, setRetrievalResults] = useState([]);
   const [contextTasks, setContextTasks] = useState([]);
   const [executionPackages, setExecutionPackages] = useState([]);
@@ -27,220 +28,295 @@ function App() {
   // SEND QUERY
   // =========================
 
-  const handleSubmit = () => {
-    if (
-      !query.trim() ||
-      processing ||
-      awaitingApproval
-    ) {
-      return;
+// =========================
+// SEND QUERY
+// =========================
+
+const handleSubmit = async () => {
+  if (
+    !query.trim() ||
+    processing ||
+    awaitingApproval
+  ) {
+    return;
+  }
+
+  const userQuery = query.trim();
+
+  const userMessage = {
+    role: "user",
+    content: userQuery,
+  };
+
+  const isNewConversation = !activeChatId;
+  const chatId = isNewConversation ? Date.now() : activeChatId;
+
+  const updatedMessages = isNewConversation
+    ? [userMessage]
+    : [...messages, userMessage];
+
+  setActiveChatId(chatId);
+  setMessages(updatedMessages);
+
+  setHistory((prevHistory) => {
+    if (isNewConversation) {
+      return [
+        ...prevHistory,
+        {
+          id: chatId,
+          title:
+            userQuery.slice(0, 30) +
+            (userQuery.length > 30 ? "..." : ""),
+          messages: [userMessage],
+        },
+      ];
     }
 
-    const userQuery = query.trim();
+    return prevHistory.map((chat) =>
+      chat.id === activeChatId
+        ? {
+            ...chat,
+            messages: updatedMessages,
+          }
+        : chat
+    );
+  });
 
-    const userMessage = {
-      role: "user",
-      content: userQuery,
-    };
+  setQuery("");
+  setRejected(false);
+  setRejectedQuery("");
 
-    const isNewConversation = !activeChatId;
-    const chatId = isNewConversation ? Date.now() : activeChatId;
+  // Start Mediator
+  setProcessing(true);
+  
 
-    const updatedMessages = isNewConversation
-      ? [userMessage]
-      : [...messages, userMessage];
+  try {
+    // ==========================================
+    // CALL FASTAPI MEDIATOR
+    // ==========================================
 
-    setActiveChatId(chatId);
-    setMessages(updatedMessages);
+    const response = await fetch(
+      "http://127.0.0.1:8000/api/mediator",
+      {
+        method: "POST",
 
-    setHistory((prevHistory) => {
-      if (isNewConversation) {
-        return [
-          ...prevHistory,
-          {
-            id: chatId,
-            title:
-              userQuery.slice(0, 30) +
-              (userQuery.length > 30 ? "..." : ""),
-            messages: [userMessage],
-          },
-        ];
+        headers: {
+          "Content-Type": "application/json",
+        },
+
+        body: JSON.stringify({
+          query: userQuery,
+        }),
       }
+    );
 
-      return prevHistory.map((chat) =>
-        chat.id === activeChatId
-          ? { ...chat, messages: updatedMessages }
-          : chat
+    // ==========================================
+    // CHECK HTTP RESPONSE
+    // ==========================================
+
+    if (!response.ok) {
+      throw new Error(
+        `Mediator request failed: ${response.status}`
       );
-    });
+    }
 
-    setQuery("");
-    setRejected(false);
-    setRejectedQuery("");
+    // ==========================================
+    // READ BACKEND RESPONSE
+    // ==========================================
 
-    // Start Mediator
-    setProcessing(true);
+    const data = await response.json();
+
+    const result = data.result;
+
+    // ==========================================
+    // CONVERSATIONAL RESPONSE
+    // ==========================================
+
+    if (typeof result === "string") {
+
+  setProcessing(false);
+  setStage(null);
+  setExpandedStage(null);
+
+  setMessages((currentMessages) => [
+    ...currentMessages,
+    {
+      role: "assistant",
+      content: result,
+    },
+  ]);
+
+  return;
+}
+
+    // ==========================================
+    // TASK-ORIENTED RESPONSE
+    // ==========================================
+
+    if (!Array.isArray(result)) {
+      throw new Error(
+        "Invalid Mediator response: expected a task list."
+      );
+    }
+
+    // ==========================================
+    // REAL MEDIATOR TASKS
+    // ==========================================
+
+   setGeneratedTasks(result);
+
+    setProcessing(false);
+
     setStage("mediator");
     setExpandedStage("mediator");
 
-    // Temporary Mediator simulation
-    setTimeout(() => {
+    setAwaitingApproval(true);
+  } catch (error) {
 
-      const tasks = [
-        `Understand the request: ${userQuery}`,
-        "Retrieve relevant information",
-        "Generate and verify the final response",
-      ];
+    console.error(
+      "Mediator request failed:",
+      error
+    );
 
-      setGeneratedTasks(tasks);
-      setProcessing(false);
-      setAwaitingApproval(true);
-      setExpandedStage("mediator");
+    setProcessing(false);
+    setStage(null);
 
-    }, 1200);
-  };
-
+    setMessages((currentMessages) => [
+      ...currentMessages,
+      {
+        role: "assistant",
+        content:
+          "Unable to connect to the Mediator backend. Please make sure the FastAPI server is running.",
+      },
+    ]);
+  }
+};
 
   // =========================
-  // CONTINUE
-  // =========================
+// CONTINUE
+// =========================
 
-  const handleContinue = () => {
-    setAwaitingApproval(false);
-    setProcessing(true);
-    setRejected(false);
+const handleContinue = async () => {
 
-    const retrievalPlan = [
-      {
-        taskId: 1,
-        strategy: "Static retrieval",
-        required: true,
-        status: "processing",
-      },
-      {
-        taskId: 2,
-        strategy: "Static retrieval",
-        required: true,
-        status: "waiting",
-      },
-      {
-        taskId: 3,
-        strategy: "No retrieval required",
-        required: false,
-        status: "completed",
-      },
-      {
-        taskId: 4,
-        strategy: "No retrieval required",
-        required: false,
-        status: "completed",
-      },
-      {
-        taskId: 5,
-        strategy: "Static retrieval",
-        required: true,
-        status: "waiting",
-      },
-    ];
+  setAwaitingApproval(false);
+  setProcessing(true);
+  setRejected(false);
 
-    setRetrievalTasks(retrievalPlan);
+  // Start Retrieval & Context
+  setStage("retrieval");
+  setExpandedStage("retrieval");
+  setActiveRetrievalOperation("planner");
 
-    const retrievalResultsData = [
+  try {
+
+    // ==========================================
+    // CALL FASTAPI RETRIEVAL
+    // ==========================================
+
+    const response = await fetch(
+      "http://127.0.0.1:8000/api/retrieval",
       {
-        taskId: 1,
-        strategy: "Static retrieval",
-        status: "completed",
-        result: "Context found",
-        fallback: false,
-      },
+        method: "POST",
+
+        headers: {
+          "Content-Type": "application/json",
+        },
+
+        body: JSON.stringify({
+          tasks: generatedTasks,
+        }),
+      }
+    );
+
+
+    // ==========================================
+    // CHECK HTTP RESPONSE
+    // ==========================================
+
+    if (!response.ok) {
+
+      throw new Error(
+        `Retrieval request failed: ${response.status}`
+      );
+
+    }
+
+
+    // ==========================================
+    // READ BACKEND RESPONSE
+    // ==========================================
+
+    const data = await response.json();
+    console.log("REAL RETRIEVAL RESPONSE:", data);
+
+
+    // ==========================================
+    // STORE REAL RETRIEVAL DATA
+    // ==========================================
+
+    setRetrievalTasks(
+      data.retrieval_plan
+    );
+    setRoutedTasks(
+      data.routed_plan
+    );
+
+    setRetrievalResults(
+      data.retrieval_results
+    );
+
+    setExecutionPackages(
+      data.execution_packages
+    );
+
+
+    // ==========================================
+    // MOVE THROUGH THE UI STAGES
+    // ==========================================
+
+    setActiveRetrievalOperation("source");
+
+    setActiveRetrievalOperation("retrieval");
+
+    setActiveRetrievalOperation("context");
+
+    setActiveRetrievalOperation("packages");
+
+
+    // ==========================================
+    // RETRIEVAL COMPLETE
+    // ==========================================
+
+    setStage("execution");
+
+    setExpandedStage("execution");
+
+    setActiveRetrievalOperation(null);
+
+  } catch (error) {
+
+    console.error(
+      "Retrieval request failed:",
+      error
+    );
+
+    setProcessing(false);
+
+    setStage(null);
+
+    setActiveRetrievalOperation(null);
+
+    setMessages((currentMessages) => [
+      ...currentMessages,
       {
-        taskId: 2,
-        strategy: "Static retrieval",
-        status: "completed",
-        result: "Context found",
-        fallback: false,
+        role: "assistant",
+        content:
+          "Unable to complete the retrieval process. Please check the backend.",
       },
-      {
-        taskId: 5,
-        strategy: "Static retrieval",
-        status: "fallback",
-        result: "No relevant context found",
-        fallback: true,
-        fallbackStrategy: "Dynamic retrieval",
-        fallbackStatus: "completed",
-        fallbackResult: "Context found",
-      },
-    ];
+    ]);
 
-    setRetrievalResults(retrievalResultsData);
-
-    const packages = [
-      {
-        taskId: 1,
-        context: true,
-        status: "completed",
-        message: "Context attached",
-      },
-      {
-        taskId: 2,
-        context: true,
-        status: "completed",
-        message: "Context attached",
-      },
-      {
-        taskId: 3,
-        context: false,
-        status: "completed",
-        message: "No context required",
-      },
-      {
-        taskId: 4,
-        context: false,
-        status: "completed",
-        message: "No context required",
-      },
-      {
-        taskId: 5,
-        context: true,
-        status: "completed",
-        message: "Context attached",
-      },
-    ];
-
-    setExecutionPackages(packages);
-
-    // Start Retrieval & Context
-    setStage("retrieval");
-    setExpandedStage("retrieval");
-    setActiveRetrievalOperation("planner");
-
-    // 1 → Retrieval Planner
-    setTimeout(() => {
-      setActiveRetrievalOperation("source");
-    }, 1800);
-
-    // 2 → Source Selection
-    setTimeout(() => {
-      setActiveRetrievalOperation("retrieval");
-    }, 3600);
-
-    // 3 → Retrieval
-    setTimeout(() => {
-      setActiveRetrievalOperation("context");
-    }, 5400);
-
-    // 4 → Context Building
-    setTimeout(() => {
-      setActiveRetrievalOperation("packages");
-    }, 7200);
-
-    // 5 → Execution Packages finished
-    setTimeout(() => {
-      setStage("execution");
-      setExpandedStage("execution");
-      setActiveRetrievalOperation(null);
-    }, 9000);
-  };
+  }
+};
 
 
   // =========================
@@ -631,20 +707,22 @@ function App() {
                         <ol className="generated-task-list">
 
                           {generatedTasks.map(
-                            (task, index) => (
+                              (task) => (
 
-                              <li key={index}>
-                                <span className="task-number">
-                                  {index + 1}
-                                </span>
+                                <li key={task.task_id}>
 
-                                <span className="task-text">
-                                  {task}
-                                </span>
-                              </li>
+                                  <span className="task-number">
+                                    {task.task_id}
+                                  </span>
 
-                            )
-                          )}
+                                  <span className="task-text">
+                                    {task.task}
+                                  </span>
+
+                                </li>
+
+                              )
+                            )}
 
                         </ol>
 
@@ -754,7 +832,7 @@ function App() {
                               Retrieval Planner
                             </span>
                             <span className="retrieval-operation-summary">
-                              5 tasks • 3 require retrieval
+                              {generatedTasks.length} tasks • {retrievalTasks.length} require retrieval
                             </span>
                           </div>
                         </div>
@@ -771,25 +849,25 @@ function App() {
                             {retrievalTasks.map((task) => (
                               <div
                                 className="retrieval-task"
-                                key={task.taskId}
+                                key={task.task_id}
                               >
+
                                 <div className="retrieval-task-info">
+
                                   <span className="retrieval-task-id">
-                                    Task {task.taskId}
+                                    Task {task.task_id}
                                   </span>
+
                                   <span className="retrieval-strategy">
-                                    {task.required
-                                      ? "Retrieval required"
-                                      : "No retrieval required"}
+                                    Retrieval required
                                   </span>
+
                                 </div>
+
                                 <span className="retrieval-task-status">
-                                  {task.status === "processing"
-                                    ? "⟳"
-                                    : task.status === "completed"
-                                    ? "✓"
-                                    : "○"}
+                                  ✓
                                 </span>
+
                               </div>
                             ))}
                           </div>
@@ -817,8 +895,8 @@ function App() {
                             <span className="retrieval-operation-name">
                               Source Selection
                             </span>
-                            <span className="retrieval-operation-summary">
-                              3 sources selected
+                            <span className="source-selection-summary">
+                              {routedTasks.length} sources selected
                             </span>
                           </div>
                         </div>
@@ -832,26 +910,34 @@ function App() {
                       {activeRetrievalOperation === "source" && (
                         <div className="retrieval-operation-body">
                           <div className="source-task-list">
-                            {retrievalTasks
-                              .filter((task) => task.required)
-                              .map((task) => (
-                                <div
-                                  className="source-task"
-                                  key={task.taskId}
-                                >
-                                  <div className="source-task-info">
-                                    <span className="source-task-id">
-                                      Task {task.taskId}
-                                    </span>
-                                    <span className="source-task-strategy">
-                                      {task.strategy}
-                                    </span>
-                                  </div>
-                                  <span className="source-task-status">
-                                    ○
+                            {routedTasks.map((task) => (
+                              <div
+                                className="source-task"
+                                key={task.task_id}
+                              >
+
+                                <div className="source-task-info">
+
+                                  <span className="source-task-id">
+                                    Task {task.task_id}
                                   </span>
+
+                                  <span className="source-task-strategy">
+                                    {task.retrieval_source === "static"
+                                      ? "Static retrieval"
+                                      : task.retrieval_source === "dynamic"
+                                      ? "Dynamic retrieval"
+                                      : "Unknown source"}
+                                  </span>
+
                                 </div>
-                              ))}
+
+                                <span className="source-task-status">
+                                  ✓
+                                </span>
+
+                              </div>
+                            ))}
                           </div>
                         </div>
                       )}
@@ -879,7 +965,7 @@ function App() {
                               Retrieval
                             </span>
                             <span className="retrieval-operation-summary">
-                              3 tasks retrieved • 1 fallback
+                              {retrievalResults.length} tasks retrieved
                             </span>
                           </div>
                         </div>
@@ -893,171 +979,196 @@ function App() {
                       {activeRetrievalOperation === "retrieval" && (
                         <div className="retrieval-operation-body">
                           <div className="retrieval-results-list">
-                            {retrievalResults.map((task) => (
-                              <div
-                                className="retrieval-result"
-                                key={task.taskId}
-                              >
-                                <div className="retrieval-result-info">
-                                  <span className="retrieval-result-task">
-                                    Task {task.taskId}
-                                  </span>
-                                  <span className="retrieval-result-strategy">
-                                    {task.strategy}
-                                  </span>
-                                  <span className="retrieval-result-message">
-                                    {task.result}
-                                  </span>
-                                  {task.fallback && (
-                                    <div className="retrieval-fallback">
-                                      <span className="fallback-arrow">
-                                        ↳
-                                      </span>
-                                      <div className="fallback-info">
-                                        <span className="fallback-label">
-                                          Fallback → {task.fallbackStrategy}
-                                        </span>
-                                        <span className="fallback-status-text">
-                                          Retrieving context...
-                                        </span>
-                                      </div>
-                                    </div>
-                                  )}
+                            {retrievalResults.map((result) => {
+                                      const routedTask = routedTasks.find(
+                                        (task) => task.task_id === result.task_id
+                                      );
+
+                                      const plannedSource =
+                                        routedTask?.retrieval_source;
+
+                                      const actualSource =
+                                        result.retrieval_source;
+
+                                      const isFallback =
+                                        plannedSource === "static" &&
+                                        actualSource === "dynamic";
+
+                                      const hasContext =
+                                        result.retrieved_context &&
+                                        result.retrieved_context.length > 0;
+
+                                      return (
+                                        <div
+                                          className="retrieval-result"
+                                          key={result.task_id}
+                                        >
+
+                                          <div className="retrieval-result-info">
+
+                                            <span className="retrieval-result-task">
+                                              Task {result.task_id}
+                                            </span>
+
+                                            {isFallback ? (
+                                              <>
+                                                <span className="retrieval-result-strategy">
+                                                  Static retrieval
+                                                </span>
+
+                                                <span className="retrieval-result-message">
+                                                  No relevant context found
+                                                </span>
+
+                                                <div className="retrieval-fallback">
+
+                                                  <span className="fallback-arrow">
+                                                    ↳
+                                                  </span>
+
+                                                  <span>
+                                                    Fallback → Dynamic retrieval
+                                                  </span>
+
+                                                  {hasContext && (
+                                                    <span className="fallback-context">
+                                                      Context found ({result.retrieved_context.length} chunks)
+                                                    </span>
+                                                  )}
+
+                                                </div>
+                                              </>
+                                            ) : (
+                                              <>
+                                                <span className="retrieval-result-strategy">
+                                                  {actualSource === "static"
+                                                    ? "Static retrieval"
+                                                    : actualSource === "dynamic"
+                                                    ? "Dynamic retrieval"
+                                                    : "Unknown retrieval source"}
+                                                </span>
+
+                                                <span className="retrieval-result-message">
+                                                  {hasContext
+                                                    ? `Context found (${result.retrieved_context.length} chunks)`
+                                                    : "No relevant context found"}
+                                                </span>
+                                              </>
+                                            )}
+
+                                          </div>
+
+                                          <span className="retrieval-result-status">
+                                            {hasContext ? "✓" : "✗"}
+                                          </span>
+
+                                        </div>
+                                      );
+                                    })}
+                                  </div>
                                 </div>
-                                <span className="retrieval-result-status">
-                                  {task.status === "completed"
-                                    ? "✓"
-                                    : task.status === "fallback"
-                                    ? "✗"
-                                    : "○"}
-                                </span>
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                      )}
-                    </div>
+                              )}
+                            </div>
 
                     {/* Context Building Operation */}
-                    <div className="retrieval-operation">
-                      <button
-                        className="retrieval-operation-header"
-                        onClick={() =>
-                          toggleRetrievalOperation("context")
-                        }
-                      >
-                        <div className="retrieval-operation-title">
-                          <span className="retrieval-operation-status">
+                      <div className="retrieval-operation">
+                        <button
+                          className="retrieval-operation-header"
+                          onClick={() =>
+                            toggleRetrievalOperation("context")
+                          }
+                        >
+                          <div className="retrieval-operation-title">
+
+                            <span className="retrieval-operation-status">
+                              {activeRetrievalOperation === "context"
+                                ? "⟳"
+                                : activeRetrievalOperation === "planner" ||
+                                  activeRetrievalOperation === "source" ||
+                                  activeRetrievalOperation === "retrieval"
+                                ? "○"
+                                : "✓"}
+                            </span>
+
+                            <div className="retrieval-operation-info">
+
+                              <span className="retrieval-operation-name">
+                                Context Building
+                              </span>
+
+                              <span className="context-operation-summary">
+                                {executionPackages.length} execution packages prepared
+                              </span>
+
+                            </div>
+                          </div>
+
+                          <span>
                             {activeRetrievalOperation === "context"
-                              ? "⟳"
-                              : activeRetrievalOperation === "planner" ||
-                                activeRetrievalOperation === "source" ||
-                                activeRetrievalOperation === "retrieval"
-                              ? "○"
-                              : "✓"}
+                              ? "▼"
+                              : "▶"}
                           </span>
-                          <div className="retrieval-operation-info">
-                            <span className="retrieval-operation-name">
-                              Context Building
-                            </span>
-                            <span className="retrieval-operation-summary">
-                              3 contexts prepared
-                            </span>
-                          </div>
-                        </div>
-                        <span>
-                          {activeRetrievalOperation === "context"
-                            ? "▼"
-                            : "▶"}
-                        </span>
-                      </button>
+                        </button>
 
-                      {activeRetrievalOperation === "context" && (
-                        <div className="retrieval-operation-body">
-                          <div className="context-task-list">
-                            {retrievalResults.map((task) => (
-                              <div
-                                className="context-task"
-                                key={task.taskId}
-                              >
-                                <div className="context-task-info">
-                                  <span className="context-task-id">
-                                    Task {task.taskId}
-                                  </span>
-                                  <span className="context-task-message">
-                                    Context prepared
-                                  </span>
-                                </div>
-                                <span className="context-task-status">
-                                  ✓
-                                </span>
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                      )}
-                    </div>
 
-                    {/* Execution Packages Operation */}
-                    <div className="retrieval-operation">
-                      <button
-                        className="retrieval-operation-header"
-                        onClick={() =>
-                          toggleRetrievalOperation("packages")
-                        }
-                      >
-                        <div className="retrieval-operation-title">
-                          <span className="retrieval-operation-status">
-                            {activeRetrievalOperation === "packages"
-                              ? "⟳"
-                              : activeRetrievalOperation === "planner" ||
-                                activeRetrievalOperation === "source" ||
-                                activeRetrievalOperation === "retrieval" ||
-                                activeRetrievalOperation === "context"
-                              ? "○"
-                              : "✓"}
-                          </span>
-                          <div className="retrieval-operation-info">
-                            <span className="retrieval-operation-name">
-                              Execution Packages
-                            </span>
-                            <span className="retrieval-operation-summary">
-                              5 packages prepared
-                            </span>
-                          </div>
-                        </div>
-                        <span>
-                          {activeRetrievalOperation === "packages"
-                            ? "▼"
-                            : "▶"}
-                        </span>
-                      </button>
+                        {activeRetrievalOperation === "context" && (
+                          <div className="retrieval-operation-body">
 
-                      {activeRetrievalOperation === "packages" && (
-                        <div className="retrieval-operation-body">
-                          <div className="execution-package-list">
-                            {executionPackages.map((pkg) => (
-                              <div
-                                className="execution-package"
-                                key={pkg.taskId}
-                              >
-                                <div className="execution-package-info">
-                                  <span className="execution-package-task">
-                                    Task {pkg.taskId}
-                                  </span>
-                                  <span className="execution-package-message">
-                                    {pkg.message}
-                                  </span>
-                                </div>
-                                <span className="execution-package-status">
-                                  ✓
-                                </span>
-                              </div>
-                            ))}
+                            <div className="context-task-list">
+
+                              {executionPackages.map((pkg) => {
+
+                                const originalTask = generatedTasks.find(
+                                  (task) => task.task_id === pkg.task_id
+                                );
+
+                                const hasContext =
+                                  pkg.retrieved_context &&
+                                  pkg.retrieved_context.length > 0;
+
+                                const contextRequired =
+                                  originalTask?.retrieval?.required === true;
+
+                                return (
+                                  <div
+                                    className="context-task"
+                                    key={pkg.task_id}
+                                  >
+
+                                    <div className="context-task-info">
+
+                                      <span className="context-task-id">
+                                        Task {pkg.task_id}
+                                      </span>
+
+                                      <span className="context-task-status-text">
+                                        {contextRequired
+                                          ? hasContext
+                                            ? "Context attached"
+                                            : "Context unavailable"
+                                          : "No context required"}
+                                      </span>
+
+                                    </div>
+
+                                    <span className="context-task-status">
+                                      {contextRequired && !hasContext
+                                        ? "✗"
+                                        : "✓"}
+                                    </span>
+
+                                  </div>
+                                );
+                              })}
+
+                            </div>
+
                           </div>
-                        </div>
-                      )}
-                    </div>
+                        )}
+
+                      </div>
+
+                    
                   </div>
                 )}
 
