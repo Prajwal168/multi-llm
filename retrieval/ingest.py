@@ -30,6 +30,13 @@ class IngestionPipeline:
 
         print("\nStarting ingestion...\n")
 
+        if not Path(self.documents_path).exists():
+            print(
+                f"Documents path '{self.documents_path}' does not "
+                "exist. Nothing to ingest."
+            )
+            return
+
         # ---------------------------------------------
         # 1. Reset existing Vector DB
         # ---------------------------------------------

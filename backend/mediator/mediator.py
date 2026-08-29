@@ -2,7 +2,7 @@ from ollama import Client
 import json
 
 
-client = Client(host="http://10.10.8.147:11434")
+client = Client(host="http://10.241.250.48:11434")
 
 SYSTEM_PROMPT = """
 You are a Mediator AI whose ONLY responsibility is understanding user intent and producing a structured task decomposition.
@@ -179,6 +179,28 @@ summarization
 Choose the single most appropriate type.
 
 ====================================================
+DEPENDENCY RULES
+====================================================
+
+Every task must include a "depends_on" field — a list of task_ids
+whose output this task requires in order to be completed correctly.
+
+A task depends on a previous task ONLY if:
+
+• It explicitly builds on something produced earlier
+  (e.g. "the generated code", "the above design", "that architecture").
+• It cannot be understood or performed correctly without
+  that earlier task's result.
+
+A task does NOT depend on a previous task just because it comes
+later in the sequence, or belongs to the same overall project.
+
+If a task is self-contained, "depends_on" MUST be an empty list.
+
+Only reference task_ids that appear earlier in the list.
+A task may depend on more than one earlier task if needed.
+
+====================================================
 EXAMPLES
 ====================================================
 
@@ -194,6 +216,7 @@ Output
         "task": "Explain the concept of factorial.",
         "type": "concept",
         "priority": "high",
+        "depends_on": [],
         "retrieval": {
             "required": true
         }
@@ -203,6 +226,7 @@ Output
         "task": "Generate the Python program.",
         "type": "code_generation",
         "priority": "high",
+        "depends_on": [],
         "retrieval": {
             "required": true
         }
@@ -212,6 +236,7 @@ Output
         "task": "Explain the generated program.",
         "type": "explanation",
         "priority": "medium",
+        "depends_on": [2],
         "retrieval": {
             "required": false
         }
@@ -221,6 +246,7 @@ Output
         "task": "Demonstrate the program using sample input and output.",
         "type": "testing",
         "priority": "medium",
+        "depends_on": [2],
         "retrieval": {
             "required": false
         }
@@ -230,6 +256,7 @@ Output
         "task": "Analyze the time and space complexity.",
         "type": "analysis",
         "priority": "low",
+        "depends_on": [2],
         "retrieval": {
             "required": true
         }
@@ -250,6 +277,7 @@ Output
         "task": "Analyze the project requirements.",
         "type": "planning",
         "priority": "high",
+        "depends_on": [],
         "retrieval": {
             "required": true
         }
@@ -259,6 +287,7 @@ Output
         "task": "Design the overall system architecture.",
         "type": "design",
         "priority": "high",
+        "depends_on": [1],
         "retrieval": {
             "required": true
         }
@@ -268,6 +297,7 @@ Output
         "task": "Design the database structure.",
         "type": "design",
         "priority": "high",
+        "depends_on": [1],
         "retrieval": {
             "required": true
         }
@@ -277,6 +307,7 @@ Output
         "task": "Develop the authentication module.",
         "type": "implementation",
         "priority": "high",
+        "depends_on": [2, 3],
         "retrieval": {
             "required": true
         }
@@ -286,6 +317,7 @@ Output
         "task": "Develop the attendance management module.",
         "type": "implementation",
         "priority": "high",
+        "depends_on": [2, 3],
         "retrieval": {
             "required": true
         }
@@ -295,6 +327,7 @@ Output
         "task": "Develop the reporting module.",
         "type": "implementation",
         "priority": "medium",
+        "depends_on": [2, 3, 5],
         "retrieval": {
             "required": true
         }
@@ -304,6 +337,7 @@ Output
         "task": "Test and validate the system.",
         "type": "testing",
         "priority": "medium",
+        "depends_on": [4, 5, 6],
         "retrieval": {
             "required": false
         }
@@ -313,6 +347,7 @@ Output
         "task": "Prepare the project documentation.",
         "type": "documentation",
         "priority": "low",
+        "depends_on": [],
         "retrieval": {
             "required": false
         }
@@ -359,6 +394,7 @@ The JSON schema MUST be:
         "task": "<high-level objective>",
         "type": "<task_type>",
         "priority": "<priority>",
+        "depends_on": [],
         "retrieval": {
             "required": true
         }
@@ -414,6 +450,24 @@ def generate_tasks(user_query):
     if not isinstance(mediated_tasks, list):
 
         return "Invalid Mediator output: expected a task list."
+
+    for task in mediated_tasks:
+
+        if not isinstance(task, dict):
+            continue
+
+        task_id = task.get("task_id")
+        deps = task.get("depends_on", [])
+
+        if not isinstance(deps, list):
+            deps = []
+
+        if isinstance(task_id, int):
+            deps = [d for d in deps if isinstance(d, int) and d < task_id]
+        else:
+            deps = [d for d in deps if isinstance(d, int)]
+
+        task["depends_on"] = deps
 
     return mediated_tasks
 

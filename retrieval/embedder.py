@@ -31,14 +31,28 @@ class Embedder:
 
     def embed_chunks(self, chunks):
 
+        """
+        Embeds every chunk's content in a single batched `encode()`
+        call instead of one call per chunk. Most embedding backends
+        have meaningful fixed overhead per call, so this is
+        significantly faster for large chunk sets while producing
+        identical embeddings to the per-chunk version.
+        """
+
+        if not chunks:
+            return []
+
+        contents = [chunk["content"] for chunk in chunks]
+
+        embeddings = self.model.encode(
+            contents,
+            convert_to_numpy=True,
+            normalize_embeddings=True
+        )
+
         embedded_chunks = []
 
-        for chunk in chunks:
-
-            embedding = self.model.encode(
-                chunk["content"],
-                convert_to_numpy=True
-            )
+        for chunk, embedding in zip(chunks, embeddings):
 
             embedded_chunk = chunk.copy()
 

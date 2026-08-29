@@ -8,6 +8,7 @@ from retrieval.planner import RetrievalPlanner
 from retrieval.source_selector import SourceSelector
 from retrieval.retrieval_manager import RetrievalManager
 from retrieval.context_builder import ContextBuilder
+from execution.executor import Executor
 
 
 app = FastAPI()
@@ -37,6 +38,9 @@ class MediatorRequest(BaseModel):
 class RetrievalRequest(BaseModel):
     tasks: list
 
+
+class ExecutionRequest(BaseModel):
+    execution_packages: list
 
 # ==========================================================
 # MEDIATOR ENDPOINT
@@ -103,6 +107,8 @@ def run_retrieval(request: RetrievalRequest):
         retrieval_results
     )
 
+    
+
 
     # ------------------------------------------------------
     # Return complete retrieval pipeline result
@@ -113,4 +119,22 @@ def run_retrieval(request: RetrievalRequest):
         "routed_plan": routed_plan,
         "retrieval_results": retrieval_results,
         "execution_packages": execution_packages
+    }
+
+
+# ==========================================================
+# EXECUTION ENDPOINT
+# ==========================================================
+
+@app.post("/api/execution")
+def run_execution(request: ExecutionRequest):
+
+    executor = Executor()
+
+    results = executor.execute(
+        request.execution_packages
+    )
+
+    return {
+        "results": results
     }

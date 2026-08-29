@@ -6,6 +6,7 @@ from retrieval.planner import RetrievalPlanner
 from retrieval.source_selector import SourceSelector
 from retrieval.retrieval_manager import RetrievalManager
 from retrieval.context_builder import ContextBuilder
+from execution.executor import Executor
 
 
 # ==========================================================
@@ -126,6 +127,25 @@ else:
         print(
             json.dumps(
                 execution_packages,
+                indent=4
+            )
+        )
+
+
+        # ==================================================
+        # 5. EXECUTOR (execution + verification, with retry)
+        # ==================================================
+
+        executor = Executor()
+
+        execution_results = executor.execute(
+            execution_packages
+        )
+
+        print("\nExecution Results (verified):")
+        print(
+            json.dumps(
+                execution_results,
                 indent=4
             )
         )

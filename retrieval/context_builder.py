@@ -59,6 +59,11 @@ class ContextBuilder:
 
                     "priority": task["priority"],
 
+                    "depends_on": task.get(
+                        "depends_on",
+                        []
+                    ),
+
                     "knowledge_type": retrieved_task.get(
                         "knowledge_type"
                     ),
@@ -89,6 +94,11 @@ class ContextBuilder:
                     "type": task["type"],
 
                     "priority": task["priority"],
+
+                    "depends_on": task.get(
+                        "depends_on",
+                        []
+                    ),
 
                     "knowledge_type": None,
 
@@ -139,6 +149,7 @@ if __name__ == "__main__":
             "task": "Explain recursion.",
             "type": "concept",
             "priority": "high",
+            "depends_on": [],
             "retrieval": {
                 "required": True
             }
@@ -149,6 +160,7 @@ if __name__ == "__main__":
             "task": "Generate a Python recursion program.",
             "type": "code_generation",
             "priority": "high",
+            "depends_on": [1],
             "retrieval": {
                 "required": True
             }
@@ -159,6 +171,7 @@ if __name__ == "__main__":
             "task": "Explain the generated program.",
             "type": "explanation",
             "priority": "medium",
+            "depends_on": [2],
             "retrieval": {
                 "required": False
             }
@@ -169,6 +182,7 @@ if __name__ == "__main__":
             "task": "Test the generated program.",
             "type": "testing",
             "priority": "medium",
+            "depends_on": [2],
             "retrieval": {
                 "required": False
             }
@@ -179,6 +193,7 @@ if __name__ == "__main__":
             "task": "Explain quantum tunneling.",
             "type": "concept",
             "priority": "medium",
+            "depends_on": [],
             "retrieval": {
                 "required": True
             }

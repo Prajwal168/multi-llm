@@ -1,5 +1,11 @@
 import { useState } from "react";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+import rehypeHighlight from "rehype-highlight";
+import "highlight.js/styles/atom-one-dark.css";
 import "./App.css";
+
+
 
 function App() {
   const [query, setQuery] = useState("");
@@ -8,29 +14,28 @@ function App() {
   const [activeChatId, setActiveChatId] = useState(null);
 
   const [processing, setProcessing] = useState(false);
-  const [stage, setStage] = useState(null);
-  const [generatedTasks, setGeneratedTasks] = useState([]);
+  const [mediatorLoading, setMediatorLoading] = useState(false);
   const [awaitingApproval, setAwaitingApproval] = useState(false);
 
   const [rejected, setRejected] = useState(false);
   const [rejectedQuery, setRejectedQuery] = useState("");
 
-  const [expandedStage, setExpandedStage] = useState("mediator");
-  const [retrievalTasks, setRetrievalTasks] = useState([]);
-  const [routedTasks, setRoutedTasks] = useState([]);
-  const [retrievalResults, setRetrievalResults] = useState([]);
-  const [contextTasks, setContextTasks] = useState([]);
-  const [executionPackages, setExecutionPackages] = useState([]);
-  const [activeRetrievalOperation, setActiveRetrievalOperation] = useState("planner");
+  // Each entry is a self-contained processing panel for one query.
+  // Once a run is pushed here it stays put; a new query pushes a new run.
+  const [runs, setRuns] = useState([]);
 
+  const updateRun = (runId, updates) => {
+    setRuns((prevRuns) =>
+      prevRuns.map((run) =>
+        run.id === runId ? { ...run, ...updates } : run
+      )
+    );
+  };
 
   // =========================
   // SEND QUERY
   // =========================
 
-// =========================
-// SEND QUERY
-// =========================
 
 const handleSubmit = async () => {
   if (
@@ -44,10 +49,10 @@ const handleSubmit = async () => {
   const userQuery = query.trim();
 
   const userMessage = {
+    id: Date.now(),
     role: "user",
     content: userQuery,
   };
-
   const isNewConversation = !activeChatId;
   const chatId = isNewConversation ? Date.now() : activeChatId;
 
@@ -86,8 +91,11 @@ const handleSubmit = async () => {
   setRejected(false);
   setRejectedQuery("");
 
+
+
   // Start Mediator
   setProcessing(true);
+  setMediatorLoading(true);
   
 
   try {
@@ -135,8 +143,7 @@ const handleSubmit = async () => {
     if (typeof result === "string") {
 
   setProcessing(false);
-  setStage(null);
-  setExpandedStage(null);
+  setMediatorLoading(false);
 
   setMessages((currentMessages) => [
     ...currentMessages,
@@ -163,12 +170,24 @@ const handleSubmit = async () => {
     // REAL MEDIATOR TASKS
     // ==========================================
 
-   setGeneratedTasks(result);
+   const newRun = {
+      id: Date.now(),
+      messageId: userMessage.id,
+      stage: "mediator",
+      expandedStage: "mediator",
+      generatedTasks: result,
+      retrievalTasks: [],
+      routedTasks: [],
+      retrievalResults: [],
+      executionPackages: [],
+      results: [],
+      activeRetrievalOperation: "planner",
+    };
+
+    setRuns((prevRuns) => [...prevRuns, newRun]);
 
     setProcessing(false);
-
-    setStage("mediator");
-    setExpandedStage("mediator");
+    setMediatorLoading(false);
 
     setAwaitingApproval(true);
   } catch (error) {
@@ -179,7 +198,7 @@ const handleSubmit = async () => {
     );
 
     setProcessing(false);
-    setStage(null);
+    setMediatorLoading(false);
 
     setMessages((currentMessages) => [
       ...currentMessages,
@@ -196,16 +215,22 @@ const handleSubmit = async () => {
 // CONTINUE
 // =========================
 
-const handleContinue = async () => {
+const handleContinue = async (runId) => {
+
+  const run = runs.find((r) => r.id === runId);
+  if (!run) return;
 
   setAwaitingApproval(false);
   setProcessing(true);
   setRejected(false);
 
   // Start Retrieval & Context
-  setStage("retrieval");
-  setExpandedStage("retrieval");
-  setActiveRetrievalOperation("planner");
+  // Keep all operations collapsed while backend is working
+  updateRun(runId, {
+    stage: "retrieval",
+    expandedStage: "retrieval",
+    activeRetrievalOperation: null,
+  });
 
   try {
 
@@ -223,7 +248,7 @@ const handleContinue = async () => {
         },
 
         body: JSON.stringify({
-          tasks: generatedTasks,
+          tasks: run.generatedTasks,
         }),
       }
     );
@@ -247,71 +272,111 @@ const handleContinue = async () => {
     // ==========================================
 
     const data = await response.json();
-    console.log("REAL RETRIEVAL RESPONSE:", data);
+
+    console.log(
+      "REAL RETRIEVAL RESPONSE:",
+      data
+    );
 
 
     // ==========================================
     // STORE REAL RETRIEVAL DATA
     // ==========================================
 
-    setRetrievalTasks(
-      data.retrieval_plan
-    );
-    setRoutedTasks(
-      data.routed_plan
-    );
-
-    setRetrievalResults(
-      data.retrieval_results
-    );
-
-    setExecutionPackages(
-      data.execution_packages
-    );
-
+    updateRun(runId, {
+      retrievalTasks: data.retrieval_plan,
+      routedTasks: data.routed_plan,
+      retrievalResults: data.retrieval_results,
+      executionPackages: data.execution_packages,
+    });
 
     // ==========================================
-    // MOVE THROUGH THE UI STAGES
+    // RETRIEVAL COMPLETE — MOVE TO EXECUTION
     // ==========================================
 
-    setActiveRetrievalOperation("source");
-
-    setActiveRetrievalOperation("retrieval");
-
-    setActiveRetrievalOperation("context");
-
-    setActiveRetrievalOperation("packages");
-
+    updateRun(runId, {
+      stage: "execution",
+      expandedStage: "execution",
+    });
 
     // ==========================================
-    // RETRIEVAL COMPLETE
+    // CALL FASTAPI EXECUTION
     // ==========================================
 
-    setStage("execution");
+    const executionResponse = await fetch(
+      "http://127.0.0.1:8000/api/execution",
+      {
+        method: "POST",
 
-    setExpandedStage("execution");
+        headers: {
+          "Content-Type": "application/json",
+        },
 
-    setActiveRetrievalOperation(null);
+        body: JSON.stringify({
+          execution_packages: data.execution_packages,
+        }),
+      }
+    );
+
+    // ==========================================
+    // CHECK HTTP RESPONSE
+    // ==========================================
+
+    if (!executionResponse.ok) {
+
+      throw new Error(
+        `Execution request failed: ${executionResponse.status}`
+      );
+
+    }
+
+    // ==========================================
+    // READ BACKEND RESPONSE
+    // ==========================================
+
+    const executionData = await executionResponse.json();
+
+    console.log(
+      "REAL EXECUTION RESPONSE:",
+      executionData
+    );
+
+    // ==========================================
+    // STORE REAL EXECUTION RESULTS
+    // ==========================================
+
+    updateRun(runId, {
+      results: executionData.results,
+      stage: "final",
+      expandedStage: "final",
+    });
+
+    // ==========================================
+    // EXECUTION & VERIFICATION COMPLETE
+    // ==========================================
+
+    setProcessing(false);
+
 
   } catch (error) {
 
     console.error(
-      "Retrieval request failed:",
+      "Retrieval/Execution request failed:",
       error
     );
 
     setProcessing(false);
 
-    setStage(null);
-
-    setActiveRetrievalOperation(null);
+    setRuns((prevRuns) =>
+      prevRuns.filter((run) => run.id !== runId)
+    );
 
     setMessages((currentMessages) => [
       ...currentMessages,
       {
         role: "assistant",
         content:
-          "Unable to complete the retrieval process. Please check the backend.",
+          "Unable to complete the retrieval or execution process. Please check the backend.",
       },
     ]);
 
@@ -323,7 +388,7 @@ const handleContinue = async () => {
   // REJECT
   // =========================
 
-  const handleReject = () => {
+  const handleReject = (runId) => {
   const lastUserMessage =
     [...messages]
       .reverse()
@@ -346,10 +411,9 @@ const handleContinue = async () => {
   setAwaitingApproval(false);
   setProcessing(false);
 
-  setStage(null);
-  setGeneratedTasks([]);
-
-  setExpandedStage("mediator");
+  setRuns((prevRuns) =>
+    prevRuns.filter((run) => run.id !== runId)
+  );
 };
 
 
@@ -366,13 +430,10 @@ const handleContinue = async () => {
     setMessages([]);
     setActiveChatId(null);
 
-    setStage(null);
-    setGeneratedTasks([]);
+    setRuns([]);
 
     setAwaitingApproval(false);
     setProcessing(false);
-
-    setExpandedStage("mediator");
   };
 
 
@@ -387,16 +448,13 @@ const handleContinue = async () => {
 
     setMessages([]);
 
-    setStage(null);
-    setGeneratedTasks([]);
+    setRuns([]);
 
     setAwaitingApproval(false);
     setProcessing(false);
 
     setRejected(false);
     setRejectedQuery("");
-
-    setExpandedStage("mediator");
   };
 
 
@@ -410,8 +468,7 @@ const handleContinue = async () => {
     setAwaitingApproval(false);
     setProcessing(false);
     setRejected(false);
-    setStage("idle");
-    setExpandedStage(null);
+    setRuns([]);
   };
 
 
@@ -419,21 +476,33 @@ const handleContinue = async () => {
   // TOGGLE STAGE
   // =========================
 
-  const toggleStage = (stageName) => {
+  const toggleStage = (runId, stageName) => {
 
-    setExpandedStage((current) =>
-      current === stageName
-        ? null
-        : stageName
+    setRuns((prevRuns) =>
+      prevRuns.map((run) =>
+        run.id === runId
+          ? {
+              ...run,
+              expandedStage:
+                run.expandedStage === stageName ? null : stageName,
+            }
+          : run
+      )
     );
   };
 
-  const toggleRetrievalOperation = (operation) => {
+  const toggleRetrievalOperation = (runId, operation) => {
 
-    setActiveRetrievalOperation((current) =>
-      current === operation
-        ? null
-        : operation
+    setRuns((prevRuns) =>
+      prevRuns.map((run) =>
+        run.id === runId
+          ? {
+              ...run,
+              activeRetrievalOperation:
+                run.activeRetrievalOperation === operation ? null : operation,
+            }
+          : run
+      )
     );
   };
 
@@ -537,84 +606,39 @@ const handleContinue = async () => {
 
             <div className="messages">
 
-              {messages.map(
-                (message, index) => (
+              {messages.map((message, index) => (
 
-                  <div
-                    key={index}
-                    className={`message ${message.role}`}
-                  >
+  <div key={message.id || index}>
 
-                    <div className="message-label">
+    {/* =========================
+        CHAT MESSAGE
+        ========================= */}
 
-                      {message.role === "user"
-                        ? "You"
-                        : "Assistant"}
+    <div
+      className={`message ${message.role}`}
+    >
 
-                    </div>
+      <div className="message-label">
 
+        {message.role === "user"
+          ? "You"
+          : "Assistant"}
 
-                    <div className="message-content">
+      </div>
 
-                      {message.content}
+      <div className="message-content">
 
-                    </div>
+        {message.content}
 
-                  </div>
+      </div>
 
-                )
-              )}
+    </div>
 
-            </div>
-
-          )}
-
-
-          {/* =========================
-              REJECTION MESSAGE
-              ========================= */}
-
-          {rejected && (
-
-            <div className="rejection-panel">
-
-              <div className="rejection-title">
-                Task plan rejected
-              </div>
-
-
-              <p>
-                The generated task plan was
-                rejected. Your original query
-                is still available below.
-              </p>
-
-
-              <div className="rejection-query">
-
-                {rejectedQuery}
-
-              </div>
-
-
-              <div className="rejection-actions">
-                <p className="rejection-hint">
-                  Modify the query below and press Enter to try again.
-                </p>
-              </div>
-
-            </div>
-
-          )}
-
-
-          {/* =========================
-              PROCESSING PANEL
-              ========================= */}
-
-          {stage && (
-
-            <div className="processing-panel">
+    {message.role === "user" &&
+      runs
+        .filter((run) => run.messageId === message.id)
+        .map((run) => (
+            <div className="processing-panel" key={run.id}>
 
 
               <div className="processing-header">
@@ -636,7 +660,7 @@ const handleContinue = async () => {
                 <button
                   className="stage-header"
                   onClick={() =>
-                    toggleStage("mediator")
+                    toggleStage(run.id, "mediator")
                   }
                 >
 
@@ -644,7 +668,7 @@ const handleContinue = async () => {
 
                     <span className="stage-status">
 
-                      {stage === "mediator" && !awaitingApproval
+                      {run.stage === "mediator" && !awaitingApproval
                           ? "⟳"
                           : "✓"}
 
@@ -652,7 +676,7 @@ const handleContinue = async () => {
 
 
                     <span>
-                      {awaitingApproval
+                      {run.stage !== "mediator" || awaitingApproval
                         ? "Mediator completed"
                         : "Mediator"}
                     </span>
@@ -662,7 +686,7 @@ const handleContinue = async () => {
 
                   <span className="stage-arrow">
 
-                    {expandedStage === "mediator"
+                    {run.expandedStage === "mediator"
                       ? "▼"
                       : "▶"}
 
@@ -671,13 +695,13 @@ const handleContinue = async () => {
                 </button>
 
 
-                {expandedStage === "mediator" && (
+                {run.expandedStage === "mediator" && (
 
                   <div className="stage-body">
 
 
-                    {processing &&
-                      stage === "mediator" && (
+                    {mediatorLoading &&
+                      run.stage === "mediator" && (
 
                         <p className="processing-text">
 
@@ -688,7 +712,7 @@ const handleContinue = async () => {
                     )}
 
 
-                    {generatedTasks.length > 0 && (
+                    {run.generatedTasks.length > 0 && (
 
                       <div className="task-container">
 
@@ -699,14 +723,14 @@ const handleContinue = async () => {
                             </p>
 
                             <p className="task-count">
-                              {generatedTasks.length} tasks generated
+                              {run.generatedTasks.length} tasks generated
                             </p>
                           </div>
                         </div>
 
                         <ol className="generated-task-list">
 
-                          {generatedTasks.map(
+                          {run.generatedTasks.map(
                               (task) => (
 
                                 <li key={task.task_id}>
@@ -726,7 +750,7 @@ const handleContinue = async () => {
 
                         </ol>
 
-                        {awaitingApproval && (
+                        {run.stage === "mediator" && awaitingApproval && (
                           <div className="approval-section">
 
                             <p className="approval-message">
@@ -737,14 +761,14 @@ const handleContinue = async () => {
 
                               <button
                                 className="continue-button"
-                                onClick={handleContinue}
+                                onClick={() => handleContinue(run.id)}
                               >
                                 Continue →
                               </button>
 
                               <button
                                 className="reject-button"
-                                onClick={handleReject}
+                                onClick={() => handleReject(run.id)}
                               >
                                 Reject
                               </button>
@@ -775,7 +799,7 @@ const handleContinue = async () => {
                 <button
                   className="stage-header"
                   onClick={() =>
-                    toggleStage("retrieval")
+                    toggleStage(run.id, "retrieval")
                   }
                 >
 
@@ -783,10 +807,10 @@ const handleContinue = async () => {
 
                     <span className="stage-status">
 
-                      {stage === "retrieval"
+                      {run.stage === "retrieval"
                         ? "⟳"
-                        : stage === "execution" ||
-                          stage === "final"
+                        : run.stage === "execution" ||
+                          run.stage === "final"
                         ? "✓"
                         : "○"}
 
@@ -802,7 +826,7 @@ const handleContinue = async () => {
 
                   <span className="stage-arrow">
 
-                    {expandedStage === "retrieval"
+                    {run.expandedStage === "retrieval"
                       ? "▼"
                       : "▶"}
 
@@ -811,19 +835,19 @@ const handleContinue = async () => {
                 </button>
 
 
-                {expandedStage === "retrieval" && (
+                {run.expandedStage === "retrieval" && (
                   <div className="stage-body">
                     {/* Planner Operation */}
                     <div className="retrieval-operation">
                       <button
                         className="retrieval-operation-header"
                         onClick={() =>
-                          toggleRetrievalOperation("planner")
+                          toggleRetrievalOperation(run.id, "planner")
                         }
                       >
                         <div className="retrieval-operation-title">
                           <span className="retrieval-operation-status">
-                            {activeRetrievalOperation === "planner"
+                            {run.activeRetrievalOperation === "planner"
                               ? "⟳"
                               : "✓"}
                           </span>
@@ -832,21 +856,21 @@ const handleContinue = async () => {
                               Retrieval Planner
                             </span>
                             <span className="retrieval-operation-summary">
-                              {generatedTasks.length} tasks • {retrievalTasks.length} require retrieval
+                              {run.generatedTasks.length} tasks • {run.retrievalTasks.length} require retrieval
                             </span>
                           </div>
                         </div>
                         <span>
-                          {activeRetrievalOperation === "planner"
+                          {run.activeRetrievalOperation === "planner"
                             ? "▼"
                             : "▶"}
                         </span>
                       </button>
 
-                      {activeRetrievalOperation === "planner" && (
+                      {run.activeRetrievalOperation === "planner" && (
                         <div className="retrieval-operation-body">
                           <div className="retrieval-task-list">
-                            {retrievalTasks.map((task) => (
+                            {run.retrievalTasks.map((task) => (
                               <div
                                 className="retrieval-task"
                                 key={task.task_id}
@@ -880,14 +904,14 @@ const handleContinue = async () => {
                       <button
                         className="retrieval-operation-header"
                         onClick={() =>
-                          toggleRetrievalOperation("source")
+                          toggleRetrievalOperation(run.id, "source")
                         }
                       >
                         <div className="retrieval-operation-title">
                           <span className="retrieval-operation-status">
-                            {activeRetrievalOperation === "source"
+                            {run.activeRetrievalOperation === "source"
                               ? "⟳"
-                              : activeRetrievalOperation === "planner"
+                              : run.activeRetrievalOperation === "planner"
                               ? "○"
                               : "✓"}
                           </span>
@@ -896,21 +920,21 @@ const handleContinue = async () => {
                               Source Selection
                             </span>
                             <span className="source-selection-summary">
-                              {routedTasks.length} sources selected
+                              {run.routedTasks.length} sources selected
                             </span>
                           </div>
                         </div>
                         <span>
-                          {activeRetrievalOperation === "source"
+                          {run.activeRetrievalOperation === "source"
                             ? "▼"
                             : "▶"}
                         </span>
                       </button>
 
-                      {activeRetrievalOperation === "source" && (
+                      {run.activeRetrievalOperation === "source" && (
                         <div className="retrieval-operation-body">
                           <div className="source-task-list">
-                            {routedTasks.map((task) => (
+                            {run.routedTasks.map((task) => (
                               <div
                                 className="source-task"
                                 key={task.task_id}
@@ -948,15 +972,15 @@ const handleContinue = async () => {
                       <button
                         className="retrieval-operation-header"
                         onClick={() =>
-                          toggleRetrievalOperation("retrieval")
+                          toggleRetrievalOperation(run.id, "retrieval")
                         }
                       >
                         <div className="retrieval-operation-title">
                           <span className="retrieval-operation-status">
-                            {activeRetrievalOperation === "retrieval"
+                            {run.activeRetrievalOperation === "retrieval"
                               ? "⟳"
-                              : activeRetrievalOperation === "planner" ||
-                                activeRetrievalOperation === "source"
+                              : run.activeRetrievalOperation === "planner" ||
+                                run.activeRetrievalOperation === "source"
                               ? "○"
                               : "✓"}
                           </span>
@@ -965,22 +989,22 @@ const handleContinue = async () => {
                               Retrieval
                             </span>
                             <span className="retrieval-operation-summary">
-                              {retrievalResults.length} tasks retrieved
+                              {run.retrievalResults.length} tasks retrieved
                             </span>
                           </div>
                         </div>
                         <span>
-                          {activeRetrievalOperation === "retrieval"
+                          {run.activeRetrievalOperation === "retrieval"
                             ? "▼"
                             : "▶"}
                         </span>
                       </button>
 
-                      {activeRetrievalOperation === "retrieval" && (
+                      {run.activeRetrievalOperation === "retrieval" && (
                         <div className="retrieval-operation-body">
                           <div className="retrieval-results-list">
-                            {retrievalResults.map((result) => {
-                                      const routedTask = routedTasks.find(
+                            {run.retrievalResults.map((result) => {
+                                      const routedTask = run.routedTasks.find(
                                         (task) => task.task_id === result.task_id
                                       );
 
@@ -1075,17 +1099,17 @@ const handleContinue = async () => {
                         <button
                           className="retrieval-operation-header"
                           onClick={() =>
-                            toggleRetrievalOperation("context")
+                            toggleRetrievalOperation(run.id, "context")
                           }
                         >
                           <div className="retrieval-operation-title">
 
                             <span className="retrieval-operation-status">
-                              {activeRetrievalOperation === "context"
+                              {run.activeRetrievalOperation === "context"
                                 ? "⟳"
-                                : activeRetrievalOperation === "planner" ||
-                                  activeRetrievalOperation === "source" ||
-                                  activeRetrievalOperation === "retrieval"
+                                : run.activeRetrievalOperation === "planner" ||
+                                  run.activeRetrievalOperation === "source" ||
+                                  run.activeRetrievalOperation === "retrieval"
                                 ? "○"
                                 : "✓"}
                             </span>
@@ -1097,28 +1121,28 @@ const handleContinue = async () => {
                               </span>
 
                               <span className="context-operation-summary">
-                                {executionPackages.length} execution packages prepared
+                                {run.executionPackages.length} execution packages prepared
                               </span>
 
                             </div>
                           </div>
 
                           <span>
-                            {activeRetrievalOperation === "context"
+                            {run.activeRetrievalOperation === "context"
                               ? "▼"
                               : "▶"}
                           </span>
                         </button>
 
 
-                        {activeRetrievalOperation === "context" && (
+                        {run.activeRetrievalOperation === "context" && (
                           <div className="retrieval-operation-body">
 
                             <div className="context-task-list">
 
-                              {executionPackages.map((pkg) => {
+                              {run.executionPackages.map((pkg) => {
 
-                                const originalTask = generatedTasks.find(
+                                const originalTask = run.generatedTasks.find(
                                   (task) => task.task_id === pkg.task_id
                                 );
 
@@ -1185,7 +1209,7 @@ const handleContinue = async () => {
                 <button
                   className="stage-header"
                   onClick={() =>
-                    toggleStage("execution")
+                    toggleStage(run.id, "execution")
                   }
                 >
 
@@ -1193,9 +1217,9 @@ const handleContinue = async () => {
 
                     <span className="stage-status">
 
-                      {stage === "execution"
+                      {run.stage === "execution"
                         ? "⟳"
-                        : stage === "final"
+                        : run.stage === "final"
                         ? "✓"
                         : "○"}
 
@@ -1211,7 +1235,7 @@ const handleContinue = async () => {
 
                   <span className="stage-arrow">
 
-                    {expandedStage === "execution"
+                    {run.expandedStage === "execution"
                       ? "▼"
                       : "▶"}
 
@@ -1220,19 +1244,73 @@ const handleContinue = async () => {
                 </button>
 
 
-                {expandedStage === "execution" && (
+                {run.expandedStage === "execution" && (
 
                   <div className="stage-body">
 
-                    <p className="processing-text">
+                    {run.stage !== "execution" && run.stage !== "final" && (
 
-                      {stage === "execution"
-                        ? "Executing tasks and verifying results..."
-                        : stage === "final"
-                        ? "Execution and verification completed."
-                        : "Waiting for retrieval."}
+                      <p className="processing-text">
+                        Waiting for retrieval.
+                      </p>
 
-                    </p>
+                    )}
+
+                    {(run.stage === "execution" || run.stage === "final") && (
+
+                      <div className="execution-task-list">
+
+                        {run.generatedTasks.map((task) => {
+
+                          const result = run.results.find(
+                            (r) => r.task_id === task.task_id
+                          );
+
+                          return (
+                            <div
+                              className="execution-task"
+                              key={task.task_id}
+                            >
+
+                              <div className="execution-task-info">
+
+                                <span className="execution-task-id">
+                                  Task {task.task_id}
+                                </span>
+
+                                <span className="execution-task-text">
+                                  {task.task}
+                                </span>
+
+                                {result && (
+                                  <span className="execution-task-meta">
+                                    {result.status === "passed"
+                                      ? `Verified (${result.attempts} attempt${
+                                          result.attempts === 1 ? "" : "s"
+                                        })`
+                                      : result.reason}
+                                  </span>
+                                )}
+
+                              </div>
+
+                              <span className="execution-task-status">
+
+                                {!result
+                                  ? "⟳"
+                                  : result.status === "passed"
+                                  ? "✓"
+                                  : "✗"}
+
+                              </span>
+
+                            </div>
+                          );
+                        })}
+
+                      </div>
+
+                    )}
 
                   </div>
 
@@ -1251,7 +1329,7 @@ const handleContinue = async () => {
                 <button
                   className="stage-header"
                   onClick={() =>
-                    toggleStage("final")
+                    toggleStage(run.id, "final")
                   }
                 >
 
@@ -1259,7 +1337,7 @@ const handleContinue = async () => {
 
                     <span className="stage-status">
 
-                      {stage === "final"
+                      {run.stage === "final"
                         ? "✓"
                         : "○"}
 
@@ -1275,7 +1353,7 @@ const handleContinue = async () => {
 
                   <span className="stage-arrow">
 
-                    {expandedStage === "final"
+                    {run.expandedStage === "final"
                       ? "▼"
                       : "▶"}
 
@@ -1284,17 +1362,55 @@ const handleContinue = async () => {
                 </button>
 
 
-                {expandedStage === "final" && (
+                {run.expandedStage === "final" && (
 
                   <div className="stage-body">
 
-                    <p className="processing-text">
+                    {run.stage !== "final" && (
 
-                      {stage === "final"
-                        ? "Processing complete."
-                        : "Waiting for execution."}
+                      <p className="processing-text">
+                        Waiting for execution.
+                      </p>
 
-                    </p>
+                    )}
+
+                    {run.stage === "final" && (
+
+                      <div className="final-response-list">
+
+                        {run.results.map((result) => (
+
+                          <div
+                            className="final-response-item"
+                            key={result.task_id}
+                          >
+
+                            <p className="final-response-task-label">
+                              Task {result.task_id}
+                            </p>
+
+                            <div className="final-response-output">
+                              <ReactMarkdown
+                                remarkPlugins={[remarkGfm]}
+                                rehypePlugins={[rehypeHighlight]}
+                              >
+                                {result.output}
+                              </ReactMarkdown>
+                            </div>
+
+                            {result.status === "failed" && (
+                              <p className="final-response-status">
+                                Verification failed: {result.reason}
+                              </p>
+                            )}
+
+                          </div>
+
+                        ))}
+
+                      </div>
+
+                    )}
 
                   </div>
 
@@ -1304,8 +1420,72 @@ const handleContinue = async () => {
 
 
             </div>
+        ))}
+
+
+  </div>
+
+))}
+
+              {mediatorLoading && (
+                <div className="processing-indicator">
+                  <div className="processing-spinner">
+                    ⟳
+                  </div>
+                  <div className="processing-text">
+                    <span className="processing-title">
+                      Processing your request...
+                    </span>
+                    <span className="processing-subtitle">
+                      Mediator is analyzing your query
+                    </span>
+                  </div>
+                </div>
+              )}
+
+            </div>
 
           )}
+
+
+          {/* =========================
+              REJECTION MESSAGE
+              ========================= */}
+
+          {rejected && (
+
+            <div className="rejection-panel">
+
+              <div className="rejection-title">
+                Task plan rejected
+              </div>
+
+
+              <p>
+                The generated task plan was
+                rejected. Your original query
+                is still available below.
+              </p>
+
+
+              <div className="rejection-query">
+
+                {rejectedQuery}
+
+              </div>
+
+
+              <div className="rejection-actions">
+                <p className="rejection-hint">
+                  Modify the query below and press Enter to try again.
+                </p>
+              </div>
+
+            </div>
+
+          )}
+
+
 
         </section>
 
