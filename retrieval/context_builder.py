@@ -20,7 +20,7 @@ class ContextBuilder:
     - Pass retrieval context through without modifying its structure.
     """
 
-    def build(self, original_tasks, retrieval_results):
+    def build(self, original_tasks, retrieval_results, raw_query=None):
 
         # --------------------------------------------------
         # Create lookup table for retrieved tasks
@@ -75,7 +75,9 @@ class ContextBuilder:
                     "retrieved_context": retrieved_task.get(
                         "retrieved_context",
                         []
-                    )
+                    ),
+
+                    "raw_query": raw_query
 
                 }
 
@@ -104,7 +106,9 @@ class ContextBuilder:
 
                     "query": None,
 
-                    "retrieved_context": []
+                    "retrieved_context": [],
+
+                    "raw_query": raw_query
 
                 }
 

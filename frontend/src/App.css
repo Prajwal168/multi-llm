@@ -1049,9 +1049,10 @@
 }
 
 .execution-task-status {
-  min-width: 20px;
+  min-width: 28px;
   text-align: center;
   font-size: 13px;
+  letter-spacing: -1px;
 }
 
 /* =========================

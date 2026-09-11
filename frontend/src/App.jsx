@@ -5,6 +5,33 @@ import rehypeHighlight from "rehype-highlight";
 import "highlight.js/styles/atom-one-dark.css";
 import "./App.css";
 
+// LLM output sometimes indents a "sample output" snippet with spaces/tabs
+// but no ``` fence. CommonMark treats that as an indented code block, and
+// since it has no language it never gets syntax-highlighted — leaving
+// dark-on-dark, unreadable text. Strip stray indentation on any line that
+// isn't inside a real ``` fenced block so it just renders as plain text.
+function sanitizeMarkdown(text) {
+  if (!text) return text;
+
+  let inFence = false;
+
+  return text
+    .split("\n")
+    .map((line) => {
+      if (line.trimStart().startsWith("```")) {
+        inFence = !inFence;
+        return line;
+      }
+
+      if (!inFence && /^( {4,}|\t)/.test(line)) {
+        return line.replace(/^[ \t]+/, "");
+      }
+
+      return line;
+    })
+    .join("\n");
+}
+
 
 
 function App() {
@@ -175,12 +202,14 @@ const handleSubmit = async () => {
       messageId: userMessage.id,
       stage: "mediator",
       expandedStage: "mediator",
+      originalQuery: userQuery,
       generatedTasks: result,
       retrievalTasks: [],
       routedTasks: [],
       retrievalResults: [],
       executionPackages: [],
       results: [],
+      taskProgress: {},
       activeRetrievalOperation: "planner",
     };
 
@@ -249,6 +278,7 @@ const handleContinue = async (runId) => {
 
         body: JSON.stringify({
           tasks: run.generatedTasks,
+          raw_query: run.originalQuery,
         }),
       }
     );
@@ -322,7 +352,7 @@ const handleContinue = async (runId) => {
     // CHECK HTTP RESPONSE
     // ==========================================
 
-    if (!executionResponse.ok) {
+    if (!executionResponse.ok || !executionResponse.body) {
 
       throw new Error(
         `Execution request failed: ${executionResponse.status}`
@@ -331,22 +361,69 @@ const handleContinue = async (runId) => {
     }
 
     // ==========================================
-    // READ BACKEND RESPONSE
+    // READ STREAMED PROGRESS
+    // (NDJSON: one JSON event per line)
     // ==========================================
+    //
+    // The backend streams events as each task executes and
+    // verifies, instead of blocking until every task is done:
+    //   {"type": "executed", "task_id": N}
+    //   {"type": "verified", "task_id": N, "status", ...}
+    //   {"type": "done", "results": [...]}   <- always last
+    //
+    // taskProgress drives the live tick marks in the Execution &
+    // Verification panel; results (from "done") drives Final Response.
 
-    const executionData = await executionResponse.json();
+    const reader = executionResponse.body.getReader();
+    const decoder = new TextDecoder();
 
-    console.log(
-      "REAL EXECUTION RESPONSE:",
-      executionData
-    );
+    let buffer = "";
+    let finalResults = [];
+    const taskProgress = {};
+
+    while (true) {
+
+      const { value, done } = await reader.read();
+      if (done) break;
+
+      buffer += decoder.decode(value, { stream: true });
+
+      const lines = buffer.split("\n");
+      // Last entry may be a partial line split across chunks —
+      // hold it back until more data arrives.
+      buffer = lines.pop();
+
+      for (const line of lines) {
+
+        if (!line.trim()) continue;
+
+        const event = JSON.parse(line);
+
+        if (event.type === "executed") {
+
+          taskProgress[event.task_id] = "executed";
+          updateRun(runId, { taskProgress: { ...taskProgress } });
+
+        } else if (event.type === "verified") {
+
+          taskProgress[event.task_id] = event.status;
+          updateRun(runId, { taskProgress: { ...taskProgress } });
+
+        } else if (event.type === "done") {
+
+          finalResults = event.results;
+
+        }
+      }
+    }
 
     // ==========================================
     // STORE REAL EXECUTION RESULTS
     // ==========================================
 
     updateRun(runId, {
-      results: executionData.results,
+      results: finalResults,
+      taskProgress,
       stage: "final",
       expandedStage: "final",
     });
@@ -1262,9 +1339,61 @@ const handleContinue = async (runId) => {
 
                         {run.generatedTasks.map((task) => {
 
+                          const progress =
+                            run.taskProgress?.[task.task_id];
+
                           const result = run.results.find(
                             (r) => r.task_id === task.task_id
                           );
+
+                          const isPassed =
+                            progress === "passed" ||
+                            result?.status === "passed";
+
+                          const isFailed =
+                            progress === "failed" ||
+                            progress === "unverified_failed" ||
+                            progress === "error" ||
+                            result?.status === "failed" ||
+                            result?.status === "unverified_failed" ||
+                            result?.status === "error";
+
+                          const isExecuted = progress === "executed";
+
+                          let statusDisplay = "○";
+                          let metaText = null;
+
+                          if (isFailed) {
+
+                            statusDisplay = "✗";
+                            metaText =
+                              result?.reason ?? "Verification failed";
+
+                          } else if (isPassed) {
+
+                            statusDisplay = "✓✓";
+                            metaText = result
+                              ? `Verified (${result.attempts} attempt${
+                                  result.attempts === 1 ? "" : "s"
+                                })`
+                              : "Verified";
+
+                          } else if (isExecuted) {
+
+                            // Single tick: output generated, now
+                            // waiting on the verifier.
+                            statusDisplay = "✓";
+                            metaText = "Executed — verifying...";
+
+                          } else if (run.stage === "execution") {
+
+                            // Independent tasks in the same
+                            // dependency level run concurrently, so
+                            // several of these can show at once.
+                            statusDisplay = "⟳";
+                            metaText = "Running...";
+
+                          }
 
                           return (
                             <div
@@ -1282,26 +1411,16 @@ const handleContinue = async (runId) => {
                                   {task.task}
                                 </span>
 
-                                {result && (
+                                {metaText && (
                                   <span className="execution-task-meta">
-                                    {result.status === "passed"
-                                      ? `Verified (${result.attempts} attempt${
-                                          result.attempts === 1 ? "" : "s"
-                                        })`
-                                      : result.reason}
+                                    {metaText}
                                   </span>
                                 )}
 
                               </div>
 
                               <span className="execution-task-status">
-
-                                {!result
-                                  ? "⟳"
-                                  : result.status === "passed"
-                                  ? "✓"
-                                  : "✗"}
-
+                                {statusDisplay}
                               </span>
 
                             </div>
@@ -1394,11 +1513,13 @@ const handleContinue = async (runId) => {
                                 remarkPlugins={[remarkGfm]}
                                 rehypePlugins={[rehypeHighlight]}
                               >
-                                {result.output}
+                                {sanitizeMarkdown(result.output)}
                               </ReactMarkdown>
                             </div>
 
-                            {result.status === "failed" && (
+                            {(result.status === "failed" ||
+                              result.status === "unverified_failed" ||
+                              result.status === "error") && (
                               <p className="final-response-status">
                                 Verification failed: {result.reason}
                               </p>

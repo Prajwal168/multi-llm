@@ -1,0 +1,52 @@
+[
+  {
+    "query": "Explain what recursion is and give a simple Python example.",
+    "success": true,
+    "mediator_time": 31.918803700000012,
+    "retrieval_time": 27.67836939999995,
+    "execution_time": 181.0949349,
+    "total_time": 240.69370719999995,
+    "tasks": 3,
+    "error": null
+  },
+  {
+    "query": "Debug this Python code: x = [1, 2, 3]; print(x[3]) and explain the error.",
+    "success": true,
+    "mediator_time": 7.819456200000104,
+    "retrieval_time": 31.882008499999984,
+    "execution_time": 77.64457159999995,
+    "total_time": 117.347129,
+    "tasks": 1,
+    "error": null
+  },
+  {
+    "query": "Compare lists and tuples in Python and explain when to use each.",
+    "success": true,
+    "mediator_time": 7.798584900000151,
+    "retrieval_time": 24.151153000000022,
+    "execution_time": 167.5242050999998,
+    "total_time": 199.4754820999999,
+    "tasks": 1,
+    "error": null
+  },
+  {
+    "query": "Write a Python function that checks whether a string is a palindrome.",
+    "success": true,
+    "mediator_time": 7.616042799999832,
+    "retrieval_time": 24.35809019999988,
+    "execution_time": 55.27723859999992,
+    "total_time": 87.25356020000004,
+    "tasks": 1,
+    "error": null
+  },
+  {
+    "query": "Explain the time complexity of binary search and why it is O(log n).",
+    "success": true,
+    "mediator_time": 7.773193600000013,
+    "retrieval_time": 19.354993800000102,
+    "execution_time": 98.96166219999986,
+    "total_time": 126.09151309999993,
+    "tasks": 1,
+    "error": null
+  }
+]

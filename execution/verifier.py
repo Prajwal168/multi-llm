@@ -1,5 +1,6 @@
 import re
 import json
+import time
 
 from ollama import Client
 
@@ -8,7 +9,7 @@ class Verifier:
 
     def __init__(
         self,
-        host="http://10.241.250.48:11434",
+        host="http://10.35.206.48:11434",
         model="qwen3:8b"
     ):
         self.client = Client(host=host)
@@ -19,19 +20,23 @@ class Verifier:
         task,
         output,
         retrieved_context=None,
-        dependency_outputs=None
+        dependency_outputs=None,
+        raw_query=None
     ):
 
         prompt = self._build_prompt(
             task=task,
             output=output,
             retrieved_context=retrieved_context,
-            dependency_outputs=dependency_outputs
+            dependency_outputs=dependency_outputs,
+            raw_query=raw_query
         )
 
+        task_id = task.get("task_id", "?")
+
         try:
-            response = self.client.chat(
-                model=self.model,
+            content = self._stream_chat(
+                task_id=task_id,
                 messages=[
                     {
                         "role": "system",
@@ -45,6 +50,20 @@ Consider:
 1. The task itself
 2. Retrieved context, if provided
 3. Outputs of dependency tasks, if provided
+4. The user's original submission, if provided (e.g. the actual
+   code/document/content the task refers to)
+5. Whether every factual or technical claim in the output is
+   actually correct — not just whether the output has the right
+   shape or covers the right topics
+
+Coverage is not correctness. An output can address every part of
+the task (e.g. "explain the error" + "give corrected code") while
+being factually wrong about what the code does, why it fails, or
+what fixes it. That is a FAIL. Independently check claims like
+"this raises an IndexError", "this has O(n) complexity", "this
+line causes X" against the actual code or content provided — do
+not simply trust the output's own reasoning as evidence it is
+correct.
 
 Do not generate a replacement answer.
 
@@ -61,29 +80,92 @@ Return ONLY valid JSON:
                         "content": prompt
                     }
                 ],
+                # Verifier is a pass/fail judgment call, not a
+                # reasoning task — thinking mode was burning tokens
+                # on an invisible <think> block before ever reaching
+                # the {"status": ...} JSON, same issue as the
+                # mediator had.
+                think=True,
                 options={
                     # Deterministic judging: we want consistent
                     # pass/fail verdicts, not creative variation.
-                    "temperature": 0
+                    "temperature": 0,
+                    "num_predict": 800,
                 }
             )
 
         except Exception as exc:
 
             # Never let a transport/model error crash the pipeline.
-            # A verifier that can't reach the model can't vouch for
-            # the output, so we fail safe.
+            # This is deliberately NOT "failed" — a failed verdict
+            # means the verifier looked at the output and rejected
+            # it, which the executor treats as content feedback to
+            # retry against. A dropped connection or timeout is a
+            # different kind of problem: the output was never judged
+            # at all, so feeding this exception text back into the
+            # executor's next prompt as "reviewer feedback" just
+            # confuses the model about a network issue it can't fix.
             return {
-                "status": "failed",
+                "status": "error",
                 "reason": (
                     "Verifier call raised an exception: "
                     f"{exc}"
                 )
             }
 
-        return self._parse_response(
-            response["message"]["content"]
-        )
+        return self._parse_response(content)
+
+    # ==========================================================
+    # STREAMING CHAT HELPER
+    # ==========================================================
+
+    def _stream_chat(self, task_id, messages, think, options):
+        """
+        Runs an Ollama chat call with stream=True instead of blocking
+        until the full response is generated. Content is identical
+        either way — this doesn't make generation faster — but it
+        lets us print real token/sec numbers per call and see live
+        whether a call is stalling out, instead of only finding out
+        after the fact.
+        """
+
+        start = time.monotonic()
+        chunks = []
+        eval_count = None
+        eval_duration_ns = None
+
+        for chunk in self.client.chat(
+            model=self.model,
+            messages=messages,
+            think=think,
+            options=options,
+            stream=True,
+        ):
+            piece = chunk.get("message", {}).get("content", "")
+
+            if piece:
+                chunks.append(piece)
+
+            if chunk.get("done"):
+                eval_count = chunk.get("eval_count")
+                eval_duration_ns = chunk.get("eval_duration")
+
+        elapsed = time.monotonic() - start
+        content = "".join(chunks)
+
+        if eval_count and eval_duration_ns:
+            tokens_per_sec = eval_count / (eval_duration_ns / 1e9)
+            print(
+                f"\n[Verifier: Task {task_id}] generated {eval_count} "
+                f"tokens in {elapsed:.1f}s ({tokens_per_sec:.1f} tok/s)"
+            )
+        else:
+            print(
+                f"\n[Verifier: Task {task_id}] streamed response in "
+                f"{elapsed:.1f}s (token count unavailable)"
+            )
+
+        return content
 
     # ==========================================================
     # PROMPT BUILDER
@@ -94,7 +176,8 @@ Return ONLY valid JSON:
         task,
         output,
         retrieved_context,
-        dependency_outputs
+        dependency_outputs,
+        raw_query=None
     ):
 
         task_description = task.get("task")
@@ -111,11 +194,26 @@ Generated output:
 {output}
 """
 
+        if raw_query:
+
+            prompt += """
+
+User's original submission (verbatim — the actual code/document/
+content the task refers to; use this as the ground truth when
+checking whether claims made in the generated output are correct):
+"""
+            prompt += f"\n{raw_query}\n"
+
         if retrieved_context:
 
             prompt += """
 
-Retrieved context:
+Reference material retrieved for this task (background/
+structure/method only — this is NOT the required subject.
+If the retrieved material happens to be a worked example on
+a different topic than the Task above, and the generated
+output copied that example's topic instead of addressing the
+Task's actual subject, this should FAIL verification):
 """
 
             for index, context in enumerate(
@@ -148,7 +246,8 @@ Dependency task outputs:
 
 Determine whether the generated output is consistent
 with and satisfies the task above, given the context
-and dependency outputs (if any). Return ONLY the JSON
+and dependency outputs (if any), AND whether its factual/
+technical claims are actually correct. Return ONLY the JSON
 object described in your instructions.
 """
 
@@ -221,47 +320,3 @@ object described in your instructions.
 if __name__ == "__main__":
 
     verifier = Verifier()
-
-    # ------------------------------------------------------
-    # Task 5
-    # ------------------------------------------------------
-
-    task = {
-        "task_id": 5,
-        "task": "Analyze the time and space complexity of the recursive solution.",
-        "type": "analysis"
-    }
-
-    # Actual code generated by Task 2
-    dependency_outputs = {
-        2: """
-def mysum(L):
-    if not L:
-        return 0
-    else:
-        return L[0] + mysum(L[1:])
-
-numbers = [1, 2, 3, 4, 5]
-result = mysum(numbers)
-print(f"Sum of {numbers}: {result}")
-"""
-    }
-
-    # Output generated by Task 5
-    output = """
-The recursive solution has O(100) time complexity
-and O(1) space complexity.
-"""
-
-    result = verifier.verify(
-        task=task,
-        output=output,
-        retrieved_context=None,
-        dependency_outputs=dependency_outputs
-    )
-
-    print("\n")
-    print("=" * 60)
-    print("VERIFICATION RESULT")
-    print("=" * 60)
-    print(json.dumps(result, indent=2))

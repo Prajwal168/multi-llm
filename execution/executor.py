@@ -1,3 +1,7 @@
+import queue
+import time
+from concurrent.futures import ThreadPoolExecutor
+
 from ollama import Client
 
 from .verifier import Verifier
@@ -7,22 +11,48 @@ class Executor:
 
     def __init__(
         self,
-        host="http://10.241.250.48:11434",
-        model="qwen3:8b",
+        host="http://10.35.206.244:11434",
+        model="qwen3.8:27b",
         verifier=None,
-        max_retries=1
+        verifier_host=None,
+        max_retries=1,
+        max_workers=4
     ):
         self.client = Client(host=host)
         self.model = model
 
         # Reuse a Verifier instance if one is passed in (e.g. to
-        # share a connection or point it at a different model),
-        # otherwise spin up a default one against the same host.
-        self.verifier = verifier or Verifier(host=host)
+        # share a connection or point it at a different model).
+        # Otherwise build a fresh one. Important: do NOT default
+        # verifier_host to the executor's own `host` here — that
+        # was the bug. If the caller doesn't explicitly give us a
+        # verifier_host, let Verifier fall back to its own default
+        # host, since the executor and verifier are meant to live
+        # on separate machines.
+        self.verifier = verifier or Verifier(
+            **({"host": verifier_host} if verifier_host else {})
+        )
+
+        # Keep a plain string of whichever host the verifier actually
+        # ended up on, purely for the startup log below. We track this
+        # ourselves rather than introspecting self.verifier.client
+        # internals, since those are private to the ollama library and
+        # not guaranteed stable across versions.
+        self._verifier_host_display = (
+            verifier_host
+            if verifier_host
+            else ("(Verifier instance passed in)" if verifier else "default (Verifier's own)")
+        )
 
         # How many times to retry a task in the executor after a
         # failed verification, before giving up and moving on.
         self.max_retries = max_retries
+
+        # Cap on how many tasks run concurrently within a single
+        # dependency "level" (see _topological_levels). Independent
+        # tasks are dispatched together; this just guards against an
+        # unusually wide task graph swamping the Ollama host.
+        self.max_workers = max_workers
 
         # Internal lookup of task_id -> output string, used only to
         # feed dependency content into later prompts. This always
@@ -35,6 +65,19 @@ class Executor:
         # execution_packages so callers don't have to cross-reference
         # two separate dicts to see a task's output/status/reason.
         self.results = []
+
+        # Sanity-check log: print exactly which host each role is
+        # pointed at on startup. This is here specifically because
+        # the executor's Verifier construction previously (silently)
+        # defaulted to the executor's own host instead of the
+        # verifier's, so both roles were hitting the same machine
+        # without any visible signal that anything was wrong.
+        print(
+            "\n[Executor init] "
+            f"executor -> {host} (model={model}) | "
+            f"verifier -> {self._verifier_host_display} "
+            f"(model={self.verifier.model})"
+        )
 
     def execute(self, execution_packages):
 
@@ -100,13 +143,197 @@ class Executor:
         return self.results
 
     # ==========================================================
+    # STREAMING EXECUTION (dependency-parallel + live progress)
+    # ==========================================================
+    #
+    # Same inputs/outputs as execute(), but:
+    #   - tasks with no unmet dependencies on each other run
+    #     concurrently instead of strictly one-at-a-time
+    #   - yields a progress event the moment each thing happens,
+    #     instead of blocking until every task is done
+    #
+    # Event shapes yielded:
+    #   {"type": "executed", "task_id": N}
+    #   {"type": "verified", "task_id": N, "task", "type",
+    #    "depends_on", "output", "status", "reason", "attempts"}
+    #   {"type": "done", "results": [...]}   <- always last
+
+    def execute_stream(self, execution_packages):
+
+        self.results = []
+        self._outputs = {}
+
+        packages_by_id = {
+            package["task_id"]: package
+            for package in execution_packages
+        }
+
+        levels = self._topological_levels(execution_packages)
+
+        for level in levels:
+
+            events = queue.Queue()
+
+            with ThreadPoolExecutor(
+                max_workers=min(self.max_workers, len(level))
+            ) as pool:
+
+                for task_id in level:
+                    pool.submit(
+                        self._run_task_stream,
+                        packages_by_id[task_id],
+                        events
+                    )
+
+                # Drain events as they arrive from whichever task
+                # finishes first, until every task in this level has
+                # reported completion. The `with` block above won't
+                # return until all submitted work is done, but we
+                # don't want to wait for that silently — we want to
+                # surface each event the moment it lands.
+                finished = 0
+
+                while finished < len(level):
+
+                    event = events.get()
+
+                    if event["type"] == "task_done":
+                        finished += 1
+                        continue
+
+                    if event["type"] == "verified":
+
+                        self._outputs[event["task_id"]] = (
+                            event["output"]
+                        )
+
+                        self.results.append({
+                            "task_id": event["task_id"],
+                            "task": event["task"],
+                            "type": event["task_type"],
+                            "depends_on": event["depends_on"],
+                            "output": event["output"],
+                            "status": event["status"],
+                            "reason": event["reason"],
+                            "attempts": event["attempts"],
+                        })
+
+                    yield event
+
+        self.results.sort(key=lambda result: result["task_id"])
+
+        yield {
+            "type": "done",
+            "results": self.results
+        }
+
+    def _run_task_stream(self, package, events):
+
+        task_id = package["task_id"]
+
+        try:
+
+            dependencies = package.get("depends_on", [])
+
+            previous_outputs = {
+                dependency_id: self._outputs[dependency_id]
+                for dependency_id in dependencies
+            }
+
+            output, verification, attempts = (
+                self._execute_with_verification(
+                    package,
+                    previous_outputs,
+                    on_event=events.put
+                )
+            )
+
+            events.put({
+                "type": "verified",
+                "task_id": task_id,
+                "task": package["task"],
+                "task_type": package["type"],
+                "depends_on": dependencies,
+                "output": output,
+                "status": verification["status"],
+                "reason": verification["reason"],
+                "attempts": attempts,
+            })
+
+        except Exception as exc:
+
+            # A thread dying silently would leave the level's event
+            # loop waiting forever for a "task_done" that never comes.
+            # Fail this task clearly instead of hanging the pipeline.
+            events.put({
+                "type": "verified",
+                "task_id": task_id,
+                "task": package.get("task", ""),
+                "task_type": package.get("type", ""),
+                "depends_on": package.get("depends_on", []),
+                "output": f"EXECUTION ERROR: {exc}",
+                "status": "failed",
+                "reason": f"Unhandled exception during execution: {exc}",
+                "attempts": 0,
+            })
+
+        finally:
+            events.put({
+                "type": "task_done",
+                "task_id": task_id
+            })
+
+    def _topological_levels(self, execution_packages):
+        """
+        Groups tasks into ordered "levels" based on depends_on: every
+        task in a level has all of its dependencies satisfied by
+        earlier levels, so tasks within the same level are mutually
+        independent and safe to run concurrently.
+        """
+
+        remaining = {
+            package["task_id"]: set(package.get("depends_on", []))
+            for package in execution_packages
+        }
+
+        # Preserve original task order as a tie-breaker within a level.
+        order = [package["task_id"] for package in execution_packages]
+
+        levels = []
+
+        while remaining:
+
+            ready = [
+                task_id
+                for task_id in order
+                if task_id in remaining and not remaining[task_id]
+            ]
+
+            if not ready:
+                raise ValueError(
+                    "Circular or unresolved dependency in execution "
+                    f"packages involving tasks: {list(remaining.keys())}"
+                )
+
+            levels.append(ready)
+
+            for task_id in ready:
+                del remaining[task_id]
+
+            for dependency_ids in remaining.values():
+                dependency_ids.difference_update(ready)
+
+        return levels
+
+    # ==========================================================
     # EXECUTE + VERIFY (WITH RETRY)
     # ==========================================================
 
     def _execute_with_verification(
         self,
         package,
-        previous_outputs
+        previous_outputs,
+        on_event=None
     ):
 
         task_id = package["task_id"]
@@ -116,6 +343,7 @@ class Executor:
             "retrieved_context",
             []
         )
+        raw_query = package.get("raw_query")
 
         feedback = None
         output = None
@@ -132,11 +360,22 @@ class Executor:
                 attempt=attempt
             )
 
-            verification = self.verifier.verify(
+            # Signal "executed" once, after the first attempt produces
+            # output. Retries are an internal recovery detail — the
+            # caller only needs to know the task has *something* and
+            # is now moving into verification.
+            if attempt == 0 and on_event:
+                on_event({
+                    "type": "executed",
+                    "task_id": task_id
+                })
+
+            verification = self._verify_with_retry(
                 task={"task": task, "type": task_type},
                 output=output,
                 retrieved_context=retrieved_context,
-                dependency_outputs=previous_outputs
+                dependency_outputs=previous_outputs,
+                raw_query=raw_query
             )
 
             print(
@@ -149,9 +388,13 @@ class Executor:
             if verification["status"] == "passed":
                 return output, verification, attempt + 1
 
-            # Failed. If we still have retries left, carry the
-            # verifier's reason into the next attempt as feedback.
-            feedback = verification["reason"]
+            # Only carry genuine content feedback into the next
+            # executor attempt. A transport "error" means the
+            # verifier never actually judged this output — re-running
+            # the model with a network exception as "reviewer
+            # feedback" wouldn't fix anything and just burns a retry.
+            if verification["status"] == "failed":
+                feedback = verification["reason"]
 
         # Exhausted all retries and still failing verification.
         # Don't crash the pipeline (downstream tasks may still
@@ -170,6 +413,56 @@ class Executor:
         }
 
         return output, verification, self.max_retries + 1
+
+    def _verify_with_retry(
+        self,
+        task,
+        output,
+        retrieved_context,
+        dependency_outputs,
+        raw_query=None,
+        transport_retries=2,
+        backoff_seconds=3
+    ):
+        """
+        Retries only the verifier call itself on a transport failure
+        (dropped connection, timeout, server briefly unreachable) —
+        the model's output already exists and doesn't need
+        regenerating just because the verifier couldn't be reached.
+        """
+
+        verification = None
+
+        for transport_attempt in range(transport_retries + 1):
+
+            verification = self.verifier.verify(
+                task=task,
+                output=output,
+                retrieved_context=retrieved_context,
+                dependency_outputs=dependency_outputs,
+                raw_query=raw_query
+            )
+
+            if verification["status"] != "error":
+                return verification
+
+            if transport_attempt < transport_retries:
+
+                print(
+                    f"\nVerifier unreachable "
+                    f"(attempt {transport_attempt + 1}/"
+                    f"{transport_retries + 1}): "
+                    f"{verification['reason']}. "
+                    f"Retrying in {backoff_seconds}s..."
+                )
+
+                time.sleep(backoff_seconds)
+
+        # Verifier stayed unreachable after retries. Surface this
+        # distinctly from a content failure so callers (and the UI)
+        # can tell "the model rejected this" apart from "we couldn't
+        # even ask the model."
+        return verification
 
     # ==========================================================
     # TASK EXECUTION
@@ -192,6 +485,8 @@ class Executor:
             []
         )
 
+        raw_query = package.get("raw_query")
+
         # ------------------------------------------------------
         # Build prompt
         # ------------------------------------------------------
@@ -201,7 +496,8 @@ class Executor:
             task_type=task_type,
             retrieved_context=retrieved_context,
             previous_outputs=previous_outputs,
-            feedback=feedback
+            feedback=feedback,
+            raw_query=raw_query
         )
 
         print("\n" + "=" * 60)
@@ -224,23 +520,55 @@ class Executor:
         # ------------------------------------------------------
 
         try:
-            response = self.client.chat(
-                model=self.model,
+            content = self._stream_chat(
+                task_id=task_id,
                 messages=[
                     {
                         "role": "system",
                         "content": (
                             "You are the execution specialist. "
-                            "Complete the assigned task using "
-                            "the provided knowledge and outputs "
-                            "from dependent tasks."
+                            "Complete the assigned task exactly as "
+                            "described. The task description alone "
+                            "defines the subject matter and scope — "
+                            "never substitute or adopt a different "
+                            "subject, even if one appears in the "
+                            "retrieved knowledge below.\n\n"
+                            "Retrieved knowledge may include worked "
+                            "examples, guides, or sample content that "
+                            "illustrate a method, structure, or "
+                            "format using their own unrelated topic "
+                            "(e.g. a 'how to write a research paper' "
+                            "guide that demonstrates its advice using "
+                            "a sample paper about some other subject). "
+                            "In that case, use the guidance and "
+                            "structure it demonstrates, but do NOT "
+                            "write about that example's topic. Apply "
+                            "the technique to the task's actual "
+                            "subject instead.\n\n"
+                            "Use outputs from dependent tasks as "
+                            "given context for continuity."
                         )
                     },
                     {
                         "role": "user",
                         "content": prompt
                     }
-                ]
+                ],
+                # Thinking mode was burning 2000-3000 tokens per call
+                # on an invisible <think> block that competed with the
+                # actual answer for the same num_predict budget, same
+                # issue as the mediator/verifier had. Off for every
+                # task type now.
+                think=False,
+                options={
+                    # Generous cap — this is real deliverable content
+                    # (code, explanations, analysis), not a small
+                    # fixed-shape verdict, so it needs far more room
+                    # than the mediator/verifier calls. Just guards
+                    # against a runaway generation, not meant to bind
+                    # in normal operation.
+                    "num_predict": 3000,
+                }
             )
 
         except Exception as exc:
@@ -253,7 +581,59 @@ class Executor:
                 f"the following exception: {exc}"
             )
 
-        return response["message"]["content"]
+        return content
+
+    # ==========================================================
+    # STREAMING CHAT HELPER
+    # ==========================================================
+
+    def _stream_chat(self, task_id, messages, think, options):
+        """
+        Runs an Ollama chat call with stream=True instead of blocking
+        until the full response is generated. Content is identical
+        either way — this doesn't make generation faster — but it
+        lets us print real token/sec numbers per call and see live
+        whether a task is stalling out or filling its num_predict
+        budget, instead of only finding out after the fact.
+        """
+
+        start = time.monotonic()
+        chunks = []
+        eval_count = None
+        eval_duration_ns = None
+
+        for chunk in self.client.chat(
+            model=self.model,
+            messages=messages,
+            think=think,
+            options=options,
+            stream=True,
+        ):
+            piece = chunk.get("message", {}).get("content", "")
+
+            if piece:
+                chunks.append(piece)
+
+            if chunk.get("done"):
+                eval_count = chunk.get("eval_count")
+                eval_duration_ns = chunk.get("eval_duration")
+
+        elapsed = time.monotonic() - start
+        content = "".join(chunks)
+
+        if eval_count and eval_duration_ns:
+            tokens_per_sec = eval_count / (eval_duration_ns / 1e9)
+            print(
+                f"\n[Task {task_id}] generated {eval_count} tokens "
+                f"in {elapsed:.1f}s ({tokens_per_sec:.1f} tok/s)"
+            )
+        else:
+            print(
+                f"\n[Task {task_id}] streamed response in "
+                f"{elapsed:.1f}s (token count unavailable)"
+            )
+
+        return content
 
     # ==========================================================
     # PROMPT BUILDER
@@ -265,7 +645,8 @@ class Executor:
         task_type,
         retrieved_context,
         previous_outputs,
-        feedback=None
+        feedback=None,
+        raw_query=None
     ):
 
         prompt = f"""
@@ -277,6 +658,28 @@ Task type:
 """
 
         # ------------------------------------------------------
+        # User's original submission (verbatim)
+        #
+        # The mediator only ever produces short task labels like
+        # "Explain the provided code snippet" — it never carries the
+        # actual code/document/text the task refers to. This is that
+        # original content, forwarded unmodified from the initial
+        # query so a task like the one above has something concrete
+        # to act on instead of nothing.
+        # ------------------------------------------------------
+
+        if raw_query:
+
+            prompt += f"""
+
+User's original submission (verbatim — this may contain the actual
+code, document, or content the Task above refers to; treat it as
+the primary source of truth over any paraphrase in the Task text):
+
+{raw_query}
+"""
+
+        # ------------------------------------------------------
         # Retrieved knowledge
         # ------------------------------------------------------
 
@@ -284,7 +687,9 @@ Task type:
 
             prompt += """
 
-Retrieved knowledge:
+Reference material (background/structure/method only —
+NOT the subject to write about; the Task above is the
+only source of the actual subject matter):
 """
 
             for index, context in enumerate(
@@ -293,7 +698,8 @@ Retrieved knowledge:
             ):
 
                 prompt += (
-                    f"\n--- Context {index} ---\n"
+                    f"\n--- Reference {index} "
+                    f"(source: {context.get('source', 'unknown')}) ---\n"
                     f"{context.get('content', '')}\n"
                 )
 
@@ -348,193 +754,4 @@ Complete the task using the information above.
 
 if __name__ == "__main__":
 
-    execution_packages = [
-
-        {
-        "task_id": 1,
-        "task": "Explain the concept of recursion in Python.",
-        "type": "concept",
-        "priority": "high",
-        "depends_on": [],
-        "knowledge_type": "programming",
-        "query": "Explain the concept of recursion in Python.",
-        "retrieved_context": [
-            {
-                "content": "Recursion is useful when processing structures whose shapes can\u2019t be predicted ahead of time. \u2022 Assigned names are local unless declared global or nonlocal . By default, all the names assigned inside a function definition are put in the local scope (the namespace associated with the function call). If you need to assign a name that lives at the top level of the module enclosing the function, you can do so by declaring it in a global statement inside the function. If you need to assign a name that lives in an enclosing def, as of Python 3.0 you can do so by declaring it in a nonlocal statement. \u2022 All other names are enclosing function locals, globals, or built-ins . Names not assigned a value in the function definition are assumed to be enclosing scope locals (in an enclosing def), globals (in the enclosing module\u2019s namespace), or builtins (in the predefined __builtin__ module Python provides). There are a few subtleties to note here.",
-                "domain": "programming",
-                "source": "documents\\programming\\Learning_Python.pdf",
-                "score": 0.3259459137916565
-            },
-            {
-                "content": "Recursive Functions While discussing scope rules near the start of Chapter 17, we briefly noted that Python supports recursive functions\u2014functions that call themselves either directly or indirectly in order to loop. Recursion is a somewhat advanced topic, and it\u2019s relatively rare to see in Python. Still, it\u2019s a useful technique to know about, as it allows programs to traverse structures that have arbitrary and unpredictable shapes. Recursion is even an alternative for simple loops and iterations, though not necessarily the simplest or most efficient one. Summation with Recursion Let\u2019s look at some examples. To sum a list (or other sequence) of numbers, we can either use the built-in sum function or write a more custom version of our own. Here\u2019s what a custom summing function might look like when coded with recursion:\n>>> def mysum(L):\n... if not L:\n... return 0\n... else:\n... return L[0] + mysum(L[1:]) # Call myself",
-                "domain": "programming",
-                "source": "documents\\programming\\Learning_Python.pdf",
-                "score": 0.33909910917282104
-            },
-            {
-                "content": ">>> def mysum(L):\n... if not L:\n... return 0\n... else:\n... return L[0] + mysum(L[1:]) # Call myself\n>>> mysum([1, 2, 3, 4, 5])\nAt each level, this function calls itself recursively to compute the sum of the rest of the list, which is later added to the item at the front. The recursive loop ends and zero is returned when the list becomes empty. When using recursion like this, each open level Figure 19-1. Function execution environment. Functions may obtain input and produce output in a variety of ways, though functions are usually easier to understand and maintain if you use arguments for input and return statements and anticipated mutable argument changes for output. In Python 3, outputs may also take the form of declared nonlocal names that exist in an enclosing function scope. Recursive Functions | 465",
-                "domain": "programming",
-                "source": "documents\\programming\\Learning_Python.pdf",
-                "score": 0.3599058985710144
-            },
-            {
-                "content": ">>> def mysum(L):\n... if not L: return 0\n... return nonempty(L) # Call a function that calls me\n...\n>>> def nonempty(L):\n... return L[0] + mysum(L[1:]) # Indirectly recursive\n...\n>>> mysum([1.1, 2.2, 3.3, 4.4])\n11.0 Loop Statements Versus Recursion Though recursion works for summing in the prior sections\u2019 examples, it\u2019s probably overkill in this context. In fact, recursion is not used nearly as often in Python as in more esoteric languages like Prolog or Lisp, because Python emphasizes simpler procedural statements like loops, which are usually more natural. The while, for example, often makes things a bit more concrete, and it doesn\u2019t require that a function be defined to allow recursive calls:\n>>> L = [1, 2, 3, 4, 5]\n>>> sum = 0\n>>> while L:\n... sum += L[0]\n... L = L[1:]\n...\n>>> sum\nBetter yet, for loops iterate for us automatically, making recursion largely extraneous in most cases (and, in all likelihood, less efficient in terms of memory space and execution time):",
-                "domain": "programming",
-                "source": "documents\\programming\\Learning_Python.pdf",
-                "score": 0.3714852035045624
-            },
-            {
-                "content": "expressions, are passed values, and return results. But writing new functions requires the application of a few additional ideas that haven\u2019t yet been introduced. Moreover, functions behave very differently in Python than they do in compiled languages like C. Here is a brief introduction to the main concepts behind Python functions, all of which we will study in this part of the book: \u2022 def is executable code. Python functions are written with a new statement, the def. Unlike functions in compiled languages such as C, def is an executable statement\u2014your function does not exist until Python reaches and runs the def. In fact, it\u2019s legal (and even occasionally useful) to nest def statements inside if statements, while loops, and even other defs. In typical operation, def statements are coded in module files and are naturally run to generate functions when a module file is first imported. \u2022 def creates an object and assigns it to a name.",
-                "domain": "programming",
-                "source": "documents\\programming\\Learning_Python.pdf",
-                "score": 0.37339818477630615
-            },
-            {
-                "content": "expressions, are passed values, and return results. But writing new functions requires the application of a few additional ideas that haven\u2019t yet been introduced. Moreover, functions behave very differently in Python than they do in compiled languages like C. Here is a brief introduction to the main concepts behind Python functions, all of which we will study in this part of the book: \u2022 def is executable code. Python functions are written with a new statement, the def. Unlike functions in compiled languages such as C, def is an executable statement\u2014your function does not exist until Python reaches and runs the def. In fact, it\u2019s legal (and even occasionally useful) to nest def statements inside if statements, while loops, and even other defs. In typical operation, def statements are coded in module files and are naturally run to generate functions when a module file is first imported. \u2022 def creates an object and assigns it to a name.",
-                "domain": "programming",
-                "source": "documents\\programming\\Learning_Python.pdf",
-                "score": 0.37718647718429565
-            }
-        ]
-    },
-    {
-        "task_id": 2,
-        "task": "Generate a Python program demonstrating recursion.",
-        "type": "code_generation",
-        "priority": "high",
-        "depends_on": [],
-        "knowledge_type": "programming",
-        "query": "Generate a Python program demonstrating recursion.",
-        "retrieved_context": [
-            {
-                "content": "Recursive Functions While discussing scope rules near the start of Chapter 17, we briefly noted that Python supports recursive functions\u2014functions that call themselves either directly or indirectly in order to loop. Recursion is a somewhat advanced topic, and it\u2019s relatively rare to see in Python. Still, it\u2019s a useful technique to know about, as it allows programs to traverse structures that have arbitrary and unpredictable shapes. Recursion is even an alternative for simple loops and iterations, though not necessarily the simplest or most efficient one. Summation with Recursion Let\u2019s look at some examples. To sum a list (or other sequence) of numbers, we can either use the built-in sum function or write a more custom version of our own. Here\u2019s what a custom summing function might look like when coded with recursion:\n>>> def mysum(L):\n... if not L:\n... return 0\n... else:\n... return L[0] + mysum(L[1:]) # Call myself",
-                "domain": "programming",
-                "source": "documents\\programming\\Learning_Python.pdf",
-                "score": 0.3880983591079712
-            },
-            {
-                "content": ">>> def mysum(L):\n... if not L:\n... return 0\n... else:\n... return L[0] + mysum(L[1:]) # Call myself\n>>> mysum([1, 2, 3, 4, 5])\nAt each level, this function calls itself recursively to compute the sum of the rest of the list, which is later added to the item at the front. The recursive loop ends and zero is returned when the list becomes empty. When using recursion like this, each open level Figure 19-1. Function execution environment. Functions may obtain input and produce output in a variety of ways, though functions are usually easier to understand and maintain if you use arguments for input and return statements and anticipated mutable argument changes for output. In Python 3, outputs may also take the form of declared nonlocal names that exist in an enclosing function scope. Recursive Functions | 465",
-                "domain": "programming",
-                "source": "documents\\programming\\Learning_Python.pdf",
-                "score": 0.4316267967224121
-            },
-            {
-                "content": ">>> def mysum(L):\n... if not L: return 0\n... return nonempty(L) # Call a function that calls me\n...\n>>> def nonempty(L):\n... return L[0] + mysum(L[1:]) # Indirectly recursive\n...\n>>> mysum([1.1, 2.2, 3.3, 4.4])\n11.0 Loop Statements Versus Recursion Though recursion works for summing in the prior sections\u2019 examples, it\u2019s probably overkill in this context. In fact, recursion is not used nearly as often in Python as in more esoteric languages like Prolog or Lisp, because Python emphasizes simpler procedural statements like loops, which are usually more natural. The while, for example, often makes things a bit more concrete, and it doesn\u2019t require that a function be defined to allow recursive calls:\n>>> L = [1, 2, 3, 4, 5]\n>>> sum = 0\n>>> while L:\n... sum += L[0]\n... L = L[1:]\n...\n>>> sum\nBetter yet, for loops iterate for us automatically, making recursion largely extraneous in most cases (and, in all likelihood, less efficient in terms of memory space and execution time):",
-                "domain": "programming",
-                "source": "documents\\programming\\Learning_Python.pdf",
-                "score": 0.4471689462661743
-            },
-            {
-                "content": ">>> def gensquares(N):\n... for i in range(N):\n... yield i ** 2 # Resume here later\n...\nThis function yields a value, and so returns to its caller, each time through the loop; when it is resumed, its prior state is restored and control picks up again immediately after the yield statement. For example, when it\u2019s used in the body of a for loop, control returns to the function after its yield statement each time through the loop:\n>>> for i in gensquares(5): # Resume the function\n... print(i, end=' : ') # Print last yielded value\n...\n>>>\nTo end the generation of values, functions either use a return statement with no value or simply allow control to fall off the end of the function body. If you want to see what is going on inside the for, call the generator function directly:\n>>> x = gensquares(4)",
-                "domain": "programming",
-                "source": "documents\\programming\\Learning_Python.pdf",
-                "score": 0.4569298028945923
-            },
-            {
-                "content": "19. Advanced Function Topics . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 463 Function Design Concepts 463 Recursive Functions 465 Summation with Recursion 465 Coding Alternatives 466 Loop Statements Versus Recursion 467 Handling Arbitrary Structures 468 Function Objects: Attributes and Annotations 469 Indirect Function Calls 469 Function Introspection 470 Function Attributes 471 Function Annotations in 3.0 472 Anonymous Functions: lambda 474 lambda Basics 474 Why Use lambda? 475 How (Not) to Obfuscate Your Python Code 477 Nested lambdas and Scopes 478 Mapping Functions over Sequences: map 479 Functional Programming Tools: filter and reduce 481 20. Iterations and Comprehensions, Part 2 . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .",
-                "domain": "programming",
-                "source": "documents\\programming\\Learning_Python.pdf",
-                "score": 0.4644320607185364
-            }
-        ]
-    },
-    {
-        "task_id": 3,
-        "task": "Explain the generated recursive code.",
-        "type": "explanation",
-        "priority": "medium",
-        "depends_on": [
-            2
-        ],
-        "knowledge_type": None,
-        "query": None,
-        "retrieved_context": []
-    },
-    {
-        "task_id": 4,
-        "task": "Test the recursive code with sample input and output.",
-        "type": "testing",
-        "priority": "medium",
-        "depends_on": [
-            2
-        ],
-        "knowledge_type": None,
-        "query": None,
-        "retrieved_context": []
-    },
-    {
-        "task_id": 5,
-        "task": "Analyze the time and space complexity of the recursive solution.",
-        "type": "analysis",
-        "priority": "medium",
-        "depends_on": [
-            2
-        ],
-        "knowledge_type": "programming",
-        "query": "Analyze the time and space complexity of the recursive solution.",
-        "retrieved_context": [
-            {
-                "content": "# Analysis of Time and Space Complexity in Recursive Algorithms\n\n--\n\nListen\n\nShare\n\nIn this article, we\u2019ll delve deeper into the analysis of time and space complexity in recursive algorithms by examining two classic examples: calculating the Fibonacci sequence and binary search. By understanding these examples, you\u2019ll gain fresh insights into the intricacies of recursive algorithms.\n\nPerformance of Recursively Calculating the Fibonacci Sequence\n\nLet\u2019s start by looking at a recursive approach to calculate the Fibonacci sequence.",
-                "source": "https://medium.com/@yingpeng0221/analysis-of-time-and-space-complexity-in-recursive-algorithms-5a82ea278046",
-                "domain": "programming",
-                "score": 0.7892124652862549
-            },
-            {
-                "content": "Let\u2019s analyze the time complexity of this recursive Fibonacci algorithm.\n\nWhen discussing the time complexity of recursive algorithms, we mentioned that the time complexity of a recursive algorithm fundamentally depends on the number of recursive calls * the time complexity of each recursive call .",
-                "source": "https://medium.com/@yingpeng0221/analysis-of-time-and-space-complexity-in-recursive-algorithms-5a82ea278046",
-                "domain": "programming",
-                "score": 0.7243631482124329
-            },
-            {
-                "content": "Consider the following code for example.\n\nThe time complexity of this function is written as T(n) = 2T(n/2) + O(n ). Now to find the time complexity, we need to solve this recurrence. There are mainly three common methods used to solve recurrence relations that arise in the analysis of recursive algorithms.",
-                "source": "https://www.geeksforgeeks.org/dsa/how-to-analyse-complexity-of-recurrence-relation/",
-                "domain": "programming",
-                "score": 0.7129022479057312
-            },
-            {
-                "content": "Analyzing time/space complexity for recursive algorithms\u00e2\u0080\u0094this is the main focus, and I'll use dynamic programming and backtracking as examples.\n\nBefore diving into the concepts and calculations, let me share some practical tips and common pitfalls.",
-                "source": "https://labuladong.online/en/algo/essential-technique/complexity-analysis/",
-                "domain": "programming",
-                "score": 0.7061986923217773
-            },
-            {
-                "content": "## PROBLEM STATEMENT\n\nAnalyzing the complexity of recursive algorithms requires a systematic approach, especially when dealing with non-trivial structures. The core challenges typically revolve around:\n\nDetermining Recurrence Relations: Formulating a mathematical expression that describes the runtime or space usage of a recursive function in terms of its input size and the cost of its recursive calls.",
-                "source": "https://www.technetexperts.com/recursive-algorithm-complexity-analysis/",
-                "domain": "programming",
-                "score": 0.701823353767395
-            }
-        ]
-    }
-
-    ]
-
     executor = Executor(max_retries=1)
-
-    results = executor.execute(
-        execution_packages
-    )
-
-    print("\n\n")
-    print("=" * 60)
-    print("FINAL EXECUTION RESULTS")
-    print("=" * 60)
-
-    for result in results:
-
-        print(
-            f"\nTASK {result['task_id']} "
-            f"[{result['status'].upper()}] "
-            f"(attempts: {result['attempts']})"
-        )
-        print(f"Task: {result['task']}")
-        print(f"Reason: {result['reason']}")
-        print("-" * 60)
-        print(result["output"])
-
-    # Optional: dump the full structured results as JSON, useful if
-    # this pipeline feeds into another system downstream.
-    import json
-    print("\n\n" + "=" * 60)
-    print("JSON RESULTS")
-    print("=" * 60)
-    print(json.dumps(results, indent=2))

@@ -1,7 +1,9 @@
 import json
+import os
 import re
 import sys
 import time
+import concurrent.futures
 from pathlib import Path
 
 import requests
@@ -56,8 +58,20 @@ class DynamicRetriever:
 
     DuckDuckGo is the default search backend.
 
-    A different search backend can later be supplied through
-    search_fn without changing the rest of the retrieval pipeline.
+    If DuckDuckGo fails outright, returns a non-200 status
+    (e.g. 202 under rate limiting / bot detection), or returns
+    200 with no parsable result links (soft block / captcha
+    page), the search automatically falls back to Tavily
+    (search_depth="basic") for that query. Requires
+    TAVILY_API_KEY to be set in the environment for the
+    fallback to actually work; otherwise it just logs and
+    returns no results for that query.
+
+    A different primary search backend can later be supplied
+    through search_fn without changing the rest of the
+    retrieval pipeline. Note: search_fn, if supplied, replaces
+    DuckDuckGo entirely - the DuckDuckGo -> Tavily fallback
+    chain described above only applies to the default backend.
     """
 
     # ==========================================================
@@ -73,7 +87,8 @@ class DynamicRetriever:
         semantic_threshold=0.55,
         request_timeout=10,
         request_delay=0.3,
-        search_fn=None
+        search_fn=None,
+        max_workers=3
     ):
 
         self.top_k = top_k
@@ -89,6 +104,15 @@ class DynamicRetriever:
         self.request_delay = (
             request_delay
         )
+
+        # --------------------------------------------------
+        # Max number of dynamic tasks processed concurrently
+        # in a single retrieve() call. Bounded to avoid
+        # hammering the search backend / target websites and
+        # to keep concurrent embedder.encode() calls sane.
+        # --------------------------------------------------
+
+        self.max_workers = max_workers
 
         # --------------------------------------------------
         # Reuse the EXISTING Chunker.
@@ -117,10 +141,11 @@ class DynamicRetriever:
         # Search backend.
         #
         # Default:
-        #     DuckDuckGo
+        #     DuckDuckGo (with Tavily as an automatic
+        #     fallback - see _search_duckduckgo)
         #
         # Later:
-        #     Google / Bing / Tavily / etc.
+        #     Google / Bing / etc, via search_fn.
         # --------------------------------------------------
 
         self._search_fn = (
@@ -142,6 +167,32 @@ class DynamicRetriever:
             )
         }
 
+        # --------------------------------------------------
+        # Tavily fallback config.
+        #
+        # Only used when DuckDuckGo fails, returns a non-200
+        # status (e.g. 202), or returns 200 with no parsable
+        # results. Deliberately "basic" search_depth, not
+        # "advanced" - this is a cheap fallback, not a
+        # primary backend.
+        # --------------------------------------------------
+
+        self.tavily_api_key = (
+            os.environ.get("TAVILY_API_KEY")
+        )
+
+        self.tavily_search_depth = "basic"
+
+        if not self.tavily_api_key:
+
+            print(
+                "[DynamicRetriever] "
+                "Warning: TAVILY_API_KEY not set. "
+                "If DuckDuckGo starts returning 202/blocked "
+                "responses, searches will fail with no "
+                "fallback available."
+            )
+
     # ==========================================================
     # MAIN RETRIEVAL FUNCTION
     # ==========================================================
@@ -154,94 +205,137 @@ class DynamicRetriever:
         """
         Process the routed plan.
 
-        Dynamic tasks are retrieved from the web.
+        Dynamic tasks are retrieved from the web, concurrently
+        (up to self.max_workers at a time).
 
         Static tasks are passed through unchanged.
 
         The overall structure remains the same as the
-        StaticRetriever output.
+        StaticRetriever output, and result order matches the
+        order of routed_plan regardless of thread completion
+        order.
         """
 
-        retrieval_results = []
+        retrieval_results = [None] * len(routed_plan)
 
-        for task in routed_plan:
+        dynamic_indices = []
+        dynamic_tasks = []
 
-            # --------------------------------------------------
-            # Only dynamically retrieve dynamic tasks.
-            # --------------------------------------------------
+        # --------------------------------------------------
+        # Split out dynamic tasks. Everything else passes
+        # through unchanged, in place.
+        # --------------------------------------------------
 
-            if task.get(
-                "retrieval_source"
-            ) != "dynamic":
+        for index, task in enumerate(routed_plan):
 
-                retrieval_results.append(
+            if task.get("retrieval_source") != "dynamic":
+
+                retrieval_results[index] = task
+
+                continue
+
+            dynamic_indices.append(index)
+            dynamic_tasks.append(task)
+
+        # --------------------------------------------------
+        # Nothing dynamic to do.
+        # --------------------------------------------------
+
+        if not dynamic_tasks:
+            return retrieval_results
+
+        # --------------------------------------------------
+        # Run dynamic tasks concurrently. Each task gets its
+        # own web search + fetch + chunk + embed cycle, run
+        # on a worker thread. A failure in one task doesn't
+        # abort the others.
+        # --------------------------------------------------
+
+        with concurrent.futures.ThreadPoolExecutor(
+            max_workers=self.max_workers
+        ) as pool:
+
+            future_to_index = {
+                pool.submit(
+                    self._retrieve_single_task,
                     task
+                ): index
+                for index, task in zip(
+                    dynamic_indices,
+                    dynamic_tasks
                 )
+            }
 
-                continue
+            for future in concurrent.futures.as_completed(
+                future_to_index
+            ):
 
-            # --------------------------------------------------
-            # Copy original task.
-            # --------------------------------------------------
+                index = future_to_index[future]
 
-            retrieved_task = task.copy()
+                try:
 
-            # --------------------------------------------------
-            # Get query.
-            # --------------------------------------------------
-
-            query = task.get(
-                "query",
-                ""
-            )
-
-            query = self._normalize_query(
-                query
-            )
-
-            # --------------------------------------------------
-            # Missing query.
-            # --------------------------------------------------
-
-            if not query:
-
-                retrieved_task[
-                    "retrieved_context"
-                ] = []
-
-                retrieval_results.append(
-                    retrieved_task
-                )
-
-                continue
-
-            # --------------------------------------------------
-            # Perform dynamic retrieval.
-            # --------------------------------------------------
-
-            retrieved_context = (
-                self._retrieve_query(
-                    query,
-                    task.get(
-                        "knowledge_type",
-                        ""
+                    retrieval_results[index] = (
+                        future.result()
                     )
-                )
-            )
 
-            # --------------------------------------------------
-            # Attach context.
-            # --------------------------------------------------
+                except Exception as error:
 
-            retrieved_task[
-                "retrieved_context"
-            ] = retrieved_context
+                    print(
+                        "[DynamicRetriever] "
+                        f"Task failed: {error}"
+                    )
 
-            retrieval_results.append(
-                retrieved_task
-            )
+                    fallback_task = (
+                        routed_plan[index].copy()
+                    )
+
+                    fallback_task[
+                        "retrieved_context"
+                    ] = []
+
+                    retrieval_results[index] = (
+                        fallback_task
+                    )
 
         return retrieval_results
+
+    # ==========================================================
+    # SINGLE-TASK RETRIEVAL (used by the thread pool in retrieve)
+    # ==========================================================
+
+    def _retrieve_single_task(
+        self,
+        task
+    ):
+
+        """
+        Runs the full dynamic retrieval pipeline for one task.
+        Safe to call from a worker thread: no shared mutable
+        instance state is written here (see _extract_main_text,
+        which takes url as an argument rather than reading
+        self._current_url).
+        """
+
+        retrieved_task = task.copy()
+
+        query = self._normalize_query(
+            task.get("query", "")
+        )
+
+        if not query:
+
+            retrieved_task["retrieved_context"] = []
+
+            return retrieved_task
+
+        retrieved_task["retrieved_context"] = (
+            self._retrieve_query(
+                query,
+                task.get("knowledge_type", "")
+            )
+        )
+
+        return retrieved_task
 
     # ==========================================================
     # QUERY NORMALIZATION
@@ -310,10 +404,36 @@ class DynamicRetriever:
         all_chunks = []
 
         # --------------------------------------------------
+        # Stop fetching further pages once we have comfortably
+        # more good candidates than top_k, instead of always
+        # working through every one of num_search_results URLs.
+        # Ranking still picks the best top_k from whatever was
+        # collected — this just avoids fetching/chunking/
+        # embedding pages that were never going to be needed.
+        # Restored after being dropped in the concurrency
+        # refactor; still needed per-task even though tasks
+        # themselves now run in parallel, since each task can
+        # still be handed up to num_search_results=8 URLs.
+        # --------------------------------------------------
+
+        early_stop_target = self.top_k * 3
+
+        # --------------------------------------------------
         # Process every search result.
         # --------------------------------------------------
 
         for url, title in search_results:
+
+            if len(all_chunks) >= early_stop_target:
+
+                print(
+                    "[DynamicRetriever] "
+                    f"Collected {len(all_chunks)} candidate "
+                    f"chunks (>= {early_stop_target}); "
+                    "skipping remaining search results."
+                )
+
+                break
 
             # --------------------------------------------------
             # Fetch page.
@@ -330,10 +450,9 @@ class DynamicRetriever:
             # Extract actual page content.
             # --------------------------------------------------
 
-            self._current_url = url
-
             text = self._extract_main_text(
-                html
+                html,
+                url
             )
 
             if not text:
@@ -361,6 +480,20 @@ class DynamicRetriever:
                     cleaned
                 )
             )
+
+            # --------------------------------------------------
+            # A single page can yield 100+ raw chunks (e.g. a
+            # long guide). Only a handful could ever end up in
+            # the final top_k, so cap how many chunks from ONE
+            # page get filtered/kept — avoids one long page
+            # crowding out chunks from other, possibly more
+            # relevant, sources. Restored after being dropped
+            # in the concurrency refactor.
+            # --------------------------------------------------
+
+            max_chunks_per_page = self.top_k * 4
+
+            page_chunks = page_chunks[:max_chunks_per_page]
 
             # --------------------------------------------------
             # Filter bad chunks.
@@ -636,7 +769,7 @@ class DynamicRetriever:
         return False
 
     # ==========================================================
-    # DUCKDUCKGO SEARCH
+    # DUCKDUCKGO SEARCH (primary backend)
     # ==========================================================
 
     def _search_duckduckgo(
@@ -648,9 +781,17 @@ class DynamicRetriever:
         """
         Default web search backend.
 
-        Uses DuckDuckGo's HTML endpoint.
+        Uses DuckDuckGo's HTML endpoint. No API key required.
 
-        No API key is required.
+        Falls back to Tavily (see _search_tavily) when:
+
+            - the request itself raises (timeout, connection
+              error, etc.)
+            - the response status is anything other than 200
+              (e.g. 202, which raise_for_status() does NOT
+              treat as an error, so it's checked explicitly)
+            - the response is 200 but no parsable result links
+              are found (soft block / captcha / layout change)
 
         Returns:
 
@@ -671,16 +812,39 @@ class DynamicRetriever:
                 timeout=self.request_timeout
             )
 
-            response.raise_for_status()
+            # --------------------------------------------------
+            # 202 (and any other non-200) means DuckDuckGo did
+            # NOT give us a normal result page - typically rate
+            # limiting or bot detection. raise_for_status() only
+            # catches 4xx/5xx, so this is checked separately.
+            # --------------------------------------------------
+
+            if response.status_code != 200:
+
+                print(
+                    "[DynamicRetriever] "
+                    f"DuckDuckGo returned status "
+                    f"{response.status_code} for query "
+                    f"'{query}'; falling back to Tavily."
+                )
+
+                return self._search_tavily(
+                    query,
+                    num_results
+                )
 
         except requests.RequestException as error:
 
             print(
                 "[DynamicRetriever] "
-                f"DuckDuckGo search failed: {error}"
+                f"DuckDuckGo search failed: {error}; "
+                "falling back to Tavily."
             )
 
-            return []
+            return self._search_tavily(
+                query,
+                num_results
+            )
 
         try:
 
@@ -692,6 +856,21 @@ class DynamicRetriever:
             results = []
 
             seen_urls = set()
+
+            # --------------------------------------------------
+            # Domains/URL patterns that are ad redirects or
+            # tracking links rather than real content pages.
+            # Fetching these wastes a full fetch+chunk+embed
+            # cycle for near-zero usable content.
+            # --------------------------------------------------
+
+            AD_REDIRECT_MARKERS = (
+                "duckduckgo.com/y.js",
+                "bing.com/aclick",
+                "/aclk?",
+                "googleadservices.com",
+                "doubleclick.net",
+            )
 
             # --------------------------------------------------
             # Extract search result links.
@@ -715,6 +894,12 @@ class DynamicRetriever:
                 if not title:
                     continue
 
+                if any(
+                    marker in href
+                    for marker in AD_REDIRECT_MARKERS
+                ):
+                    continue
+
                 if href in seen_urls:
                     continue
 
@@ -735,16 +920,155 @@ class DynamicRetriever:
                 ):
                     break
 
+            # --------------------------------------------------
+            # 200 OK but nothing usable parsed out (DuckDuckGo
+            # sometimes serves a soft-block/captcha page with a
+            # 200 status). Treat this the same as a hard failure
+            # and fall back rather than returning empty-handed.
+            # --------------------------------------------------
+
+            if not results:
+
+                print(
+                    "[DynamicRetriever] "
+                    f"DuckDuckGo returned no parsable results "
+                    f"for query '{query}'; falling back to "
+                    "Tavily."
+                )
+
+                return self._search_tavily(
+                    query,
+                    num_results
+                )
+
             return results
 
         except Exception as error:
 
             print(
                 "[DynamicRetriever] "
-                f"DuckDuckGo parsing failed: {error}"
+                f"DuckDuckGo parsing failed: {error}; "
+                "falling back to Tavily."
+            )
+
+            return self._search_tavily(
+                query,
+                num_results
+            )
+
+    # ==========================================================
+    # TAVILY SEARCH (fallback backend)
+    # ==========================================================
+
+    def _search_tavily(
+        self,
+        query,
+        num_results
+    ):
+
+        """
+        Fallback search backend.
+
+        Only reached when DuckDuckGo fails, returns a non-200
+        status (e.g. 202), or returns 200 with no parsable
+        results.
+
+        Deliberately uses search_depth="basic", NOT "advanced" -
+        this is meant to be a cheap fallback, not a primary
+        backend, and "advanced" costs more Tavily credits per
+        call for reranking we don't need here.
+
+        Requires TAVILY_API_KEY in the environment. If it's not
+        set, logs and returns [] rather than raising, so the
+        rest of the pipeline degrades gracefully (that task
+        just gets no retrieved_context, per _retrieve_query).
+
+        Returns the same shape as _search_duckduckgo:
+
+            [
+                (url, title),
+                ...
+            ]
+        """
+
+        if not self.tavily_api_key:
+
+            print(
+                "[DynamicRetriever] "
+                "Tavily fallback unavailable: "
+                "TAVILY_API_KEY not set."
             )
 
             return []
+
+        try:
+
+            response = requests.post(
+                "https://api.tavily.com/search",
+                json={
+                    "api_key": self.tavily_api_key,
+                    "query": query,
+                    "search_depth": self.tavily_search_depth,
+                    "max_results": num_results,
+                    "include_answer": False,
+                    "include_raw_content": False
+                },
+                timeout=self.request_timeout
+            )
+
+            response.raise_for_status()
+
+            data = response.json()
+
+        except requests.RequestException as error:
+
+            print(
+                "[DynamicRetriever] "
+                f"Tavily search failed: {error}"
+            )
+
+            return []
+
+        except ValueError as error:
+
+            print(
+                "[DynamicRetriever] "
+                f"Tavily response parsing failed: {error}"
+            )
+
+            return []
+
+        results = []
+
+        for item in data.get("results", []):
+
+            url = item.get("url")
+
+            title = (
+                item.get("title")
+                or url
+            )
+
+            if not url:
+                continue
+
+            results.append(
+                (
+                    url,
+                    title
+                )
+            )
+
+            if len(results) >= num_results:
+                break
+
+        print(
+            "[DynamicRetriever] "
+            f"Tavily fallback returned {len(results)} "
+            f"results for query '{query}'."
+        )
+
+        return results
 
     # ==========================================================
     # PAGE FETCHING
@@ -810,7 +1134,8 @@ class DynamicRetriever:
 
     def _extract_main_text(
         self,
-        html
+        html,
+        url=""
     ):
 
         """
@@ -921,12 +1246,7 @@ class DynamicRetriever:
             # --------------------------------------------------
 
             is_wikipedia = (
-                "wikipedia.org"
-                in getattr(
-                    self,
-                    "_current_url",
-                    ""
-                )
+                "wikipedia.org" in url
             )
 
             tag_targets = (
@@ -1133,7 +1453,7 @@ if __name__ == "__main__":
         "priority": "low",
         "planner": "planner_llm",
         "retrieval_source": "dynamic",
-        
+
     }
     ]
 
