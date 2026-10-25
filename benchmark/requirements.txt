@@ -1,0 +1,5 @@
+# harness only (the pipeline's own requirements are unchanged)
+numpy
+pandas
+scipy
+psutil   # optional: harness process memory

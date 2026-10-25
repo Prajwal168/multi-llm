@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="en" xml:lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>
+		Evaluating the architectural trade-offs of micro services versus monolithic designs: An empirical analysis of scalability and maintainability in enterprise environments
+							| Journal of Emerging Trends in Social Sciences and Humanities
+			</title>
+
+	
+<meta name="generator" content="Open Journal Systems 3.5.0.1" />
+<meta name="gs_meta_revision" content="1.1"/>
+<meta name="citation_journal_title" content="Journal of Emerging Trends in Social Sciences and Humanities"/>
+<meta name="citation_journal_abbrev" content="JoETSSH"/>
+<meta name="citation_issn" content="3006-7898"/> 
+<meta name="citation_author" content="Muhammad Ahmad Raza"/>
+<meta name="citation_author_institution" content="MS Scholar, Department of Computer Science and Information Technology, Superior University, Lahore, Punjab, Pakistan"/>
+<meta name="citation_author" content="Shaher Yar Haider"/>
+<meta name="citation_author_institution" content="MS Scholar, Department of Computer Science and Information Technology, Superior University, Lahore, Punjab, Pakistan"/>
+<meta name="citation_author" content="Saleem Zubair"/>
+<meta name="citation_author_institution" content="Department of Computer Science and Information Technology, Superior University, Lahore, Punjab, Pakistan"/>
+<meta name="citation_author" content="Ayesha Saddiqa"/>
+<meta name="citation_author_institution" content="Department of Computer Science and Information Technology, Superior University, Lahore, Punjab, Pakistan"/>
+<meta name="citation_title" content="Evaluating the architectural trade-offs of micro services versus monolithic designs: An empirical analysis of scalability and maintainability in enterprise environments"/>
+<meta name="citation_language" content="en"/>
+<meta name="citation_date" content="2026/08/14"/>
+<meta name="citation_volume" content="3"/>
+<meta name="citation_issue" content="3"/>
+<meta name="citation_firstpage" content="223"/>
+<meta name="citation_lastpage" content="240"/>
+<meta name="citation_doi" content="10.68065/joetssh.03.03.79"/>
+<meta name="citation_abstract_html_url" content="https://joetssh.com/index.php/joetssh/article/view/79"/>
+<meta name="citation_abstract" xml:lang="en" content="One key problem in enterprise software is the different software architecture problems. The two popular architectures are monolithic and microservices architecture. A review of the literature indicates, however, that current research tends to focus on the assessment of These quality attributes have been studied individually, with limited evidence to support their joint constraints. To overcome this gap, the present study has adopted a systematic secondary data analysis based on a comparative study. Evaluation and Evidence Extraction Synthesis (CEES) framework, a synthesis of empirical findings. From recently published peer-reviewed studies comparing both architectural styles. The analysis combines quantitative Integrate performance evidence and qualitative maintainability properties in one architecture evaluation. Both architectures showed similar performance under baseline workloads but not under overloads; Larger datasets led to increases in response time as the monolithic architecture broke down to a 20 s response time for 10, and then 50, concurrent users. The microservices architecture, on the other hand, maintained a better performance of a 15 s response time. What the results also reveal is that although the microservices promise numerous benefits in the areas of scalability, modularity and fault isolation, these benefits are substantial, but come with the added complexity of managing distributed communication, orchestration, and infrastructure. The study finally demonstrates that the choice of architectural style should be based on the needs of the organization, not technology."/>
+<meta name="citation_keywords" xml:lang="en" content="Architectural"/>
+<meta name="citation_keywords" xml:lang="en" content="Micro Service"/>
+<meta name="citation_keywords" xml:lang="en" content="Monolithic Design"/>
+<meta name="citation_keywords" xml:lang="en" content="Trade-offs"/>
+<meta name="citation_keywords" xml:lang="en" content="Scarability and Maintainability"/>
+<meta name="citation_pdf_url" content="https://joetssh.com/index.php/joetssh/article/download/79/81"/>
+<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/" />
+<meta name="DC.Creator.PersonalName" content="Muhammad Ahmad Raza"/>
+<meta name="DC.Creator.PersonalName" content="Shaher Yar Haider"/>
+<meta name="DC.Creator.PersonalName" content="Saleem Zubair"/>
+<meta name="DC.Creator.PersonalName" content="Ayesha Saddiqa"/>
+<meta name="DC.Date.created" scheme="ISO8601" content="2026-08-14"/>
+<meta name="DC.Date.dateSubmitted" scheme="ISO8601" content="2026-08-14"/>
+<meta name="DC.Date.issued" scheme="ISO8601" content="2026-07-01"/>
+<meta name="DC.Date.modified" scheme="ISO8601" content="2026-09-10"/>
+<meta name="DC.Description" xml:lang="en" content="One key problem in enterprise software is the different software architecture problems. The two popular architectures are monolithic and microservices architecture. A review of the literature indicates, however, that current research tends to focus on the assessment of These quality attributes have been studied individually, with limited evidence to support their joint constraints. To overcome this gap, the present study has adopted a systematic secondary data analysis based on a comparative study. Evaluation and Evidence Extraction Synthesis (CEES) framework, a synthesis of empirical findings. From recently published peer-reviewed studies comparing both architectural styles. The analysis combines quantitative Integrate performance evidence and qualitative maintainability properties in one architecture evaluation. Both architectures showed similar performance under baseline workloads but not under overloads; Larger datasets led to increases in response time as the monolithic architecture broke down to a 20 s response time for 10, and then 50, concurrent users. The microservices architecture, on the other hand, maintained a better performance of a 15 s response time. What the results also reveal is that although the microservices promise numerous benefits in the areas of scalability, modularity and fault isolation, these benefits are substantial, but come with the added complexity of managing distributed communication, orchestration, and infrastructure. The study finally demonstrates that the choice of architectural style should be based on the needs of the organization, not technology."/>
+<meta name="DC.Format" scheme="IMT" content="application/pdf"/>
+<meta name="DC.Identifier" content="79"/>
+<meta name="DC.Identifier.pageNumber" content="223-240"/>
+<meta name="DC.Identifier.DOI" content="10.68065/joetssh.03.03.79"/>
+<meta name="DC.Identifier.URI" content="https://joetssh.com/index.php/joetssh/article/view/79"/>
+<meta name="DC.Language" scheme="rfc5646" content="en"/>
+<meta name="DC.Rights" content="Copyright (c) 2026 Journal of Emerging Trends in Social Sciences and Humanities"/>
+<meta name="DC.Rights" content="https://creativecommons.org/licenses/by-nc-nd/4.0"/>
+<meta name="DC.Source" content="Journal of Emerging Trends in Social Sciences and Humanities"/>
+<meta name="DC.Source.ISSN" content="3006-7898"/>
+<meta name="DC.Source.Issue" content="3"/>
+<meta name="DC.Source.Volume" content="3"/>
+<meta name="DC.Source.URI" content="https://joetssh.com/index.php/joetssh/joetssh"/>
+<meta name="DC.Subject" xml:lang="en" content="Architectural"/>
+<meta name="DC.Subject" xml:lang="en" content="Micro Service"/>
+<meta name="DC.Subject" xml:lang="en" content="Monolithic Design"/>
+<meta name="DC.Subject" xml:lang="en" content="Trade-offs"/>
+<meta name="DC.Subject" xml:lang="en" content="Scarability and Maintainability"/>
+<meta name="DC.Title" content="Evaluating the architectural trade-offs of micro services versus monolithic designs: An empirical analysis of scalability and maintainability in enterprise environments"/>
+<meta name="DC.Type" content="Text.Serial.Journal"/>
+<meta name="DC.Type.articleType" content="Articles"/>
+	<link rel="stylesheet" href="https://joetssh.com/index.php/joetssh/$$$call$$$/page/page/css?name=stylesheet" type="text/css" /><link rel="stylesheet" href="https://joetssh.com/index.php/joetssh/$$$call$$$/page/page/css?name=font" type="text/css" /><link rel="stylesheet" href="https://joetssh.com/lib/pkp/styles/fontawesome/fontawesome.css?v=3.5.0.1" type="text/css" /><link rel="stylesheet" href="https://joetssh.com/plugins/themes/default/js/lib/swiper/swiper-bundle.min.css?v=3.5.0.1" type="text/css" /><link rel="stylesheet" href="https://joetssh.com/public/journals/1/styleSheet.css?d=2026-01-27+17%3A20%3A07" type="text/css" /><link rel="stylesheet" href="https://joetssh.com/plugins/generic/citationStyleLanguage/css/citationStyleLanguagePlugin.css?v=3.5.0.1" type="text/css" />
+</head>
+<body class="pkp_page_article pkp_op_view" dir="ltr">
+
+	<div class="pkp_structure_page">
+
+				<header class="pkp_structure_head" id="headerNavigationContainer" role="banner">
+						 <nav class="cmp_skip_to_content" aria-label="Jump to content links">
+	<a href="#pkp_content_main">Skip to main content</a>
+	<a href="#siteNav">Skip to main navigation menu</a>
+		<a href="#pkp_content_footer">Skip to site footer</a>
+</nav>
+
+			<div class="pkp_head_wrapper">
+
+				<div class="pkp_site_name_wrapper">
+					<button class="pkp_site_nav_toggle">
+						<span>Open Menu</span>
+					</button>
+										<div class="pkp_site_name">
+																<a href="						https://joetssh.com/index.php/joetssh/index
+					" class="is_text">Journal of Emerging Trends in Social Sciences and Humanities</a>
+										</div>
+				</div>
+
+				
+				<nav class="pkp_site_nav_menu" aria-label="Site Navigation">
+					<a id="siteNav"></a>
+					<div class="pkp_navigation_primary_row">
+						<div class="pkp_navigation_primary_wrapper">
+																				<ul id="navigationPrimary" class="pkp_navigation_primary pkp_nav_list">
+								<li class="">
+				<a href="https://joetssh.com/index.php/joetssh/index">
+					HOME
+				</a>
+							</li>
+								<li class="">
+				<a href="https://joetssh.com/index.php/joetssh/about">
+					About the Journal
+				</a>
+									<ul>
+																					<li class="">
+									<a href="https://joetssh.com/index.php/joetssh/about-joetssh">
+										ABOUT JoETSSH
+									</a>
+								</li>
+																												<li class="">
+									<a href="https://joetssh.com/index.php/joetssh/editorial-team">
+										Editorial Team
+									</a>
+								</li>
+																												<li class="">
+									<a href="https://joetssh.com/index.php/joetssh/editorial-advisory-board">
+										Editorial Advisory Board
+									</a>
+								</li>
+																												<li class="">
+									<a href="https://joetssh.com/index.php/joetssh/copyright-and-licensing">
+										Copyright and Licensing
+									</a>
+								</li>
+																												<li class="">
+									<a href="https://joetssh.com/index.php/joetssh/privacy-Policy">
+										Privacy Policy
+									</a>
+								</li>
+																												<li class="">
+									<a href="https://joetssh.com/index.php/joetssh/about/contact">
+										Contact
+									</a>
+								</li>
+																		</ul>
+							</li>
+								<li class="">
+				<a href="https://joetssh.com/index.php/joetssh/about">
+					Archives
+				</a>
+									<ul>
+																					<li class="">
+									<a href="https://joetssh.com/index.php/joetssh/issue/current">
+										Current
+									</a>
+								</li>
+																												<li class="">
+									<a href="https://joetssh.com/index.php/joetssh/issue/archive">
+										Archives
+									</a>
+								</li>
+																		</ul>
+							</li>
+								<li class="">
+				<a href="https://joetssh.com/index.php/joetssh/about/submissions">
+					Submissions
+				</a>
+									<ul>
+																					<li class="">
+									<a href="https://joetssh.com/index.php/joetssh/aim-scope">
+										Aim & Scope
+									</a>
+								</li>
+																												<li class="">
+									<a href="https://joetssh.com/index.php/joetssh/call-for-papers">
+										Call for Papers
+									</a>
+								</li>
+																												<li class="">
+									<a href="https://joetssh.com/index.php/joetssh/about/submissions">
+										Submit your Article
+									</a>
+								</li>
+																												<li class="">
+									<a href="https://joetssh.com/index.php/joetssh/Publication-Fee-and-Funding">
+										Publication Fee and Funding
+									</a>
+								</li>
+																		</ul>
+							</li>
+								<li class="">
+				<a href="https://joetssh.com/index.php/joetssh/indexing-abstracting">
+					Indexing and Abstracting
+				</a>
+							</li>
+								<li class="">
+				<a href="https://joetssh.com/index.php/joetssh/policy-documents">
+					Policy Documents
+				</a>
+							</li>
+			</ul>
+
+				
+
+																						<div class="pkp_navigation_search_wrapper">
+									<a href="https://joetssh.com/index.php/joetssh/search" class="pkp_search pkp_search_desktop">
+										<span class="fa fa-search" aria-hidden="true"></span>
+										Search
+									</a>
+								</div>
+													</div>
+					</div>
+					<div class="pkp_navigation_user_wrapper" id="navigationUserWrapper">
+							<ul id="navigationUser" class="pkp_navigation_user pkp_nav_list">
+								<li class="profile">
+				<a href="https://joetssh.com/index.php/joetssh/user/register">
+					Register
+				</a>
+							</li>
+								<li class="profile">
+				<a href="https://joetssh.com/index.php/joetssh/login">
+					Login
+				</a>
+							</li>
+										</ul>
+
+					</div>
+				</nav>
+			</div><!-- .pkp_head_wrapper -->
+		</header><!-- .pkp_structure_head -->
+
+						<div class="pkp_structure_content has_sidebar">
+			<div class="pkp_structure_main" role="main">
+				<a id="pkp_content_main"></a>
+
+<div class="page page_article">
+			<nav class="cmp_breadcrumbs" role="navigation" aria-label="You are here:">
+	<ol>
+		<li>
+			<a href="https://joetssh.com/index.php/joetssh/index">
+				Home
+			</a>
+			<span class="separator">/</span>
+		</li>
+		<li>
+			<a href="https://joetssh.com/index.php/joetssh/issue/archive">
+				Archives
+			</a>
+			<span class="separator">/</span>
+		</li>
+					<li>
+				<a href="https://joetssh.com/index.php/joetssh/issue/view/14">
+					Vol. 3 No. 3 (2026): July-September
+				</a>
+				<span class="separator">/</span>
+			</li>
+				<li class="current" aria-current="page">
+			<span aria-current="page">
+									Articles
+							</span>
+		</li>
+	</ol>
+</nav>
+	
+		  	 <article class="obj_article_details">
+
+		
+	<h1 class="page_title">
+		Evaluating the architectural trade-offs of micro services versus monolithic designs: An empirical analysis of scalability and maintainability in enterprise environments
+	</h1>
+
+	
+	<div class="row">
+		<div class="main_entry">
+
+							<section class="item authors">
+					<h2 class="pkp_screen_reader">Authors</h2>
+					<ul class="authors">
+											<li>
+							<span class="name">
+								Muhammad Ahmad Raza
+							</span>
+															<span class="affiliation">
+																			<span>MS Scholar, Department of Computer Science and Information Technology, Superior University, Lahore, Punjab, Pakistan</span>
+																																					</span>
+																													<span class="userGroup">
+									Author
+								</span>
+																				</li>
+											<li>
+							<span class="name">
+								Shaher Yar Haider
+							</span>
+															<span class="affiliation">
+																			<span>MS Scholar, Department of Computer Science and Information Technology, Superior University, Lahore, Punjab, Pakistan</span>
+																																					</span>
+																													<span class="userGroup">
+									Author
+								</span>
+																				</li>
+											<li>
+							<span class="name">
+								Saleem Zubair
+							</span>
+															<span class="affiliation">
+																			<span>Department of Computer Science and Information Technology, Superior University, Lahore, Punjab, Pakistan</span>
+																																					</span>
+																													<span class="userGroup">
+									Author
+								</span>
+																				</li>
+											<li>
+							<span class="name">
+								Ayesha Saddiqa
+							</span>
+															<span class="affiliation">
+																			<span>Department of Computer Science and Information Technology, Superior University, Lahore, Punjab, Pakistan</span>
+																																					</span>
+																													<span class="userGroup">
+									Author
+								</span>
+																				</li>
+										</ul>
+				</section>
+			
+																	<section class="item doi">
+					<h2 class="label">
+												DOI: 
+					</h2>
+					<span class="value">
+						<a href="https://doi.org/10.68065/joetssh.03.03.79">
+							https://doi.org/10.68065/joetssh.03.03.79
+						</a>
+					</span>
+				</section>
+			
+
+									<section class="item keywords">
+				<h2 class="label">
+										Keywords: 
+				</h2>
+				<span class="value">
+											Architectural, 											Micro Service, 											Monolithic Design, 											Trade-offs, 											Scarability and Maintainability									</span>
+			</section>
+			
+										<section class="item abstract">
+					<h2 class="label">Abstract</h2>
+					<p>One key problem in enterprise software is the different software architecture problems. The two popular architectures are monolithic and microservices architecture. A review of the literature indicates, however, that current research tends to focus on the assessment of These quality attributes have been studied individually, with limited evidence to support their joint constraints. To overcome this gap, the present study has adopted a systematic secondary data analysis based on a comparative study. Evaluation and Evidence Extraction Synthesis (CEES) framework, a synthesis of empirical findings. From recently published peer-reviewed studies comparing both architectural styles. The analysis combines quantitative Integrate performance evidence and qualitative maintainability properties in one architecture evaluation. Both architectures showed similar performance under baseline workloads but not under overloads; Larger datasets led to increases in response time as the monolithic architecture broke down to a 20 s response time for 10, and then 50, concurrent users. The microservices architecture, on the other hand, maintained a better performance of a 15 s response time. What the results also reveal is that although the microservices promise numerous benefits in the areas of scalability, modularity and fault isolation, these benefits are substantial, but come with the added complexity of managing distributed communication, orchestration, and infrastructure. The study finally demonstrates that the choice of architectural style should be based on the needs of the organization, not technology.</p>
+				</section>
+			
+			
+
+										
+				<section class="item downloads_chart">
+					<h2 class="label">
+						Downloads
+					</h2>
+					<div class="value">
+						<canvas class="usageStatsGraph" data-object-type="Submission" data-object-id="79"></canvas>
+						<div class="usageStatsUnavailable" data-object-type="Submission" data-object-id="79">
+							Download data is not yet available.
+						</div>
+					</div>
+				</section>
+			
+																																								
+						
+		</div><!-- .main_entry -->
+
+		<div class="entry_details">
+
+						
+										<div class="item galleys">
+					<h2 class="pkp_screen_reader">
+						Downloads
+					</h2>
+					<ul class="value galleys_links">
+													<li>
+								
+	
+													
+
+<a class="obj_galley_link pdf" href="https://joetssh.com/index.php/joetssh/article/view/79/81">
+		
+	PDF
+
+	</a>
+							</li>
+											</ul>
+				</div>
+						
+						<div class="item published">
+				<section class="sub_item">
+					<h2 class="label">
+						Published
+					</h2>
+					<div class="value">
+																			<span>2026-08-14</span>
+																	</div>
+				</section>
+							</div>
+			
+						
+										<div class="item issue">
+
+											<section class="sub_item">
+							<h2 class="label">
+								Issue
+							</h2>
+							<div class="value">
+								<a class="title" href="https://joetssh.com/index.php/joetssh/issue/view/14">
+									Vol. 3 No. 3 (2026): July-September
+								</a>
+							</div>
+						</section>
+					
+											<section class="sub_item">
+							<h2 class="label">
+								Section
+							</h2>
+							<div class="value">
+								Articles
+							</div>
+						</section>
+					
+									</div>
+			
+						
+										<div class="item copyright">
+					<h2 class="label">
+						License
+					</h2>
+																										<p>Copyright (c) 2026 Journal of Emerging Trends in Social Sciences and Humanities</p>
+														<a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/"><img alt="Creative Commons License" src="//i.creativecommons.org/l/by-nc-nd/4.0/88x31.png" /></a><p>This work is licensed under a <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/">Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License</a>.</p>
+																
+				</div>
+			
+				<div class="item citation">
+		<section class="sub_item citation_display">
+			<h2 class="label">
+				How to Cite
+			</h2>
+			<div class="value">
+				<div id="citationOutput" role="region" aria-live="polite">
+					<div class="csl-bib-body">
+  <div class="csl-entry">Raza, M. A., Haider, S. Y., Zubair, S., &#38; Saddiqa, A. (2026). Evaluating the architectural trade-offs of micro services versus monolithic designs: An empirical analysis of scalability and maintainability in enterprise environments. <i>Journal of Emerging Trends in Social Sciences and Humanities</i>, <i>3</i>(3), 223-240. <a href="https://doi.org/10.68065/joetssh.03.03.79">https://doi.org/10.68065/joetssh.03.03.79</a></div>
+</div>
+				</div>
+				<div class="citation_formats">
+					<button class="citation_formats_button label" aria-controls="cslCitationFormats" aria-expanded="false" data-csl-dropdown="true">
+						More Citation Formats
+					</button>
+					<div id="cslCitationFormats" class="citation_formats_list" aria-hidden="true">
+						<ul class="citation_formats_styles">
+															<li>
+									<a
+											rel="nofollow"
+											aria-controls="citationOutput"
+											href="https://joetssh.com/index.php/joetssh/citationstylelanguage/get/acm-sig-proceedings?submissionId=79&amp;publicationId=79&amp;issueId=14"
+											data-load-citation
+											data-json-href="https://joetssh.com/index.php/joetssh/citationstylelanguage/get/acm-sig-proceedings?submissionId=79&amp;publicationId=79&amp;issueId=14&amp;return=json"
+									>
+										ACM
+									</a>
+								</li>
+															<li>
+									<a
+											rel="nofollow"
+											aria-controls="citationOutput"
+											href="https://joetssh.com/index.php/joetssh/citationstylelanguage/get/acs-nano?submissionId=79&amp;publicationId=79&amp;issueId=14"
+											data-load-citation
+											data-json-href="https://joetssh.com/index.php/joetssh/citationstylelanguage/get/acs-nano?submissionId=79&amp;publicationId=79&amp;issueId=14&amp;return=json"
+									>
+										ACS
+									</a>
+								</li>
+															<li>
+									<a
+											rel="nofollow"
+											aria-controls="citationOutput"
+											href="https://joetssh.com/index.php/joetssh/citationstylelanguage/get/apa?submissionId=79&amp;publicationId=79&amp;issueId=14"
+											data-load-citation
+											data-json-href="https://joetssh.com/index.php/joetssh/citationstylelanguage/get/apa?submissionId=79&amp;publicationId=79&amp;issueId=14&amp;return=json"
+									>
+										APA
+									</a>
+								</li>
+															<li>
+									<a
+											rel="nofollow"
+											aria-controls="citationOutput"
+											href="https://joetssh.com/index.php/joetssh/citationstylelanguage/get/associacao-brasileira-de-normas-tecnicas?submissionId=79&amp;publicationId=79&amp;issueId=14"
+											data-load-citation
+											data-json-href="https://joetssh.com/index.php/joetssh/citationstylelanguage/get/associacao-brasileira-de-normas-tecnicas?submissionId=79&amp;publicationId=79&amp;issueId=14&amp;return=json"
+									>
+										ABNT
+									</a>
+								</li>
+															<li>
+									<a
+											rel="nofollow"
+											aria-controls="citationOutput"
+											href="https://joetssh.com/index.php/joetssh/citationstylelanguage/get/chicago-author-date?submissionId=79&amp;publicationId=79&amp;issueId=14"
+											data-load-citation
+											data-json-href="https://joetssh.com/index.php/joetssh/citationstylelanguage/get/chicago-author-date?submissionId=79&amp;publicationId=79&amp;issueId=14&amp;return=json"
+									>
+										Chicago
+									</a>
+								</li>
+															<li>
+									<a
+											rel="nofollow"
+											aria-controls="citationOutput"
+											href="https://joetssh.com/index.php/joetssh/citationstylelanguage/get/harvard-cite-them-right?submissionId=79&amp;publicationId=79&amp;issueId=14"
+											data-load-citation
+											data-json-href="https://joetssh.com/index.php/joetssh/citationstylelanguage/get/harvard-cite-them-right?submissionId=79&amp;publicationId=79&amp;issueId=14&amp;return=json"
+									>
+										Harvard
+									</a>
+								</li>
+															<li>
+									<a
+											rel="nofollow"
+											aria-controls="citationOutput"
+											href="https://joetssh.com/index.php/joetssh/citationstylelanguage/get/ieee?submissionId=79&amp;publicationId=79&amp;issueId=14"
+											data-load-citation
+											data-json-href="https://joetssh.com/index.php/joetssh/citationstylelanguage/get/ieee?submissionId=79&amp;publicationId=79&amp;issueId=14&amp;return=json"
+									>
+										IEEE
+									</a>
+								</li>
+															<li>
+									<a
+											rel="nofollow"
+											aria-controls="citationOutput"
+											href="https://joetssh.com/index.php/joetssh/citationstylelanguage/get/modern-language-association?submissionId=79&amp;publicationId=79&amp;issueId=14"
+											data-load-citation
+											data-json-href="https://joetssh.com/index.php/joetssh/citationstylelanguage/get/modern-language-association?submissionId=79&amp;publicationId=79&amp;issueId=14&amp;return=json"
+									>
+										MLA
+									</a>
+								</li>
+															<li>
+									<a
+											rel="nofollow"
+											aria-controls="citationOutput"
+											href="https://joetssh.com/index.php/joetssh/citationstylelanguage/get/turabian-fullnote-bibliography?submissionId=79&amp;publicationId=79&amp;issueId=14"
+											data-load-citation
+											data-json-href="https://joetssh.com/index.php/joetssh/citationstylelanguage/get/turabian-fullnote-bibliography?submissionId=79&amp;publicationId=79&amp;issueId=14&amp;return=json"
+									>
+										Turabian
+									</a>
+								</li>
+															<li>
+									<a
+											rel="nofollow"
+											aria-controls="citationOutput"
+											href="https://joetssh.com/index.php/joetssh/citationstylelanguage/get/vancouver?submissionId=79&amp;publicationId=79&amp;issueId=14"
+											data-load-citation
+											data-json-href="https://joetssh.com/index.php/joetssh/citationstylelanguage/get/vancouver?submissionId=79&amp;publicationId=79&amp;issueId=14&amp;return=json"
+									>
+										Vancouver
+									</a>
+								</li>
+															<li>
+									<a
+											rel="nofollow"
+											aria-controls="citationOutput"
+											href="https://joetssh.com/index.php/joetssh/citationstylelanguage/get/ama?submissionId=79&amp;publicationId=79&amp;issueId=14"
+											data-load-citation
+											data-json-href="https://joetssh.com/index.php/joetssh/citationstylelanguage/get/ama?submissionId=79&amp;publicationId=79&amp;issueId=14&amp;return=json"
+									>
+										AMA
+									</a>
+								</li>
+													</ul>
+													<div class="label">
+								Download Citation
+							</div>
+							<ul class="citation_formats_styles">
+																	<li>
+										<a href="https://joetssh.com/index.php/joetssh/citationstylelanguage/download/ris?submissionId=79&amp;publicationId=79&amp;issueId=14">
+											<span class="fa fa-download"></span>
+											Endnote/Zotero/Mendeley (RIS)
+										</a>
+									</li>
+																	<li>
+										<a href="https://joetssh.com/index.php/joetssh/citationstylelanguage/download/bibtex?submissionId=79&amp;publicationId=79&amp;issueId=14">
+											<span class="fa fa-download"></span>
+											BibTeX
+										</a>
+									</li>
+															</ul>
+											</div>
+				</div>
+			</div>
+		</section>
+	</div>
+
+
+		</div><!-- .entry_details -->
+	</div><!-- .row -->
+
+</article>
+
+	
+
+</div><!-- .page -->
+
+	</div><!-- pkp_structure_main -->
+
+									<div class="pkp_structure_sidebar left" role="complementary">
+				<div class="pkp_block block_custom" id="customblock-joetssh">
+	<h2 class="title pkp_screen_reader">Joetssh</h2>
+	<div class="content">
+		<p style="text-align: justify;"><img src="https://joetssh.com/public/site/images/joetsshcom/hbm.jpg" alt=""></p>
+<p style="text-align: justify;"><span style="font-family: 'times new roman', times, serif; font-size: 12pt;"><strong>Publishing Frequency: </strong>4 Issues Per Year (Quartly)</span></p>
+<p style="text-align: justify;"><span style="font-family: 'times new roman', times, serif; font-size: 12pt;"><strong>ISSN Online:</strong>&nbsp; <a href="https://portal.issn.org/resource/ISSN/3006-7898#">3006-7898</a></span></p>
+<p style="text-align: justify;"><span style="font-family: 'times new roman', times, serif; font-size: 12pt;"><strong>ISSN Print: </strong><a href="https://portal.issn.org/resource/ISSN/3006-788X#">3006-788X</a></span></p>
+<p style="text-align: justify;"><span style="font-family: 'times new roman', times, serif; font-size: 12pt;"><strong>Language:</strong>&nbsp; English</span></p>
+<p style="text-align: justify;"><span style="font-family: 'times new roman', times, serif; font-size: 12pt;"><strong>Publisher Address: 27-A, Street # 10, New Shalimar Colony, Multan Road, Lahore, Pakistan.</strong></span></p>
+	</div>
+</div>
+<div class="pkp_block block_web_feed">
+	<h2 class="title">Latest publications</h2>
+	<div class="content">
+		<ul>
+			<li>
+				<a href="https://joetssh.com/index.php/joetssh/gateway/plugin/WebFeedGatewayPlugin/atom">
+					<img src="https://joetssh.com/lib/pkp/templates/images/atom.svg" alt="Atom logo">
+				</a>
+			</li>
+			<li>
+				<a href="https://joetssh.com/index.php/joetssh/gateway/plugin/WebFeedGatewayPlugin/rss2">
+					<img src="https://joetssh.com/lib/pkp/templates/images/rss20_logo.svg" alt="RSS2 logo">
+				</a>
+			</li>
+			<li>
+				<a href="https://joetssh.com/index.php/joetssh/gateway/plugin/WebFeedGatewayPlugin/rss">
+					<img src="https://joetssh.com/lib/pkp/templates/images/rss10_logo.svg" alt="RSS1 logo">
+				</a>
+			</li>
+		</ul>
+	</div>
+</div>
+<div class="pkp_block block_information">
+	<h2 class="title">Information</h2>
+	<div class="content">
+		<ul>
+							<li>
+					<a href="https://joetssh.com/index.php/joetssh/information/readers">
+						For Readers
+					</a>
+				</li>
+										<li>
+					<a href="https://joetssh.com/index.php/joetssh/information/authors">
+						For Authors
+					</a>
+				</li>
+										<li>
+					<a href="https://joetssh.com/index.php/joetssh/information/librarians">
+						For Librarians
+					</a>
+				</li>
+					</ul>
+	</div>
+</div>
+<div class="pkp_block block_custom" id="customblock-sign-up-for-e-alerts">
+	<h2 class="title pkp_screen_reader">Sign up for E-Alerts</h2>
+	<div class="content">
+		<div class="oa-card"><a class="btn-3d primary" href="https://joetssh.com/index.php/joetssh/about/submissions">Submit a Manuscript</a> <a class="btn-3d secondary" href="https://joetssh.com/index.php/joetssh/user/register">Sign up for E-Alerts</a>
+<div class="img-box"><img src="https://joccd.com/public/site/images/joccdcom/images.png" alt="Open Access" width="136" height="55"></div>
+<div class="img-box"><a href="https://creativecommons.org/licenses/by-nc/4.0/"><img src="https://licensebuttons.net/l/by-nc-sa/4.0/88x31.png" alt="CC BY-NC-SA"></a></div>
+</div>
+	</div>
+</div>
+<div class="pkp_block block_make_submission">
+	<h2 class="pkp_screen_reader">
+		Make a Submission
+	</h2>
+
+	<div class="content">
+		<a class="block_make_submission_link" href="https://joetssh.com/index.php/joetssh/about/submissions">
+			Make a Submission
+		</a>
+	</div>
+</div>
+<div class="pkp_block block_custom" id="customblock-journal-information">
+	<h2 class="title">Journal information</h2>
+	<div class="content">
+		<p><em>Journal of Emerging Trends in Social Sciences and Humanities</em></p>
+<p><em>ISSN:&nbsp;<a href="https://portal.issn.org/resource/ISSN/3006-7898#">3006-7898</a></em></p>
+<p><em><strong>Editor-in-Chief:</strong> Prof. Dr. Iram Khalid</em></p>
+<p><em><a href="https://joetssh.com/index.php/joetssh/about/contact">Contact</a></em></p>
+<p><em><a href="https://joetssh.com/index.php/joetssh/privacy-Policy">Privacy Policy</a></em></p>
+<p><em><a href="https://joetssh.com/index.php/joetssh/copyright-and-publishing-rights">Copyright &amp; Licensing</a></em></p>
+	</div>
+</div>
+
+			</div><!-- pkp_sidebar.left -->
+			</div><!-- pkp_structure_content -->
+
+<div class="pkp_structure_footer_wrapper" role="contentinfo">
+	<a id="pkp_content_footer"></a>
+
+	<div class="pkp_structure_footer">
+
+					<div class="pkp_footer_content">
+				<blockquote><center><strong><img src="https://joccd.com/public/site/images/joccdcom/instutube-for-eduction--2-edited.png" alt="" width="173" height="99"></strong></center><center><strong>Publisher:</strong> Institute for Educating Environmental Resilience and Governance </center></blockquote>
+<blockquote><center><strong>Address:</strong> 135-B, Punjab University Housing Society, Town 1, Lahore, Pakistan</center></blockquote>
+<blockquote><center><strong>Website:</strong> <a href="https://ieerg.org/">https://ieerg.org/</a></center></blockquote>
+<blockquote><center><strong>Email:</strong> info@ieerg.org </center></blockquote>
+<blockquote><center><strong>Contact:</strong> 092-3004154599</center></blockquote>
+			</div>
+		
+		<div class="pkp_brand_footer">
+			<a href="https://joetssh.com/index.php/joetssh/about/aboutThisPublishingSystem">
+				<img alt="More information about the publishing system, Platform and Workflow by OJS/PKP." src="https://joetssh.com/templates/images/ojs_brand.png">
+			</a>
+		</div>
+	</div>
+</div><!-- pkp_structure_footer_wrapper -->
+
+</div><!-- pkp_structure_page -->
+
+<script src="https://joetssh.com/js/build/jquery/jquery.min.js?v=3.5.0.1" type="text/javascript"></script><script src="https://joetssh.com/js/build/jquery-ui/jquery-ui.min.js?v=3.5.0.1" type="text/javascript"></script><script src="https://joetssh.com/plugins/themes/default/js/lib/popper/popper.js?v=3.5.0.1" type="text/javascript"></script><script src="https://joetssh.com/plugins/themes/default/js/lib/bootstrap/util.js?v=3.5.0.1" type="text/javascript"></script><script src="https://joetssh.com/plugins/themes/default/js/lib/bootstrap/dropdown.js?v=3.5.0.1" type="text/javascript"></script><script src="https://joetssh.com/plugins/themes/default/js/lib/swiper/swiper-bundle.min.js?v=3.5.0.1" type="text/javascript"></script><script type="text/javascript">var pkpDefaultThemeI18N = {"nextSlide":"Next slide","prevSlide":"Previous slide"}</script><script src="https://joetssh.com/plugins/themes/default/js/main.js?v=3.5.0.1" type="text/javascript"></script><script src="https://joetssh.com/plugins/generic/citationStyleLanguage/js/articleCitation.js?v=3.5.0.1" type="text/javascript"></script><script type="text/javascript">var pkpUsageStats = pkpUsageStats || {};pkpUsageStats.data = pkpUsageStats.data || {};pkpUsageStats.data.Submission = pkpUsageStats.data.Submission || {};pkpUsageStats.data.Submission[79] = {"data":{"2026":{"8":"45","9":"64"}},"label":"All Downloads","color":"79,181,217","total":109};</script><script src="https://joetssh.com/js/build/chart.js/chart.umd.js?v=3.5.0.1" type="text/javascript"></script><script type="text/javascript">var pkpUsageStats = pkpUsageStats || {};pkpUsageStats.locale = pkpUsageStats.locale || {};pkpUsageStats.locale.months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];pkpUsageStats.config = pkpUsageStats.config || {};pkpUsageStats.config.chartType = "bar";</script><script src="https://joetssh.com/lib/pkp/js/usage-stats-chart.js?v=3.5.0.1" type="text/javascript"></script>
+
+
+</body>
+</html>

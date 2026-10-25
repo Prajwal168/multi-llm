@@ -1,0 +1,858 @@
+<!DOCTYPE html><html lang="en" data-theme="dark" class="plus_jakarta_sans_a70c094a-module__Ge6A8q__variable"><head><meta charSet="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="/_next/static/chunks/20fby5rwr5hff.css" data-precedence="next"/><link rel="stylesheet" href="/_next/static/chunks/0fpx0zdb3k9kb.css" data-precedence="next"/><link rel="stylesheet" href="/_next/static/chunks/0u__1xj34coe-.css" data-precedence="next"/><link rel="stylesheet" href="/_next/static/chunks/0jhtbo5jcgk5y.css" data-precedence="next"/><link rel="stylesheet" href="/_next/static/chunks/0a0a_9lj-h20h.css" data-precedence="next"/><link rel="stylesheet" href="/_next/static/chunks/3_ghj7lw0pina.css" data-precedence="next"/><link rel="preload" as="script" fetchPriority="low" href="/_next/static/chunks/2tzlvp2q7dk6t.js"/><script src="/_next/static/chunks/10hi619fq5xmp.js" async=""></script><script src="/_next/static/chunks/27t_qfc-3_lzs.js" async=""></script><script src="/_next/static/chunks/10hqnqgtgc--0.js" async=""></script><script src="/_next/static/chunks/turbopack-1a4r9fom-5-pr.js" async=""></script><script src="/_next/static/chunks/3_g8wjnnyafep.js" async=""></script><script src="/_next/static/chunks/3y-9e9_f11zip.js" async=""></script><script src="/_next/static/chunks/29zwfi5_xti9r.js" async=""></script><script src="/_next/static/chunks/3dk39kva71n_w.js" async=""></script><script src="/_next/static/chunks/0738efkbv6y3k.js" async=""></script><script src="/_next/static/chunks/1ce9je2siyveg.js" async=""></script><script src="/_next/static/chunks/42qkv0w5l-byv.js" async=""></script><link rel="preload" href="/_next/static/chunks/3_95diz3oq33o.css" as="style"/><meta name="next-size-adjust" content=""/><script src="/_next/static/chunks/0cz1d0mv5g_q7.js" noModule=""></script></head><body id="ctl00_MasterBody" class="openClose"><div hidden=""><!--$?--><template id="B:0"></template><!--/$--></div><script type="text/javascript" data-cfasync="false">(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-KTSP8N2G');</script><script type="text/javascript" data-cfasync="false">(function(){try{if(localStorage.getItem("lightmode")!=="active")return;var e=document.documentElement;e.setAttribute("data-theme","light");e.classList.add("light-mode")}catch(e){}})()</script><script type="text/javascript" data-cfasync="false">(function(){try{if(location.pathname!=="/")return;if(!("scrollRestoration" in history))return;history.scrollRestoration="manual"}catch(e){}})()</script><noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KTSP8N2G" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript><div id="LayoutForm"><style>
+    #ulMoreItems:after {
+        content: '';
+        width: 0px;
+        height: 0px;
+        border-left: 8px solid transparent;
+        border-right: 8px solid transparent;
+        border-top: 8px solid var(--bdrColor);
+        position: absolute;
+        bottom: -9px;
+        left: 22px;
+    }
+
+    .main-navbar-list .navbar-item #actionMenuMore, .top-header-right-controls #actionMenuMore {
+        padding: inherit;
+        border: 0px;
+    }
+
+    #actionMenuMore {
+        position: relative;
+        display: inline-block;
+        border: 1px solid #343E57;
+        border-radius: 4px;
+        padding: 3px;
+        margin-left: auto;
+    }
+
+        #actionMenuMore .dropdown-list {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: none;
+            position: absolute;
+            top: 20px;
+            right: 0px;
+            z-index: 99;
+            background-color: var(--dropdownBg);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            min-width: 120px;
+            border: 1px solid var(--bdrColor);
+            border-radius: var(--bdrRadius);
+            overflow: hidden;
+        }
+
+        #actionMenuMore .dropdown-item a {
+            padding: 5px 10px;
+            border-bottom: 1px solid var(--bdrColor);
+            display: block;
+        }
+    /*message notification*/
+    .pic img {
+        max-width: 45px;
+        max-height: 45px;
+        border-radius: 100%;
+    }
+
+    .pic {
+        position: absolute;
+    }
+
+    .newright_content {
+        margin-left: 55px;
+    }
+
+    li.newdvMessages.dropdown-item {
+        position: relative;
+        border-bottom: 1px solid var(--bdrColor);
+        min-height: 50px;
+    }
+
+    span.newnotificationDate {
+        position: absolute;
+        top: 5px;
+        right: 28px;
+        z-index: 11;
+    }
+
+    /*
+     * The panel needs a width of its own. Everything inside it is block-level,
+     * so there is nothing for it to shrink-wrap to and it collapsed onto the
+     * min-width: 120px in 01-stylesheet.css -- at which point the
+     * overflow-wrap: anywhere sitting beside that min-width broke the words
+     * down the middle to fit, and the empty state read "Nothi / ng new.".
+     * That pair is there to stop one unbroken URL from stretching a menu, not
+     * to decide how wide this is; stating a width makes the min-width moot and
+     * lets overflow-wrap go back to being the guard it was written as.
+     */
+    #dvMessages,
+    #dvAlerts {
+        width: var(--header-panel-width, 340px);
+        max-width: calc(100vw - 24px);
+        overflow-wrap: break-word;
+        box-shadow: 0 8px 24px rgb(0 0 0 / 35%);
+    }
+
+    /*
+     * A row is avatar | message | time, and it is laid out by measuring those
+     * three rather than by guessing at them. What was here was an absolutely
+     * positioned .pic, a 55px indent to clear it, and an absolutely positioned
+     * date -- so nothing reserved room for the date and it printed on top of
+     * the first line of every message long enough to reach it.
+     */
+    #dvMessages .newdvMessages a,
+    #dvAlerts .newdvMessages a {
+        border-bottom: none;
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        padding: 10px;
+    }
+
+    #dvMessages .pic,
+    #dvAlerts .pic {
+        position: static;
+        flex: 0 0 auto;
+        line-height: 0;
+    }
+
+    #dvMessages .newright_content,
+    #dvAlerts .newright_content {
+        /* The 55px cleared the absolute avatar; the flex row does that now. */
+        margin-left: 0;
+        flex: 1 1 auto;
+        /* Without this the text refuses to wrap below its longest word and
+           pushes the date off the end of the row instead. */
+        min-width: 0;
+    }
+
+    #dvMessages span.newnotificationDate,
+    #dvAlerts span.newnotificationDate {
+        position: static;
+        flex: 0 0 auto;
+        font-size: 11px;
+        /* Same token as .text, dimmed -- it had no colour of its own and so
+           came out in the anchor's link colour, which on the dark palette is a
+           blue barely off the panel behind it. */
+        color: var(--fontColor);
+        opacity: 0.7;
+        white-space: nowrap;
+    }
+
+    /* No avatar to clear and no date to make room for, so the empty state is
+       just the sentence -- and not held open to a 50px row to say it. */
+    #dvMessages .dvMessages-empty,
+    #dvAlerts .dvMessages-empty {
+        min-height: 0;
+    }
+
+    .newdvMessages .text {
+     color: var(--fontColor);
+    }
+
+    /* ---- the two panels: a heading, the rows, and a way out of them ----
+       Written once for both because they are the same menu twice: the message
+       icon and the bell open lists of the same shape, and the only thing that
+       differs is what a row means. Everything below is shared by #dvMessages
+       and #dvAlerts. */
+
+    /* .avatar-initials is sized by whatever class the caller puts on it, and
+       these two panels pass none -- so a member with no picture had a 45px hole
+       where a 0x0 span was. .pic img was already capped at 45; this states the
+       box for both, so a row is the same height whichever way the avatar goes. */
+    .header-panel .pic img,
+    .header-panel .pic .avatar-initials {
+        width: 45px;
+        height: 45px;
+        border-radius: 100%;
+    }
+
+    /* Which menu this is. Without it the two panels are indistinguishable
+       stacks of avatars, and they open from icons a few pixels apart.
+
+       THE FLEX IS ON THE DIV INSIDE, not on this <li>. 03-main-leftnavbar.css
+       ends with a .dropdown-list > li rule that sets display: block !important.
+       It was written for the left rail's account menu, but it matches every
+       direct child of every dropdown in the site, so a display on this element
+       is not a declaration this file can win. The row inside it is nobody's
+       direct li. */
+    .header-panel .header-panel-title {
+        padding: 8px 10px;
+        border-bottom: 1px solid var(--bdrColor);
+        color: var(--fontColor);
+    }
+
+    .header-panel .header-panel-heading {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+        font-weight: 600;
+    }
+
+    .header-panel .header-panel-count {
+        font-weight: 400;
+        font-size: 11px;
+        opacity: 0.7;
+    }
+
+    /* The name is the line a reader scans; the preview under it is the detail.
+       Both are one line -- a three-line row would fit two threads in a panel
+       that is meant to show five. */
+    .header-panel .header-panel-name {
+        color: var(--fontColor);
+        font-weight: 600;
+        font-size: 13px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .header-panel .newright_content .text {
+        font-size: 12px;
+        opacity: 0.75;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    /* A thread with something in it, so the panel answers "which one" at a
+       glance rather than by being read. Not bold text: the preview is already
+       dimmed, and undimming it says the same thing without a second weight. */
+    .header-panel .is-unread .newright_content .text {
+        opacity: 1;
+        font-weight: 600;
+    }
+
+    /* The date and the count share the right-hand column, stacked, because the
+       row's three cells are measured and a fourth would squeeze the preview. */
+    .header-panel span.newnotificationDate {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 4px;
+    }
+
+    /*
+     * When it actually happened, inside a panel that clips.
+     *
+     * components/PostedTime.tsx draws its own tooltip rather than leaving the
+     * exact time to a native title, and anchors it at the left edge of the
+     * number it explains. That is right on an article byline, which has a whole
+     * page to its right; it is wrong here. The number sits against the right
+     * edge of a 340px menu, the box is a nowrap date two hundred pixels wide,
+     * and .dropdown .dropdown-list in 01-stylesheet.css is overflow: hidden --
+     * so left-anchored it would open into the clip and show nothing. Anchored
+     * to the right instead, it opens back across the panel it belongs to.
+     *
+     * ABOVE THE ROW, for the same clip. The date sits at the top of its row, so
+     * what is above the first one is the panel's own heading -- 38px of it,
+     * against a ~37px box lifted 4px. Below would put the last row's tooltip
+     * through the bottom of the panel, where the same overflow would eat it.
+     */
+    .header-panel .posted-when-pop {
+        left: auto;
+        right: 0;
+        bottom: calc(100% + 4px);
+    }
+
+    /* #0086dc in both themes, for the reason 08-light-mode.css gives about the
+       badge itself: this is the same count, and a number that changes colour
+       with the theme reads as a different number. */
+    .header-panel .header-panel-dot {
+        background: #0086dc;
+        color: #fff;
+        border-radius: 100%;
+        min-width: 18px;
+        padding: 1px;
+        font-size: 10px;
+        line-height: 16px;
+        text-align: center;
+    }
+
+    /* The panel shows five. This is how a member reaches the sixth, and it is
+       the only row that is always there -- including under the empty state,
+       where "there is nothing here" and "here is everything" are different
+       sentences and a member may want the second one. */
+    .header-panel .header-panel-all {
+        border-top: 1px solid var(--bdrColor);
+        text-align: center;
+    }
+
+    .header-panel .header-panel-all a {
+        display: block;
+        padding: 8px 10px;
+        font-size: 12px;
+        font-weight: 600;
+    }
+
+    /* ---- a friend request, which is a row with a question on it ---- */
+
+    /* Not a link wrapping the whole row: the buttons are the point of it, and a
+       button inside an anchor is a click that does two things. The anchor is
+       the top half only. */
+    .header-panel .header-request {
+        padding-bottom: 8px;
+    }
+
+    .header-panel .header-request-actions {
+        display: flex;
+        gap: 8px;
+        padding: 0 10px 0 65px;
+    }
+
+    .header-panel .header-request-actions .btn {
+        flex: 1 1 0;
+        padding: 4px 8px;
+        font-size: 12px;
+        border-radius: var(--bdrRadius);
+        cursor: pointer;
+        border: 1px solid var(--bdrColor);
+    }
+
+    .header-panel .header-request-actions .btn:disabled {
+        opacity: 0.5;
+        cursor: default;
+    }
+
+    .header-panel .header-request-accept {
+        background: #0086dc;
+        border-color: #0086dc;
+        color: #fff;
+    }
+
+    /* --boxlightbg, not transparent: on the dark panel a border in --bdrColor
+       is 46% of a grey-blue over #101830 and reads as nothing at all, so
+       Decline came out as a word floating beside a button rather than the
+       second of two. The token is the site's own raised neutral surface and is
+       defined for both themes. */
+    .header-panel .header-request-decline {
+        background: var(--boxlightbg);
+        color: var(--fontColor);
+    }
+
+    span#spanMessages,
+    span#spanAlerts {
+        position: absolute;
+        top: -9px;
+        text-align: center;
+        right: 0px;
+        background: #0086dc;
+        color: #fff;
+        padding: 1px;
+        font-size: 10px;
+        min-width: 18px;
+        border-radius: 100%;
+        z-index: 3;
+    }
+    span#spanCommentCount {
+        position: absolute;
+        top: -9px;
+        text-align: center;
+        right: 0px;
+        background: #0086dc;
+        color: #fff;
+        padding: 1px;
+        font-size: 10px;
+        min-width: 18px;
+        border-radius: 100%;
+        z-index: 3;
+    }
+
+    a#messageNotification,
+    a#alertNotification {
+        display: block;
+        position: relative;
+    }
+
+    /*
+     * KEEPING THE PANEL OPEN ON THE WAY DOWN TO IT.
+     *
+     * The same problem the reaction picker had, answered the same two ways —
+     * see THE BRIDGE and the transition note in app/styles/33-reactions.css.
+     *
+     * The panel hangs a few pixels below the icon and 340px to the left of it,
+     * so a pointer setting off for the first row leaves the icon almost at
+     * once and is over neither it nor the panel for the rest of the trip.
+     * :hover went false the moment it crossed that band and display: none
+     * took the panel away mid-movement, which made answering a friend request
+     * a diagonal nobody could hold — the panel shut in their face every time.
+     *
+     * THE BRIDGE floors the gap with a transparent strip belonging to the
+     * wrapper, as wide as the panel it leads to. Hovering it is hovering the
+     * .dropdown, so :hover never goes false in transit. It is hidden with
+     * visibility alongside the panel, so it exists only while the panel does
+     * and never sits over the Contribute button the rest of the time; and it
+     * is painted below the panel, so overshooting the gap costs nothing.
+     *
+     * THE GRACE covers everything either side of the bridge: a pointer that
+     * clips a corner on the way down gets --header-panel-grace to come back
+     * before the panel goes. That is what makes this a visibility flip
+     * rather than a display one — a display change cannot be delayed — and
+     * visibility switches at the END of the fade rather than with it, so the
+     * panel is never invisible while still able to take a click.
+     *
+     * The ID selectors are not for emphasis: .dropdown:hover .dropdown-list
+     * in 01-stylesheet.css sets display: block, and only an ID outranks it.
+     * The two other dropdowns in this header keep that rule as it is.
+     */
+    .dropdown.header-panel-wrap {
+        /* Stated once for the panel, the bridge under it and the fade, because
+           a bridge that disagrees with the panel by a pixel is the whole bug
+           back again. */
+        --header-panel-width: 340px;
+        --header-panel-grace: 220ms;
+        /* Comfortably more than the gap between the icon and the panel, which
+           is the couple of pixels between the icon's line box and the
+           top: 30px the panel inherits. Anything past the panel's top edge
+           is behind the panel and cannot be reached, so this errs long. */
+        --header-panel-bridge: 14px;
+    }
+
+    .dropdown.header-panel-wrap::after {
+        content: '';
+        position: absolute;
+        top: 100%;
+        right: 0;
+        width: var(--header-panel-width);
+        max-width: calc(100vw - 24px);
+        height: var(--header-panel-bridge);
+        /* Under the panel's 99, so the part of it that reaches past the gap is
+           covered rather than sitting over the first row. */
+        z-index: 98;
+        visibility: hidden;
+        transition: visibility 0s linear calc(var(--header-panel-grace) + 120ms);
+    }
+
+    #dvMessages,
+    #dvAlerts {
+        display: block;
+        visibility: hidden;
+        opacity: 0;
+        transition:
+            opacity 120ms ease-out var(--header-panel-grace),
+            visibility 0s linear calc(var(--header-panel-grace) + 120ms);
+    }
+
+    /* :focus-visible, not :focus-within — a mouse click focuses the icon too,
+       and plain focus-within would leave the panel hanging open behind
+       whoever had just finished with it. */
+    .header-panel-wrap:hover::after,
+    .header-panel-wrap:has(:focus-visible)::after,
+    .header-panel-wrap:hover #dvMessages,
+    .header-panel-wrap:hover #dvAlerts,
+    .header-panel-wrap:has(:focus-visible) #dvMessages,
+    .header-panel-wrap:has(:focus-visible) #dvAlerts {
+        visibility: visible;
+        opacity: 1;
+        /* No wait on the way in — the grace above is for leaving only. */
+        transition-delay: 0s;
+    }
+
+    /* The little arrow over the panel, which 01-stylesheet.css shows and hides
+       with display on the same instant :hover. Left alone it blinked out
+       while the panel it points at was still fading. */
+    .top-header-right-controls .dropdown.header-panel-wrap::before {
+        display: block;
+        visibility: hidden;
+        transition: visibility 0s linear calc(var(--header-panel-grace) + 120ms);
+    }
+
+    .top-header-right-controls .dropdown.header-panel-wrap:hover::before,
+    .top-header-right-controls .dropdown.header-panel-wrap:has(:focus-visible)::before {
+        visibility: visible;
+        transition-delay: 0s;
+    }
+
+    /* A panel that fades is movement this preference is set to stop. The grace
+       stays: it is not motion, it is time, and it is what keeps the panel
+       reachable. opacity is given visibility's delay rather than dropped, so
+       the two still change together. */
+    @media (prefers-reduced-motion: reduce) {
+        #dvMessages,
+        #dvAlerts {
+            transition:
+                opacity 0s linear calc(var(--header-panel-grace) + 120ms),
+                visibility 0s linear calc(var(--header-panel-grace) + 120ms);
+        }
+    }
+
+    .top-header-right-controls .dropdown {
+        margin-left: 0px;
+    }
+
+    /*
+     * Anchored to the icon on a phone too, not shoved 82px past it. That offset
+     * came over with the old chrome, where the trigger sat further in and the
+     * nudge carried a narrow panel out to the screen edge; against a panel with
+     * a stated width it carries most of it off the right of a 390px screen
+     * instead, and the max-width above can cap a width but cannot pull back an
+     * offset. right: 0 with that cap keeps the whole panel on screen at every
+     * width, which is what the offset was reaching for.
+     */
+    @media (max-width: 450px) {
+        #dvMessages,
+        #dvAlerts {
+            right: 0;
+        }
+    }
+       .animated-logo{
+          display: flex;
+        align-items: center;
+        position: relative;
+        top: -6px;
+        left: -10px;
+        transform: scale(0.7);
+        height: 0px;
+        }
+/* The mark itself is components/SiteLogo.tsx, which the consulting header
+   draws too; what is above is where this header puts it. */
+
+        .logo-rotating {
+            position: relative;
+        }
+            .logo-rotating::before {
+                content: '';
+                display: block;
+                width: 40px;
+                height: 40px;
+                background-image: url('data:image/svg+xml;charset=UTF-8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 200 200" fill="none"><g clip-path=%22url(%23clip0_5419_11639)%22><mask id=%22mask0_5419_11639%22 style=%22mask-type:luminance%22 maskUnits=%22userSpaceOnUse%22 x=%220%22 y=%220%22 width=%22200%22 height=%22200%22><path d=%22M200 0H0V200H200V0Z%22 fill=%22white%22/></mask><g mask=%22url(%23mask0_5419_11639)%22><path d=%22M5.85785 35.5362C2.62298 35.5362 0 35.5362 0 35.5362V5.85784C0 2.62298 2.62298 0 5.85785 0H35.2892C35.2892 0 35.2892 2.62298 35.2892 5.85784C35.2892 9.0927 35.2892 11.7157 35.2892 11.7157H11.7157V35.5362C11.7157 35.5362 9.09271 35.5362 5.85785 35.5362Z%22 fill=%22%23BCDBFE%22/><path d=%22M194.097 35.5362C190.863 35.5362 188.24 35.5362 188.24 35.5362V11.7157H164.808C164.808 11.7157 164.808 9.0927 164.808 5.85784C164.808 2.62298 164.808 0 164.808 0H194.097C197.332 0 199.955 2.62298 199.955 5.85784V35.5362C199.955 35.5362 197.332 35.5362 194.097 35.5362Z%22 fill=%22%23BCDBFE%22/><path d=%22M35.1471 199.954H5.85785C2.62298 199.954 0 197.331 0 194.096V164.417C0 164.417 2.62298 164.417 5.85785 164.417C9.09271 164.417 11.7157 164.417 11.7157 164.417V188.238H35.1471C35.1471 188.238 35.1471 190.861 35.1471 194.096C35.1471 197.331 35.1471 199.954 35.1471 199.954Z%22 fill=%22%23BCDBFE%22/><path d=%22M194.097 199.954H164.808C164.808 199.954 164.808 197.331 164.808 194.096C164.808 190.861 164.808 188.238 164.808 188.238H188.24V164.417C188.24 164.417 190.863 164.417 194.097 164.417C197.332 164.417 199.955 164.417 199.955 164.417V194.096C199.955 197.331 197.332 199.954 194.097 199.954Z%22 fill=%22%23BCDBFE%22/></g></g><defs><clipPath id=%22clip0_5419_11639%22><rect width=%22200%22 height=%22200%22 fill=%22white%22/></clipPath></defs></svg>');
+                background-size: contain;
+                background-repeat: no-repeat;
+                position: absolute;
+                top: -10px;
+                left: -10px;
+                right: 0;
+                bottom: 0;
+            }
+
+        .cube {
+            width: 20px;
+            height: 20px;
+            position: absolute;
+            transform-style: preserve-3d;
+            animation: rotate 15s infinite linear;
+        }
+        .cube div {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: transparent;
+            border: 0.2px solid #BCDBFE;
+        }
+        .cube .front  { transform: translateZ(10px); }
+        .cube ._back   { transform: rotateY(180deg) translateZ(10px); }
+        .cube ._right  { transform: rotateY(90deg) translateZ(10px); }
+        .cube .left   { transform: rotateY(-90deg) translateZ(10px); }
+        .cube .top    { transform: rotateX(90deg) translateZ(10px); }
+        .cube .bottom { transform: rotateX(-90deg) translateZ(10px); }
+
+        @keyframes rotate {
+            from { transform: rotateX(0deg) rotateY(0deg); }
+            to { transform: rotateX(360deg) rotateY(360deg); }
+        }
+</style><a href="#main-content" class="skip-to-content">Skip to content</a><input type="hidden" id="hdncurrentPage" value="chapters"/><header class="main-header no-active-user"><div class="inner-header"><div class="left-inner-header"><div class="logo"><a href="/" title="C# Corner"><div class="animated-logo"><div class="logo-rotating" aria-hidden="true"><div class="cube"><div class="front"></div><div class="_back"></div><div class="_right"></div><div class="left"></div><div class="top"></div><div class="bottom"></div></div></div><span class="animated-sitelogo">C# Corner</span></div></a></div><div class="global-searchbox" id="GlobalSearchBox"><input type="text" id="searchTextBox" class="input-global-serach" placeholder="Search" autoComplete="off" spellCheck="false" aria-autocomplete="none" autoCapitalize="off"/><span class="search-hint" aria-hidden="true">Search<span class="search-hint-window"><span class="search-hint-reel"><span>articles</span><span>videos</span><span>blogs</span><span>forums</span><span>interview questions</span><span>articles</span></span></span></span></div></div><div class="right-inner-header"><nav class="top-main-navbar" id="topMainNavbar"><ul class="main-navbar-list"><li class="navbar-item"><a href="/technologies" title="Technologies" class="nav-link">Tech</a></li><li class="navbar-item"><a class="nav-link" href="/articles/" title="Articles">Articles</a></li><li class="navbar-item"><a class="nav-link" href="/blogs/" title="Blogs">Blogs</a></li><li class="navbar-item"><a class="nav-link" href="/news" title="News">News</a></li><li class="navbar-item"><a class="nav-link" href="/videos" title="Videos">Videos</a></li><li class="navbar-item"><a class="nav-link" href="/interviews/" title="Interview Questions">Interviews</a></li><li class="navbar-item"><a class="nav-link" href="/forums/" title="Forums">Forums</a></li><li class="navbar-item"><a class="nav-link" href="/ebooks/" title="Free Books">Books</a></li><li class="navbar-item"><a class="nav-link" href="/events" title="Events">Events</a></li><li class="navbar-item more-links"><div class="dropdown"><button class="nav-link btn-more-items" disabled="">More</button><ul class="dropdown-list"><li class="dropdown-item"><a href="/jobs/" title="Jobs">Jobs</a></li><li class="dropdown-item"><a href="/stories/" title="Success Stories">Stories</a></li></ul></div></li></ul></nav><div class="top-header-right-controls"><div class="theme-changer" id="divChangeTheme"><button type="button" class="btn-theme-changer" aria-pressed="false" aria-label="Switch to light theme"><i class="nav-icon icon-theme-changer"></i></button></div><a rel="nofollow noreferrer" href="/login" class="btn nav-link btn-login">Login</a><div class="dropdown post-btn-wrap"><button type="button" class="nav-link btn-more-items btn-add-post"><i class="nav-icon icon-puls"></i>Contribute</button><ul class="dropdown-list scrollbar" id="dropDownPostItem"><li class="dropdown-item"><a id="postArticle" href="/create?type=article" title="Contribute an Article"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M5.5 7a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1zM5 9.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5m0 2a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5"></path><path d="M9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.5zm0 1v2A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1z"></path></svg><span>Article</span></a> </li><li class="dropdown-item"><a id="postBlog" href="/create?type=blog" title="Contribute a Blog"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"></path><path d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"></path></svg><span>Blog</span></a> </li><li class="dropdown-item"><a id="postVideo" href="/create?type=video" title="Contribute a Video"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M0 5a2 2 0 0 1 2-2h7.5a2 2 0 0 1 1.983 1.738l3.11-1.382A1 1 0 0 1 16 4.269v7.462a1 1 0 0 1-1.406.913l-3.111-1.382A2 2 0 0 1 9.5 13H2a2 2 0 0 1-2-2zm11.5 5.175 3.5 1.556V4.269l-3.5 1.556zM2 4a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h7.5a1 1 0 0 0 1-1V5a1 1 0 0 0-1-1z"></path></svg><span>Video</span></a> </li><li class="dropdown-item"><a id="postEbook" href="/create/ebook" title="Contribute an Ebook"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M1 2.828c.885-.37 2.154-.769 3.388-.893 1.33-.134 2.458.063 3.112.752v9.746c-.935-.53-2.12-.603-3.213-.493-1.18.12-2.37.461-3.287.811zm7.5-.141c.654-.689 1.782-.886 3.112-.752 1.234.124 2.503.523 3.388.893v9.923c-.918-.35-2.107-.692-3.287-.81-1.094-.111-2.278-.039-3.213.492zM8 1.783C7.015.936 5.587.81 4.287.94c-1.514.153-3.042.672-3.994 1.105A.5.5 0 0 0 0 2.5v11a.5.5 0 0 0 .707.455c.882-.4 2.303-.881 3.68-1.02 1.409-.142 2.59.087 3.223.877a.5.5 0 0 0 .78 0c.633-.79 1.814-1.019 3.222-.877 1.378.139 2.8.62 3.681 1.02A.5.5 0 0 0 16 13.5v-11a.5.5 0 0 0-.293-.455c-.952-.433-2.48-.952-3.994-1.105C10.413.809 8.985.936 8 1.783"></path></svg><span>Ebook</span></a> </li><li class="dropdown-item"><a id="postInterView" href="/interviews/ask" title="Contribute an Interview Question"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"></path><path d="M5.255 5.786a.237.237 0 0 0 .241.247h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286m1.557 5.763c0 .533.425.927 1.01.927.609 0 1.028-.394 1.028-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94"></path></svg><span>Interview Question</span></a> </li></ul></div></div><button type="button" class="top-mobile-menu" aria-label="Open menu" aria-expanded="false" aria-controls="topMainNavbar"><span class="top-mobile-menu-bars" aria-hidden="true"></span></button><div class="top-mobile-backdrop" aria-hidden="true"></div></div></div></header><main id="main-content" tabindex="-1" class="main-container no-left-nav"><div class="right-container"><section class="body-container"><div class="inner-layout"><!--$?--><template id="B:1"></template><div class="sk-page" role="status"><span class="sk-sr">Loading</span><div aria-hidden="true"><div class="sk-article"><div class="sk-article-head"><span class="sk sk-thumb" style="width:48px;height:48px"></span><div class="sk-article-title"><span class="sk" style="width:88%;height:24px"></span><span class="sk" style="width:52%;height:24px"></span></div></div><div class="sk-meta"><span class="sk sk-round" style="width:24px;height:24px"></span><span class="sk" style="width:120px;height:11px"></span><span class="sk" style="width:70px;height:11px"></span><span class="sk" style="width:54px;height:11px"></span></div><div class="sk-lead"><span class="sk" style="width:94%;height:15px"></span><span class="sk" style="width:66%;height:15px"></span></div><div class="sk-prose"><span class="sk" style="width:98%;height:13px"></span><span class="sk" style="width:95%;height:13px"></span><span class="sk" style="width:99%;height:13px"></span><span class="sk sk-para-end" style="width:54%;height:13px"></span><span class="sk" style="width:97%;height:13px"></span><span class="sk" style="width:92%;height:13px"></span><span class="sk" style="width:96%;height:13px"></span><span class="sk sk-para-end" style="width:61%;height:13px"></span><span class="sk" style="width:99%;height:13px"></span><span class="sk" style="width:94%;height:13px"></span><span class="sk" style="width:97%;height:13px"></span><span class="sk sk-para-end" style="width:47%;height:13px"></span></div><div class="sk-tags"><span class="sk sk-tag" style="width:72px;height:24px"></span><span class="sk sk-tag" style="width:96px;height:24px"></span><span class="sk sk-tag" style="width:60px;height:24px"></span><span class="sk sk-tag" style="width:110px;height:24px"></span><span class="sk sk-tag" style="width:84px;height:24px"></span></div><div class="sk-comments"><span class="sk" style="width:140px;height:16px"></span><div class="sk-comment"><span class="sk sk-round" style="width:36px;height:36px"></span><div class="sk-comment-body"><span class="sk" style="width:130px;height:11px"></span><span class="sk" style="width:84%;height:12px"></span></div></div><div class="sk-comment"><span class="sk sk-round" style="width:36px;height:36px"></span><div class="sk-comment-body"><span class="sk" style="width:130px;height:11px"></span><span class="sk" style="width:67%;height:12px"></span></div></div></div></div></div></div><!--/$--></div></section><aside class="aside-right no-rail-ads"><style>
+    .event-calendar{
+        display:flex;
+        flex-direction:column-reverse;
+        background:linear-gradient(-180deg, rgba(93,107,148, 40%) 40%, #0086dc 40%);
+        text-align: center;
+        border-radius: 4px;
+        min-width: 42px;
+        max-width: 42px;
+        min-height:50px;
+    }
+    .event-list-item{
+        display:flex;
+        flex-direction:row;
+        align-items:center;
+        gap:15px;
+        margin-bottom:15px;
+    }
+    .local-day{
+        font-size:20px;
+        font-weight:600;
+        height:31px;
+        color:var(--textColor);
+    }
+    .local-month{
+         font-size:12px;
+         color:var(--textColor);
+    }
+    /* Two lines, the same clamp .question-link gets in the card below this one.
+       EVENTS_SHOWN above exists so this card is the same height on every page
+       whatever the data, and an unclamped title undid that a week at a time — a
+       four-line conference name made the card 366px instead of 264px. It is the
+       card's height the rail's sticky rule is measured against
+       (.aside-right.no-rail-ads, 01-stylesheet.css), so this is what keeps that
+       number true. Scoped to this list: .event-title is also the events page's
+       and the about page's. */
+    .UpComing-Events-list .event-title a{
+        display:-webkit-box;
+        -webkit-line-clamp:2;
+        -webkit-box-orient:vertical;
+        overflow:hidden;
+    }
+      </style><div class="wrap" id="ChapterEventsBox"><div class="wrap-heading"><div class="heading">Upcoming Events</div><a href="/events" class="btn-view-all">View all</a></div><ul id="ChapterEventsContainer" class="UpComing-Events-list"><li id="event-1" class="event-list-item"><div class="event-calendar"><span class="local-day" id="LocalDay1"><time dateTime="2026-11-23T11:30:00.000Z">23</time></span> <span class="local-month" id="LocalMonth1"><time dateTime="2026-11-23T11:30:00.000Z">NOV</time></span></div><div class="event-title"><a class="title" href="/events/ai-agents-conference-2026-3rd-edition" title="AI Agents Conference 2026 - 3rd Edition">AI Agents Conference 2026 - 3rd Edition</a></div></li></ul><div id="tzListDiv"></div></div><style>
+    .latest-questions-list {
+        margin-top: -5px;
+    }
+
+        .latest-questions-list li {
+            position: relative;
+            border-bottom: 1px solid rgba(154, 185, 220, 0.1);
+        }
+
+    .question-link, h3.post-title span {
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        text-overflow: ellipsis;
+        font-size: 14px;
+        line-height: 24px;
+        word-break: break-word;
+        font-weight: 500;
+        color: var(--texthightlight);
+        overflow: hidden;
+        white-space: normal;
+    }
+
+    .question-link {
+        margin-bottom: 5px;
+    }
+
+    .question-item {
+        padding: 6px 0 6px 0;
+    }
+
+    .latest-questions-list li:last-child {
+        border-bottom: 0 !important;
+        padding-bottom: 0;
+        margin-bottom: 0;
+    }
+      </style><div class="our-training-program latest-questions wrap"><div class="wrap-heading"><h2 class="heading">Our Training Programs</h2><a href="https://learnai.c-sharpcorner.com/trainings" class="btn-view-all" target="_blank" rel="noopener noreferrer">View all</a></div><ul id="OurTrainingPrograms" class="latest-questions-list"><li class="question-item"><h3><a class="question-link" href="https://learnai.c-sharpcorner.com/trainings/ai-machine-learning" title="AI &amp; Machine Learning" target="_blank" rel="noopener noreferrer">AI &amp; Machine Learning</a></h3><div class="question-meta"></div></li><li class="question-item"><h3><a class="question-link" href="https://learnai.c-sharpcorner.com/trainings/mastering-large-language-models" title="Mastering Large Language Models" target="_blank" rel="noopener noreferrer">Mastering Large Language Models</a></h3><div class="question-meta"></div></li><li class="question-item"><h3><a class="question-link" href="https://learnai.c-sharpcorner.com/trainings/mastering-prompt-engineering" title="Mastering Prompt Engineering" target="_blank" rel="noopener noreferrer">Mastering Prompt Engineering</a></h3><div class="question-meta"></div></li><li class="question-item"><h3><a class="question-link" href="https://learnai.c-sharpcorner.com/trainings/certified-vibe-coder" title="Certified Vibe Coder" target="_blank" rel="noopener noreferrer">Certified Vibe Coder</a></h3><div class="question-meta"></div></li><li class="question-item"><h3><a class="question-link" href="https://learnai.c-sharpcorner.com/trainings/github-copilot-training" title="Github Copilot Training" target="_blank" rel="noopener noreferrer">Github Copilot Training</a></h3><div class="question-meta"></div></li><li class="question-item"><h3><a class="question-link" href="https://learnai.c-sharpcorner.com/trainings/generative-ai-for-beginners" title="Generative AI for Beginners" target="_blank" rel="noopener noreferrer">Generative AI for Beginners</a></h3><div class="question-meta"></div></li><li class="question-item"><h3><a class="question-link" href="https://learnai.c-sharpcorner.com/trainings/learn-n8n-for-beginners" title="n8n Automation &amp; AI Agents Training" target="_blank" rel="noopener noreferrer">n8n Automation &amp; AI Agents Training</a></h3><div class="question-meta"></div></li></ul></div></aside></div></main><style>
+    .icon-sprite-footer {
+    display: inline-block;
+    border: none;
+    cursor: pointer;
+    background-image: url('/images/social-icons.png'); /* Ensure the correct path and extension */
+    background-size: auto; /* Adjust if needed */
+    background-color: transparent;
+}
+
+.icon-sprite-footer-facebook {
+    width: 24px;
+    height: 30px;
+    background-position: 0px 0px;
+}
+
+.icon-sprite-footer-twitter {
+    width: 24px;
+    height: 30px;
+    background-position: -29px 0px;
+}
+
+.icon-sprite-footer-linkedin {
+    width: 26px;
+    height: 30px;
+    background-position: -62px 0px;
+}
+
+.icon-sprite-footer-yt {
+    width: 34px;
+    height: 30px;
+    background-position: -98px 0px;
+}
+
+.icon-sprite-footer-windows {
+    width: 26px;
+    height: 30px;
+    background-position: 135px 0px;
+}
+
+.icon-sprite-footer-playstore {
+    width: 26px;
+    height: 30px;
+    background-position: 98px 0px;
+}
+
+.icon-sprite-footer-appstore {
+    width: 26px;
+    height: 30px;
+    background-position: 64px -2px;
+}
+</style><div id="NewFooter"><footer class="main-footer"><div class="inner-footer"><div class="social-media-wrap"><a title="Facebook" href="https://www.facebook.com/pages/C-Corner/194086953935286" target="_blank" rel="noopener noreferrer" style="text-decoration:none" class="icon-sprite-footer icon-sprite-footer-facebook"></a><a title="Twitter" href="https://twitter.com/csharpcorner" target="_blank" rel="noopener noreferrer" style="text-decoration:none" class="icon-sprite-footer icon-sprite-footer-twitter"></a><a title="LinkedIn" href="https://www.linkedin.com/company/csharpcorner/" target="_blank" rel="noopener noreferrer" style="text-decoration:none" class="icon-sprite-footer icon-sprite-footer-linkedin"></a><a title="Youtube" href="https://www.youtube.com/user/CsharpCorner1/" target="_blank" rel="noopener noreferrer" style="text-decoration:none" class="icon-sprite-footer icon-sprite-footer-yt"></a><a title="Windows App" href="https://www.microsoft.com/store/apps/9nblggh4tmwd?ocid=badge" target="_blank" rel="noopener noreferrer" style="text-decoration:none" class="icon-sprite-footer icon-sprite-footer-windows"></a><a title="Android App" href="https://play.google.com/store/apps/details?id=com.mcn.csharpcorner&amp;pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1" target="_blank" rel="noopener noreferrer" style="text-decoration:none" class="icon-sprite-footer icon-sprite-footer-playstore"></a><a title="iOS App" href="https://itunes.apple.com/us/app/c-corner/id451080586?ls=1&amp;mt=8" target="_blank" rel="noopener noreferrer" style="text-decoration:none" class="icon-sprite-footer icon-sprite-footer-appstore"></a></div><div class="footer-links"><a title="About Us" href="/about" class="foot-item-link">About Us</a><a title="Contact Us" href="/contact-us" class="foot-item-link">Contact Us</a><a title="Privacy Policy" href="/privacy-policy" class="foot-item-link">Privacy Policy</a><a title="Terms" href="/terms" class="foot-item-link">Terms</a><a title="Brand Guidelines" href="/brand-guidelines" class="foot-item-link">Brand Guidelines</a><a title="Partners" href="/partners" class="foot-item-link">Partners</a><a title="C# Tutorials" href="/csharp-tutorials" class="foot-item-link">C# Tutorials</a><a title="Consultants" href="/consulting" class="foot-item-link">Consultants</a><a title="Ideas" href="/ideas" class="foot-item-link">Ideas</a><a title="Report a Bug" href="/report-bugs" class="foot-item-link">Report A Bug</a><a title="FAQs" href="/faq" class="foot-item-link">FAQs</a><a title="Sitemap" href="/sitemap" class="foot-item-link">Sitemap</a><a title="Stories" href="/stories" class="foot-item-link">Stories</a><a title="CSharp TV" href="https://www.youtube.com/user/CsharpCorner1/" class="foot-item-link" target="_blank" rel="noopener noreferrer">CSharp TV</a><a title="DB Talks" href="https://www.dbtalks.com/" class="foot-item-link" target="_blank" rel="noopener noreferrer">DB Talks</a><a title="Web3 Universe" href="https://web3universe.today/" class="foot-item-link" target="_blank" rel="noopener noreferrer">Web3 Universe</a><a title="Jumpstart Blockchain" href="https://www.jumpstartblockchain.com/" class="foot-item-link" target="_blank" rel="noopener noreferrer">Jumpstart Blockchain</a></div><div class="copyright"><p>©<!-- -->2026<!-- --> C# Corner.</p><p>All contents are copyright of their authors.</p></div></div></footer></div></div><script>requestAnimationFrame(function(){$RT=performance.now()});</script><script src="/_next/static/chunks/2tzlvp2q7dk6t.js" id="_R_" async=""></script><div hidden id="S:1"><template id="P:2"></template><!--$?--><template id="B:3"></template><!--/$--></div><script>(self.__next_f=self.__next_f||[]).push([0])</script><script>self.__next_f.push([1,"1:\"$Sreact.fragment\"\n4:I[39756,[\"/_next/static/chunks/3_g8wjnnyafep.js\"],\"default\"]\n5:I[37457,[\"/_next/static/chunks/3_g8wjnnyafep.js\"],\"default\"]\n7:I[97367,[\"/_next/static/chunks/3_g8wjnnyafep.js\"],\"OutletBoundary\"]\n8:\"$Sreact.suspense\"\nb:I[97367,[\"/_next/static/chunks/3_g8wjnnyafep.js\"],\"ViewportBoundary\"]\nd:I[97367,[\"/_next/static/chunks/3_g8wjnnyafep.js\"],\"MetadataBoundary\"]\nf:I[68027,[\"/_next/static/chunks/3_g8wjnnyafep.js\"],\"default\",1]\n:HL[\"/_next/static/chunks/20fby5rwr5hff.css\",\"style\"]\n:HL[\"/_next/static/chunks/0fpx0zdb3k9kb.css\",\"style\"]\n:HL[\"/_next/static/media/fba5a26ea33df6a3-s.p.18rizl4rsrl42.woff2\",\"font\",{\"crossOrigin\":\"\",\"type\":\"font/woff2\"}]\n:HL[\"/_next/static/chunks/0u__1xj34coe-.css\",\"style\"]\n:HL[\"/_next/static/chunks/0jhtbo5jcgk5y.css\",\"style\"]\n:HL[\"/_next/static/chunks/0a0a_9lj-h20h.css\",\"style\"]\n:HL[\"/_next/static/chunks/3_ghj7lw0pina.css\",\"style\"]\na:X\n0:{\"P\":null,\"c\":[\"\",\"article\",\"fibonacci-series-recursion-memoization-and-optimal-approach\"],\"q\":\"\",\"i\":false,\"f\":[[[\"\",{\"children\":[\"(main)\",{\"children\":[\"article\",{\"children\":[[\"slug\",\"fibonacci-series-recursion-memoization-and-optimal-approach\",\"d\",[]],{\"children\":[\"__PAGE__\",{},\"$undefined\",\"$undefined\",4096]},\"$undefined\",\"$undefined\",4096]},\"$undefined\",\"$undefined\",4096]},\"$undefined\",\"$undefined\",4096]},\"$undefined\",\"$undefined\",4112],[[\"$\",\"$1\",\"c\",{\"children\":[[[\"$\",\"link\",\"0\",{\"rel\":\"stylesheet\",\"href\":\"/_next/static/chunks/20fby5rwr5hff.css\",\"precedence\":\"next\",\"crossOrigin\":\"$undefined\",\"nonce\":\"$undefined\"}],[\"$\",\"link\",\"1\",{\"rel\":\"stylesheet\",\"href\":\"/_next/static/chunks/0fpx0zdb3k9kb.css\",\"precedence\":\"next\",\"crossOrigin\":\"$undefined\",\"nonce\":\"$undefined\"}],[\"$\",\"script\",\"script-0\",{\"src\":\"/_next/static/chunks/3_g8wjnnyafep.js\",\"async\":true,\"nonce\":\"$undefined\"}]],\"$L2\"]}],{\"children\":[[\"$\",\"$1\",\"c\",{\"children\":[[[\"$\",\"script\",\"script-0\",{\"src\":\"/_next/static/chunks/3y-9e9_f11zip.js\",\"async\":true,\"nonce\":\"$undefined\"}],[\"$\",\"script\",\"script-1\",{\"src\":\"/_next/static/chunks/29zwfi5_xti9r.js\",\"async\":true,\"nonce\":\"$undefined\"}],[\"$\",\"script\",\"script-2\",{\"src\":\"/_next/static/chunks/3dk39kva71n_w.js\",\"async\":true,\"nonce\":\"$undefined\"}]],\"$L3\"]}],{\"children\":[[\"$\",\"$1\",\"c\",{\"children\":[null,[\"$\",\"$L4\",null,{\"parallelRouterKey\":\"children\",\"error\":\"$undefined\",\"errorStyles\":\"$undefined\",\"errorScripts\":\"$undefined\",\"template\":[\"$\",\"$L5\",null,{}],\"templateStyles\":\"$undefined\",\"templateScripts\":\"$undefined\",\"notFound\":\"$undefined\",\"forbidden\":\"$undefined\",\"unauthorized\":\"$undefined\"}]]}],{\"children\":[[\"$\",\"$1\",\"c\",{\"children\":[null,[\"$\",\"$L4\",null,{\"parallelRouterKey\":\"children\",\"error\":\"$undefined\",\"errorStyles\":\"$undefined\",\"errorScripts\":\"$undefined\",\"template\":[\"$\",\"$L5\",null,{}],\"templateStyles\":\"$undefined\",\"templateScripts\":\"$undefined\",\"notFound\":\"$undefined\",\"forbidden\":\"$undefined\",\"unauthorized\":\"$undefined\"}]]}],{\"children\":[[\"$\",\"$1\",\"c\",{\"children\":[\"$L6\",[[\"$\",\"link\",\"0\",{\"rel\":\"stylesheet\",\"href\":\"/_next/static/chunks/0u__1xj34coe-.css\",\"precedence\":\"next\",\"crossOrigin\":\"$undefined\",\"nonce\":\"$undefined\"}],[\"$\",\"link\",\"1\",{\"rel\":\"stylesheet\",\"href\":\"/_next/static/chunks/0jhtbo5jcgk5y.css\",\"precedence\":\"next\",\"crossOrigin\":\"$undefined\",\"nonce\":\"$undefined\"}],[\"$\",\"link\",\"2\",{\"rel\":\"stylesheet\",\"href\":\"/_next/static/chunks/0a0a_9lj-h20h.css\",\"precedence\":\"next\",\"crossOrigin\":\"$undefined\",\"nonce\":\"$undefined\"}],[\"$\",\"link\",\"3\",{\"rel\":\"stylesheet\",\"href\":\"/_next/static/chunks/3_ghj7lw0pina.css\",\"precedence\":\"next\",\"crossOrigin\":\"$undefined\",\"nonce\":\"$undefined\"}],[\"$\",\"script\",\"script-0\",{\"src\":\"/_next/static/chunks/1ce9je2siyveg.js\",\"async\":true,\"nonce\":\"$undefined\"}],[\"$\",\"script\",\"script-1\",{\"src\":\"/_next/static/chunks/42qkv0w5l-byv.js\",\"async\":true,\"nonce\":\"$undefined\"}]],[\"$\",\"$L7\",null,{\"children\":[\"$\",\"$8\",null,{\"name\":\"Next.MetadataOutlet\",\"children\":\"$@9\"}]}]]}],{},null,false,null]},null,false,\"$a\"]},null,false,\"$a\"]},null,false,null]},null,false,null],[\"$\",\"$1\",\"h\",{\"children\":[null,[\"$\",\"$Lb\",null,{\"children\":\"$Lc\"}],[\"$\",\"div\",null,{\"hidden\":true,\"children\":[\"$\",\"$Ld\",null,{\"children\":[\"$\",\"$8\",null,{\"name\":\"Next.Metadata\",\"children\":\"$Le\"}]}]}],[\"$\",\"meta\",null,{\"name\":\"next-size-adjust\",\"content\":\"\"}]]}],false]],\"m\":\"$undefined\",\"G\":[\"$f\",[[\"$\",\"link\",\"0\",{\"rel\":\"stylesheet\",\"href\":\"/_next/static/chunks/20fby5rwr5hff.css\",\"precedence\":\"next\",\"crossOrigin\":\"$undefined\",\"nonce\":\"$undefined\"}],[\"$\",\"link\",\"1\",{\"rel\":\"stylesheet\",\"href\":\"/_next/static/chunks/0fpx0zdb3k9kb.css\",\"precedence\":\"next\",\"crossOrigin\":\"$undefined\",\"nonce\":\"$undefined\"}]]],\"S\":false,\"h\":null,\"r\":\"$undefined\",\"s\":\"$undefined\",\"a\":\"$undefined\",\"l\":\"$undefined\",\"p\":\"$undefined\",\"d\":\"$undefined\",\"b\":\"vFPjnyHugtY3pfD7G3HhB\"}\na:C\n10:I[339,[\"/_next/static/chunks/3_g8wjnnyafep.js\"],\"InlineScript\"]\n12:I[79142,[\"/_next/static/chunks/3_g8wjnnyafep.js\"],\"default\"]\n13:I[51999,[\"/_next/static/chunks/3_g8wjnnyafep.js\"],\"default\"]\n14:I[92287,[\"/_next/static/chunks/3_g8wjnnyafep.js\"],\"default\"]\n15:I[65588,[\"/_next/static/chunks/3_g8wjnnyafep.js\"],\"default\"]\n:HL[\"/_next/static/chunks/3_95diz3oq33o.css\",\"style\"]\n11:[\"$\",\"iframe\",null,{\"src\":\"https://www.googletagmanager.com/ns.html?id=GTM-KTSP8N2G\",\"height\":\"0\",\"width\":\"0\",\"style\":{\"display\":\"none\",\"visibility\":\"hidden\"}}]\n2:[\"$\",\"html\",null,{\"lang\":\"en\",\"data-theme\":\"dark\",\"className\":\"plus_jakarta_sans_a70c094a-module__Ge6A8q__variable\",\"suppressHydrationWarning\":true,\"children\":[[\"$\",\"head\",null,{\"children\":null}],[\"$\",\"body\",null,{\"id\":\"ctl00_MasterBody\",\"className\":\"openClose\",\"children\":[[\"$\",\"$L10\",null,{\"html\":\"(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'\u0026l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-KTSP8N2G');\"}],[\"$\",\"$L10\",null,{\"html\":\"(function(){try{if(localStorage.getItem(\\\"lightmode\\\")!==\\\"active\\\")return;var e=document.documentElement;e.setAttribute(\\\"data-theme\\\",\\\"light\\\");e.classList.add(\\\"light-mode\\\")}catch(e){}})()\"}],[\"$\",\"$L10\",null,{\"html\":\"(function(){try{if(location.pathname!==\\\"/\\\")return;if(!(\\\"scrollRestoration\\\" in history))return;history.scrollRestoration=\\\"manual\\\"}catch(e){}})()\"}],[\"$\",\"noscript\",null,{\"children\":\"$11\"}],[\"$\",\"$L12\",null,{}],[\"$\",\"$L13\",null,{\"enabled\":true}],[\"$\",\"$L14\",null,{\"cdnBase\":\"https://cdn.c-sharpcorner.com\",\"imageOrigin\":\"https://oldmedia.c-sharpcorner.com\"}],[\"$\",\"$L15\",null,{}],[\"$\",\"div\",null,{\"id\":\"LayoutForm\",\"children\":[\"$\",\"$L4\",null,{\"parallelRouterKey\":\"children\",\"error\":\"$undefined\",\"errorStyles\":\"$undefined\",\"errorScripts\":\"$undefined\",\"template\":[\"$\",\"$L5\",null,{}],\"templateStyles\":\"$undefined\",\"templateScripts\":\"$undefined\",\"notFound\":[\"$L16\",[[\"$\",\"link\",\"0\",{\"rel\":\"stylesheet\",\"href\":\"/_next/static/chunks/3_95diz3oq33o.css\",\"precedence\":\"next\",\"crossOrigin\":\"$undefined\",\"nonce\":\"$undefined\"}]]],\"forbidden\":\"$undefined\",\"unauthorized\":\"$undefined\"}]}]]}]]}]\n17:I[70119,[\"/_next/static/chunks/3_g8wjnnyafep.js\",\"/_next/static/chunks/3y-9e9_f11zip.js\",\"/_next/static/chunks/29zwfi5_xti9r.js\",\"/_next/static/chunks/3dk39kva71n_w.js\"],\"default\"]\n18:I[6005,[\"/_next/static/chunks/3_g8wjnnyafep.js\",\"/_next/static/chunks/3y-9e9_f11zip.js\",\"/_next/static/chunks/29zwfi5_xti9r.js\",\"/_next/static/chunks/3dk39kva71n_w.js\",\"/_next/static/chunks/0738efkbv6y3k.js\"],\"default\"]\n16:[[\"$\",\"$L17\",null,{\"user\":null,\"messaging\":true}],[\"$\",\"main\",null,{\"className\":\"main-container no-left-nav\",\"children\":[null,[\"$\",\"div\",null,{\"className\":\"right-container\",\"children\":[\"$\",\"section\",null,{\"className\":\"body-container full-container\",\"children\":[\"$\",\"div\",null,{\"className\":\"notfound-standalone\",\"children\":[\"$\",\"div\",null,{\"className\":\"notfound-wrap\",\"children\":[[\"$\",\"$L18\",null,{}],[\"$\",\"p\",null,{\"className\":\"notfound-code\",\"aria-hidden\":\"true\",\"children\":\"404\"}],[\"$\",\"h1\",null,{\"className\":\"notfound-title\",\"children\":\"We can't find that page\"}],[\"$\",\"p\",null,{\"className\":\"notfound-message\",\"children\":\"The link may be broken, or the page may have moved since it was last shared.\"}],[\"$\",\"a\",null,{\"href\":\"/\",\"className\":\"btn primary-btn notfound-home\",\"children\":\"Back to home\"}],[\"$\",\"div\",null,{\"className\":\"notfound-links\",\"children\":[[\"$\",\"span\",null,{\"className\":\"notfound-links-label\",\"children\":\"Or pick up where you left off\"}],[\"$\",\"ul\",null,{\"children\":[[\"$\",\"li\",\"/articles\",{\"children\":[\"$\",\"a\",null,{\"href\":\"/articles\",\"children\":\"Articles\"}]}],[\"$\",\"li\",\"/blogs\",{\"children\":[\"$\",\"a\",null,{\"href\":\"/blogs\",\"children\":\"Blogs\"}]}],[\"$\",\"li\",\"/videos\",{\"children\":[\"$\",\"a\",null,{\"href\":\"/videos\",\"children\":\"Videos\"}]}],[\"$\",\"li\",\"/interviews\",{\"children\":[\"$\",\"a\",null,{\"href\":\"/interviews\",\"children\":\"Interview Questions\"}]}],[\"$\",\"li\",\"/forums\",{\"children\":[\"$\",\"a\",null,{\"href\":\"/forums\",\"children\":\"Forums\"}]}],[\"$\",\"li\",\"/ebooks\",{\"children\":[\"$\",\"a\",null,{\"href\":\"/ebooks\",\"children\":\"Ebooks\"}]}],[\"$\",\"li\",\"/events\",{\"children\":[\"$\",\"a\",null,{\"href\":\"/events\",\"children\":\"Events\"}]}],[\"$\",\"li\",\"/technologies\",{\"children\":[\"$\",\"a\",null,{\"href\":\"/technologies\",\"children\":\"Technologies\"}]}]]}]]}]]}]}]}]}]]}],[[\"$\",\"style\",null,{\"children\":\"\\n    .icon-sprite-footer {\\n    display: inline-block;\\n    border: none;\\n    cursor: pointer;\\n    background-image: url('/images/social-icons.png'); /* Ensure the correct path and extension */\\n    background-size: auto; /* Adjust if needed */\\n    background-color: transparent;\\n}\\n\\n.icon-sprite-footer-facebook {\\n    width: 24px;\\n    height: 30px;\\n    background-position: 0px 0px;\\n}\\n\\n.icon-sprite-footer-twitter {\\n    width: 24px;\\n    height: 30px;\\n    background-position: -29px 0px;\\n}\\n\\n.icon-sprite-footer-linkedin {\\n    width: 26px;\\n    height: 30px;\\n    background-position: -62px 0px;\\n}\\n\\n.icon-sprite-footer-yt {\\n    width: 34px;\\n    height: 30px;\\n    background-position: -98px 0px;\\n}\\n\\n.icon-sprite-footer-windows {\\n    width: 26px;\\n    height: 30px;\\n    background-position: 135px 0px;\\n}\\n\\n.icon-sprite-footer-playstore {\\n    width: 26px;\\n    height: 30px;\\n    background-position: 98px 0px;\\n}\\n\\n.icon-sprite-footer-appstore {\\n    width: 26px;\\n    height: 30px;\\n    background-position: 64px -2px;\\n}\\n\"}],[\"$\",\"div\",null,{\"id\":\"NewFooter\",\"children\":[\"$\",\"footer\",null,{\"className\":\"main-footer\",\"children\":[\"$\",\"div\",null,{\"className\":\"inner-footer\",\"children\":[[\"$\",\"div\",null,{\"className\":\"social-media-wrap\",\"children\":[[\"$\",\"a\",null,{\"title\":\"Facebook\",\"href\":\"https://www.facebook.com/pages/C-Corner/194086953935286\",\"target\":\"_blank\",\"rel\":\"noopener noreferrer\",\"style\":{\"textDecoration\":\"none\"},\"className\":\"icon-sprite-footer icon-sprite-footer-facebook\"}],[\"$\",\"a\",null,{\"title\":\"Twitter\",\"href\":\"https://twitter.com/csharpcorner\",\"target\":\"_blank\",\"rel\":\"noopener noreferrer\",\"style\":{\"textDecoration\":\"none\"},\"className\":\"icon-sprite-footer icon-sprite-footer-twitter\"}],[\"$\",\"a\",null,{\"title\":\"LinkedIn\",\"href\":\"https://www.linkedin.com/company/csharpcorner/\",\"target\":\"_blank\",\"rel\":\"noopener noreferrer\",\"style\":{\"textDecoration\":\"none\"},\"className\":\"icon-sprite-footer icon-sprite-footer-linkedin\"}],[\"$\",\"a\",null,{\"title\":\"Youtube\",\"href\":\"https://www.youtube.com/user/CsharpCorner1/\",\"target\":\"_blank\",\"rel\":\"noopener noreferrer\",\"style\":{\"textDecoration\":\"none\"},\"className\":\"icon-sprite-footer icon-sprite-footer-yt\"}],[\"$\",\"a\",null,{\"title\":\"Windows App\",\"href\":\"https://www.microsoft.com/store/apps/9nblggh4tmwd?ocid=badge\",\"target\":\"_blank\",\"rel\":\"noopener noreferrer\",\"style\":{\"textDecoration\":\"none\"},\"className\":\"icon-sprite-footer icon-sprite-footer-windows\"}],\"$L19\",\"$L1a\"]}],\"$L1b\",\"$L1c\"]}]}]}]]]\n3:[[\"$\",\"$L17\",null,{\"user\":null,\"messaging\":true}],[\"$\",\"main\",null,{\"id\":\"main-content\",\"tabIndex\":-1,\"className\":\"main-container no-left-nav\",\"children\":[null,[\"$\",\"div\",null,{\"className\":\"right-container\",\"children\":[[\"$\",\"section\",null,{\"className\":\"body-container\",\"children\":[\"$\",\"div\",null,{\"className\":\"inner-layout\",\"children\":[\"$\",\"$8\",null,{\"fallback\":[\"$\",\"div\",null,{\"className\":\"sk-page\",\"role\":\"status\",\"children\":[[\"$\",\"span\",null,{\"className\":\"sk-sr\",\"children\":\"Loading\"}],[\"$\",\"div\",null,{\"aria-hidden\":\"true\",\"children\":[\"$\",\"div\",null,{\"className\":\"sk-article\",\"children\":[[\"$\",\"div\",null,{\"className\":\"sk-article-head\",\"children\":[[\"$\",\"span\",null,{\"className\":\"sk sk-thumb\",\"style\":{\"width\":\"48px\",\"height\":\"48px\"}}],[\"$\",\"div\",null,{\"className\":\"sk-article-title\",\"children\":[[\"$\",\"span\",null,{\"className\":\"sk\",\"style\":{\"width\":\"88%\",\"height\":\"24px\"}}],[\"$\",\"span\",null,{\"className\":\"sk\",\"style\":{\"width\":\"52%\",\"height\":\"24px\"}}]]}]]}],[\"$\",\"div\",null,{\"className\":\"sk-meta\",\"children\":[[\"$\",\"span\",null,{\"className\":\"sk sk-round\",\"style\":{\"width\":\"24px\",\"height\":\"24px\"}}],[\"$\",\"span\",null,{\"className\":\"sk\",\"style\":{\"width\":\"120px\",\"height\":\"11px\"}}],[\"$\",\"span\",null,{\"className\":\"sk\",\"style\":{\"width\":\"70px\",\"height\":\"11px\"}}],[\"$\",\"span\",null,{\"className\":\"sk\",\"style\":{\"width\":\"54px\",\"height\":\"11px\"}}]]}],[\"$\",\"div\",null,{\"className\":\"sk-lead\",\"children\":[[\"$\",\"span\",null,{\"className\":\"sk\",\"style\":{\"width\":\"94%\",\"height\":\"15px\"}}],[\"$\",\"span\",null,{\"className\":\"sk\",\"style\":{\"width\":\"66%\",\"height\":\"15px\"}}]]}],[\"$\",\"div\",null,{\"className\":\"sk-prose\",\"children\":[[\"$\",\"span\",\"0\",{\"className\":\"sk\",\"style\":{\"width\":\"98%\",\"height\":\"13px\"}}],[\"$\",\"span\",\"1\",{\"className\":\"sk\",\"style\":{\"width\":\"95%\",\"height\":\"13px\"}}],[\"$\",\"span\",\"2\",{\"className\":\"sk\",\"style\":{\"width\":\"99%\",\"height\":\"13px\"}}],[\"$\",\"span\",\"3\",{\"className\":\"sk sk-para-end\",\"style\":{\"width\":\"54%\",\"height\":\"13px\"}}],[\"$\",\"span\",\"4\",{\"className\":\"sk\",\"style\":{\"width\":\"97%\",\"height\":\"13px\"}}],[\"$\",\"span\",\"5\",{\"className\":\"sk\",\"style\":{\"width\":\"92%\",\"height\":\"13px\"}}],[\"$\",\"span\",\"6\",{\"className\":\"sk\",\"style\":{\"width\":\"96%\",\"height\":\"13px\"}}],[\"$\",\"span\",\"7\",{\"className\":\"sk sk-para-end\",\"style\":{\"width\":\"61%\",\"height\":\"13px\"}}],[\"$\",\"span\",\"8\",{\"className\":\"sk\",\"style\":{\"width\":\"99%\",\"height\":\"13px\"}}],[\"$\",\"span\",\"9\",{\"className\":\"sk\",\"style\":{\"width\":\"94%\",\"height\":\"13px\"}}],[\"$\",\"span\",\"10\",{\"className\":\"sk\",\"style\":{\"width\":\"97%\",\"height\":\"13px\"}}],[\"$\",\"span\",\"11\",{\"className\":\"sk sk-para-end\",\"style\":{\"width\":\"47%\",\"height\":\"13px\"}}]]}],[\"$\",\"div\",null,{\"className\":\"sk-tags\",\"children\":[[\"$\",\"span\",\"0\",{\"className\":\"sk sk-tag\",\"style\":{\"width\":\"72px\",\"height\":\"24px\"}}],[\"$\",\"span\",\"1\",{\"className\":\"sk sk-tag\",\"style\":{\"width\":\"96px\",\"height\":\"24px\"}}],[\"$\",\"span\",\"2\",{\"className\":\"sk sk-tag\",\"style\":{\"width\":\"60px\",\"height\":\"24px\"}}],[\"$\",\"span\",\"3\",{\"className\":\"sk sk-tag\",\"style\":{\"width\":\"110px\",\"height\":\"24px\"}}],[\"$\",\"span\",\"4\",{\"className\":\"sk sk-tag\",\"style\":{\"width\":\"84px\",\"height\":\"24px\"}}]]}],[\"$\",\"div\",null,{\"className\":\"sk-comments\",\"children\":[[\"$\",\"span\",null,{\"className\":\"sk\",\"style\":{\"width\":\"140px\",\"height\":\"16px\"}}],[[\"$\",\"div\",\"0\",{\"className\":\"sk-comment\",\"children\":[[\"$\",\"span\",null,{\"className\":\"sk sk-round\",\"style\":{\"width\":\"36px\",\"height\":\"36px\"}}],[\"$\",\"div\",null,{\"className\":\"sk-comment-body\",\"children\":[[\"$\",\"span\",null,{\"className\":\"sk\",\"style\":{\"width\":\"130px\",\"height\":\"11px\"}}],[\"$\",\"span\",null,{\"className\":\"sk\",\"style\":{\"width\":\"84%\",\"height\":\"12px\"}}]]}]]}],[\"$\",\"div\",\"1\",{\"className\":\"sk-comment\",\"children\":[[\"$\",\"span\",null,{\"className\":\"sk sk-round\",\"style\":{\"width\":\"36px\",\"height\":\"36px\"}}],[\"$\",\"div\",null,{\"className\":\"sk-comment-body\",\"children\":[[\"$\",\"span\",null,{\"className\":\"sk\",\"style\":{\"width\":\"130px\",\"height\":\"11px\"}}],[\"$\",\"span\",null,{\"className\":\"sk\",\"style\":{\"width\":\"67%\",\"height\":\"12px\"}}]]}]]}]]]}]]}]}]]}],\"children\":[\"$\",\"$L4\",null,{\"parallelRouterKey\":\"children\",\"error\":\"$undefined\",\"errorStyles\":\"$undefined\",\"errorScripts\":\"$undefined\",\"template\":[\"$\",\"$L5\",null,{}],\"templateStyles\":\"$undefined\",\"templateScripts\":\"$undefined\",\"notFound\":[[\"$\",\"div\",null,{\"className\":\"notfound-wrap\",\"children\":[[\"$\",\"$L18\",null,{}],[\"$\",\"p\",null,{\"className\":\"notfound-code\",\"aria-hidden\":\"true\",\"children\":\"404\"}],[\"$\",\"h1\",null,{\"className\":\"notfound-title\",\"children\":\"We can't find that page\"}],[\"$\",\"p\",null,{\"className\":\"notfound-message\",\"children\":\"It may have been removed, or the address may be slightly off. Everything else is still where you left it.\"}],[\"$\",\"a\",null,{\"href\":\"/\",\"className\":\"btn primary-btn notfound-home\",\"children\":\"Back to home\"}],[\"$\",\"div\",null,{\"className\":\"notfound-links\",\"children\":[[\"$\",\"span\",null,{\"className\":\"notfound-links-label\",\"children\":\"Or pick up where you left off\"}],[\"$\",\"ul\",null,{\"children\":[[\"$\",\"li\",\"/articles\",{\"children\":[\"$\",\"a\",null,{\"href\":\"/articles\",\"children\":\"Articles\"}]}],[\"$\",\"li\",\"/blogs\",{\"children\":[\"$\",\"a\",null,{\"href\":\"/blogs\",\"children\":\"Blogs\"}]}],[\"$\",\"li\",\"/videos\",{\"children\":[\"$\",\"a\",null,{\"href\":\"/videos\",\"children\":\"Videos\"}]}],[\"$\",\"li\",\"/interviews\",{\"children\":[\"$\",\"a\",null,{\"href\":\"/interviews\",\"children\":\"Interview Questions\"}]}],[\"$\",\"li\",\"/forums\",{\"children\":\"$L1d\"}],\"$L1e\",\"$L1f\",\"$L20\"]}]]}]]}],[\"$L21\"]],\"forbidden\":\"$undefined\",\"unauthorized\":\"$undefined\"}]}]}]}],\"$L22\"]}]]}],\"$L23\",\"$L24\"]\n30:I[89066,[\"/_next/static/chunks/3_g8wjnnyafep.js\",\"/_next/static/chunks/3y-9e9_f11zip.js\",\"/_next/static/chunks/29zwfi5_xti9r.js\",\"/_next/static/chunks/3dk39kva71n_w.js\"],\"default\"]\n19:[\"$\",\"a\",null,{\"title\":\"Android App\",\"href\":\"https://play.google.com/store/apps/details?id=com.mcn.csharpcorner\u0026pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1\",\"target\":\"_blank\",\"rel\":\"noopener noreferrer\",\"style\":{\"textDecoration\":\"none\"},\"className\":\"icon-sprite-footer icon-sprite-footer-playstore\"}]\n1a:[\"$\",\"a\",null,{\"title\":\"iOS App\",\"href\":\"https://itunes.apple.com/us/app/c-corner/id451080586?ls=1\u0026mt=8\",\"target\":\"_blank\",\"rel\":\"noopener noreferrer\",\"style\":{\"textDecoration\":\"none\"},\"className\":\"icon-sprite-footer icon-sprite-footer-appstore\"}]\n1b:[\"$\",\"div\",null,{\"className\":\"footer-links\",\"children\":[[\"$\",\"a\",null,{\"title\":\"About Us\",\"href\":\"/about\",\"className\":\"foot-item-link\",\"children\":\"About Us\"}],[\"$\",\"a\",null,{\"title\":\"Contact Us\",\"href\":\"/contact-us\",\"className\":\"foot-item-link\",\"children\":\"Contact Us\"}],[\"$\",\"a\",null,{\"title\":\"Privacy Policy\",\"href\":\"/privacy-policy\",\"className\":\"foot-item-link\",\"children\":\"Privacy Policy\"}],[\"$\",\"a\",null,{\"title\":\"Terms\",\"href\":\"/terms\",\"className\":\"foot-item-link\",\"children\":\"Terms\"}],[\"$\",\"a\",null,{\"title\":\"Brand Guidelines\",\"href\":\"/brand-guidelines\",\"className\":\"foot-item-link\",\"children\":\"Brand Guidelines\"}],[\"$\",\"a\",null,{\"title\":\"Partners\",\"href\":\"/partners\",\"className\":\"foot-item-link\",\"children\":\"Partners\"}],[\"$\",\"a\",null,{\"title\":\"C# Tutorials\",\"href\":\"/csharp-tutorials\",\"className\":\"foot-item-link\",\"children\":\"C# Tutorials\"}],[\"$\",\"a\",null,{\"title\":\"Consultants\",\"href\":\"/consulting\",\"className\":\"foot-item-link\",\"children\":\"Consultants\"}],[\"$\",\"a\",null,{\"title\":\"Ideas\",\"href\":\"/ideas\",\"className\":\"foot-item-link\",\"children\":\"Ideas\"}],[\"$\",\"a\",null,{\"title\":\"Report a Bug\",\"href\":\"/report-bugs\",\"className\":\"foot-item-link\",\"children\":\"Report A Bug\"}],[\"$\",\"a\",null,{\"title\":\"FAQs\",\"href\":\"/faq\",\"className\":\"foot-item-link\",\"children\":\"FAQs\"}],[\"$\",\"a\",null,{\"title\":\"Sitemap\",\"href\":\"/sitemap\",\"className\":\"foot-item-link\",\"children\":\"Sitemap\"}],[\"$\",\"a\",null,{\"title\":\"Stories\",\"href\":\"/stories\",\"className\":\"foot-item-link\",\"children\":\"Stories\"}],[\"$\",\"a\",null,{\"title\":\"CSharp TV\",\"href\":\"https://www.youtube.com/user/CsharpCorner1/\",\"className\":\"foot-item-link\",\"target\":\"_blank\",\"rel\":\"noopener noreferrer\",\"children\":\"CSharp TV\"}],[\"$\",\"a\",null,{\"title\":\"DB Talks\",\"href\":\"https://www.dbtalks.com/\",\"className\":\"foot-item-link\",\"target\":\"_blank\",\"rel\":\"noopener noreferrer\",\"children\":\"DB Talks\"}],[\"$\",\"a\",null,{\"title\":\"Web3 Universe\",\"href\":\"https://web3universe.today/\",\"className\":\"foot-item-link\",\"target\":\"_blank\",\"rel\":\"noopener noreferrer\",\"children\":\"Web3 Universe\"}],[\"$\",\"a\",null,{\"title\":\"Jumpstart Blockchain\",\"href\":\"https://www.jumpstartblockchain.com/\",\"className\":\"foot-item-link\",\"target\":\"_blank\",\"rel\":\"noopener noreferrer\",\"children\":\"Jumpstart Blockchain\"}]]}]\n1c:[\"$\",\"div\",null,{\"className\":\"copyright\",\"children\":[[\"$\",\"p\",null,{\"children\":[\"©\",2026,\" C# Corner.\"]}],[\"$\",\"p\",null,{\"children\":\"All contents are copyright of their authors.\"}]]}]\n1d:[\"$\",\"a\",null,{\"href\":\"/forums\",\"children\":\"Forums\"}]\n1e:[\"$\",\"li\",\"/ebooks\",{\"children\":[\"$\",\"a\",null,{\"href\":\"/ebooks\",\"children\":\"Ebooks\"}]}]\n1f:[\"$\",\"li\",\"/events\",{\"children\":[\"$\",\"a\",null,{\"href\":\"/events\",\"children\":\"Events\"}]}]\n20:[\"$\",\"li\",\"/technologies\",{\"children\":[\"$\",\"a\",null,{\"href\":\"/technologies\",\"children\":\"Technologies\"}]}]\n21:[\"$\",\"link\",\"0\",{\"rel\":\"stylesheet\",\"href\":\"/_next/static/chunks/3_95diz3oq33o.css\",\"precedence\":\"next\",\"crossOrigin\":\"$undefined\",\"nonce\":\"$undefined\"}]\n22:[\"$\",\"aside\",null,{\"className\":\"aside-right no-rail-ads\",\"children\":\"$L25\"}]\n23:[[\"$\",\"style\",null,{\"children\":\"\\n    .icon-sprite-footer {\\n    display: inline-block;\\n    border: none;\\n    cursor: pointer;\\n    background-image: url('/images/social-icons.png'); /* Ensure the correct path and extension */\\n    background-size: auto; /* Adjust if needed */\\n    background-color: transparent;\\n}\\n\\n.icon-sprite-footer-facebook {\\n    width: 24px;\\n    height: 30px;\\n    background-position: 0px 0px;\\n}\\n\\n.icon-sprite-footer-twitter {\\n    width: 24px;\\n    height: 30px;\\n    background-position: -29px 0px;\\n}\\n\\n.icon-sprite-footer-linkedin {\\n    width: 26px;\\n    height: 30px;\\n    background-position: -62px 0px;\\n}\\n\\n.icon-sprite-footer-yt {\\n    width: 34px;\\n    height: 30px;\\n    background-position: -98px 0px;\\n}\\n\\n.icon-sprite-footer-windows {\\n    width: 26px;\\n    height: 30px;\\n    background-position: 135px 0px;\\n}\\n\\n.icon-sprite-footer-playstore {\\n    width: 26px;\\n    height: 30px;\\n    background-position: 98px 0px;\\n}\\n\\n.icon-sprite-footer-appstore {\\n    width: 26px;\\n    height: 30px;\\n    background-position: 64px -2px;\\n}\\n\"}],[\"$\",\"div\",null,{\"id\":\"NewFooter\",\"children\":[\"$\",\"footer\",null,{\"className\":\"main-footer\",\"children\":[\"$\",\"div\",null,{\"className\":\"inner-footer\",\"children\":[[\"$\",\"div\",null,{\"className\":\"social-media-wrap\",\"children\":[[\"$\",\"a\",null,{\"title\":\"Facebook\",\"href\":\"https://www.facebook.com/pages/C-Corner/194086953935286\",\"target\":\"_blank\",\"rel\":\"noopener noreferrer\",\"style\":{\"textDecoration\":\"none\"},\"className\":\"icon-sprite-footer icon-sprite-footer-facebook\"}],[\"$\",\"a\",null,{\"title\":\"Twitter\",\"href\":\"https://twitter.com/csharpcorner\",\"target\":\"_blank\",\"rel\":\"noopener noreferrer\",\"style\":{\"textDecoration\":\"none\"},\"className\":\"icon-sprite-footer icon-sprite-footer-twitter\"}],[\"$\",\"a\",null,{\"title\":\"LinkedIn\",\"href\":\"https://www.linkedin.com/company/csharpcorner/\",\"target\":\"_blank\",\"rel\":\"noopener noreferrer\",\"style\":{\"textDecoration\":\"none\"},\"className\":\"icon-sprite-footer icon-sprite-footer-linkedin\"}],[\"$\",\"a\",null,{\"title\":\"Youtube\",\"href\":\"https://www.youtube.com/user/CsharpCorner1/\",\"target\":\"_blank\",\"rel\":\"noopener noreferrer\",\"style\":{\"textDecoration\":\"none\"},\"className\":\"icon-sprite-footer icon-sprite-footer-yt\"}],[\"$\",\"a\",null,{\"title\":\"Windows App\",\"href\":\"https://www.microsoft.com/store/apps/9nblggh4tmwd?ocid=badge\",\"target\":\"_blank\",\"rel\":\"noopener noreferrer\",\"style\":{\"textDecoration\":\"none\"},\"className\":\"icon-sprite-footer icon-sprite-footer-windows\"}],[\"$\",\"a\",null,{\"title\":\"Android App\",\"href\":\"https://play.google.com/store/apps/details?id=com.mcn.csharpcorner\u0026pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1\",\"target\":\"_blank\",\"rel\":\"noopener noreferrer\",\"style\":{\"textDecoration\":\"none\"},\"className\":\"icon-sprite-footer icon-sprite-footer-playstore\"}],[\"$\",\"a\",null,{\"title\":\"iOS App\",\"href\":\"https://itunes.apple.com/us/app/c-corner/id451080586?ls=1\u0026mt=8\",\"target\":\"_blank\",\"rel\":\"noopener noreferrer\",\"style\":{\"textDecoration\":\"none\"},\"className\":\"icon-sprite-footer icon-sprite-footer-appstore\"}]]}],[\"$\",\"div\",null,{\"className\":\"footer-links\",\"children\":[[\"$\",\"a\",null,{\"title\":\"About Us\",\"href\":\"/about\",\"className\":\"foot-item-link\",\"children\":\"About Us\"}],[\"$\",\"a\",null,{\"title\":\"Contact Us\",\"href\":\"/contact-us\",\"className\":\"foot-item-link\",\"children\":\"Contact Us\"}],[\"$\",\"a\",null,{\"title\":\"Privacy Policy\",\"href\":\"/privacy-policy\",\"className\":\"foot-item-link\",\"children\":\"Privacy Policy\"}],[\"$\",\"a\",null,{\"title\":\"Terms\",\"href\":\"/terms\",\"className\":\"foot-item-link\",\"children\":\"Terms\"}],[\"$\",\"a\",null,{\"title\":\"Brand Guidelines\",\"href\":\"/brand-guidelines\",\"className\":\"foot-item-link\",\"children\":\"Brand Guidelines\"}],[\"$\",\"a\",null,{\"title\":\"Partners\",\"href\":\"/partners\",\"className\":\"foot-item-link\",\"children\":\"Partners\"}],[\"$\",\"a\",null,{\"title\":\"C# Tutorials\",\"href\":\"/csharp-tutorials\",\"className\":\"foot-item-link\",\"children\":\"C# Tutorials\"}],[\"$\",\"a\",null,{\"title\":\"Consultants\",\"href\":\"/consulting\",\"className\":\"foot-item-link\",\"children\":\"Consultants\"}],\"$L26\",\"$L27\",\"$L28\",\"$L29\",\"$L2a\",\"$L2b\",\"$L2c\",\"$L2d\",\"$L2e\"]}],\"$L2f\"]}]}]}]]\n24:[\"$\",\"$L30\",null,{}]\n26:[\"$\",\"a\",null,{\"title\":\"Ideas\",\"href\":\"/ideas\",\"className\":\"foot-item-link\",\"children\":\"Ideas\"}]\n27:[\"$\",\"a\",null,{\"title\":\"Report a Bug\",\"href\":\"/report-bugs\",\"className\":\"foot-item-link\",\"children\":\"Report A Bug\"}]\n28:[\"$\",\"a\",null,{\"title\":\"FAQs\",\"href\":\"/faq\",\"className\":\"foot-item-link\",\"children\":\"FAQs\"}]\n29:[\"$\",\"a\",null,{\"title\":\"Sitemap\",\"href\":\"/sitemap\",\"className\":\"foot-item-link\",\"children\":\"Sitemap\"}]\n2a:[\"$\",\"a\",null,{\"title\":\"Stories\",\"href\":\"/stories\",\"className\":\"foot-item-link\",\"children\":\"Stories\"}]\n2b:[\"$\",\"a\",null,{\"title\":\"CSharp TV\",\"href\":\"https://www.youtube.com/user/CsharpCorner1/\",\"className\":\"foot-item-link\",\"target\":\"_blank\",\"rel\":\"noopener noreferrer\",\"children\":\"CSharp TV\"}]\n2c:[\"$\",\"a\",null,{\"title\":\"DB Talks\",\"href\":\"https://www.dbtalks.com/\",\"className\":\"foot-item-link\",\"target\":\"_blank\",\"rel\":\"noopener noreferrer\",\"children\":\"DB Talks\"}]\n2d:[\"$\",\"a\",null,{\"title\":\"Web3 Universe\",\"href\":\"https://web3universe.today/\",\"className\":\"foot-item-link\",\"target\":\"_blank\",\"rel\":\"noopener noreferrer\",\"children\":\"Web3 Universe\"}]\n2e:[\"$\",\"a\",null,{\"title\":\"Jumpstart Blockchain\",\"href\":\"https://www.jumpstartblockchain.com/\",\"className\":\"foot-item-link\",\"target\":\"_blank\",\"rel\":\"noopener noreferrer\",\"children\":\"Jumpstart Blockchain\"}]\n2f:[\"$\",\"div\",null,{\"className\":\"copyright\",\"children\":[[\"$\",\"p\",null,{\"children\":[\"©\",2026,\" C# Corner.\"]}],[\"$\",\"p\",null,{\"children\":\"All contents are copyright of their authors.\"}]]}]\n32:I[2907,[\"/_next/static/chunks/3_g8wjnnyafep.js\",\"/_next/static/chunks/3y-9e9_f11zip.js\",\"/_next/static/chunks/29zwfi5_xti9r.js\",\"/_next/static/chunks/3dk39kva71n_w.js\"],\"default\"]\n31:T58b,\n    .event-calendar{\n        display:flex;\n        flex-direction:column-reverse;\n        background:linear-gradient(-180deg, rgba(93,107,148, 40%) 40%, #0086dc 40%);\n        text-align: center;\n        border-radius: 4px;\n        min-width: 42px;\n        max-width: 42px;\n        min-height:50px;\n    }\n    .event-list-item{\n        display:flex;\n        flex-direction:row;\n        align-items:center;\n        gap:15px;\n        margin-bottom:15px;\n    }\n    .local-day{\n        font-size:20px;\n        font-weight:600;\n        height:31px;\n        color:var(--textColor);\n    }\n    .local-month{\n         font-size:12px;\n         color:var(--textColor);\n    }\n    /* Two lines, the same clamp .question-link gets in the card below this one.\n       EVENTS_SHOWN above exists so this card is the same height on every page\n       whatever the data, and an unclamped title undid that a week at a time — a\n       four-line conference name made the card 366px instead of 264px. It is the\n       card's height the rail's sticky rule is measured against\n       (.aside-right.no-rail-ads, 01-stylesheet.css), so this is what keeps that\n       number true. Scoped to this list: .event-title is also the events page's\n       and the about page's. */\n    .UpComing-Events-list .event-title a{\n        display:-webkit-box;\n        -webkit-line-clamp:2;\n        -webkit-box-orient:vertical;\n        overflow:hidden;\n    }\n      25:[[\"$\",\"style\",null,{\"children\":\"$31\"}],[\"$\",\"div\",null,{\"className\":\"wrap\",\"id\":\"ChapterEventsBox\",\"children\":[[\"$\",\"div\",null,{\"className\":\"wrap-heading\",\"children\":[[\"$\",\"div\",null,{\"className\":\"heading\",\"children\":\"Upcoming Events\"}],[\"$\",\"a\",null,{\"href\":\"/events\",\"className\":\"btn-view-all\",\"children\":\"View all\"}]]}],[\"$\",\"ul\",null,{\"id\":\"ChapterEventsContainer\",\"className\":\"UpComing-Events-list\",\"children\":[[\"$\",\"li\",\"2123-0\",{\"id\":\"event-1\",\"className\":\"event-list-item\",\"children\":[[\"$\",\"div\",null,{\"className\":\"event-calendar\",\"children\":[[\"$\",\"span\",null,{\"className\":\"local-day\",\"id\":\"LocalDay1\",\"children\":[\"$\",\"$L32\",null,{\"startsAt\":\"2026-11-23T11:30:00.000Z\",\"variant\":\"day\"}]}],\" \",[\"$\",\"span\",null,{\"className\":\"local-month\",\"id\":\"LocalMonth1\",\"children\":[\"$\",\"$L32\",null,{\"startsAt\":\"2026-11-23T11:30:00.000Z\",\"variant\":\"monthUpper\"}]}]]}],[\"$\",\"div\",null,{\"className\":\"event-title\",\"children\":[\"$\",\"a\",null,{\"className\":\"title\",\"href\":\"/events/ai-agents-conference-2026-3rd-edition\",\"title\":\"AI Agents Conference 2026 - 3rd Edition\",\"children\":\"AI Agents Conference 2026 - 3rd Edition\"}]}]]}]]}],[\"$\",\"div\",null,{\"id\":\"tzListDiv\"}]]}],[\"$\",\"style\",null,{\"children\":\"\\n    .latest-questions-list {\\n        margin-top: -5px;\\n    }\\n\\n        .latest-questions-list li {\\n            position: relative;\\n            border-bottom: 1px solid rgba(154, 185, 220, 0.1);\\n        }\\n\\n    .question-link, h3.post-title span {\\n        display: -webkit-box;\\n        -webkit-line-clamp: 2;\\n        -webkit-box-orient: vertical;\\n        text-overflow: ellipsis;\\n        font-size: 14px;\\n        line-height: 24px;\\n        word-break: break-word;\\n        font-weight: 500;\\n        color: var(--texthightlight);\\n        overflow: hidden;\\n        white-space: normal;\\n    }\\n\\n    .question-link {\\n        margin-bottom: 5px;\\n    }\\n\\n    .question-item {\\n        padding: 6px 0 6px 0;\\n    }\\n\\n    .latest-questions-list li:last-child {\\n        border-bottom: 0 !important;\\n        padding-bottom: 0;\\n        margin-bottom: 0;\\n    }\\n      \"}],[\"$\",\"div\",null,{\"className\":\"our-training-program latest-questions wrap\",\"children\":[[\"$\",\"div\",null,{\"className\":\"wrap-heading\",\"children\":[[\"$\",\"h2\",null,{\"className\":\"heading\",\"children\":\"Our Training Programs\"}],\"$L33\"]}],\"$L34\"]}],\"$L35\",\"$L36\",\"$L37\"]\n33:[\"$\",\"a\",null,{\"href\":\"https://learnai.c-sharpcorner.com/trainings\",\"className\":\"btn-view-all\",\"target\":\"_blank\",\"rel\":\"noopener noreferrer\",\"children\":\"View all\"}]\n34:[\"$\",\"ul\",null,{\"id\":\"OurTrainingPrograms\",\"className\":\"latest-questions-list\",\"children\":[[\"$\",\"li\",\"0-https://learnai.c-sharpcorner.com/trainings/ai-machine-learning\",{\"className\":\"question-item\",\"children\":[[\"$\",\"h3\",null,{\"children\":[\"$\",\"a\",null,{\"className\":\"question-link\",\"href\":\"https://learnai.c-sharpcorner.com/trainings/ai-machine-learning\",\"title\":\"AI \u0026 Machine Learning\",\"target\":\"_blank\",\"rel\":\"noopener noreferrer\",\"children\":\"AI \u0026 Machine Learning\"}]}],[\"$\",\"div\",null,{\"className\":\"question-meta\"}]]}],[\"$\",\"li\",\"1-https://learnai.c-sharpcorner.com/trainings/mastering-large-language-models\",{\"className\":\"question-item\",\"children\":[[\"$\",\"h3\",null,{\"children\":[\"$\",\"a\",null,{\"className\":\"question-link\",\"href\":\"https://learnai.c-sharpcorner.com/trainings/mastering-large-language-models\",\"title\":\"Mastering Large Language Models\",\"target\":\"_blank\",\"rel\":\"noopener noreferrer\",\"children\":\"Mastering Large Language Models\"}]}],[\"$\",\"div\",null,{\"className\":\"question-meta\"}]]}],[\"$\",\"li\",\"2-https://learnai.c-sharpcorner.com/trainings/mastering-prompt-engineering\",{\"className\":\"question-item\",\"children\":[[\"$\",\"h3\",null,{\"children\":[\"$\",\"a\",null,{\"className\":\"question-link\",\"href\":\"https://learnai.c-sharpcorner.com/trainings/mastering-prompt-engineering\",\"title\":\"Mastering Prompt Engineering\",\"target\":\"_blank\",\"rel\":\"noopener noreferrer\",\"children\":\"Mastering Prompt Engineering\"}]}],[\"$\",\"div\",null,{\"className\":\"question-meta\"}]]}],[\"$\",\"li\",\"3-https://learnai.c-sharpcorner.com/trainings/certified-vibe-coder\",{\"className\":\"question-item\",\"children\":[[\"$\",\"h3\",null,{\"children\":[\"$\",\"a\",null,{\"className\":\"question-link\",\"href\":\"https://learnai.c-sharpcorner.com/trainings/certified-vibe-coder\",\"title\":\"Certified Vibe Coder\",\"target\":\"_blank\",\"rel\":\"noopener noreferrer\",\"children\":\"Certified Vibe Coder\"}]}],[\"$\",\"div\",null,{\"className\":\"question-meta\"}]]}],[\"$\",\"li\",\"4-https://learnai.c-sharpcorner.com/trainings/github-copilot-training\",{\"className\":\"question-item\",\"children\":[[\"$\",\"h3\",null,{\"children\":[\"$\",\"a\",null,{\"className\":\"question-link\",\"href\":\"https://learnai.c-sharpcorner.com/trainings/github-copilot-training\",\"title\":\"Github Copilot Training\",\"target\":\"_blank\",\"rel\":\"noopener noreferrer\",\"children\":\"Github Copilot Training\"}]}],[\"$\",\"div\",null,{\"className\":\"question-meta\"}]]}],[\"$\",\"li\",\"5-https://learnai.c-sharpcorner.com/trainings/generative-ai-for-beginners\",{\"className\":\"question-item\",\"children\":[[\"$\",\"h3\",null,{\"children\":[\"$\",\"a\",null,{\"className\":\"question-link\",\"href\":\"https://learnai.c-sharpcorner.com/trainings/generative-ai-for-beginners\",\"title\":\"Generative AI for Beginners\",\"target\":\"_blank\",\"rel\":\"noopener noreferrer\",\"children\":\"Generative AI for Beginners\"}]}],[\"$\",\"div\",null,{\"className\":\"question-meta\"}]]}],[\"$\",\"li\",\"6-https://learnai.c-sharpcorner.com/trainings/learn-n8n-for-beginners\",{\"className\":\"question-item\",\"children\":[[\"$\",\"h3\",null,{\"children\":[\"$\",\"a\",null,{\"className\":\"question-link\",\"href\":\"https://learnai.c-sharpcorner.com/trainings/learn-n8n-for-beginners\",\"title\":\"n8n Automation \u0026 AI Agents Training\",\"target\":\"_blank\",\"rel\":\"noopener noreferrer\",\"children\":\"n8n Automation \u0026 AI Agents Training\"}]}],[\"$\",\"div\",null,{\"className\":\"question-meta\"}]]}]]}]\n35:null\n36:null\n37:null\nc:[[\"$\",\"meta\",\"0\",{\"charSet\":\"utf-8\"}],[\"$\",\"meta\",\"1\",{\"name\":\"viewport\",\"content\":\"width=device-width, initial-scale=1\"}]]\n"])</script><script>self.__next_f.push([1,"38:I[27201,[\"/_next/static/chunks/3_g8wjnnyafep.js\"],\"IconMark\"]\n9:null\ne:[[\"$\",\"title\",\"0\",{\"children\":\"Fibonacci Series : Recursion, Memoization, and Optimal Approach\"}],[\"$\",\"meta\",\"1\",{\"name\":\"description\",\"content\":\"The Fibonacci series is a mathematical sequence starting with 0 and 1, where each subsequent number is the sum of the previous two. This article explores three methods to compute Fibonacci numbers in C#: recursion, memoization, and an optimal iterative approach.\"}],[\"$\",\"meta\",\"2\",{\"name\":\"keywords\",\"content\":\"Computational Efficiency, Fibonacci Series, Loop Iteration, Recursion, Software Development, Time Complexity\"}],[\"$\",\"link\",\"3\",{\"rel\":\"canonical\",\"href\":\"https://www.c-sharpcorner.com/article/fibonacci-series-recursion-memoization-and-optimal-approach/\"}],[\"$\",\"meta\",\"4\",{\"property\":\"og:title\",\"content\":\"Fibonacci Series : Recursion, Memoization, and Optimal Approach\"}],[\"$\",\"meta\",\"5\",{\"property\":\"og:description\",\"content\":\"The Fibonacci series is a mathematical sequence starting with 0 and 1, where each subsequent number is the sum of the previous two. This article explores three methods to compute Fibonacci numbers in C#: recursion, memoization, and an optimal iterative approach.\"}],[\"$\",\"meta\",\"6\",{\"property\":\"og:url\",\"content\":\"https://www.c-sharpcorner.com/article/fibonacci-series-recursion-memoization-and-optimal-approach/\"}],[\"$\",\"meta\",\"7\",{\"property\":\"og:type\",\"content\":\"article\"}],[\"$\",\"meta\",\"8\",{\"property\":\"article:published_time\",\"content\":\"2024-10-01T00:00:00.000Z\"}],[\"$\",\"meta\",\"9\",{\"property\":\"article:modified_time\",\"content\":\"2024-10-01T08:15:37.503Z\"}],[\"$\",\"meta\",\"10\",{\"property\":\"article:author\",\"content\":\"Vivek Kumar\"}],[\"$\",\"meta\",\"11\",{\"name\":\"twitter:card\",\"content\":\"summary\"}],[\"$\",\"meta\",\"12\",{\"name\":\"twitter:title\",\"content\":\"Fibonacci Series : Recursion, Memoization, and Optimal Approach\"}],[\"$\",\"meta\",\"13\",{\"name\":\"twitter:description\",\"content\":\"The Fibonacci series is a mathematical sequence starting with 0 and 1, where each subsequent number is the sum of the previous two. This article explores three methods to compute Fibonacci numbers in C#: recursion, memoization, and an optimal iterative approach.\"}],[\"$\",\"link\",\"14\",{\"rel\":\"icon\",\"href\":\"/favicon.ico?favicon.2vob68tjqpejf.ico\",\"sizes\":\"256x256\",\"type\":\"image/x-icon\"}],[\"$\",\"link\",\"15\",{\"rel\":\"icon\",\"href\":\"/images/layout/favicon-icon-dark.png\"}],[\"$\",\"$L38\",\"16\",{}]]\n"])</script><title>Fibonacci Series : Recursion, Memoization, and Optimal Approach</title><meta name="description" content="The Fibonacci series is a mathematical sequence starting with 0 and 1, where each subsequent number is the sum of the previous two. This article explores three methods to compute Fibonacci numbers in C#: recursion, memoization, and an optimal iterative approach."/><meta name="keywords" content="Computational Efficiency, Fibonacci Series, Loop Iteration, Recursion, Software Development, Time Complexity"/><link rel="canonical" href="https://www.c-sharpcorner.com/article/fibonacci-series-recursion-memoization-and-optimal-approach/"/><meta property="og:title" content="Fibonacci Series : Recursion, Memoization, and Optimal Approach"/><meta property="og:description" content="The Fibonacci series is a mathematical sequence starting with 0 and 1, where each subsequent number is the sum of the previous two. This article explores three methods to compute Fibonacci numbers in C#: recursion, memoization, and an optimal iterative approach."/><meta property="og:url" content="https://www.c-sharpcorner.com/article/fibonacci-series-recursion-memoization-and-optimal-approach/"/><meta property="og:type" content="article"/><meta property="article:published_time" content="2024-10-01T00:00:00.000Z"/><meta property="article:modified_time" content="2024-10-01T08:15:37.503Z"/><meta property="article:author" content="Vivek Kumar"/><meta name="twitter:card" content="summary"/><meta name="twitter:title" content="Fibonacci Series : Recursion, Memoization, and Optimal Approach"/><meta name="twitter:description" content="The Fibonacci series is a mathematical sequence starting with 0 and 1, where each subsequent number is the sum of the previous two. This article explores three methods to compute Fibonacci numbers in C#: recursion, memoization, and an optimal iterative approach."/><link rel="icon" href="/favicon.ico?favicon.2vob68tjqpejf.ico" sizes="256x256" type="image/x-icon"/><link rel="icon" href="/images/layout/favicon-icon-dark.png"/><script>document.querySelectorAll('body link[rel="icon"], body link[rel="apple-touch-icon"]').forEach(el => document.head.appendChild(el))</script><div hidden id="S:3"></div><script>$RB=[];$RV=function(a){$RT=performance.now();for(var b=0;b<a.length;b+=2){var c=a[b],e=a[b+1];null!==e.parentNode&&e.parentNode.removeChild(e);var f=c.parentNode;if(f){var g=c.previousSibling,h=0;do{if(c&&8===c.nodeType){var d=c.data;if("/$"===d||"/&"===d)if(0===h)break;else h--;else"$"!==d&&"$?"!==d&&"$~"!==d&&"$!"!==d&&"&"!==d||h++}d=c.nextSibling;f.removeChild(c);c=d}while(c);for(;e.firstChild;)f.insertBefore(e.firstChild,c);g.data="$";g._reactRetry&&requestAnimationFrame(g._reactRetry)}}a.length=0};
+$RC=function(a,b){if(b=document.getElementById(b))(a=document.getElementById(a))?(a.previousSibling.data="$~",$RB.push(a,b),2===$RB.length&&("number"!==typeof $RT?requestAnimationFrame($RV.bind(null,$RB)):(a=performance.now(),setTimeout($RV.bind(null,$RB),2300>a&&2E3<a?2300-a:$RT+300-a)))):b.parentNode.removeChild(b)};$RC("B:3","S:3")</script><div hidden id="S:0"></div><script>$RC("B:0","S:0")</script><script>self.__next_f.push([1,"39:I[22016,[\"/_next/static/chunks/3_g8wjnnyafep.js\",\"/_next/static/chunks/3y-9e9_f11zip.js\",\"/_next/static/chunks/29zwfi5_xti9r.js\",\"/_next/static/chunks/3dk39kva71n_w.js\",\"/_next/static/chunks/1ce9je2siyveg.js\",\"/_next/static/chunks/42qkv0w5l-byv.js\"],\"\"]\n3a:I[26489,[\"/_next/static/chunks/3_g8wjnnyafep.js\",\"/_next/static/chunks/3y-9e9_f11zip.js\",\"/_next/static/chunks/29zwfi5_xti9r.js\",\"/_next/static/chunks/3dk39kva71n_w.js\",\"/_next/static/chunks/1ce9je2siyveg.js\",\"/_next/static/chunks/42qkv0w5l-byv.js\"],\"default\"]\n3b:T5b2,{\"@context\":\"https://schema.org\",\"@type\":\"TechArticle\",\"headline\":\"Fibonacci Series : Recursion, Memoization, and Optimal Approach\",\"description\":\"The Fibonacci series is a mathematical sequence starting with 0 and 1, where each subsequent number is the sum of the previous two. This article explores three methods to compute Fibonacci numbers in C#: recursion, memoization, and an optimal iterative approach.\",\"mainEntityOfPage\":{\"@type\":\"WebPage\",\"@id\":\"https://www.c-sharpcorner.com/article/fibonacci-series-recursion-memoization-and-optimal-approach/\"},\"url\":\"https://www.c-sharpcorner.com/article/fibonacci-series-recursion-memoization-and-optimal-approach/\",\"datePublished\":\"2024-10-01T00:00:00.000Z\",\"dateModified\":\"2024-10-01T08:15:37.503Z\",\"author\":{\"@type\":\"Person\",\"name\":\"Vivek Kumar\",\"url\":\"https://www.c-sharpcorner.com/members/vivek-kumar244\"},\"publisher\":{\"@type\":\"Organization\",\"name\":\"C# Corner\",\"url\":\"https://www.c-sharpcorner.com/\",\"logo\":{\"@type\":\"ImageObject\",\"url\":\"https://www.c-sharpcorner.com/images/layout/csharp-logo.png\"}},\"articleSection\":\"C#\",\"keywords\":\"Computational Efficiency, Fibonacci Series, Loop Iteration, Recursion, Software Development, Time Complexity\",\"inLanguage\":\"en\",\"interactionStatistic\":[{\"@type\":\"InteractionCounter\",\"interactionType\":\"https://schema.org/ReadAction\",\"userInteractionCount\":7149},{\"@type\":\"InteractionCounter\",\"interactionType\":\"https://schema.org/CommentAction\",\"userInteractionCount\":0}]}6:[[[\"$\",\"nav\",null,{\"className\":\"breadcrumbs\",\"aria-label\":\"Breadcrumb\",\"children\":[\"$\",\"ol\",null,{\"children\":[[\"$\",\"li\",\"/\",{\"children\":[\"$\",\"$L39\",null,{\"href\":\"/\",\"children\":\"Home\"}]}],[\"$\",\"li\",\"/technologies\",{\"children\":[\"$\",\"$L39\",null,{\"href\":\"/technologies\",\"children\":\"Technologies\"}]}],[\"$\",\"li\",\"/technologies/csharp-programming\",{\"children\":[\"$\",\"$L39\",null,{\"href\":\"/technologies/csharp-programming\",\"children\":\"C#\"}]}]]}]}],[\"$\",\"script\",null,{\"type\":\"application/ld+json\",\"dangerouslySetInnerHTML\":{\"__html\":\"{\\\"@context\\\":\\\"https://schema.org\\\",\\\"@type\\\":\\\"BreadcrumbList\\\",\\\"itemListElement\\\":[{\\\"@type\\\":\\\"ListItem\\\",\\\"position\\\":1,\\\"name\\\":\\\"Home\\\",\\\"item\\\":\\\"https://www.c-sharpcorner.com/\\\"},{\\\"@type\\\":\\\"ListItem\\\",\\\"position\\\":2,\\\"name\\\":\\\"Technologies\\\",\\\"item\\\":\\\"https://www.c-sharpcorner.com/technologies\\\"},{\\\"@type\\\":\\\"ListItem\\\",\\\"position\\\":3,\\\"name\\\":\\\"C#\\\",\\\"item\\\":\\\"https://www.c-sharpcorner.com/technologies/csharp-programming\\\"},{\\\"@type\\\":\\\"ListItem\\\",\\\"position\\\":4,\\\"name\\\":\\\"Fibonacci Series : Recursion, Memoization, and Optimal Approach\\\"}]}\"}}]],[\"$\",\"article\",null,{\"className\":\"article-detail-wrap\",\"children\":[[\"$\",\"$L3a\",null,{\"contentId\":75075}],[\"$\",\"script\",null,{\"type\":\"application/ld+json\",\"dangerouslySetInnerHTML\":{\"__html\":\"$3b\"}}],[\"$\",\"header\",null,{\"children\":[[\"$\",\"div\",null,{\"className\":\"detail d-flex\",\"children\":[[\"$\",\"div\",null,{\"className\":\"catagory-img-wrap\",\"children\":[\"$\",\"a\",null,{\"href\":\"/technologies/csharp-programming\",\"title\":\"C#\",\"children\":[\"$\",\"img\",null,{\"src\":\"https://cdn.c-sharpcorner.com/uploadfile/minorcatimages/csharp-programming_082820175.webp\",\"className\":\"catagory-img\",\"alt\":\"C#\",\"width\":48,\"height\":48,\"loading\":\"lazy\"}]}]}],[\"$\",\"div\",null,{\"className\":\"detail-right\",\"children\":[\"$\",\"h1\",null,{\"className\":\"techName\",\"children\":\"Fibonacci Series : Recursion, Memoization, and Optimal Approach\"}]}]]}],[\"$\",\"div\",null,{\"className\":\"user-details article-meta\",\"children\":[\"$\",\"div\",null,{\"className\":\"list-foot-action-ctrl\",\"children\":[[\"$\",\"a\",null,{\"href\":\"/members/vivek-kumar244\",\"className\":\"sm-user-details\",\"title\":\"Vivek Kumar\",\"children\":[[\"$\",\"img\",null,{\"id\":\"$undefined\",\"className\":\"sm-img-circle\",\"src\":\"https://cdn.c-sharpcorner.com/uploadfile/authorimage/2ad42020191008101243.webp\",\"alt\":\"Vivek Kumar\",\"title\":\"Vivek Kumar\",\"loading\":\"lazy\",\"data-avatar-name\":\"Vivek Kumar\",\"referrerPolicy\":\"no-referrer\"}],\"$L3c\"]}],false,\"$L3d\",\"$L3e\",\"$L3f\",\"$L40\",\"$L41\",\"$L42\",\"$L43\"]}]}]]}],null,\"$L44\",\"$L45\",\"$L46\",\"$L47\",\"$L48\",\"$L49\"]}]]\n"])</script><script>self.__next_f.push([1,"4a:I[60981,[\"/_next/static/chunks/3_g8wjnnyafep.js\",\"/_next/static/chunks/3y-9e9_f11zip.js\",\"/_next/static/chunks/29zwfi5_xti9r.js\",\"/_next/static/chunks/3dk39kva71n_w.js\",\"/_next/static/chunks/1ce9je2siyveg.js\",\"/_next/static/chunks/42qkv0w5l-byv.js\"],\"default\"]\n4b:I[4941,[\"/_next/static/chunks/3_g8wjnnyafep.js\",\"/_next/static/chunks/3y-9e9_f11zip.js\",\"/_next/static/chunks/29zwfi5_xti9r.js\",\"/_next/static/chunks/3dk39kva71n_w.js\",\"/_next/static/chunks/1ce9je2siyveg.js\",\"/_next/static/chunks/42qkv0w5l-byv.js\"],\"default\"]\n4c:I[21409,[\"/_next/static/chunks/3_g8wjnnyafep.js\",\"/_next/static/chunks/3y-9e9_f11zip.js\",\"/_next/static/chunks/29zwfi5_xti9r.js\",\"/_next/static/chunks/3dk39kva71n_w.js\",\"/_next/static/chunks/1ce9je2siyveg.js\",\"/_next/static/chunks/42qkv0w5l-byv.js\"],\"default\"]\n4d:I[24170,[\"/_next/static/chunks/3_g8wjnnyafep.js\",\"/_next/static/chunks/3y-9e9_f11zip.js\",\"/_next/static/chunks/29zwfi5_xti9r.js\",\"/_next/static/chunks/3dk39kva71n_w.js\",\"/_next/static/chunks/1ce9je2siyveg.js\",\"/_next/static/chunks/42qkv0w5l-byv.js\"],\"default\"]\n3c:[\"$\",\"p\",null,{\"className\":\"user-name\",\"children\":\"Vivek Kumar\"}]\n3d:[\"$\",\"$L39\",null,{\"href\":\"/article/fibonacci-series-recursion-memoization-and-optimal-approach/history\",\"className\":\"action-item\",\"title\":\"History\",\"children\":[[\"$\",\"i\",null,{\"className\":\"icon-sprite-02 icon-time\"}],[\"$\",\"$L4a\",null,{\"iso\":\"2024-10-01T08:15:37.503Z\",\"className\":\"post-time\",\"times\":[{\"label\":\"Published\",\"iso\":\"2024-10-01T00:00:00.000Z\"},{\"label\":\"Updated\",\"iso\":\"2024-10-01T08:15:37.503Z\"}],\"focusable\":false}]]}]\n3e:[\"$\",\"span\",null,{\"className\":\"action-item\",\"title\":\"Views\",\"children\":[[\"$\",\"i\",null,{\"className\":\"icon-sprite-02 icon-views\"}],[\"$\",\"span\",null,{\"className\":\"post-views\",\"children\":\"7.1k\"}]]}]\n3f:[\"$\",\"a\",null,{\"className\":\"action-item\",\"title\":\"Comments\",\"href\":\"#comments\",\"children\":[[\"$\",\"i\",null,{\"className\":\"icon-sprite-02 icon-comnts\"}],[\"$\",\"span\",null,{\"className\":\"post-comments\",\"children\":\"0\"}]]}]\n40:[\"$\",\"$L4b\",null,{\"contentId\":75075,\"initial\":{\"total\":4,\"counts\":{\"like\":4},\"mine\":\"\"},\"signedIn\":false,\"returnTo\":\"/article/fibonacci-series-recursion-memoization-and-optimal-approach\"}]\n41:[\"$\",\"span\",null,{\"className\":\"action-item\",\"title\":\"Points\",\"children\":[[\"$\",\"i\",null,{\"className\":\"icon-sprite-02 icon-token\"}],[\"$\",\"span\",null,{\"className\":\"tokens\",\"children\":100}]]}]\n42:[\"$\",\"a\",null,{\"href\":\"/articles\",\"className\":\"action-item btn-article-tag\",\"children\":\"Article\"}]\n43:[\"$\",\"div\",null,{\"className\":\"byline-controls\",\"children\":[null,[\"$\",\"$L4c\",null,{\"itemId\":\"75075\",\"role\":\"$undefined\",\"noun\":\"article\",\"afterHref\":\"/articles\"}]]}]\n46:null\n47:[\"$\",\"div\",null,{\"className\":\"article-tags\",\"children\":[[\"$\",\"$L39\",\"software-development\",{\"href\":\"/topics/software-development\",\"className\":\"action-item btn-article-tag\",\"children\":\"software development\"}],[\"$\",\"$L39\",\"recursion\",{\"href\":\"/topics/recursion\",\"className\":\"action-item btn-article-tag\",\"children\":\"Recursion\"}],[\"$\",\"$L39\",\"time-complexity\",{\"href\":\"/topics/time-complexity\",\"className\":\"action-item btn-article-tag\",\"children\":\"Time Complexity\"}],[\"$\",\"span\",\"fibonacci-series\",{\"className\":\"action-item btn-article-tag\",\"children\":\"Fibonacci series\"}],[\"$\",\"span\",\"computational-efficiency\",{\"className\":\"action-item btn-article-tag\",\"children\":\"Computational Efficiency\"}],[\"$\",\"span\",\"loop-iteration\",{\"className\":\"action-item btn-article-tag\",\"children\":\"Loop Iteration\"}]]}]\n49:[\"$\",\"$L4d\",null,{\"contentId\":75075,\"initial\":[],\"user\":null,\"returnTo\":\"/article/fibonacci-series-recursion-memoization-and-optimal-approach\",\"canEditAny\":false,\"canDeleteAny\":false,\"canMention\":false}]\n"])</script><div hidden id="S:2"><nav class="breadcrumbs" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><a href="/technologies">Technologies</a></li><li><a href="/technologies/csharp-programming">C#</a></li></ol></nav><script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://www.c-sharpcorner.com/"},{"@type":"ListItem","position":2,"name":"Technologies","item":"https://www.c-sharpcorner.com/technologies"},{"@type":"ListItem","position":3,"name":"C#","item":"https://www.c-sharpcorner.com/technologies/csharp-programming"},{"@type":"ListItem","position":4,"name":"Fibonacci Series : Recursion, Memoization, and Optimal Approach"}]}</script><article class="article-detail-wrap"><script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"Fibonacci Series : Recursion, Memoization, and Optimal Approach","description":"The Fibonacci series is a mathematical sequence starting with 0 and 1, where each subsequent number is the sum of the previous two. This article explores three methods to compute Fibonacci numbers in C#: recursion, memoization, and an optimal iterative approach.","mainEntityOfPage":{"@type":"WebPage","@id":"https://www.c-sharpcorner.com/article/fibonacci-series-recursion-memoization-and-optimal-approach/"},"url":"https://www.c-sharpcorner.com/article/fibonacci-series-recursion-memoization-and-optimal-approach/","datePublished":"2024-10-01T00:00:00.000Z","dateModified":"2024-10-01T08:15:37.503Z","author":{"@type":"Person","name":"Vivek Kumar","url":"https://www.c-sharpcorner.com/members/vivek-kumar244"},"publisher":{"@type":"Organization","name":"C# Corner","url":"https://www.c-sharpcorner.com/","logo":{"@type":"ImageObject","url":"https://www.c-sharpcorner.com/images/layout/csharp-logo.png"}},"articleSection":"C#","keywords":"Computational Efficiency, Fibonacci Series, Loop Iteration, Recursion, Software Development, Time Complexity","inLanguage":"en","interactionStatistic":[{"@type":"InteractionCounter","interactionType":"https://schema.org/ReadAction","userInteractionCount":7149},{"@type":"InteractionCounter","interactionType":"https://schema.org/CommentAction","userInteractionCount":0}]}</script><header><div class="detail d-flex"><div class="catagory-img-wrap"><a href="/technologies/csharp-programming" title="C#"><img src="https://cdn.c-sharpcorner.com/uploadfile/minorcatimages/csharp-programming_082820175.webp" class="catagory-img" alt="C#" width="48" height="48" loading="lazy"/></a></div><div class="detail-right"><h1 class="techName">Fibonacci Series : Recursion, Memoization, and Optimal Approach</h1></div></div><div class="user-details article-meta"><div class="list-foot-action-ctrl"><a href="/members/vivek-kumar244" class="sm-user-details" title="Vivek Kumar"><img class="sm-img-circle" src="https://cdn.c-sharpcorner.com/uploadfile/authorimage/2ad42020191008101243.webp" alt="Vivek Kumar" title="Vivek Kumar" loading="lazy" data-avatar-name="Vivek Kumar" referrerPolicy="no-referrer"/><p class="user-name">Vivek Kumar</p></a><a class="action-item" title="History" href="/article/fibonacci-series-recursion-memoization-and-optimal-approach/history"><i class="icon-sprite-02 icon-time"></i><span class="posted-when"><time class="posted-when-value post-time" dateTime="2024-10-01T08:15:37.503Z">2y</time><span class="posted-when-pop" role="tooltip"><span>Published<!-- --> <!-- -->Oct 1, 2024, 12:00 AM</span><span>Updated<!-- --> <!-- -->Oct 1, 2024, 8:15 AM</span></span></span></a><span class="action-item" title="Views"><i class="icon-sprite-02 icon-views"></i><span class="post-views">7.1k</span></span><a class="action-item" title="Comments" href="#comments"><i class="icon-sprite-02 icon-comnts"></i><span class="post-comments">0</span></a><span class="reaction-wrap action-item"><button type="button" class="reaction-button" aria-pressed="false" aria-label="Leave a reaction" title="Leave a reaction"><span class="reaction-faces" aria-hidden="true"><img class="reaction-face" src="/images/emotions/undo-like.png" alt="" width="18" height="18" loading="lazy"/></span></button><button type="button" class="reaction-count is-link" aria-haspopup="dialog" aria-label="See who reacted — 4" title="See who reacted">4</button><span class="reaction-picker" role="group" aria-label="Reactions"><button type="button" class="reaction-choice" style="--reaction-still:url(&quot;/images/emotions/undo-like.png&quot;);--reaction-motion:url(&quot;/images/emotions/like.webp&quot;)" aria-pressed="false" aria-label="Like" title="Like"></button><button type="button" class="reaction-choice" style="--reaction-still:url(&quot;/images/emotions/heart.png&quot;);--reaction-motion:url(&quot;/images/emotions/heart.webp&quot;)" aria-pressed="false" aria-label="Love It" title="Love It"></button><button type="button" class="reaction-choice" style="--reaction-still:url(&quot;/images/emotions/clap.png&quot;);--reaction-motion:url(&quot;/images/emotions/clap.webp&quot;)" aria-pressed="false" aria-label="Awesome" title="Awesome"></button><button type="button" class="reaction-choice" style="--reaction-still:url(&quot;/images/emotions/undo-interesting.png&quot;);--reaction-motion:url(&quot;/images/emotions/interesting.webp&quot;)" aria-pressed="false" aria-label="Interesting" title="Interesting"></button><button type="button" class="reaction-choice" style="--reaction-still:url(&quot;/images/emotions/okok.png&quot;);--reaction-motion:url(&quot;/images/emotions/okok.webp&quot;)" aria-pressed="false" aria-label="Okay" title="Okay"></button><button type="button" class="reaction-choice" style="--reaction-still:url(&quot;/images/emotions/unlike.png&quot;);--reaction-motion:url(&quot;/images/emotions/unlike.webp&quot;)" aria-pressed="false" aria-label="Thumbs Down" title="Thumbs Down"></button></span><dialog class="reaction-dialog" aria-label="People who reacted"><div class="reaction-dialog-head"><span class="reaction-dialog-title">Reactions</span><button type="button" class="reaction-dialog-close" aria-label="Close">×</button></div></dialog></span><span class="action-item" title="Points"><i class="icon-sprite-02 icon-token"></i><span class="tokens">100</span></span><a href="/articles" class="action-item btn-article-tag">Article</a><div class="byline-controls"></div></div></div></header><template id="P:4"></template><template id="P:5"></template><div class="article-tags"><a class="action-item btn-article-tag" href="/topics/software-development">software development</a><a class="action-item btn-article-tag" href="/topics/recursion">Recursion</a><a class="action-item btn-article-tag" href="/topics/time-complexity">Time Complexity</a><span class="action-item btn-article-tag">Fibonacci series</span><span class="action-item btn-article-tag">Computational Efficiency</span><span class="action-item btn-article-tag">Loop Iteration</span></div><template id="P:6"></template><section class="comments" id="comments" aria-label="Comments"><header class="comments-head"><span class="comments-badge" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M3 3h10a2 2 0 0 1 2 2v4.5a2 2 0 0 1-2 2H7.5L4 14.5V11.5H3a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"></path></svg></span><div><p class="comments-title">Comments</p><p class="comments-sub">Join the conversation! Your thoughts help the community grow.</p></div></header><div class="comment-signin"><span class="comment-signin-badge" aria-hidden="true"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M11.5 3.5h3.2a1 1 0 0 1 1 1v11a1 1 0 0 1-1 1h-3.2" stroke-linecap="round"></path><path d="M4.5 10h7" stroke-linecap="round"></path><path d="M8.8 7.2 11.6 10l-2.8 2.8" stroke-linecap="round" stroke-linejoin="round"></path></svg></span><div class="comment-signin-body"><p class="comment-signin-title">Sign in to <!-- -->leave a comment</p><p class="comment-signin-text">It is the same account you read, post and publish with — and you will come straight back to this page.</p></div><div class="comment-signin-actions"><a class="btn primary-btn comment-signin-btn" href="/login?returnurl=%2Farticle%2Ffibonacci-series-recursion-memoization-and-optimal-approach">Sign in</a><a class="comment-signin-alt" href="/register?returnurl=%2Farticle%2Ffibonacci-series-recursion-memoization-and-optimal-approach">Create an account</a></div></div></section></article></div><script>$RS=function(a,b){a=document.getElementById(a);b=document.getElementById(b);for(a.parentNode.removeChild(a);a.firstChild;)b.parentNode.insertBefore(a.firstChild,b);b.parentNode.removeChild(b)};$RS("S:2","P:2")</script><script>self.__next_f.push([1,"44:null\n4e:T21cf,\u003cp\u003eThe Fibonacci series is a popular mathematical sequence that appears in various fields, from computer science to nature. The sequence starts with two numbers, 0 and 1, and every subsequent number is the sum of the previous two numbers.\u003c/p\u003e\n\n\u003cul\u003e\n\t\u003cli\u003eF(0)=0,F(1)=1,\u003c/li\u003e\n\t\u003cli\u003eF(n)=F(n\u0026minus;1)+F(n\u0026minus;2) for n\u0026ge;2F(0) = 0\u003c/li\u003e\n\u003c/ul\u003e\n\n\u003cp\u003eIn this article, we will explore three different ways to compute the Fibonacci series in C#: using Recursion, memorization, and the Optimal Programming approach.\u003c/p\u003e\n\n\u003ch2\u003eFibonacci Using Recursion\u003c/h2\u003e\n\n\u003cp\u003eThe recursive approach is a simple and intuitive way to compute the Fibonacci sequence. However, it\u0026rsquo;s not the most efficient, as we\u0026rsquo;ll see in the complexity analysis.\u003c/p\u003e\n\n\u003cpre\u003e\n\u003ccode class=\"language-csharp\"\u003epublic static int FibonacciRecursive(int n)\n{\n    if (n \u0026lt;= 1) return n; // Base case\n    return FibonacciRecursive(n - 1) + FibonacciRecursive(n - 2); //Sub problem\n}\u003c/code\u003e\u003c/pre\u003e\n\n\u003cp\u003e\u003cstrong\u003eOutput\u003c/strong\u003e\u003c/p\u003e\n\n\u003cp style=\"text-align:center\"\u003e\u003cimg loading=\"lazy\" alt=\"fibonacci number\" src=\"https://cdn.c-sharpcorner.com/article/fibonacci-series-recursion-memoization-and-optimal-approach/screenshot-2024-10-01-124545.webp\" /\u003e\u003c/p\u003e\n\n\u003cul\u003e\n\t\u003cli\u003eThe function FibonacciRecursive is called recursively for each value of n, reducing the problem size by computing the values for n-1 and n-2.\u003c/li\u003e\n\t\u003cli\u003eFor small values of n, this approach works fine, but for larger values, the number of recursive calls grows exponentially.\u003c/li\u003e\n\t\u003cli\u003e\u003cstrong\u003eTime Complexity:\u003c/strong\u003e O(2^n) \u0026ndash; Each function call branches into two additional calls, leading to an exponential growth in the number of calls.\u003c/li\u003e\n\t\u003cli\u003e\u003cstrong\u003eSpace Complexity: \u003c/strong\u003eO(n) \u0026ndash; The maximum depth of the recursion stack is n, which defines the space complexity.\u003c/li\u003e\n\u003c/ul\u003e\n\n\u003ch2\u003eFibonacci Using Memoization\u003c/h2\u003e\n\n\u003cp\u003eMemoization is a technique that optimizes the recursive solution by storing previously computed results. This avoids the redundant calculations seen in the basic recursive approach.\u003c/p\u003e\n\n\u003cpre\u003e\n\u003ccode class=\"language-csharp\"\u003epublic static int FibonacciMemoization(int n, Dictionary\u0026lt;int, int\u0026gt; memo = null)\n{\n    if (memo == null) memo = new Dictionary\u0026lt;int, int\u0026gt;(); //Used to store older results to avoid redundant recursion calls\n    if (n \u0026lt;= 1) return n; //Base case   \n    if (!memo.ContainsKey(n)) // check if already result is present. If not, then only compute\n        memo[n] = FibonacciMemoization(n - 1, memo) + FibonacciMemoization(n - 2, memo); //Sub problem    \n    return memo[n];\n}\u003c/code\u003e\u003c/pre\u003e\n\n\u003cp\u003e\u003cstrong\u003eOutput\u003c/strong\u003e\u003c/p\u003e\n\n\u003cp style=\"text-align:center\"\u003e\u003cimg loading=\"lazy\" alt=\"fibonacci number\" src=\"https://cdn.c-sharpcorner.com/article/fibonacci-series-recursion-memoization-and-optimal-approach/screenshot2.webp\" /\u003e \u003c/p\u003e\n\n\u003cul\u003e\n\t\u003cli\u003eIn this approach, we use a dictionary (or an array) to store previously computed Fibonacci numbers.\u003c/li\u003e\n\t\u003cli\u003eIf the function has already computed F(n), it retrieves the result from the dictionary instead of making recursive calls.\u003c/li\u003e\n\t\u003cli\u003e\u003cstrong\u003eTime Complexity: \u003c/strong\u003eO(n) \u0026ndash; Each Fibonacci number is computed only once and stored, avoiding the exponential calls. So, in this approach, we have reduced the time complexity to O(n) from O(2^n)\u003c/li\u003e\n\t\u003cli\u003e\u003cstrong\u003eSpace Complexity:\u003c/strong\u003e O(n) \u0026ndash; We need additional space to store the results of the Fibonacci calculations in the dictionary, plus the recursion depth, which means space complexity is still the same as the previous approach.\u003c/li\u003e\n\u003c/ul\u003e\n\n\u003ch2\u003eFibonacci Using an Optimal Approach\u003c/h2\u003e\n\n\u003cp\u003eIn this approach for Fibonacci, as we only need the last two Fibonacci values to calculate the next one so by storing just these two values (instead of the entire sequence), we iteratively compute the result in a loop. This reduces both time complexity to O(n) and space complexity to O(1).\u003c/p\u003e\n\n\u003cpre\u003e\n\u003ccode class=\"language-csharp\"\u003epublic static int FibonacciOptimal(int n)\n{\n    if (n \u0026lt;= 1) return n;\n    int prev1 = 0, prev2 = 1; //Variables to store last two results\n    for (int i = 2; i \u0026lt;= n; i++)\n    {\n        int current = prev1 + prev2;\n        prev1 = prev2;\n        prev2 = current;\n    }\n    return prev2;\n}\u003c/code\u003e\u003c/pre\u003e\n\n\u003cp\u003e\u003cstrong\u003eOutput\u003c/strong\u003e\u003c/p\u003e\n\n\u003cp style=\"text-align:center\"\u003e\u003cimg loading=\"lazy\" alt=\"fibonacci number\" src=\"https://cdn.c-sharpcorner.com/article/fibonacci-series-recursion-memoization-and-optimal-approach/screenshot3.webp\" /\u003e\u003c/p\u003e\n\n\u003cul\u003e\n\t\u003cli\u003eWe initialize two variables, prev1 and prev2, representing the two previous Fibonacci numbers.\u003c/li\u003e\n\t\u003cli\u003eAs we iterate from 2 to n, we update these two variables to compute the current Fibonacci number.\u003c/li\u003e\n\t\u003cli\u003eThis approach avoids recursion entirely and uses a constant amount of space.\u003c/li\u003e\n\t\u003cli\u003e\u003cstrong\u003eTime Complexity: \u003c/strong\u003eO(n) \u0026ndash; We iterate once through the sequence up to n.\u003c/li\u003e\n\t\u003cli\u003e\u003cstrong\u003eSpace Complexity:\u003c/strong\u003e O(1) \u0026ndash; Only a constant amount of space is needed, as we only store two variables at any given time. So, here we are able to reduce the space complexity of this approach to O(1) from O(n).\u003c/li\u003e\n\u003c/ul\u003e\n\n\u003ch3\u003eComparing the Approaches\u003c/h3\u003e\n\n\u003cp\u003eLet\u0026rsquo;s summarize the time and space complexities of the three approaches.\u003c/p\u003e\n\n\u003ctable border=\"1\" cellspacing=\"0\" style=\"border-collapse:collapse; width:100%\"\u003e\n\t\u003cthead\u003e\n\t\t\u003ctr\u003e\n\t\t\t\u003ctd style=\"background-color:#0086dc; border-color:#ababab; border-style:dashed; border-width:1px\"\u003e\u003cspan style=\"color:#ffffff\"\u003eImplementation Approach \u003c/span\u003e\u003c/td\u003e\n\t\t\t\u003ctd style=\"background-color:#0086dc; border-color:#ababab; border-style:dashed; border-width:1px\"\u003e\u003cspan style=\"color:#ffffff\"\u003eTime Complexity \u003c/span\u003e\u003c/td\u003e\n\t\t\t\u003ctd style=\"background-color:#0086dc; border-color:#ababab; border-style:dashed; border-width:1px\"\u003e\u003cspan style=\"color:#ffffff\"\u003eSpace Complexity \u003c/span\u003e\u003c/td\u003e\n\t\t\u003c/tr\u003e\n\t\u003c/thead\u003e\n\t\u003ctbody\u003e\n\t\t\u003ctr\u003e\n\t\t\t\u003ctd style=\"border-color:#ababab; border-style:dashed; border-width:1px\"\u003eRecursion\u003c/td\u003e\n\t\t\t\u003ctd style=\"border-color:#ababab; border-style:dashed; border-width:1px\"\u003eO(2^n)\u003c/td\u003e\n\t\t\t\u003ctd style=\"border-color:#ababab; border-style:dashed; border-width:1px\"\u003eO(n)\u003c/td\u003e\n\t\t\u003c/tr\u003e\n\t\t\u003ctr\u003e\n\t\t\t\u003ctd style=\"border-color:#ababab; border-style:dashed; border-width:1px\"\u003eMemoization\u003c/td\u003e\n\t\t\t\u003ctd style=\"border-color:#ababab; border-style:dashed; border-width:1px\"\u003eO(n)\u003c/td\u003e\n\t\t\t\u003ctd style=\"border-color:#ababab; border-style:dashed; border-width:1px\"\u003eO(n)\u003c/td\u003e\n\t\t\u003c/tr\u003e\n\t\t\u003ctr\u003e\n\t\t\t\u003ctd style=\"border-color:#ababab; border-style:dashed; border-width:1px\"\u003eOptimal\u003c/td\u003e\n\t\t\t\u003ctd style=\"border-color:#ababab; border-style:dashed; border-width:1px\"\u003eO(n)\u003c/td\u003e\n\t\t\t\u003ctd style=\"border-color:#ababab; border-style:dashed; border-width:1px\"\u003eO(1)\u003c/td\u003e\n\t\t\u003c/tr\u003e\n\t\u003c/tbody\u003e\n\u003c/table\u003e\n\n\u003cp\u003e\u003cstrong\u003eComplete Code\u003c/strong\u003e\u003c/p\u003e\n\n\u003cpre\u003e\n\u003ccode class=\"language-csharp\"\u003eusing System;\nusing System.Collections.Generic;\nnamespace FibonacciSeries\n{\n    internal class Program\n    {\n        static void Main(string[] args)\n        {\n            int n = 10; // calculate nth fibonnacci \n          \n            Console.WriteLine(\"Fibonacci number using recursion for n = \" + n + \":\");\n            Console.Write(FibonacciRecursive(n) + \" \"); \n\n            Console.WriteLine(\"\\n\\nFibonacci number using memoization for n = \" + n + \":\");\n            Console.Write(FibonacciMemoization(n) + \" \");  \n\n            Console.WriteLine(\"\\n\\nFibonacci number using the optimal approach for n = \" + n + \":\");\n            Console.Write(FibonacciOptimal(n) + \" \");  \n            Console.ReadLine();         \n        }\n\n        public static int FibonacciRecursive(int n)\n        {\n            if (n \u0026lt;= 1) return n;\n            return FibonacciRecursive(n - 1) + FibonacciRecursive(n - 2);\n        }\n\n        public static int FibonacciMemoization(int n, Dictionary\u0026lt;int, int\u0026gt; memo = null)\n        {\n            if (memo == null) memo = new Dictionary\u0026lt;int, int\u0026gt;();\n            if (n \u0026lt;= 1) return n;\n            if (!memo.ContainsKey(n))\n                memo[n] = FibonacciMemoization(n - 1, memo) + FibonacciMemoization(n - 2, memo);\n            return memo[n];\n        }\n\n        public static int FibonacciOptimal(int n)\n        {\n            if (n \u0026lt;= 1) return n;\n            int prev1 = 0, prev2 = 1;\n            for (int i = 2; i \u0026lt;= n; i++)\n            {\n                int current = prev1 + prev2;\n                prev1 = prev2;\n                prev2 = current;\n            }\n            return prev2;\n        }\n    }   \n}\u003c/code\u003e\u003c/pre\u003e\n\n\u003cp\u003e\u003cstrong\u003eOutput\u003c/strong\u003e\u003c/p\u003e\n\n\u003cp style=\"text-align:center\"\u003e\u003cimg loading=\"lazy\" alt=\"\" src=\"https://cdn.c-sharpcorner.com/article/fibonacci-series-recursion-memoization-and-optimal-approach/screenshot4.webp\" /\u003e\u003c/p\u003e45:[\"$\",\"div\",null,{\"className\":\"article-body\",\"dangerouslySetInnerHTML\":{\"__html\":\"$4e\"}}]\n48:null\n"])</script><div hidden id="S:4"></div><script>$RS("S:4","P:4")</script><div hidden id="S:5"><div class="article-body"><p>The Fibonacci series is a popular mathematical sequence that appears in various fields, from computer science to nature. The sequence starts with two numbers, 0 and 1, and every subsequent number is the sum of the previous two numbers.</p>
+
+<ul>
+	<li>F(0)=0,F(1)=1,</li>
+	<li>F(n)=F(n&minus;1)+F(n&minus;2) for n&ge;2F(0) = 0</li>
+</ul>
+
+<p>In this article, we will explore three different ways to compute the Fibonacci series in C#: using Recursion, memorization, and the Optimal Programming approach.</p>
+
+<h2>Fibonacci Using Recursion</h2>
+
+<p>The recursive approach is a simple and intuitive way to compute the Fibonacci sequence. However, it&rsquo;s not the most efficient, as we&rsquo;ll see in the complexity analysis.</p>
+
+<pre>
+<code class="language-csharp">public static int FibonacciRecursive(int n)
+{
+    if (n &lt;= 1) return n; // Base case
+    return FibonacciRecursive(n - 1) + FibonacciRecursive(n - 2); //Sub problem
+}</code></pre>
+
+<p><strong>Output</strong></p>
+
+<p style="text-align:center"><img loading="lazy" alt="fibonacci number" src="https://cdn.c-sharpcorner.com/article/fibonacci-series-recursion-memoization-and-optimal-approach/screenshot-2024-10-01-124545.webp" /></p>
+
+<ul>
+	<li>The function FibonacciRecursive is called recursively for each value of n, reducing the problem size by computing the values for n-1 and n-2.</li>
+	<li>For small values of n, this approach works fine, but for larger values, the number of recursive calls grows exponentially.</li>
+	<li><strong>Time Complexity:</strong> O(2^n) &ndash; Each function call branches into two additional calls, leading to an exponential growth in the number of calls.</li>
+	<li><strong>Space Complexity: </strong>O(n) &ndash; The maximum depth of the recursion stack is n, which defines the space complexity.</li>
+</ul>
+
+<h2>Fibonacci Using Memoization</h2>
+
+<p>Memoization is a technique that optimizes the recursive solution by storing previously computed results. This avoids the redundant calculations seen in the basic recursive approach.</p>
+
+<pre>
+<code class="language-csharp">public static int FibonacciMemoization(int n, Dictionary&lt;int, int&gt; memo = null)
+{
+    if (memo == null) memo = new Dictionary&lt;int, int&gt;(); //Used to store older results to avoid redundant recursion calls
+    if (n &lt;= 1) return n; //Base case   
+    if (!memo.ContainsKey(n)) // check if already result is present. If not, then only compute
+        memo[n] = FibonacciMemoization(n - 1, memo) + FibonacciMemoization(n - 2, memo); //Sub problem    
+    return memo[n];
+}</code></pre>
+
+<p><strong>Output</strong></p>
+
+<p style="text-align:center"><img loading="lazy" alt="fibonacci number" src="https://cdn.c-sharpcorner.com/article/fibonacci-series-recursion-memoization-and-optimal-approach/screenshot2.webp" /> </p>
+
+<ul>
+	<li>In this approach, we use a dictionary (or an array) to store previously computed Fibonacci numbers.</li>
+	<li>If the function has already computed F(n), it retrieves the result from the dictionary instead of making recursive calls.</li>
+	<li><strong>Time Complexity: </strong>O(n) &ndash; Each Fibonacci number is computed only once and stored, avoiding the exponential calls. So, in this approach, we have reduced the time complexity to O(n) from O(2^n)</li>
+	<li><strong>Space Complexity:</strong> O(n) &ndash; We need additional space to store the results of the Fibonacci calculations in the dictionary, plus the recursion depth, which means space complexity is still the same as the previous approach.</li>
+</ul>
+
+<h2>Fibonacci Using an Optimal Approach</h2>
+
+<p>In this approach for Fibonacci, as we only need the last two Fibonacci values to calculate the next one so by storing just these two values (instead of the entire sequence), we iteratively compute the result in a loop. This reduces both time complexity to O(n) and space complexity to O(1).</p>
+
+<pre>
+<code class="language-csharp">public static int FibonacciOptimal(int n)
+{
+    if (n &lt;= 1) return n;
+    int prev1 = 0, prev2 = 1; //Variables to store last two results
+    for (int i = 2; i &lt;= n; i++)
+    {
+        int current = prev1 + prev2;
+        prev1 = prev2;
+        prev2 = current;
+    }
+    return prev2;
+}</code></pre>
+
+<p><strong>Output</strong></p>
+
+<p style="text-align:center"><img loading="lazy" alt="fibonacci number" src="https://cdn.c-sharpcorner.com/article/fibonacci-series-recursion-memoization-and-optimal-approach/screenshot3.webp" /></p>
+
+<ul>
+	<li>We initialize two variables, prev1 and prev2, representing the two previous Fibonacci numbers.</li>
+	<li>As we iterate from 2 to n, we update these two variables to compute the current Fibonacci number.</li>
+	<li>This approach avoids recursion entirely and uses a constant amount of space.</li>
+	<li><strong>Time Complexity: </strong>O(n) &ndash; We iterate once through the sequence up to n.</li>
+	<li><strong>Space Complexity:</strong> O(1) &ndash; Only a constant amount of space is needed, as we only store two variables at any given time. So, here we are able to reduce the space complexity of this approach to O(1) from O(n).</li>
+</ul>
+
+<h3>Comparing the Approaches</h3>
+
+<p>Let&rsquo;s summarize the time and space complexities of the three approaches.</p>
+
+<table border="1" cellspacing="0" style="border-collapse:collapse; width:100%">
+	<thead>
+		<tr>
+			<td style="background-color:#0086dc; border-color:#ababab; border-style:dashed; border-width:1px"><span style="color:#ffffff">Implementation Approach </span></td>
+			<td style="background-color:#0086dc; border-color:#ababab; border-style:dashed; border-width:1px"><span style="color:#ffffff">Time Complexity </span></td>
+			<td style="background-color:#0086dc; border-color:#ababab; border-style:dashed; border-width:1px"><span style="color:#ffffff">Space Complexity </span></td>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td style="border-color:#ababab; border-style:dashed; border-width:1px">Recursion</td>
+			<td style="border-color:#ababab; border-style:dashed; border-width:1px">O(2^n)</td>
+			<td style="border-color:#ababab; border-style:dashed; border-width:1px">O(n)</td>
+		</tr>
+		<tr>
+			<td style="border-color:#ababab; border-style:dashed; border-width:1px">Memoization</td>
+			<td style="border-color:#ababab; border-style:dashed; border-width:1px">O(n)</td>
+			<td style="border-color:#ababab; border-style:dashed; border-width:1px">O(n)</td>
+		</tr>
+		<tr>
+			<td style="border-color:#ababab; border-style:dashed; border-width:1px">Optimal</td>
+			<td style="border-color:#ababab; border-style:dashed; border-width:1px">O(n)</td>
+			<td style="border-color:#ababab; border-style:dashed; border-width:1px">O(1)</td>
+		</tr>
+	</tbody>
+</table>
+
+<p><strong>Complete Code</strong></p>
+
+<pre>
+<code class="language-csharp">using System;
+using System.Collections.Generic;
+namespace FibonacciSeries
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            int n = 10; // calculate nth fibonnacci 
+          
+            Console.WriteLine("Fibonacci number using recursion for n = " + n + ":");
+            Console.Write(FibonacciRecursive(n) + " "); 
+
+            Console.WriteLine("\n\nFibonacci number using memoization for n = " + n + ":");
+            Console.Write(FibonacciMemoization(n) + " ");  
+
+            Console.WriteLine("\n\nFibonacci number using the optimal approach for n = " + n + ":");
+            Console.Write(FibonacciOptimal(n) + " ");  
+            Console.ReadLine();         
+        }
+
+        public static int FibonacciRecursive(int n)
+        {
+            if (n &lt;= 1) return n;
+            return FibonacciRecursive(n - 1) + FibonacciRecursive(n - 2);
+        }
+
+        public static int FibonacciMemoization(int n, Dictionary&lt;int, int&gt; memo = null)
+        {
+            if (memo == null) memo = new Dictionary&lt;int, int&gt;();
+            if (n &lt;= 1) return n;
+            if (!memo.ContainsKey(n))
+                memo[n] = FibonacciMemoization(n - 1, memo) + FibonacciMemoization(n - 2, memo);
+            return memo[n];
+        }
+
+        public static int FibonacciOptimal(int n)
+        {
+            if (n &lt;= 1) return n;
+            int prev1 = 0, prev2 = 1;
+            for (int i = 2; i &lt;= n; i++)
+            {
+                int current = prev1 + prev2;
+                prev1 = prev2;
+                prev2 = current;
+            }
+            return prev2;
+        }
+    }   
+}</code></pre>
+
+<p><strong>Output</strong></p>
+
+<p style="text-align:center"><img loading="lazy" alt="" src="https://cdn.c-sharpcorner.com/article/fibonacci-series-recursion-memoization-and-optimal-approach/screenshot4.webp" /></p></div></div><script>$RS("S:5","P:5")</script><div hidden id="S:6"></div><script>$RS("S:6","P:6")</script><script>$RC("B:1","S:1")</script><script>window.__CF$cv$params={r:'a3f84bb0bcba060c',t:'MTc5MDE1MzM2Mg==',u:'01a0cd748b9c7333836b36d92ef6ed07',ut:'JYgymHT1rVGk3XYO1wQZY3iW60XZ5LjA76EkmLW_pGM-1790153362-1.2.1.1-2PeelWabStAQ4HHbfH5WN20nfSn4TYHdgKg.JCahIM_zo9ifK3j3u7IyEzrdggQGE69bnUUUcPcE1n3cpXhcfihM7WieSNt9WFdOKQjX8OI',i:60};(function(){if(!document.body)return;var s=document.createElement('script');s.src='/cdn-cgi/challenge-platform/scripts/precursor/main.js';document.head.appendChild(s);})();</script></body></html>

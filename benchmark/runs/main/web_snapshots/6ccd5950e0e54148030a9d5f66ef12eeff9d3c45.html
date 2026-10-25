@@ -1,0 +1,1211 @@
+<!doctype html>
+<html lang="en-US">
+
+<head>
+	<link rel="preload" href="https://static.pingcap.com/dist/js/master.aa073145c0fdabd44aeb.js" as="script">
+<link rel="preload" href="https://static.pingcap.com/dist/css/master.d0d7061e7840456a119b.css" as="style">
+	<title>Understanding B-Tree and Hash Indexing in Databases</title>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="application-name" content="TiDB">
+	<meta name="referrer" content="no-referrer-when-downgrade" />
+
+	<link rel="icon" href="https://www.pingcap.com/core/themes/pingcap/media/favicon/favicon.ico">
+	<link rel="shortcut icon" href="https://www.pingcap.com/core/themes/pingcap/media/favicon/favicon.ico">
+		<link rel="apple-touch-icon" sizes="180x180" href="https://www.pingcap.com/core/themes/pingcap/media/favicon/apple-touch-icon.png">
+	<link rel="manifest" href="https://www.pingcap.com/core/themes/pingcap/media/favicon/site.webmanifest">
+	<meta name="msapplication-TileColor" content="#ffffff">
+	<meta name="msapplication-config" content="https://www.pingcap.com/core/themes/pingcap/media/favicon/browserconfig.xml">
+	<meta name="theme-color" content="#ffffff">
+
+	<link rel="pingback" href="https://www.pingcap.com/xmlrpc.php">
+
+	<meta name='robots' content='index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1' />
+<link rel="preconnect" href="https://js.hsforms.net">
+<link rel="preconnect" href="https://static.pingcap.com">
+
+	<!-- This site is optimized with the Yoast SEO plugin v28.2 - https://yoast.com/product/yoast-seo-wordpress/ -->
+	<meta name="description" content="Understand the differences between B-Tree and Hash Indexing in databases. Learn about their performance, use cases, and how to choose the right indexing technique." />
+	<link rel="canonical" href="https://www.pingcap.com/article/understanding-b-tree-and-hash-indexing-in-databases/" />
+	<meta property="og:locale" content="en_US" />
+	<meta property="og:type" content="article" />
+	<meta property="og:title" content="Understanding B-Tree and Hash Indexing in Databases" />
+	<meta property="og:description" content="Understand the differences between B-Tree and Hash Indexing in databases. Learn about their performance, use cases, and how to choose the right indexing technique." />
+	<meta property="og:url" content="https://www.pingcap.com/article/understanding-b-tree-and-hash-indexing-in-databases/" />
+	<meta property="og:site_name" content="TiDB" />
+	<meta property="article:publisher" content="https://facebook.com/pingcap2015" />
+	<meta property="article:modified_time" content="2024-06-28T09:09:02+00:00" />
+	<meta property="og:image" content="https://static.pingcap.com/files/2024/09/11005522/Homepage-Ad.png" />
+	<meta property="og:image:width" content="1440" />
+	<meta property="og:image:height" content="714" />
+	<meta property="og:image:type" content="image/png" />
+	<meta name="twitter:card" content="summary_large_image" />
+	<meta name="twitter:site" content="@PingCAP" />
+	<meta name="twitter:label1" content="Est. reading time" />
+	<meta name="twitter:data1" content="6 minutes" />
+	<script type="application/ld+json" class="yoast-schema-graph">{"@context":"https:\/\/schema.org","@graph":[{"@type":"WebPage","@id":"https:\/\/www.pingcap.com\/article\/understanding-b-tree-and-hash-indexing-in-databases\/","url":"https:\/\/www.pingcap.com\/article\/understanding-b-tree-and-hash-indexing-in-databases\/","name":"Understanding B-Tree and Hash Indexing in Databases","isPartOf":{"@id":"https:\/\/www.pingcap.com\/#website"},"datePublished":"2024-06-28T09:06:05+00:00","dateModified":"2024-06-28T09:09:02+00:00","description":"Understand the differences between B-Tree and Hash Indexing in databases. Learn about their performance, use cases, and how to choose the right indexing technique.","breadcrumb":{"@id":"https:\/\/www.pingcap.com\/article\/understanding-b-tree-and-hash-indexing-in-databases\/#breadcrumb"},"inLanguage":"en-US","potentialAction":[{"@type":"ReadAction","target":["https:\/\/www.pingcap.com\/article\/understanding-b-tree-and-hash-indexing-in-databases\/"]}]},{"@type":"BreadcrumbList","@id":"https:\/\/www.pingcap.com\/article\/understanding-b-tree-and-hash-indexing-in-databases\/#breadcrumb","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https:\/\/www.pingcap.com\/"},{"@type":"ListItem","position":2,"name":"Articles","item":"https:\/\/www.pingcap.com\/article\/"},{"@type":"ListItem","position":3,"name":"Understanding B-Tree and Hash Indexing in Databases"}]},{"@type":"WebSite","@id":"https:\/\/www.pingcap.com\/#website","url":"https:\/\/www.pingcap.com\/","name":"TiDB","description":"TiDB | SQL at Scale","publisher":{"@id":"https:\/\/www.pingcap.com\/#organization"},"potentialAction":[{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https:\/\/www.pingcap.com\/?s={search_term_string}"},"query-input":{"@type":"PropertyValueSpecification","valueRequired":true,"valueName":"search_term_string"}}],"inLanguage":"en-US"},{"@type":"Organization","@id":"https:\/\/www.pingcap.com\/#organization","name":"PingCAP","url":"https:\/\/www.pingcap.com\/","logo":{"@type":"ImageObject","inLanguage":"en-US","@id":"https:\/\/www.pingcap.com\/#\/schema\/logo\/image\/","url":"https:\/\/static.pingcap.com\/files\/2021\/11\/pingcap-logo.png","contentUrl":"https:\/\/static.pingcap.com\/files\/2021\/11\/pingcap-logo.png","width":811,"height":232,"caption":"PingCAP"},"image":{"@id":"https:\/\/www.pingcap.com\/#\/schema\/logo\/image\/"},"sameAs":["https:\/\/facebook.com\/pingcap2015","https:\/\/x.com\/PingCAP","https:\/\/linkedin.com\/company\/pingcap","https:\/\/youtube.com\/channel\/UCuq4puT32DzHKT5rU1IZpIA"]}]}</script>
+	<!-- / Yoast SEO plugin. -->
+
+
+<link rel='dns-prefetch' href='//static.pingcap.com' />
+<link rel='dns-prefetch' href='//cdnjs.cloudflare.com' />
+<link rel="alternate" type="application/rss+xml" title="TiDB &raquo; Feed" href="https://www.pingcap.com/feed/" />
+<link rel="alternate" title="oEmbed (JSON)" type="application/json+oembed" href="https://www.pingcap.com/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fwww.pingcap.com%2Farticle%2Funderstanding-b-tree-and-hash-indexing-in-databases%2F" />
+<link rel="alternate" title="oEmbed (XML)" type="text/xml+oembed" href="https://www.pingcap.com/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fwww.pingcap.com%2Farticle%2Funderstanding-b-tree-and-hash-indexing-in-databases%2F&#038;format=xml" />
+<style id="wp-img-auto-sizes-contain-inline-css">
+img:is([sizes=auto i],[sizes^="auto," i]){contain-intrinsic-size:3000px 1500px}
+/*# sourceURL=wp-img-auto-sizes-contain-inline-css */
+</style>
+<style id="wp-block-library-inline-css">
+:root{--wp-block-synced-color:#7a00df;--wp-block-synced-color--rgb:122,0,223;--wp-bound-block-color:var(--wp-block-synced-color);--wp-editor-canvas-background:#ddd;--wp-admin-theme-color:#007cba;--wp-admin-theme-color--rgb:0,124,186;--wp-admin-theme-color-darker-10:#006ba1;--wp-admin-theme-color-darker-10--rgb:0,107,160.5;--wp-admin-theme-color-darker-20:#005a87;--wp-admin-theme-color-darker-20--rgb:0,90,135;--wp-admin-border-width-focus:2px}@media (min-resolution:192dpi){:root{--wp-admin-border-width-focus:1.5px}}.wp-element-button{cursor:pointer}:root .has-very-light-gray-background-color{background-color:#eee}:root .has-very-dark-gray-background-color{background-color:#313131}:root .has-very-light-gray-color{color:#eee}:root .has-very-dark-gray-color{color:#313131}:root .has-vivid-green-cyan-to-vivid-cyan-blue-gradient-background{background:linear-gradient(135deg,#00d084,#0693e3)}:root .has-purple-crush-gradient-background{background:linear-gradient(135deg,#34e2e4,#4721fb 50%,#ab1dfe)}:root .has-hazy-dawn-gradient-background{background:linear-gradient(135deg,#faaca8,#dad0ec)}:root .has-subdued-olive-gradient-background{background:linear-gradient(135deg,#fafae1,#67a671)}:root .has-atomic-cream-gradient-background{background:linear-gradient(135deg,#fdd79a,#004a59)}:root .has-nightshade-gradient-background{background:linear-gradient(135deg,#330968,#31cdcf)}:root .has-midnight-gradient-background{background:linear-gradient(135deg,#020381,#2874fc)}:root{--wp--preset--font-size--normal:16px;--wp--preset--font-size--huge:42px}.has-regular-font-size{font-size:1em}.has-larger-font-size{font-size:2.625em}.has-normal-font-size{font-size:var(--wp--preset--font-size--normal)}.has-huge-font-size{font-size:var(--wp--preset--font-size--huge)}:root .has-text-align-center{text-align:center}:root .has-text-align-left{text-align:left}:root .has-text-align-right{text-align:right}.has-fit-text{white-space:nowrap!important}#end-resizable-editor-section{display:none}.aligncenter{clear:both}.items-justified-left{justify-content:flex-start}.items-justified-center{justify-content:center}.items-justified-right{justify-content:flex-end}.items-justified-space-between{justify-content:space-between}.screen-reader-text{word-wrap:normal!important;border:0;clip-path:inset(50%);height:1px;margin:-1px;overflow:hidden;padding:0;position:absolute;width:1px;word-break:normal!important}.screen-reader-text:focus{background-color:#ddd;clip-path:none;color:#444;display:block;font-size:1em;height:auto;left:5px;line-height:normal;padding:15px 23px 14px;text-decoration:none;top:5px;width:auto;z-index:100000}html :where(.has-border-color){border-style:solid}html :where([style^=border-color],[style*=";border-color"],[style*="; border-color"]){border-style:solid}html :where([style^=border-top-color],[style*=";border-top-color"],[style*="; border-top-color"]){border-top-style:solid}html :where([style^=border-right-color],[style*=";border-right-color"],[style*="; border-right-color"]){border-right-style:solid}html :where([style^=border-bottom-color],[style*=";border-bottom-color"],[style*="; border-bottom-color"]){border-bottom-style:solid}html :where([style^=border-left-color],[style*=";border-left-color"],[style*="; border-left-color"]){border-left-style:solid}html :where([style^=border-width],[style*=";border-width"],[style*="; border-width"]){border-style:solid}html :where([style^=border-top-width],[style*=";border-top-width"],[style*="; border-top-width"]){border-top-style:solid}html :where([style^=border-right-width],[style*=";border-right-width"],[style*="; border-right-width"]){border-right-style:solid}html :where([style^=border-bottom-width],[style*=";border-bottom-width"],[style*="; border-bottom-width"]){border-bottom-style:solid}html :where([style^=border-left-width],[style*=";border-left-width"],[style*="; border-left-width"]){border-left-style:solid}html :where(img[class*=wp-image-]){height:auto;max-width:100%}:where(figure){margin:0 0 1em}html :where(.is-position-sticky){--wp-admin--admin-bar--position-offset:var(--wp-admin--admin-bar--height,0px)}@media screen and (max-width:600px){html :where(.is-position-sticky){--wp-admin--admin-bar--position-offset:0px}}
+
+/*# sourceURL=/wp-includes/css/dist/block-library/common.min.css */
+</style>
+<style id="wp-block-heading-inline-css">
+h1:where(.wp-block-heading).has-background,h2:where(.wp-block-heading).has-background,h3:where(.wp-block-heading).has-background,h4:where(.wp-block-heading).has-background,h5:where(.wp-block-heading).has-background,h6:where(.wp-block-heading).has-background{padding:1.25em 2.375em}h1.has-text-align-left[style*=writing-mode]:where([style*=vertical-lr]),h1.has-text-align-right[style*=writing-mode]:where([style*=vertical-rl]),h2.has-text-align-left[style*=writing-mode]:where([style*=vertical-lr]),h2.has-text-align-right[style*=writing-mode]:where([style*=vertical-rl]),h3.has-text-align-left[style*=writing-mode]:where([style*=vertical-lr]),h3.has-text-align-right[style*=writing-mode]:where([style*=vertical-rl]),h4.has-text-align-left[style*=writing-mode]:where([style*=vertical-lr]),h4.has-text-align-right[style*=writing-mode]:where([style*=vertical-rl]),h5.has-text-align-left[style*=writing-mode]:where([style*=vertical-lr]),h5.has-text-align-right[style*=writing-mode]:where([style*=vertical-rl]),h6.has-text-align-left[style*=writing-mode]:where([style*=vertical-lr]),h6.has-text-align-right[style*=writing-mode]:where([style*=vertical-rl]){rotate:180deg}
+/*# sourceURL=https://www.pingcap.com/lib/blocks/heading/style.min.css */
+</style>
+<style id="wp-block-list-inline-css">
+ol,ul{box-sizing:border-box}:root :where(.wp-block-list.has-background){padding:1.25em 2.375em}
+/*# sourceURL=https://www.pingcap.com/lib/blocks/list/style.min.css */
+</style>
+<style id="wp-block-paragraph-inline-css">
+.is-small-text{font-size:.875em}.is-regular-text{font-size:1em}.is-large-text{font-size:2.25em}.is-larger-text{font-size:3em}.has-drop-cap:not(:focus):first-letter{float:left;font-size:8.4em;font-style:normal;font-weight:100;line-height:.68;margin:.05em .1em 0 0;text-transform:uppercase}body.rtl .has-drop-cap:not(:focus):first-letter{float:none;margin-left:.1em}p.has-drop-cap.has-background{overflow:hidden}:root :where(p.has-background){padding:1.25em 2.375em}:where(p.has-text-color:not(.has-link-color)) a{color:inherit}p.has-text-align-left[style*="writing-mode:vertical-lr"],p.has-text-align-right[style*="writing-mode:vertical-rl"]{rotate:180deg}
+/*# sourceURL=https://www.pingcap.com/lib/blocks/paragraph/style.min.css */
+</style>
+
+<style id="classic-theme-styles-inline-css">
+/*! This file is auto-generated */
+.wp-block-button__link{color:#fff;background-color:#32373c;border-radius:9999px;box-shadow:none;text-decoration:none;padding:calc(.667em + 2px) calc(1.333em + 2px);font-size:1.125em}.wp-block-file__button{background:#32373c;color:#fff;text-decoration:none}
+/*# sourceURL=/wp-includes/css/classic-themes.min.css */
+</style>
+
+<style id="global-styles-inline-css">
+:root{--wp--preset--aspect-ratio--square: 1;--wp--preset--aspect-ratio--4-3: 4/3;--wp--preset--aspect-ratio--3-4: 3/4;--wp--preset--aspect-ratio--3-2: 3/2;--wp--preset--aspect-ratio--2-3: 2/3;--wp--preset--aspect-ratio--16-9: 16/9;--wp--preset--aspect-ratio--9-16: 9/16;--wp--preset--color--black: #000000;--wp--preset--color--cyan-bluish-gray: #abb8c3;--wp--preset--color--white: #ffffff;--wp--preset--color--pale-pink: #f78da7;--wp--preset--color--vivid-red: #cf2e2e;--wp--preset--color--luminous-vivid-orange: #ff6900;--wp--preset--color--luminous-vivid-amber: #fcb900;--wp--preset--color--light-green-cyan: #7bdcb5;--wp--preset--color--vivid-green-cyan: #00d084;--wp--preset--color--pale-cyan-blue: #8ed1fc;--wp--preset--color--vivid-cyan-blue: #0693e3;--wp--preset--color--vivid-purple: #9b51e0;--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple: linear-gradient(135deg,rgb(6,147,227) 0%,rgb(155,81,224) 100%);--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan: linear-gradient(135deg,rgb(122,220,180) 0%,rgb(0,208,130) 100%);--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange: linear-gradient(135deg,rgb(252,185,0) 0%,rgb(255,105,0) 100%);--wp--preset--gradient--luminous-vivid-orange-to-vivid-red: linear-gradient(135deg,rgb(255,105,0) 0%,rgb(207,46,46) 100%);--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray: linear-gradient(135deg,rgb(238,238,238) 0%,rgb(169,184,195) 100%);--wp--preset--gradient--cool-to-warm-spectrum: linear-gradient(135deg,rgb(74,234,220) 0%,rgb(151,120,209) 20%,rgb(207,42,186) 40%,rgb(238,44,130) 60%,rgb(251,105,98) 80%,rgb(254,248,76) 100%);--wp--preset--gradient--blush-light-purple: linear-gradient(135deg,rgb(255,206,236) 0%,rgb(152,150,240) 100%);--wp--preset--gradient--blush-bordeaux: linear-gradient(135deg,rgb(254,205,165) 0%,rgb(254,45,45) 50%,rgb(107,0,62) 100%);--wp--preset--gradient--luminous-dusk: linear-gradient(135deg,rgb(255,203,112) 0%,rgb(199,81,192) 50%,rgb(65,88,208) 100%);--wp--preset--gradient--pale-ocean: linear-gradient(135deg,rgb(255,245,203) 0%,rgb(182,227,212) 50%,rgb(51,167,181) 100%);--wp--preset--gradient--electric-grass: linear-gradient(135deg,rgb(202,248,128) 0%,rgb(113,206,126) 100%);--wp--preset--gradient--midnight: linear-gradient(135deg,rgb(2,3,129) 0%,rgb(40,116,252) 100%);--wp--preset--font-size--small: 13px;--wp--preset--font-size--medium: 20px;--wp--preset--font-size--large: 36px;--wp--preset--font-size--x-large: 42px;--wp--preset--spacing--20: 0.44rem;--wp--preset--spacing--30: 0.67rem;--wp--preset--spacing--40: 1rem;--wp--preset--spacing--50: 1.5rem;--wp--preset--spacing--60: 2.25rem;--wp--preset--spacing--70: 3.38rem;--wp--preset--spacing--80: 5.06rem;--wp--preset--shadow--natural: 6px 6px 9px rgba(0, 0, 0, 0.2);--wp--preset--shadow--deep: 12px 12px 50px rgba(0, 0, 0, 0.4);--wp--preset--shadow--sharp: 6px 6px 0px rgba(0, 0, 0, 0.2);--wp--preset--shadow--outlined: 6px 6px 0px -3px rgb(255, 255, 255), 6px 6px rgb(0, 0, 0);--wp--preset--shadow--crisp: 6px 6px 0px rgb(0, 0, 0);}.wp-block-button{--wp--preset--dimension--25: 25%;--wp--preset--dimension--50: 50%;--wp--preset--dimension--75: 75%;--wp--preset--dimension--100: 100%;}:where(body) { margin: 0; }:where(.is-layout-flex){gap: 0.5em;}:where(.is-layout-grid){gap: 0.5em;}body .is-layout-flex{display: flex;}.is-layout-flex{flex-wrap: wrap;align-items: center;}.is-layout-flex > :is(*, div){margin: 0;}body .is-layout-grid{display: grid;}.is-layout-grid > :is(*, div){margin: 0;}body{padding-top: 0px;padding-right: 0px;padding-bottom: 0px;padding-left: 0px;}:root :where(.wp-element-button, .wp-block-button__link){background-color: #32373c;border-width: 0;color: #fff;font-family: inherit;font-size: inherit;font-style: inherit;font-weight: inherit;letter-spacing: inherit;line-height: inherit;padding-top: calc(0.667em + 2px);padding-right: calc(1.333em + 2px);padding-bottom: calc(0.667em + 2px);padding-left: calc(1.333em + 2px);text-decoration: none;text-transform: inherit;}.has-black-color{color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-color{color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-color{color: var(--wp--preset--color--white) !important;}.has-pale-pink-color{color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-color{color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-color{color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-color{color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-color{color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-color{color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-color{color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-color{color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-color{color: var(--wp--preset--color--vivid-purple) !important;}.has-black-background-color{background-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-background-color{background-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-background-color{background-color: var(--wp--preset--color--white) !important;}.has-pale-pink-background-color{background-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-background-color{background-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-background-color{background-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-background-color{background-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-background-color{background-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-background-color{background-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-background-color{background-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-background-color{background-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-background-color{background-color: var(--wp--preset--color--vivid-purple) !important;}.has-black-border-color{border-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-border-color{border-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-border-color{border-color: var(--wp--preset--color--white) !important;}.has-pale-pink-border-color{border-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-border-color{border-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-border-color{border-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-border-color{border-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-border-color{border-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-border-color{border-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-border-color{border-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-border-color{border-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-border-color{border-color: var(--wp--preset--color--vivid-purple) !important;}.has-vivid-cyan-blue-to-vivid-purple-gradient-background{background: var(--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple) !important;}.has-light-green-cyan-to-vivid-green-cyan-gradient-background{background: var(--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan) !important;}.has-luminous-vivid-amber-to-luminous-vivid-orange-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange) !important;}.has-luminous-vivid-orange-to-vivid-red-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-orange-to-vivid-red) !important;}.has-very-light-gray-to-cyan-bluish-gray-gradient-background{background: var(--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray) !important;}.has-cool-to-warm-spectrum-gradient-background{background: var(--wp--preset--gradient--cool-to-warm-spectrum) !important;}.has-blush-light-purple-gradient-background{background: var(--wp--preset--gradient--blush-light-purple) !important;}.has-blush-bordeaux-gradient-background{background: var(--wp--preset--gradient--blush-bordeaux) !important;}.has-luminous-dusk-gradient-background{background: var(--wp--preset--gradient--luminous-dusk) !important;}.has-pale-ocean-gradient-background{background: var(--wp--preset--gradient--pale-ocean) !important;}.has-electric-grass-gradient-background{background: var(--wp--preset--gradient--electric-grass) !important;}.has-midnight-gradient-background{background: var(--wp--preset--gradient--midnight) !important;}.has-small-font-size{font-size: var(--wp--preset--font-size--small) !important;}.has-medium-font-size{font-size: var(--wp--preset--font-size--medium) !important;}.has-large-font-size{font-size: var(--wp--preset--font-size--large) !important;}.has-x-large-font-size{font-size: var(--wp--preset--font-size--x-large) !important;}
+/*# sourceURL=global-styles-inline-css */
+</style>
+
+<link rel='stylesheet' id='quickcreator-styles-css' href='https://www.pingcap.com/core/plugins/quickcreator/assets/css/quickcreatorblog-front.css?ver=0.2.2' media='all' />
+<link rel='stylesheet' id='ub-extension-style-css-css' href='https://www.pingcap.com/core/plugins/ultimate-blocks/src/extensions/style.css?ver=7.1.2' media='all' />
+<link rel='stylesheet' id='eztoc-css' href='https://www.pingcap.com/core/plugins/easy-table-of-contents/assets/css/screen.min.css?ver=2.0.86' media='all' />
+<style id="eztoc-inline-css">
+div#ez-toc-container .ez-toc-title {font-size: 120%;}div#ez-toc-container .ez-toc-title {font-weight: 500;}div#ez-toc-container ul li , div#ez-toc-container ul li a {font-size: 95%;}div#ez-toc-container ul li , div#ez-toc-container ul li a {font-weight: 500;}div#ez-toc-container nav ul ul li {font-size: 90%;}.ez-toc-box-title {font-weight: bold; margin-bottom: 10px; text-align: center; text-transform: uppercase; letter-spacing: 1px; color: #666; padding-bottom: 5px;position:absolute;top:-4%;left:5%;background-color: inherit;transition: top 0.3s ease;}.ez-toc-box-title.toc-closed {top:-25%;}
+.ez-toc-container-direction {direction: ltr;}.ez-toc-counter ul{counter-reset: item ;}.ez-toc-counter nav ul li a::before {content: counters(item, '.', decimal) '. ';display: inline-block;counter-increment: item;flex-grow: 0;flex-shrink: 0;margin-right: .2em; float: left; }.ez-toc-widget-direction {direction: ltr;}.ez-toc-widget-container ul{counter-reset: item ;}.ez-toc-widget-container nav ul li a::before {content: counters(item, '.', decimal) '. ';display: inline-block;counter-increment: item;flex-grow: 0;flex-shrink: 0;margin-right: .2em; float: left; }
+/*# sourceURL=eztoc-inline-css */
+</style>
+<link rel='stylesheet' id='master_css-css' href='https://static.pingcap.com/dist/css/master.d0d7061e7840456a119b.css' media='all' />
+<link rel='stylesheet' id='trp-language-switcher-v2-css' href='https://www.pingcap.com/core/plugins/translatepress-multilingual/assets/css/trp-language-switcher-v2.css?ver=3.3.1' media='all' />
+<link rel='stylesheet' id='viewer-css-css' href='https://cdnjs.cloudflare.com/ajax/libs/viewerjs/1.11.7/viewer.css?ver=7.1.2' media='all' />
+<script id="jquery-core-js" src="https://www.pingcap.com/lib/js/jquery/jquery.min.js?ver=3.7.1"></script>
+<script id="trp-language-switcher-js-v2-js" src="https://www.pingcap.com/core/plugins/translatepress-multilingual/assets/js/trp-frontend-language-switcher.js?ver=3.3.1"></script>
+<link rel="https://api.w.org/" href="https://www.pingcap.com/wp-json/" /><link rel="alternate" title="JSON" type="application/json" href="https://www.pingcap.com/wp-json/wp/v2/article/17960" /><link rel='shortlink' href='https://www.pingcap.com/?p=17960' />
+<link rel="alternate" hreflang="en-US" href="https://www.pingcap.com/article/understanding-b-tree-and-hash-indexing-in-databases/"/>
+<link rel="alternate" hreflang="ko-KR" href="https://www.pingcap.com/ko/article/understanding-b-tree-and-hash-indexing-in-databases/"/>
+<link rel="alternate" hreflang="en" href="https://www.pingcap.com/article/understanding-b-tree-and-hash-indexing-in-databases/"/>
+<link rel="alternate" hreflang="ko" href="https://www.pingcap.com/ko/article/understanding-b-tree-and-hash-indexing-in-databases/"/>
+<meta name="facebook-domain-verification" content="0gk94zd3hh6amnrfygj55shrag0icv" /><style class="wpcode-css-snippet">/**
+ * PingCAP — Fix Pricing Page Mobile Horizontal Scroll
+ *
+ * WPCode Setup:
+ *   - Snippet Type: CSS Snippet
+ *   - Location: "Site Wide Header" (or "Run Everywhere")
+ *   - Status: Active
+ *
+ * Root cause:
+ *   .tmpl-tidb__card-item.pricing has a fixed width of 426px
+ *   which overflows mobile viewports (e.g. 375px or 400px wide).
+ *
+ * Fix:
+ *   Cap the card at 100% of its container width on small screens.
+ *   Also adds a safety net on the page wrapper to prevent any
+ *   other element causing horizontal scroll.
+ */
+
+@media (max-width: 767px) {
+
+    /* Primary fix — constrain the overflowing pricing card */
+    .tmpl-tidb__card-item.pricing {
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+    }
+
+    /* Safety net — prevent the page itself from scrolling horizontally */
+    body,
+    .page-template-pricing,
+    .tmpl-tidb__card-item {
+        overflow-x: hidden !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+    }
+
+}</style><link rel="icon" href="https://static.pingcap.com/files/2024/09/25192015/cropped-favicon-32x32.png" sizes="32x32" />
+<link rel="icon" href="https://static.pingcap.com/files/2024/09/25192015/cropped-favicon-192x192.png" sizes="192x192" />
+<link rel="apple-touch-icon" href="https://static.pingcap.com/files/2024/09/25192015/cropped-favicon-180x180.png" />
+<meta name="msapplication-TileImage" content="https://static.pingcap.com/files/2024/09/25192015/cropped-favicon-270x270.png" />
+<script type="text/javascript"  src="https://static.pingcap.com/dist/js/track.min.js?ver=20240912" defer></script>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-TPX49SBK');</script>
+
+<!-- End Google Tag Manager -->
+<!-- Start cookieyes banner -->
+<script id="cookieyes" type="text/javascript" src="https://cdn-cookieyes.com/client_data/004f0e8c99c3d42edb2a734a/script.js"></script> 
+<!-- End cookieyes banner --></head>
+
+<body id="body" class="wp-singular article-template-default single single-article postid-17960 wp-theme-pingcap translatepress-en_US">
+	<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TPX49SBK"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+
+<!-- End Google Tag Manager (noscript) -->				<header class="site-header-wrapper">
+			<div class="site-header">
+				<div class="site-header__inner contain">
+					<div class="site-header__logo-container">
+						<a href="https://www.pingcap.com" title="TiDB" aria-label="Home">
+							<svg width="120" height="50" viewbox="0 0 120 50" fill="none" xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" x="0px" y="0px" class="site-header__logo-image"><use xlink:href="#general-logo"></use></svg>						</a>
+					</div>
+											<div class="site-header__menu">
+							<nav class="site-header__menu-primary">
+																		<div class="site-header__dropdown-menu-container site-header__dropdown-menu-container-relative">
+											<a class="site-header__primary-menu-link ai" href="#" aria-label="AI features are live" data-dropdown-id="33046">
+												AI											</a>
+											<div class="menu-dropdown menu-dropdown-ai bg-black-dark" data-menu-dropdown-id="33046"><div class="menu-dropdown-ai__inner">
+			<span class="menu-dropdown-ai__label">TIDB FOR AGENTIC AI</span>
+		<div class="menu-dropdown-ai__links">
+					<a class="menu-dropdown-ai__link" href="https://www.pingcap.com/ai/agentic-ai/" data-gtag="event:eng_navi_click,item_name:Database for Agentic AI" >
+									<div class="menu-dropdown-ai__link-icon">
+						<img alt="Database-for-Agentic-Al" src="https://static.pingcap.com/files/2026/04/14001529/Database-for-Agentic-Al.svg" loading="lazy" />					</div>
+								<div class="menu-dropdown-ai__link-content">
+					<span class="menu-dropdown-ai__link-title">
+						Database for Agentic AI											</span>
+											<span class="menu-dropdown-ai__link-desc">Purpose-built for agent memory, state, and multi-hop reasoning</span>
+									</div>
+			</a>
+					<a class="menu-dropdown-ai__link" href="/solutions/ai-agent-context/" data-gtag="event:eng_navi_click,item_name:Persistent Context for AI Agents" >
+									<div class="menu-dropdown-ai__link-icon">
+						<img alt="Quick-Start" src="https://static.pingcap.com/files/2026/04/14001529/Quick-Start.svg" loading="lazy" />					</div>
+								<div class="menu-dropdown-ai__link-content">
+					<span class="menu-dropdown-ai__link-title">
+						Persistent Context for AI Agents											</span>
+											<span class="menu-dropdown-ai__link-desc">Persistent, queryable memory for AI agents with per-agent isolation</span>
+									</div>
+			</a>
+					<a class="menu-dropdown-ai__link" href="https://www.pingcap.com/developers/build-ai-apps/" data-gtag="event:eng_navi_click,item_name:Build AI Applications" >
+									<div class="menu-dropdown-ai__link-icon">
+						<img alt="Build-AI-Applications" src="https://static.pingcap.com/files/2026/04/14001528/Build-AI-Applications.svg" loading="lazy" />					</div>
+								<div class="menu-dropdown-ai__link-content">
+					<span class="menu-dropdown-ai__link-title">
+						Build AI Applications											</span>
+											<span class="menu-dropdown-ai__link-desc">SDKs, guides, and templates for shipping AI apps fast</span>
+									</div>
+			</a>
+					<a class="menu-dropdown-ai__link" href="https://www.pingcap.com/ai/vector-search/" data-gtag="event:eng_navi_click,item_name:Vector Search &amp; RAG" >
+									<div class="menu-dropdown-ai__link-icon">
+						<img alt="Vector-Search-RAG" src="https://static.pingcap.com/files/2026/04/14001530/Vector-Search-RAG.svg" loading="lazy" />					</div>
+								<div class="menu-dropdown-ai__link-content">
+					<span class="menu-dropdown-ai__link-title">
+						Vector Search &amp; RAG											</span>
+											<span class="menu-dropdown-ai__link-desc">Native vector indexing and retrieval-augmented generation pipelines</span>
+									</div>
+			</a>
+					<a class="menu-dropdown-ai__link" href="/tidb-ai-startup-program/" data-gtag="event:eng_navi_click,item_name:AI Startup Program" >
+									<div class="menu-dropdown-ai__link-icon">
+						<img alt="Al Startup Program" src="https://static.pingcap.com/files/2026/08/13000834/Al-Startup-Program.svg" loading="lazy" />					</div>
+								<div class="menu-dropdown-ai__link-content">
+					<span class="menu-dropdown-ai__link-title">
+						AI Startup Program													<span class="menu-dropdown-ai__link-badge">PROGRAM</span>
+											</span>
+											<span class="menu-dropdown-ai__link-desc">Scale faster without letting infrastructure become the bottleneck</span>
+									</div>
+			</a>
+			</div>
+</div>
+</div>										</div>
+																			<div class="site-header__dropdown-menu-container site-header__dropdown-menu-container-relative">
+											<a class="site-header__primary-menu-link " href="/tidb/" data-dropdown-id="8403">
+												Product											</a>
+											<div class="menu-dropdown menu-dropdown-columns bg-black-dark" data-menu-dropdown-id="8403"><div class="menu-dropdown__inner">
+			<div class="menu-dropdown__item menu-dropdown__feature">
+			
+				<div class="menu-dropdown__feature-column">
+					<div class="menu-dropdown__feature-column-title-container">
+													<a class="logo-link" href="/tidb/" data-tag="event:eng_navi_click,item_name:TiDB Overview"><img alt="logo-TiDB-1" src="https://static.pingcap.com/files/2022/08/07073128/logo-TiDB-1.svg" loading="lazy" /></a>
+											</div>
+					<div class="menu-dropdown__feature-column-content">
+						<p>An open-source distributed SQL database trusted by innovators to power transactional, AI, and other modern applications.</p>
+<p><a class="button-text" href="/tidb/">Product Overview</a></p>					</div>
+
+				</div>
+					</div>
+				<div class="menu-dropdown__item menu-dropdown__links-column">
+			<span class="menu-dropdown__links-column-label">
+				Deployment Options			</span>
+							<a href="/tidb/cloud/" data-gtag="event:eng_navi_click,item_name:TiDB Cloud">
+					<i class="menu-dropdown__links-column-icon icon-cloud-t"></i>
+					TiDB Cloud				</a>
+							<a href="/tidb/self-managed/" data-gtag="event:eng_navi_click,item_name:TiDB Self-Managed">
+					<i class="menu-dropdown__links-column-icon icon-stack-t"></i>
+					TiDB Self-Managed				</a>
+							<a href="/pricing/" data-gtag="event:eng_navi_click,item_name:Pricing">
+					<i class="menu-dropdown__links-column-icon icon-dollar-t"></i>
+					Pricing				</a>
+					</div>
+			<div class="menu-dropdown__item menu-dropdown__links-column">
+			<span class="menu-dropdown__links-column-label">
+				Ecosystem			</span>
+							<a href="https://www.pingcap.com/integrations/" data-gtag="event:eng_navi_click,item_name:Integrations">
+					<i class="menu-dropdown__links-column-icon icon-gear"></i>
+					Integrations				</a>
+							<a href="https://github.com/tikv/tikv" data-gtag="event:eng_navi_click,item_name:TiKV">
+					<i class="menu-dropdown__links-column-icon icon-sliders"></i>
+					TiKV				</a>
+							<a href="https://mem9.ai/" data-gtag="event:eng_navi_click,item_name:mem9">
+					<i class="menu-dropdown__links-column-icon icon-cash-t"></i>
+					mem9				</a>
+							<a href="https://www.pingcap.com/tidb/tidb-cloud-filesystems/" data-gtag="event:eng_navi_click,item_name:TiDB Cloud Filesystems">
+					<i class="menu-dropdown__links-column-icon icon-wallet-t"></i>
+					TiDB Cloud Filesystems				</a>
+							<a href="https://ossinsight.io/" data-gtag="event:eng_navi_click,item_name:OSS Insight">
+					<i class="menu-dropdown__links-column-icon icon-eye"></i>
+					OSS Insight				</a>
+					</div>
+	</div></div>										</div>
+																			<div class="site-header__dropdown-menu-container site-header__dropdown-menu-container-relative">
+											<a class="site-header__primary-menu-link " href="#" data-dropdown-id="8407">
+												Solutions											</a>
+											<div class="menu-dropdown menu-dropdown-columns bg-black-dark" data-menu-dropdown-id="8407"><div class="menu-dropdown__inner-reserve">
+			<div class="menu-dropdown__item menu-dropdown__feature">
+			
+				<div class="menu-dropdown__feature-column">
+					<div class="menu-dropdown__feature-column-title-container">
+								<a class="button-text" href="/customers/" data-gtag=event:eng_navi_click,item_name:Customer Stories >
+			Customer Stories		</a>
+					</div>
+					<div class="menu-dropdown__feature-column-content">
+						<p>Trusted and verified by innovation leaders around the world.</p>					</div>
+
+				</div>
+					</div>
+				<div class="menu-dropdown__item menu-dropdown__links-column">
+			<span class="menu-dropdown__links-column-label">
+				By Industry			</span>
+							<a href="/ai/" data-gtag="event:eng_navi_click,item_name:AI">
+					<i class="menu-dropdown__links-column-icon icon-ai-t"></i>
+					AI				</a>
+							<a href="/solutions/fintech/" data-gtag="event:eng_navi_click,item_name:Fintech">
+					<i class="menu-dropdown__links-column-icon icon-wallet"></i>
+					Fintech				</a>
+							<a href="/solutions/e-commerce/" data-gtag="event:eng_navi_click,item_name:eCommerce">
+					<i class="menu-dropdown__links-column-icon icon-bag"></i>
+					eCommerce				</a>
+							<a href="/solutions/saas/" data-gtag="event:eng_navi_click,item_name:SaaS">
+					<i class="menu-dropdown__links-column-icon icon-desktop"></i>
+					SaaS				</a>
+							<a href="https://www.pingcap.com/solutions/logistics-supply-chain/" data-gtag="event:eng_navi_click,item_name:Logistics & Supply Chain">
+					<i class="menu-dropdown__links-column-icon icon-archive-t"></i>
+					Logistics &amp; Supply Chain				</a>
+							<a href="https://www.pingcap.com/solutions/web3/" data-gtag="event:eng_navi_click,item_name:Web3">
+					<i class="menu-dropdown__links-column-icon icon-sliders-t"></i>
+					Web3				</a>
+					</div>
+			<div class="menu-dropdown__item menu-dropdown__links-column">
+			<span class="menu-dropdown__links-column-label">
+				By Use Case			</span>
+							<a href="/solutions/lower-infrastructure-costs/" data-gtag="event:eng_navi_click,item_name:Lower Infrastructure Costs">
+					<i class="menu-dropdown__links-column-icon icon-chart-down-t"></i>
+					Lower Infrastructure Costs				</a>
+							<a href="https://www.pingcap.com/solutions/enable-operational-intelligence/" data-gtag="event:eng_navi_click,item_name:Enable Operational Intelligence">
+					<i class="menu-dropdown__links-column-icon icon-star"></i>
+					Enable Operational Intelligence				</a>
+							<a href="/solutions/modernize-mysql-workloads/" data-gtag="event:eng_navi_click,item_name:Modernize MySQL Workloads">
+					<i class="menu-dropdown__links-column-icon icon-cloud"></i>
+					Modernize MySQL Workloads				</a>
+							<a href="/ai/" data-gtag="event:eng_navi_click,item_name:Build GenAI Applications">
+					<i class="menu-dropdown__links-column-icon icon-ai-t"></i>
+					Build GenAI Applications				</a>
+							<a href="/solutions/ai-agent-context/" data-gtag="event:eng_navi_click,item_name:Build Persistent Context for AI Agents">
+					<i class="menu-dropdown__links-column-icon icon-ai-t"></i>
+					Build Persistent Context for AI Agents				</a>
+					</div>
+	</div></div>										</div>
+																			<div class="site-header__dropdown-menu-container site-header__dropdown-menu-container-relative">
+											<a class="site-header__primary-menu-link " href="#" data-dropdown-id="8408">
+												Resources											</a>
+											<div class="menu-dropdown menu-dropdown-columns bg-black-dark" data-menu-dropdown-id="8408"><div class="menu-dropdown__inner">
+				<div class="menu-dropdown__item menu-dropdown__links-column">
+			<span class="menu-dropdown__links-column-label">
+				Learn			</span>
+							<a href="/blog/" data-gtag="event:eng_navi_click,item_name:Blog">
+					<i class="menu-dropdown__links-column-icon icon-document"></i>
+					Blog				</a>
+							<a href="/ebook-whitepaper/" data-gtag="event:eng_navi_click,item_name:eBooks & Whitepapers">
+					<i class="menu-dropdown__links-column-icon icon-book"></i>
+					eBooks &amp; Whitepapers				</a>
+							<a href="/webinars-videos/" data-gtag="event:eng_navi_click,item_name:Webinars and Videos">
+					<i class="menu-dropdown__links-column-icon icon-video"></i>
+					Webinars and Videos				</a>
+							<a href="/compare/" data-gtag="event:eng_navi_click,item_name:Compare Databases">
+					<i class="menu-dropdown__links-column-icon icon-menu"></i>
+					Compare Databases				</a>
+							<a href="https://www.pingcap.com/playbook/" data-gtag="event:eng_navi_click,item_name:Playbooks">
+					<i class="menu-dropdown__links-column-icon icon-stack"></i>
+					Playbooks				</a>
+					</div>
+			<div class="menu-dropdown__item menu-dropdown__links-column">
+			<span class="menu-dropdown__links-column-label">
+				Engage			</span>
+							<a href="/event/" data-gtag="event:eng_navi_click,item_name:Events">
+					<i class="menu-dropdown__links-column-icon icon-calender"></i>
+					Events				</a>
+							<a href="https://discord.com/invite/vYU9h56kAX" data-gtag="event:eng_navi_click,item_name:Discord Community">
+					<i class="menu-dropdown__links-column-icon icon-comment"></i>
+					Discord Community				</a>
+							<a href="/developers/" data-gtag="event:eng_navi_click,item_name:Developer Hub">
+					<i class="menu-dropdown__links-column-icon icon-code"></i>
+					Developer Hub				</a>
+							<a href="/tidb-scaile-summit/" data-gtag="event:eng_navi_click,item_name:TiDB SCaiLE">
+					<i class="menu-dropdown__links-column-icon icon-bookmark"></i>
+					TiDB SCaiLE				</a>
+					</div>
+			<div class="menu-dropdown__item menu-dropdown__links-column">
+			<span class="menu-dropdown__links-column-label">
+				PingCAP University			</span>
+							<a href="https://www.pingcap.com/education/" data-gtag="event:eng_navi_click,item_name:Courses">
+					<i class="menu-dropdown__links-column-icon icon-education"></i>
+					Courses				</a>
+							<a href="https://labs.tidb.io" data-gtag="event:eng_navi_click,item_name:Hands-on Labs">
+					<i class="menu-dropdown__links-column-icon icon-app-window"></i>
+					Hands-on Labs				</a>
+							<a href="https://www.pingcap.com/education/certification/" data-gtag="event:eng_navi_click,item_name:Certifications">
+					<i class="menu-dropdown__links-column-icon icon-award"></i>
+					Certifications				</a>
+					</div>
+	</div></div>										</div>
+																			<div class="site-header__dropdown-menu-container site-header__dropdown-menu-container-relative">
+											<a class="site-header__primary-menu-link " href="#" data-dropdown-id="8409">
+												Company											</a>
+											<div class="menu-dropdown menu-dropdown-columns bg-black-dark" data-menu-dropdown-id="8409"><div class="menu-dropdown__inner-reserve">
+			<div class="menu-dropdown__item menu-dropdown__feature">
+			
+				<div class="menu-dropdown__feature-column">
+					<div class="menu-dropdown__feature-column-title-container">
+								<a class="button-text" href="/trust-hub/" data-gtag=event:eng_navi_click,item_name:Trust Hub >
+			Trust Hub		</a>
+					</div>
+					<div class="menu-dropdown__feature-column-content">
+						<p>Explore how TiDB ensures the confidentiality and availability of your data.</p>					</div>
+
+				</div>
+					</div>
+				<div class="menu-dropdown__item menu-dropdown__links-column">
+			<span class="menu-dropdown__links-column-label">
+				About			</span>
+							<a href="/press-releases-news/" data-gtag="event:eng_navi_click,item_name:Press Releases & News">
+					<i class="menu-dropdown__links-column-icon icon-newspaper"></i>
+					Press Releases &amp; News				</a>
+							<a href="/about-us/" data-gtag="event:eng_navi_click,item_name:About Us">
+					<i class="menu-dropdown__links-column-icon icon-buildings"></i>
+					About Us				</a>
+							<a href="https://www.pingcap.com/careers/" data-gtag="event:eng_navi_click,item_name:Careers">
+					<i class="menu-dropdown__links-column-icon icon-briefcase"></i>
+					Careers				</a>
+							<a href="https://www.pingcap.com/partners/" data-gtag="event:eng_navi_click,item_name:Partners">
+					<i class="menu-dropdown__links-column-icon icon-handshake"></i>
+					Partners				</a>
+							<a href="https://www.pingcap.com/contact-us/" data-gtag="event:eng_navi_click,item_name:Contact Us">
+					<i class="menu-dropdown__links-column-icon icon-at"></i>
+					Contact Us				</a>
+					</div>
+	</div></div>										</div>
+																			<a class="site-header__primary-menu-link " href="https://docs.pingcap.com/">Docs</a>
+															</nav>
+						</div>
+						<div class="site-header__cta-container">
+															<a href="https://tidbcloud.com/signin" data-gtag="event:signin_click,position:header" class="site-header__secondary-menu-link">Sign In</a>
+								<a href="https://tidbcloud.com/free-trial/" data-gtag="event:go_to_cloud_signup,product_type:serverless,button_name:Start for Free,position:header" class="button-primary sm"><span>Start for Free</span></a>
+													</div>
+						<button class="site-header__mobile-menu-button" type="button" aria-label="Menu">
+							<span class="site-header__mobile-menu-button-box">
+								<span class="site-header__mobile-menu-button-inner"></span>
+							</span>
+						</button>
+									</div>
+			</div>
+		</header>
+		<div class="mobile-menu mobile-menu-default bg-black">
+			<div class="contain">
+				<nav class="mobile-menu-default__primary-links">
+											<div class="mobile-menu-default__primary-group">
+															<label class="mobile-menu-default__primary-title-label" for="mobile_menu_6ab35090b7414_33046">
+									<span class="mobile-menu-default__primary-button-text">
+										AI									</span>
+									<svg width="12" height="8" viewbox="0 0 12 8" fill="none" xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" x="0px" y="0px" class="mobile-menu-default__primary-button-icon"><use xlink:href="#general-chevron-down"></use></svg>								</label>
+							<div class="mobile-menu-default__primary-group-inner"><div class="mobile-menu-default__primary-group-content">	<div class="mobile-menu-default__section-links-column-label">TIDB FOR AGENTIC AI</div>
+	<div class="mobile-menu-default__section-links-column">
+		<div class="mobile-menu-default__section-links-column-links">
+		
+			<a href="https://www.pingcap.com/ai/agentic-ai/">Database for Agentic AI</a>
+		
+			<a href="/solutions/ai-agent-context/">Persistent Context for AI Agents</a>
+		
+			<a href="https://www.pingcap.com/developers/build-ai-apps/">Build AI Applications</a>
+		
+			<a href="https://www.pingcap.com/ai/vector-search/">Vector Search &amp; RAG</a>
+		
+			<a href="/tidb-ai-startup-program/">AI Startup Program<span class="mobile-menu-default__section-links-column-badge">PROGRAM</span></a>
+				</div>
+	</div>
+</div></div>						</div>
+											<div class="mobile-menu-default__primary-group">
+															<label class="mobile-menu-default__primary-title-label" for="mobile_menu_6ab35090b7414_8403">
+									<span class="mobile-menu-default__primary-button-text">
+										Product									</span>
+									<svg width="12" height="8" viewbox="0 0 12 8" fill="none" xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" x="0px" y="0px" class="mobile-menu-default__primary-button-icon"><use xlink:href="#general-chevron-down"></use></svg>								</label>
+							<div class="mobile-menu-default__primary-group-inner"><div class="mobile-menu-default__primary-group-content">	<div class="mobile-menu-default__primary-section">
+					<a class="logo-link" href="/tidb/" data-tag="event:eng_navi_click,item_name:TiDB Overview"><img alt="logo-TiDB-1" src="https://static.pingcap.com/files/2022/08/07073128/logo-TiDB-1.svg" loading="lazy" /></a>
+				<!-- 		<a class="button-text" href="/tidb/" data-gtag=event:eng_navi_click,item_name:TiDB Overview >
+			TiDB Overview		</a>
+ -->
+		<p>An open-source distributed SQL database trusted by innovators to power transactional, AI, and other modern applications.</p>
+<p><a class="button-text" href="/tidb/">Product Overview</a></p>	</div>
+	<div class="mobile-menu-default__section-links-column">
+					<div class="mobile-menu-default__section-links-column-label">Deployment Options</div>
+				<div class="mobile-menu-default__section-links-column-links ">
+								<a href="/tidb/cloud/" data-gtag="event:eng_navi_click,item_name:TiDB Cloud"><i class="menu-dropdown__links-column-icon icon-cloud-t"></i>TiDB Cloud</a>
+								<a href="/tidb/self-managed/" data-gtag="event:eng_navi_click,item_name:TiDB Self-Managed"><i class="menu-dropdown__links-column-icon icon-stack-t"></i>TiDB Self-Managed</a>
+								<a href="/pricing/" data-gtag="event:eng_navi_click,item_name:Pricing"><i class="menu-dropdown__links-column-icon icon-dollar-t"></i>Pricing</a>
+					</div>
+	</div>
+	<div class="mobile-menu-default__section-links-column">
+					<div class="mobile-menu-default__section-links-column-label">Ecosystem</div>
+				<div class="mobile-menu-default__section-links-column-links ">
+								<a href="https://www.pingcap.com/integrations/" data-gtag="event:eng_navi_click,item_name:Integrations"><i class="menu-dropdown__links-column-icon icon-gear"></i>Integrations</a>
+								<a href="https://github.com/tikv/tikv" data-gtag="event:eng_navi_click,item_name:TiKV"><i class="menu-dropdown__links-column-icon icon-sliders"></i>TiKV</a>
+								<a href="https://mem9.ai/" data-gtag="event:eng_navi_click,item_name:mem9"><i class="menu-dropdown__links-column-icon icon-cash-t"></i>mem9</a>
+								<a href="https://www.pingcap.com/tidb/tidb-cloud-filesystems/" data-gtag="event:eng_navi_click,item_name:TiDB Cloud Filesystems"><i class="menu-dropdown__links-column-icon icon-wallet-t"></i>TiDB Cloud Filesystems</a>
+								<a href="https://ossinsight.io/" data-gtag="event:eng_navi_click,item_name:OSS Insight"><i class="menu-dropdown__links-column-icon icon-eye"></i>OSS Insight</a>
+					</div>
+	</div>
+</div></div>						</div>
+											<div class="mobile-menu-default__primary-group">
+															<label class="mobile-menu-default__primary-title-label" for="mobile_menu_6ab35090b7414_8407">
+									<span class="mobile-menu-default__primary-button-text">
+										Solutions									</span>
+									<svg width="12" height="8" viewbox="0 0 12 8" fill="none" xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" x="0px" y="0px" class="mobile-menu-default__primary-button-icon"><use xlink:href="#general-chevron-down"></use></svg>								</label>
+							<div class="mobile-menu-default__primary-group-inner"><div class="mobile-menu-default__primary-group-content">	<div class="mobile-menu-default__primary-section">
+				<a class="button-text" href="/customers/" data-gtag=event:eng_navi_click,item_name:Customer Stories >
+			Customer Stories		</a>
+		<!-- 		<a class="button-text" href="/customers/" data-gtag=event:eng_navi_click,item_name:Customer Stories >
+			Customer Stories		</a>
+ -->
+		<p>Trusted and verified by innovation leaders around the world.</p>	</div>
+	<div class="mobile-menu-default__section-links-column">
+					<div class="mobile-menu-default__section-links-column-label">By Industry</div>
+				<div class="mobile-menu-default__section-links-column-links ">
+								<a href="/ai/" data-gtag="event:eng_navi_click,item_name:AI"><i class="menu-dropdown__links-column-icon icon-ai-t"></i>AI</a>
+								<a href="/solutions/fintech/" data-gtag="event:eng_navi_click,item_name:Fintech"><i class="menu-dropdown__links-column-icon icon-wallet"></i>Fintech</a>
+								<a href="/solutions/e-commerce/" data-gtag="event:eng_navi_click,item_name:eCommerce"><i class="menu-dropdown__links-column-icon icon-bag"></i>eCommerce</a>
+								<a href="/solutions/saas/" data-gtag="event:eng_navi_click,item_name:SaaS"><i class="menu-dropdown__links-column-icon icon-desktop"></i>SaaS</a>
+								<a href="https://www.pingcap.com/solutions/logistics-supply-chain/" data-gtag="event:eng_navi_click,item_name:Logistics & Supply Chain"><i class="menu-dropdown__links-column-icon icon-archive-t"></i>Logistics &amp; Supply Chain</a>
+								<a href="https://www.pingcap.com/solutions/web3/" data-gtag="event:eng_navi_click,item_name:Web3"><i class="menu-dropdown__links-column-icon icon-sliders-t"></i>Web3</a>
+					</div>
+	</div>
+	<div class="mobile-menu-default__section-links-column">
+					<div class="mobile-menu-default__section-links-column-label">By Use Case</div>
+				<div class="mobile-menu-default__section-links-column-links one">
+								<a href="/solutions/lower-infrastructure-costs/" data-gtag="event:eng_navi_click,item_name:Lower Infrastructure Costs"><i class="menu-dropdown__links-column-icon icon-chart-down-t"></i>Lower Infrastructure Costs</a>
+								<a href="https://www.pingcap.com/solutions/enable-operational-intelligence/" data-gtag="event:eng_navi_click,item_name:Enable Operational Intelligence"><i class="menu-dropdown__links-column-icon icon-star"></i>Enable Operational Intelligence</a>
+								<a href="/solutions/modernize-mysql-workloads/" data-gtag="event:eng_navi_click,item_name:Modernize MySQL Workloads"><i class="menu-dropdown__links-column-icon icon-cloud"></i>Modernize MySQL Workloads</a>
+								<a href="/ai/" data-gtag="event:eng_navi_click,item_name:Build GenAI Applications"><i class="menu-dropdown__links-column-icon icon-ai-t"></i>Build GenAI Applications</a>
+								<a href="/solutions/ai-agent-context/" data-gtag="event:eng_navi_click,item_name:Build Persistent Context for AI Agents"><i class="menu-dropdown__links-column-icon icon-ai-t"></i>Build Persistent Context for AI Agents</a>
+					</div>
+	</div>
+</div></div>						</div>
+											<div class="mobile-menu-default__primary-group">
+															<label class="mobile-menu-default__primary-title-label" for="mobile_menu_6ab35090b7414_8408">
+									<span class="mobile-menu-default__primary-button-text">
+										Resources									</span>
+									<svg width="12" height="8" viewbox="0 0 12 8" fill="none" xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" x="0px" y="0px" class="mobile-menu-default__primary-button-icon"><use xlink:href="#general-chevron-down"></use></svg>								</label>
+							<div class="mobile-menu-default__primary-group-inner"><div class="mobile-menu-default__primary-group-content">	<div class="mobile-menu-default__section-links-column">
+					<div class="mobile-menu-default__section-links-column-label">Learn</div>
+				<div class="mobile-menu-default__section-links-column-links one">
+								<a href="/blog/" data-gtag="event:eng_navi_click,item_name:Blog"><i class="menu-dropdown__links-column-icon icon-document"></i>Blog</a>
+								<a href="/ebook-whitepaper/" data-gtag="event:eng_navi_click,item_name:eBooks & Whitepapers"><i class="menu-dropdown__links-column-icon icon-book"></i>eBooks &amp; Whitepapers</a>
+								<a href="/webinars-videos/" data-gtag="event:eng_navi_click,item_name:Webinars and Videos"><i class="menu-dropdown__links-column-icon icon-video"></i>Webinars and Videos</a>
+								<a href="/compare/" data-gtag="event:eng_navi_click,item_name:Compare Databases"><i class="menu-dropdown__links-column-icon icon-menu"></i>Compare Databases</a>
+								<a href="https://www.pingcap.com/playbook/" data-gtag="event:eng_navi_click,item_name:Playbooks"><i class="menu-dropdown__links-column-icon icon-stack"></i>Playbooks</a>
+					</div>
+	</div>
+	<div class="mobile-menu-default__section-links-column">
+					<div class="mobile-menu-default__section-links-column-label">Engage</div>
+				<div class="mobile-menu-default__section-links-column-links ">
+								<a href="/event/" data-gtag="event:eng_navi_click,item_name:Events"><i class="menu-dropdown__links-column-icon icon-calender"></i>Events</a>
+								<a href="https://discord.com/invite/vYU9h56kAX" data-gtag="event:eng_navi_click,item_name:Discord Community"><i class="menu-dropdown__links-column-icon icon-comment"></i>Discord Community</a>
+								<a href="/developers/" data-gtag="event:eng_navi_click,item_name:Developer Hub"><i class="menu-dropdown__links-column-icon icon-code"></i>Developer Hub</a>
+								<a href="/tidb-scaile-summit/" data-gtag="event:eng_navi_click,item_name:TiDB SCaiLE"><i class="menu-dropdown__links-column-icon icon-bookmark"></i>TiDB SCaiLE</a>
+					</div>
+	</div>
+	<div class="mobile-menu-default__section-links-column">
+					<div class="mobile-menu-default__section-links-column-label">PingCAP University</div>
+				<div class="mobile-menu-default__section-links-column-links ">
+								<a href="https://www.pingcap.com/education/" data-gtag="event:eng_navi_click,item_name:Courses"><i class="menu-dropdown__links-column-icon icon-education"></i>Courses</a>
+								<a href="https://labs.tidb.io" data-gtag="event:eng_navi_click,item_name:Hands-on Labs"><i class="menu-dropdown__links-column-icon icon-app-window"></i>Hands-on Labs</a>
+								<a href="https://www.pingcap.com/education/certification/" data-gtag="event:eng_navi_click,item_name:Certifications"><i class="menu-dropdown__links-column-icon icon-award"></i>Certifications</a>
+					</div>
+	</div>
+</div></div>						</div>
+											<div class="mobile-menu-default__primary-group">
+															<label class="mobile-menu-default__primary-title-label" for="mobile_menu_6ab35090b7414_8409">
+									<span class="mobile-menu-default__primary-button-text">
+										Company									</span>
+									<svg width="12" height="8" viewbox="0 0 12 8" fill="none" xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" x="0px" y="0px" class="mobile-menu-default__primary-button-icon"><use xlink:href="#general-chevron-down"></use></svg>								</label>
+							<div class="mobile-menu-default__primary-group-inner"><div class="mobile-menu-default__primary-group-content">	<div class="mobile-menu-default__primary-section">
+				<a class="button-text" href="/trust-hub/" data-gtag=event:eng_navi_click,item_name:Trust Hub >
+			Trust Hub		</a>
+		<!-- 		<a class="button-text" href="/trust-hub/" data-gtag=event:eng_navi_click,item_name:Trust Hub >
+			Trust Hub		</a>
+ -->
+		<p>Explore how TiDB ensures the confidentiality and availability of your data.</p>	</div>
+	<div class="mobile-menu-default__section-links-column">
+					<div class="mobile-menu-default__section-links-column-label">About</div>
+				<div class="mobile-menu-default__section-links-column-links ">
+								<a href="/press-releases-news/" data-gtag="event:eng_navi_click,item_name:Press Releases & News"><i class="menu-dropdown__links-column-icon icon-newspaper"></i>Press Releases &amp; News</a>
+								<a href="/about-us/" data-gtag="event:eng_navi_click,item_name:About Us"><i class="menu-dropdown__links-column-icon icon-buildings"></i>About Us</a>
+								<a href="https://www.pingcap.com/careers/" data-gtag="event:eng_navi_click,item_name:Careers"><i class="menu-dropdown__links-column-icon icon-briefcase"></i>Careers</a>
+								<a href="https://www.pingcap.com/partners/" data-gtag="event:eng_navi_click,item_name:Partners"><i class="menu-dropdown__links-column-icon icon-handshake"></i>Partners</a>
+								<a href="https://www.pingcap.com/contact-us/" data-gtag="event:eng_navi_click,item_name:Contact Us"><i class="menu-dropdown__links-column-icon icon-at"></i>Contact Us</a>
+					</div>
+	</div>
+</div></div>						</div>
+											<div class="mobile-menu-default__primary-group">
+															<a class="mobile-menu-default__primary-link" href="https://docs.pingcap.com/">Docs</a>
+													</div>
+											<div class="mobile-menu-default__primary-group">
+															<a class="mobile-menu-default__primary-link" href="https://tidbcloud.com/signin">Sign In</a>
+													</div>
+									</nav>
+				<nav class="mobile-menu-default__secondary-links">
+									</nav>
+				<div class="mobile-menu-default__menu-cta">
+					<a href="https://tidbcloud.com/free-trial/" data-gtag="event:go_to_cloud_signup,product_type:serverless,button_name:Start for Free,position:header" class="button-primary lg"><span>Start for Free</span><i class="button__arrow"></i></a>
+				</div>
+			</div>
+		</div>
+        <div class="banner bg-black">
+            <div class="banner-default__inner contain">
+                <div class="banner-default__text-content banner-default__text-content--medium">
+                    <div>
+                        <h1 class="banner-resource__title">Understanding B-Tree and Hash Indexing in Databases</h1>
+                                                <div class="banner-resource__authors">
+                            		<div class="author-box">
+							<img class="author-box__image" src="https://static.pingcap.com/files/2024/10/29081802/Ti-150x150.png">
+										<div>
+					<a class="author-box__author-name" href="https://www.pingcap.com/blog/author/pingcap/">TiDB Team</a>
+					<p class="author-box__author-desc"></p>
+				</div>
+
+					</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+<main class="tmpl-single-article">
+                <div class="contain tmpl-single-article__container">
+                <div class="tmpl-single-article__content">
+                    <div class="tmpl-single-post__post-content wysiwyg wysiwyg--post-content">
+                        
+<p class="wp-block-paragraph">Database indexing plays a crucial role in accelerating queries, significantly reducing search time for specific information within vast datasets. By swiftly locating and retrieving records, indexing optimizes query execution time, enhancing database performance. The goal of implementing indexing is to boost application speed, preventing revenue leaks effectively. Indexes expedite data retrieval operations by quickly pinpointing data without the need to scan through every database row repeatedly. In this blog post, the focus will be on exploring hash index and B-Tree indexing techniques to provide insights into their characteristics, advantages, and performance implications.</p>
+
+
+
+<h2 class="wp-block-heading"><span class="ez-toc-section" id="B-Tree_Indexing"></span>B-Tree Indexing<span class="ez-toc-section-end"></span></h2>
+
+
+
+<h3 class="wp-block-heading">Characteristics of B-Tree Indexing</h3>
+
+
+
+<h4 class="wp-block-heading">Structure and properties</h4>
+
+
+
+<p class="wp-block-paragraph">B-Tree indexing exhibits a unique structure with balanced nodes, ensuring efficient data retrieval and storage. The properties of B-Trees allow for logarithmic time complexity operations, enhancing database performance significantly.</p>
+
+
+
+<h4 class="wp-block-heading">Balanced nature and height</h4>
+
+
+
+<p class="wp-block-paragraph">The balanced nature of B-Trees guarantees that all leaf nodes are at the same level, preventing skewed distributions and maintaining uniform access times. This balance contributes to consistent search speeds across the entire dataset.</p>
+
+
+
+<h4 class="wp-block-heading">Node composition and order</h4>
+
+
+
+<p class="wp-block-paragraph">In B-Tree indexing, each node contains multiple keys and child pointers, enabling effective branching for quick data traversal. The order of a B-Tree determines the maximum number of children each node can have, impacting the tree&#8217;s depth and search efficiency.</p>
+
+
+
+<h3 class="wp-block-heading">Performance of B-Tree Indexing</h3>
+
+
+
+<h4 class="wp-block-heading">Search operations</h4>
+
+
+
+<p class="wp-block-paragraph">B-Tree indexing excels in search operations by reducing the number of disk accesses required to locate specific data. This efficiency is crucial for speeding up query processing in databases with extensive datasets.</p>
+
+
+
+<h4 class="wp-block-heading">Insertions and deletions</h4>
+
+
+
+<p class="wp-block-paragraph">When it comes to insertions and deletions, B-Trees maintain their balanced structure by redistributing keys among nodes as needed. This dynamic adjustment ensures that the tree remains optimized for efficient data modifications.</p>
+
+
+
+<h4 class="wp-block-heading">Space complexity</h4>
+
+
+
+<p class="wp-block-paragraph">The space complexity of B-Tree indexing is favorable due to its ability to store large amounts of data in a structured manner without excessive memory overhead. This efficient use of space makes B-Trees suitable for handling massive datasets effectively.</p>
+
+
+
+<h3 class="wp-block-heading">Use Cases of B-Tree Indexing</h3>
+
+
+
+<h4 class="wp-block-heading">Range queries</h4>
+
+
+
+<p class="wp-block-paragraph">B-Tree indexing is particularly useful for range queries where retrieving data within a specific interval is essential. The ordered structure of B-Trees simplifies range-based searches, making them ideal for applications requiring such functionality.</p>
+
+
+
+<h4 class="wp-block-heading">Ordered data retrieval</h4>
+
+
+
+<p class="wp-block-paragraph">For scenarios demanding ordered data retrieval based on keys or values, B-Tree indexing provides optimal performance. The inherent sorting mechanism of B-Trees facilitates quick access to sequentially arranged records, enhancing query speed.</p>
+
+
+
+<h4 class="wp-block-heading">General-purpose indexing</h4>
+
+
+
+<p class="wp-block-paragraph">Due to their versatility and efficiency in various operations, B-Trees serve as general-purpose indexes suitable for a wide range of database applications. Whether handling small or large datasets, B-Tree indexing offers consistent performance across different use cases.</p>
+
+
+
+<h2 class="wp-block-heading"><span class="ez-toc-section" id="Hash_Indexing"></span>Hash Indexing<span class="ez-toc-section-end"></span></h2>
+
+
+
+<h3 class="wp-block-heading">Characteristics of Hash Indexing</h3>
+
+
+
+<h4 class="wp-block-heading">Structure and properties</h4>
+
+
+
+<p class="wp-block-paragraph">Hash indexing, known for its data agnostic nature, provides fast access to data with low cardinality columns or when accessing a large number of rows randomly. The size of hash indexes depends solely on the number of indexed data, making them efficient for specific query types.</p>
+
+
+
+<h4 class="wp-block-heading">Hash functions and buckets</h4>
+
+
+
+<p class="wp-block-paragraph">In hash indexing, a crucial component is the hash function that maps keys to index positions. This mapping enables swift retrieval of records based on specific key values, enhancing query performance significantly. Additionally, hash indexes utilize buckets to store data efficiently and ensure quick access during search operations.</p>
+
+
+
+<h4 class="wp-block-heading">Collision resolution techniques</h4>
+
+
+
+<p class="wp-block-paragraph">While implementing hash indexes, collision resolution techniques play a vital role in maintaining data integrity and search accuracy. By addressing collisions effectively, databases can ensure that each key maps uniquely to its associated value, preventing data inconsistencies.</p>
+
+
+
+<h3 class="wp-block-heading">Performance of Hash Indexing</h3>
+
+
+
+<h4 class="wp-block-heading">Search operations</h4>
+
+
+
+<p class="wp-block-paragraph">Hash indexing excels in search operations by swiftly retrieving exact matches based on primary key values. The direct mapping facilitated by hash functions allows for unparalleled efficiency in locating specific records within the dataset.</p>
+
+
+
+<h4 class="wp-block-heading">Insertions and deletions</h4>
+
+
+
+<p class="wp-block-paragraph">When it comes to insertions and deletions, hash indexes offer rapid data modification capabilities due to their direct mapping approach. By efficiently updating index positions using hash functions, databases can manage changes seamlessly without compromising search performance.</p>
+
+
+
+<h4 class="wp-block-heading">Space complexity</h4>
+
+
+
+<p class="wp-block-paragraph">The space complexity of hash indexing is proportional only to the volume of indexed data. This characteristic makes hash indexes suitable for applications with varying dataset sizes where memory usage is a concern. Despite potential memory limitations for large datasets, hash indexing remains a valuable tool for optimizing query speed.</p>
+
+
+
+<h3 class="wp-block-heading">Use Cases of Hash Indexing</h3>
+
+
+
+<h4 class="wp-block-heading">Exact match queries</h4>
+
+
+
+<p class="wp-block-paragraph">Hash indexing is particularly beneficial for scenarios requiring fast lookups based on exact primary key matches. The direct mapping feature ensures quick access to specific records without the need for extensive scanning or traversal through the entire dataset.</p>
+
+
+
+<h4 class="wp-block-heading">High-speed lookups</h4>
+
+
+
+<p class="wp-block-paragraph">For applications demanding high-speed data retrieval and efficient query processing, hash indexing offers optimal performance. By leveraging hash functions and direct mappings, databases can achieve rapid lookup times even with substantial amounts of indexed data.</p>
+
+
+
+<h4 class="wp-block-heading">Situations with uniform data distribution</h4>
+
+
+
+<p class="wp-block-paragraph">Hash indexes are well-suited for situations where data distribution is uniform across the dataset. In such cases, the hashing function efficiently distributes keys to index positions without causing significant clustering or uneven access patterns.</p>
+
+
+
+<h2 class="wp-block-heading"><span class="ez-toc-section" id="Comparison_of_B-Tree_and_Hash_Indexing"></span>Comparison of B-Tree and Hash Indexing<span class="ez-toc-section-end"></span></h2>
+
+
+
+<p class="wp-block-paragraph">When comparing<strong> </strong>B-Tree and Hash indexing, distinct characteristics and performance aspects come to light. B-Trees excel in scenarios requiring consistent performance, high scalability, and efficient range queries. On the other hand, Hash indexes shine in exact-match query situations but may not be ideal for databases with frequent updates or complex search patterns.</p>
+
+
+
+<h3 class="wp-block-heading">Performance Comparison</h3>
+
+
+
+<h4 class="wp-block-heading">Search efficiency</h4>
+
+
+
+<ul class="wp-block-list">
+<li><p>B-Trees demonstrate remarkable search efficiency by minimizing disk accesses for data retrieval, ensuring swift query processing even in extensive datasets.</p></li>
+
+
+
+<li><p>In contrast, Hash indexes offer unparalleled speed in locating exact matches based on primary key values, providing swift access to specific records within the dataset.</p></li>
+</ul>
+
+
+
+<h4 class="wp-block-heading">Insertions and deletions</h4>
+
+
+
+<ul class="wp-block-list">
+<li><p>When it comes to insertions and deletions, B-Trees maintain their balanced structure through dynamic adjustments, optimizing data modifications effectively.</p></li>
+
+
+
+<li><p>Conversely, Hash indexes facilitate rapid data modifications due to their direct mapping approach using hash functions, ensuring seamless changes without compromising search performance.</p></li>
+</ul>
+
+
+
+<h4 class="wp-block-heading">Space utilization</h4>
+
+
+
+<ul class="wp-block-list">
+<li>The space utilization of B-Trees is efficient as they store large amounts of data structuredly without excessive memory overhead, making them suitable for handling massive datasets.</li>
+
+
+
+<li>In comparison, the space complexity of Hash indexes is proportional only to the volume of indexed data. This feature makes them ideal for applications with varying dataset sizes where memory usage is a concern.</li>
+</ul>
+
+
+
+<h3 class="wp-block-heading">Use Case Comparison</h3>
+
+
+
+<h4 class="wp-block-heading">Suitability for different query types</h4>
+
+
+
+<ul class="wp-block-list">
+<li>For efficient range queries on numerical values, a B-Tree index might be the preferred choice due to its balanced tree structure that facilitates efficient data insertion and retrieval.</li>
+
+
+
+<li>In contrast, Hash indexes are more beneficial for exact match queries where fast lookups based on primary key matches are essential.</li>
+</ul>
+
+
+
+<h4 class="wp-block-heading">Scalability considerations</h4>
+
+
+
+<ul class="wp-block-list">
+<li>B-Tree, being widely used in RDBMS systems, offers consistent performance overall and high scalability compared to Hash indexes which may not be optimal for databases with frequent updates or complex search patterns.</li>
+</ul>
+
+
+
+<h4 class="wp-block-heading">Practical examples</h4>
+
+
+
+<ol class="wp-block-list">
+<li>Consider a scenario where range queries on numerical values are prevalent; in such cases, utilizing a B-Tree index would enhance query efficiency significantly.</li>
+
+
+
+<li>On the other hand, when dealing with exact match queries based on primary key values in a database system with low cardinality columns or random row access requirements, employing Hash indexing would expedite data retrieval processes.</li>
+</ol>
+
+
+
+<ul class="wp-block-list">
+<li>Selecting between B-Tree and Hash indexing hinges on the database&#8217;s specific requirements and query patterns.</li>
+
+
+
+<li>Indexes are indispensable for enhancing data search efficiency and optimizing query performance.</li>
+
+
+
+<li>By transforming full-table scans into direct lookups, indexes play a pivotal role in improving database performance.</li>
+
+
+
+<li>Leveraging covering indexes can expedite search queries by reducing disk I/O operations, thus enhancing overall search query performance.</li>
+</ul>
+                    </div>
+
+                                        <br />
+                </div>
+
+                <div class="tmpl-single-article__right">
+                    <div class="tmpl-single-article__right-content">
+                        <p>Last updated June 28, 2024</p>
+                        <div id="ez-toc">
+                            <div id="ez-toc-container" class="ez-toc-v2_0_86 counter-hierarchy ez-toc-counter ez-toc-grey ez-toc-container-direction">
+<div class="ez-toc-title-container">
+<p class="ez-toc-title" style="cursor:inherit">Table of Contents</p>
+<span class="ez-toc-title-toggle"></span></div>
+<nav><ul class='ez-toc-list ez-toc-list-level-1 ' ><li class='ez-toc-page-1 ez-toc-heading-level-2'><a class="ez-toc-link ez-toc-heading-1" href="#B-Tree_Indexing" >B-Tree Indexing</a></li><li class='ez-toc-page-1 ez-toc-heading-level-2'><a class="ez-toc-link ez-toc-heading-2" href="#Hash_Indexing" >Hash Indexing</a></li><li class='ez-toc-page-1 ez-toc-heading-level-2'><a class="ez-toc-link ez-toc-heading-3" href="#Comparison_of_B-Tree_and_Hash_Indexing" >Comparison of B-Tree and Hash Indexing</a></li></ul></nav></div>
+                        </div>
+                                <div class="tmpl-single-post__cta sticky ">
+            <div class="tmpl-single-post__cta-container" style="background-image:url('https://static.pingcap.com/files/2024/05/17233719/CTA-BG-Blue.png')">
+                                <div class="tmpl-single-post__cta-content"><p>Spin up a database with 25 GiB free resources.</p></div>
+                <div class="tmpl-single-post__cta-button">
+                    		<a class="button button-white" href="https://tidbcloud.com/free-trial/"  data-gtag="event:go_to_cloud_signup,button_name:Start Right Away,position:right_sidebar_cta,product_type: starter">
+			Start Right Away		</a>
+                </div>
+            </div>
+        </div>
+                    </div>
+                </div>
+
+                <div class="tmpl-single-post__share-icons">
+                    <div class="tmpl-single-post__share-icons-inner">
+                        <span class="tmpl-single-post__share-icons-text">Share:</span>
+                        		<a class="share-icon share-icon--facebook" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fwww.pingcap.com%2Farticle%2Funderstanding-b-tree-and-hash-indexing-in-databases%2F" data-social-share="facebook" aria-label="Share on Facebook">
+			<svg width="25" height="25" viewbox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" x="0px" y="0px" class="share-icon__icon"><use xlink:href="#social-facebook"></use></svg>		</a>
+				<a class="share-icon share-icon--twitter" href="https://twitter.com/intent/tweet?text=Understanding%20B-Tree%20and%20Hash%20Indexing%20in%20Databases%20%40PingCAP%20https%3A%2F%2Fwww.pingcap.com%2Farticle%2Funderstanding-b-tree-and-hash-indexing-in-databases%2F" data-social-share="twitter" aria-label="Share on Twitter">
+			<svg width="25" height="25" viewbox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" x="0px" y="0px" class="share-icon__icon"><use xlink:href="#social-twitter"></use></svg>		</a>
+				<a class="share-icon share-icon--linkedin" href="https://www.linkedin.com/shareArticle?url=https%3A%2F%2Fwww.pingcap.com%2Farticle%2Funderstanding-b-tree-and-hash-indexing-in-databases%2F&#038;title=Understanding%20B-Tree%20and%20Hash%20Indexing%20in%20Databases" data-social-share="linkedin" aria-label="Share on LinkedIn">
+			<svg width="25" height="25" viewbox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" x="0px" y="0px" class="share-icon__icon"><use xlink:href="#social-linkedin"></use></svg>		</a>
+		                    </div>
+                </div>
+            </div>
+    	<section data-block-index="1" class="block-bg-image block-container block-columns block-index-1" style="background-image: url(https://static.pingcap.com/files/2024/05/17233605/CTA-BG.png);" aria-label="Columns">
+			<div class="block-inner contain grid is-8" data-num-col="1" data-format="">
+					<div class="block-columns__column wysiwyg">
+				<h3 style="text-align: center">💬 Let’s Build Better Experiences — Together</h3>
+<p style="text-align: center;font-size: 26px;line-height: 1.5">Join our Discord to ask questions, share wins, and shape what’s next.</p>
+<p style="text-align: center"><a class="button" href="https://discord.gg/McrNkbeFRd?utm_source=article" target="_blank" rel="noopener noreferrer" data-gtag="event:go_to_lead_form_page,button_name:Join Now,position:bottom_cta">Join Now</a></p>
+			</div>
+			</div>
+	</section>
+	</main>
+<script src="https://tidb.ai/widget.js" data-chat-engine="pingcap-website-en" data-measurement-id="G-V9DTEYJNK2" data-api-base="https://tidb.ai" async></script>
+		<footer class="site-footer bg-black-dark">
+			<div class="contain site-footer__inner">
+				<div class="site-footer__language-links notranslate" translate="no" data-no-translation>
+					<div class="site-footer__language-select notranslate" translate="no" data-no-translation>
+						<i class="icon-globe"></i>English<svg width="12" height="8" viewbox="0 0 12 8" fill="none" xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" x="0px" y="0px"><use xlink:href="#general-chevron-down-white"></use></svg>					</div>
+					<div class="site-footer__language-options notranslate" translate="no" data-no-translation>
+													<a class="notranslate" translate="no" data-no-translation href="https://pingcap.co.jp/">日本語</a>
+											</div>
+				</div>
+				<div class="site-footer__row-top">
+											<nav class="site-footer__col-links">
+															<div class="site-footer__links-group">
+									<div class="site-footer__links-group-title">Product</div>
+																			<a class="site-footer__links-group-link" href="/tidb/" data-gtag="event:eng_footer_click,item_name:Product Overview">
+																						Product Overview										</a>
+																			<a class="site-footer__links-group-link" href="/tidb/cloud/" data-gtag="event:eng_footer_click,item_name:TiDB Cloud">
+																						TiDB Cloud										</a>
+																			<a class="site-footer__links-group-link" href="/tidb/self-managed/" data-gtag="event:eng_footer_click,item_name:TiDB Self-Managed">
+																						TiDB Self-Managed										</a>
+																			<a class="site-footer__links-group-link" href="https://www.pingcap.com/pricing/" data-gtag="event:eng_footer_click,item_name:Pricing">
+																						Pricing										</a>
+																	</div>
+																						<div class="site-footer__language-links notranslate" translate="no" data-no-translation>
+									<div class="site-footer__language-select notranslate" translate="no" data-no-translation>
+										<i class="icon-globe"></i>English<svg width="12" height="8" viewbox="0 0 12 8" fill="none" xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" x="0px" y="0px"><use xlink:href="#general-chevron-down-white"></use></svg>									</div>
+									<div class="site-footer__language-options notranslate" translate="no" data-no-translation>
+																					<a class="notranslate" translate="no" data-no-translation href="https://pingcap.co.jp/">日本語</a>
+																			</div>
+								</div>
+													</nav>
+											<nav class="site-footer__col-links">
+															<div class="site-footer__links-group">
+									<div class="site-footer__links-group-title">Ecosystem</div>
+																			<a class="site-footer__links-group-link" href="https://www.pingcap.com/integrations/" data-gtag="event:eng_footer_click,item_name:Integrations">
+																						Integrations										</a>
+																			<a class="site-footer__links-group-link" href="https://github.com/tikv/tikv" data-gtag="event:eng_footer_click,item_name:TiKV">
+																						TiKV										</a>
+																			<a class="site-footer__links-group-link" href="https://mem9.ai/" data-gtag="event:eng_footer_click,item_name:mem9">
+																						mem9										</a>
+																			<a class="site-footer__links-group-link" href="https://www.pingcap.com/tidb/tidb-cloud-filesystems/" data-gtag="event:eng_footer_click,item_name:TiDB Cloud Filesystems">
+																						TiDB Cloud Filesystems										</a>
+																			<a class="site-footer__links-group-link" href="https://ossinsight.io/" data-gtag="event:eng_footer_click,item_name:OSS Insight">
+																						OSS Insight										</a>
+																	</div>
+																				</nav>
+											<nav class="site-footer__col-links">
+															<div class="site-footer__links-group">
+									<div class="site-footer__links-group-title">Resources</div>
+																			<a class="site-footer__links-group-link" href="https://www.pingcap.com/blog/" data-gtag="event:eng_footer_click,item_name:Blog">
+																						Blog										</a>
+																			<a class="site-footer__links-group-link" href="/article/" data-gtag="event:eng_footer_click,item_name:Articles">
+																						Articles										</a>
+																			<a class="site-footer__links-group-link" href="/event" data-gtag="event:eng_footer_click,item_name:Events & Webinars">
+																						Events &amp; Webinars										</a>
+																			<a class="site-footer__links-group-link" href="/tidb-scaile-summit/" data-gtag="event:eng_footer_click,item_name:TiDB SCaiLE">
+																						TiDB SCaiLE										</a>
+																			<a class="site-footer__links-group-link" href="https://docs.pingcap.com" data-gtag="event:eng_footer_click,item_name:Docs">
+																						Docs										</a>
+																			<a class="site-footer__links-group-link" href="https://docs.pingcap.com/developer/" data-gtag="event:eng_footer_click,item_name:Developer Guide">
+																						Developer Guide										</a>
+																			<a class="site-footer__links-group-link" href="https://docs.pingcap.com/tidb/stable/faq-overview/" data-gtag="event:eng_footer_click,item_name:FAQs">
+																						FAQs										</a>
+																			<a class="site-footer__links-group-link" href="https://tidb.support.pingcap.com/" data-gtag="event:eng_footer_click,item_name:Support">
+																						Support										</a>
+																	</div>
+																				</nav>
+											<nav class="site-footer__col-links">
+															<div class="site-footer__links-group">
+									<div class="site-footer__links-group-title">Company</div>
+																			<a class="site-footer__links-group-link" href="https://www.pingcap.com/about-us/" data-gtag="event:eng_footer_click,item_name:About Us">
+																						About Us										</a>
+																			<a class="site-footer__links-group-link" href="/press-releases-news" data-gtag="event:eng_footer_click,item_name:News">
+																						News										</a>
+																			<a class="site-footer__links-group-link" href="https://www.pingcap.com/careers/" data-gtag="event:eng_footer_click,item_name:Careers">
+																						Careers										</a>
+																			<a class="site-footer__links-group-link" href="https://www.pingcap.com/contact-us/" data-gtag="event:eng_footer_click,item_name:Contact Us">
+																						Contact Us										</a>
+																			<a class="site-footer__links-group-link" href="https://www.pingcap.com/partners/" data-gtag="event:eng_footer_click,item_name:Partners">
+																						Partners										</a>
+																			<a class="site-footer__links-group-link" href="https://www.pingcap.com/trust-hub/" data-gtag="event:eng_footer_click,item_name:Trust Hub">
+																						Trust Hub										</a>
+																			<a class="site-footer__links-group-link" href="https://www.pingcap.com/security/" data-gtag="event:eng_footer_click,item_name:Security">
+																						Security										</a>
+																			<a class="site-footer__links-group-link" href="https://www.pingcap.com/tidb-release-support-policy/" data-gtag="event:eng_footer_click,item_name:Release Support">
+																						Release Support										</a>
+																			<a class="site-footer__links-group-link" href="/tidb-brand-guidelines/" data-gtag="event:eng_footer_click,item_name:Brand Guidelines">
+																						Brand Guidelines										</a>
+																	</div>
+																				</nav>
+					
+					<nav class="site-footer__col-links">
+						<div class="site-footer__links-group">
+															<div class="site-footer__links-group-title">Stay Connected</div>
+								<div class="block-cta">
+									<div class="block-cta__subscribe-form">
+										<div class="hs-form-container dark hs-form-container--d74dfb7c-a14a-4f8d-ab28-eba7a00e7900-6ab35090d54e1  "></div>									</div>
+								</div>
+								<p>Sign up to receive periodic updates and<br />feature releases to your email.</p>
+														<div class="site-footer__social-group">
+																	<a class="site-footer__social-group-link" href="https://github.com/pingcap">
+										<svg width="25" height="25" viewbox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" x="0px" y="0px" class="site-footer__social-icon"><use xlink:href="#social-github"></use></svg>									</a>
+																	<a class="site-footer__social-group-link" href="https://twitter.com/PingCAP">
+										<svg width="25" height="25" viewbox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" x="0px" y="0px" class="site-footer__social-icon"><use xlink:href="#social-twitter"></use></svg>									</a>
+																	<a class="site-footer__social-group-link" href="https://linkedin.com/company/pingcap">
+										<svg width="25" height="25" viewbox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" x="0px" y="0px" class="site-footer__social-icon"><use xlink:href="#social-linkedin"></use></svg>									</a>
+																	<a class="site-footer__social-group-link" href="https://facebook.com/pingcap2015">
+										<svg width="25" height="25" viewbox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" x="0px" y="0px" class="site-footer__social-icon"><use xlink:href="#social-facebook"></use></svg>									</a>
+																	<a class="site-footer__social-group-link" href="https://slack.tidb.io/invite?team=tidb-community&#038;channel=everyone&#038;ref=pingcap">
+										<svg width="25" height="25" viewbox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" x="0px" y="0px" class="site-footer__social-icon"><use xlink:href="#social-slack"></use></svg>									</a>
+																	<a class="site-footer__social-group-link" href="https://discord.com/invite/vYU9h56kAX">
+										<svg width="25" height="25" viewbox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" x="0px" y="0px" class="site-footer__social-icon"><use xlink:href="#social-discord"></use></svg>									</a>
+																	<a class="site-footer__social-group-link" href="https://www.youtube.com/PingCAP">
+										<svg width="25" height="25" viewbox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" x="0px" y="0px" class="site-footer__social-icon"><use xlink:href="#social-youtube"></use></svg>									</a>
+															</div>
+						</div>
+					</nav>
+				</div>
+				<div class="site-footer__row-bottom">
+					<div class="site-footer__legal">
+						<div class="site-footer__legal-top-row">
+							<span class="site-footer__copyright">&copy; 2026 PingCAP. All Rights Reserved.</span>
+						</div>
+						<div class="site-footer__legal-bottom-row">
+
+							<nav class="site-footer__menu-legal">
+																	<a href="https://www.pingcap.com/privacy-policy/">Privacy Policy</a>
+																	<a href="/legal/">Legal</a>
+															</nav>
+						</div>
+					</div>
+				</div>
+			</div>
+		</footer>
+
+<template id="tp-language" data-tp-language="en_US"></template><script type="speculationrules">
+{"prefetch":[{"source":"document","where":{"and":[{"href_matches":"/*"},{"not":{"href_matches":["/wp-*.php","/cms-dashboard/*","/files/*","/core/*","/core/plugins/*","/core/themes/pingcap/*","/*\\?(.+)"]}},{"not":{"selector_matches":"a[rel~=\"nofollow\"]"}},{"not":{"selector_matches":".no-prefetch, .no-prefetch a"}}]},"eagerness":"conservative"}]}
+</script>
+			<svg style="display:none" width="120" height="50" viewbox="0 0 120 50" fill="none" xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" x="0px" y="0px">
+				<symbol id="general-logo">
+					<g clip-path="url(#clip0_188_1654)"><path d="M49.2754 17.0474H56.0643V37.4118H60.8394V17.0474H67.6283V12.666H49.2754V17.0474Z" fill="white"></path><path d="M72.3708 12.1367C71.6442 12.1367 71.0089 12.3994 70.4774 12.9206C69.9459 13.4418 69.6719 14.0943 69.6719 14.8571C69.6719 15.5774 69.9418 16.2088 70.4733 16.7427C71.0048 17.2723 71.64 17.5435 72.3667 17.5435C73.0933 17.5435 73.6913 17.2723 74.2144 16.7427C74.7376 16.213 74.9992 15.5774 74.9992 14.8571C74.9992 14.0943 74.7418 13.446 74.2311 12.9249C73.7203 12.4037 73.0933 12.141 72.3708 12.141V12.1367Z" fill="white"></path><path d="M74.6908 19.6621H70.0527V37.4121H74.6908V19.6621Z" fill="white"></path><path d="M87.3888 12.666H78.8643V37.4118H87.3888C91.0636 37.4118 93.9826 36.2931 96.067 34.0855C98.1473 31.8779 99.2061 28.8355 99.2061 25.0389C99.2061 21.2423 98.1515 18.1703 96.067 15.9753C93.9826 13.7804 91.0636 12.666 87.3888 12.666ZM83.6393 17.0474H87.2186C89.5937 17.0474 91.3874 17.7508 92.5584 19.1364C93.7335 20.5304 94.3272 22.4669 94.3272 24.8948C94.3272 27.3228 93.7293 29.3397 92.5542 30.8143C91.3833 32.2804 89.5895 33.0262 87.2144 33.0262H83.6352V17.0431L83.6393 17.0474Z" fill="white"></path><path d="M118.651 26.3736C117.862 25.3948 116.923 24.6914 115.869 24.2847V24.2423C118.078 23.1491 119.195 21.3567 119.195 18.916C119.195 17.0219 118.58 15.488 117.372 14.3609C116.164 13.238 114.382 12.666 112.078 12.666H102.079V37.4118H112.011C114.453 37.4118 116.396 36.8016 117.783 35.5982C119.178 34.3906 119.884 32.6745 119.884 30.4965C119.884 28.7719 119.469 27.3864 118.655 26.3736H118.651ZM106.746 22.7042V16.6236H111.455C112.352 16.6236 113.078 16.8948 113.614 17.4287C114.146 17.9626 114.415 18.7084 114.415 19.6491C114.415 20.5897 114.15 21.344 113.627 21.8864C113.103 22.4287 112.352 22.7042 111.384 22.7042H106.742H106.746ZM115.001 30.1448C115.001 31.1321 114.706 31.9372 114.129 32.5389C113.552 33.1406 112.696 33.4457 111.596 33.4457H106.75V26.666H111.596C112.651 26.666 113.494 26.9923 114.096 27.6406C114.698 28.2889 115.005 29.1321 115.005 30.1406L115.001 30.1448Z" fill="white"></path><path d="M21.2877 0.300781L0.293945 12.6694V37.4025L21.2877 49.7711L42.2773 37.4025V12.6694L21.2877 0.300781Z" fill="#DC150B"></path><path d="M14.2876 37.4028V20.9155L7.29102 25.0384V16.7926L21.2882 8.54688L28.2848 12.6698L21.2882 16.7926V41.5257L14.2876 37.4028Z" fill="white"></path><path d="M28.2842 37.4031V20.9159L35.2807 16.793V33.2803L28.2842 37.4031Z" fill="white"></path></g><defs><clippath id="clip0_188_1654"><rect width="120" height="50" fill="white"></rect></clippath></defs>				</symbol>
+			</svg>
+						<svg style="display:none" width="12" height="8" viewbox="0 0 12 8" fill="none" xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" x="0px" y="0px">
+				<symbol id="general-chevron-down">
+					<path d="M1 1L6 6L11 1" stroke="var(--svg-chevron-down-color, currentColor)" stroke-width="1.5" stroke-linecap="round"></path>				</symbol>
+			</svg>
+						<svg style="display:none" width="25" height="25" viewbox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" x="0px" y="0px">
+				<symbol id="social-facebook">
+					<path d="M12.5 0C19.4036 2.57703e-07 25 5.59644 25 12.5C25 19.4036 19.4036 25 12.5 25C5.59644 25 2.57711e-07 19.4036 0 12.5C0 5.59644 5.59644 0 12.5 0ZM13.8301 6.25C11.5748 6.25 10.7812 7.38697 10.7812 9.29883V10.7061H9.375V13.0488H10.7812V19.8496H13.5947V13.0488H15.4717L15.7207 10.7051H13.5947L13.5977 9.53223C13.5977 8.92115 13.6564 8.59375 14.5342 8.59375H15.707V6.25H13.8301Z" fill="white"></path>				</symbol>
+			</svg>
+						<svg style="display:none" width="25" height="25" viewbox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" x="0px" y="0px">
+				<symbol id="social-twitter">
+					<path d="M12.5 0C19.4036 2.57703e-07 25 5.59644 25 12.5C25 19.4036 19.4036 25 12.5 25C5.59644 25 2.57711e-07 19.4036 0 12.5C0 5.59644 5.59644 0 12.5 0ZM11.2598 13.667L5.95898 19.8242H7.15625L11.792 14.4404L15.4941 19.8242H19.5371L14.0391 11.8301L19.0947 5.95801H17.8965L13.5078 11.0566L10.002 5.95801H5.95898L11.2598 13.667ZM12.877 11.7891L13.4141 12.5566L17.8975 18.9648H16.0576L12.3984 13.7354L11.8613 12.9678L7.58789 6.85938H9.42773L12.877 11.7891Z" fill="white"></path>				</symbol>
+			</svg>
+						<svg style="display:none" width="25" height="25" viewbox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" x="0px" y="0px">
+				<symbol id="social-linkedin">
+					<path d="M12.5 0C19.4036 2.57703e-07 25 5.59644 25 12.5C25 19.4036 19.4036 25 12.5 25C5.59644 25 2.57711e-07 19.4036 0 12.5C0 5.59644 5.59644 0 12.5 0ZM5.89648 10.3525V18.8643H8.72949V10.3525H5.89648ZM15.6836 10.1533C14.18 10.1535 13.5068 10.9791 13.1309 11.5586V10.3535H10.2979C10.335 11.1513 10.2981 18.8129 10.2979 18.8643H13.1309V14.1113C13.1309 13.857 13.1488 13.603 13.2236 13.4209C13.4284 12.9127 13.8951 12.3867 14.6777 12.3867C15.7029 12.3869 16.1123 13.167 16.1123 14.3105V18.8643H18.9453V13.9844C18.9453 11.3701 17.5477 10.1533 15.6836 10.1533ZM7.33203 6.25C6.36309 6.25 5.72967 6.88537 5.72949 7.71973C5.72949 8.53695 6.34393 9.19138 7.29492 9.19141H7.31348C8.30099 9.19123 8.91602 8.53686 8.91602 7.71973C8.89747 6.88545 8.3008 6.25012 7.33203 6.25Z" fill="white"></path>				</symbol>
+			</svg>
+						<svg style="display:none" width="12" height="8" viewbox="0 0 12 8" fill="none" xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" x="0px" y="0px">
+				<symbol id="general-chevron-down-white">
+					<path d="M1 1L6 6L11 1" stroke="#fff" stroke-width="1.5" stroke-linecap="round"></path>				</symbol>
+			</svg>
+						<svg style="display:none" width="25" height="25" viewbox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" x="0px" y="0px">
+				<symbol id="social-github">
+					<path d="M12.5223 0.09375C5.63239 0.09375 0.0454102 5.77495 0.0454102 12.7836C0.0454102 18.3904 3.62041 23.1472 8.57785 24.8252C9.2014 24.9427 9.43033 24.5499 9.43033 24.2147C9.43033 23.9121 9.41876 22.9125 9.41339 21.8521C5.94231 22.6198 5.20987 20.3548 5.20987 20.3548C4.64231 18.888 3.82454 18.498 3.82454 18.498C2.69252 17.7104 3.90987 17.7266 3.90987 17.7266C5.16277 17.8159 5.82248 19.0343 5.82248 19.0343C6.93529 20.9743 8.74128 20.4135 9.45326 20.0892C9.56524 19.2692 9.88859 18.709 10.2454 18.3923C7.47413 18.0714 4.56091 16.9833 4.56091 12.1208C4.56091 10.7354 5.0483 9.60332 5.84644 8.71463C5.7169 8.3948 5.28983 7.10431 5.96731 5.35635C5.96731 5.35635 7.01504 5.01529 9.39934 6.65713C10.3946 6.37596 11.4619 6.23495 12.5223 6.23012C13.5826 6.23495 14.6508 6.37596 15.6479 6.65713C18.0293 5.01529 19.0756 5.35635 19.0756 5.35635C19.7547 7.10431 19.3274 8.3948 19.1979 8.71463C19.9979 9.60332 20.482 10.7354 20.482 12.1208C20.482 16.9949 17.5632 18.0681 14.7849 18.3822C15.2324 18.776 15.6312 19.5483 15.6312 20.7323C15.6312 22.43 15.6167 23.7966 15.6167 24.2147C15.6167 24.5524 15.8413 24.9481 16.4737 24.8235C21.4285 23.1436 24.9989 18.3885 24.9989 12.7836C24.9989 5.77495 19.4128 0.09375 12.5223 0.09375Z" fill="white"></path><path d="M4.77116 18.3138C4.74368 18.3771 4.64616 18.3958 4.55732 18.3525C4.46682 18.3111 4.41599 18.2252 4.44533 18.1619C4.47219 18.097 4.56992 18.0791 4.66021 18.1222C4.75091 18.1638 4.80256 18.2506 4.77116 18.3138Z" fill="white"></path><path d="M5.27628 18.887C5.21677 18.9431 5.10045 18.917 5.02152 18.8283C4.93991 18.7399 4.92462 18.6216 4.98495 18.5646C5.04632 18.5085 5.15913 18.5348 5.24095 18.6232C5.32256 18.7128 5.33847 18.8302 5.27628 18.887Z" fill="white"></path><path d="M5.76847 19.6179C5.69202 19.6719 5.56702 19.6213 5.48975 19.5084C5.4133 19.3956 5.4133 19.2603 5.4914 19.206C5.56888 19.1518 5.69202 19.2006 5.77033 19.3126C5.84657 19.4271 5.84657 19.5626 5.76847 19.6179Z" fill="white"></path><path d="M6.44224 20.3239C6.37385 20.4006 6.22819 20.38 6.12158 20.2754C6.01249 20.173 5.98211 20.0278 6.05071 19.9511C6.11992 19.8742 6.26641 19.8959 6.37385 19.9997C6.48211 20.1018 6.51517 20.2481 6.44224 20.3239Z" fill="white"></path><path d="M7.372 20.7341C7.34184 20.8335 7.20155 20.8787 7.06023 20.8365C6.91911 20.793 6.82675 20.6766 6.85527 20.5761C6.88461 20.4761 7.02552 20.429 7.16787 20.4742C7.30878 20.5175 7.40134 20.6331 7.372 20.7341Z" fill="white"></path><path d="M8.39309 20.8103C8.3966 20.9149 8.27677 21.0017 8.12842 21.0034C7.97925 21.007 7.85859 20.9223 7.85693 20.8193C7.85693 20.7136 7.97408 20.6277 8.12326 20.6251C8.2716 20.6222 8.39309 20.7063 8.39309 20.8103Z" fill="white"></path><path d="M9.34349 20.6455C9.36126 20.7477 9.25816 20.8525 9.11084 20.8803C8.96601 20.9074 8.83192 20.8443 8.81353 20.743C8.79555 20.6384 8.90051 20.5335 9.04514 20.5064C9.19266 20.4804 9.32469 20.5417 9.34349 20.6455Z" fill="white"></path>				</symbol>
+			</svg>
+						<svg style="display:none" width="25" height="25" viewbox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" x="0px" y="0px">
+				<symbol id="social-slack">
+					<path d="M12.5 0C19.4036 2.57703e-07 25 5.59644 25 12.5C25 19.4036 19.4036 25 12.5 25C5.59644 25 2.57711e-07 19.4036 0 12.5C0 5.59644 5.59644 0 12.5 0ZM11.0615 13.2637C10.2599 13.2638 9.60551 13.9191 9.60547 14.7207V18.3682C9.60548 19.1698 10.2599 19.8251 11.0615 19.8252C11.8632 19.8252 12.5185 19.1699 12.5186 18.3682V14.7207C12.5185 13.919 11.8632 13.2637 11.0615 13.2637ZM13.2646 16.9111V18.3682C13.2646 19.1698 13.9192 19.825 14.7207 19.8252C15.5224 19.8252 16.1777 19.1699 16.1777 18.3682C16.1777 17.5664 15.5224 16.9111 14.7207 16.9111H13.2646ZM7.41504 13.2637C6.61336 13.2637 5.95804 13.919 5.95801 14.7207C5.95801 15.5224 6.61334 16.1777 7.41504 16.1777C8.21666 16.1776 8.87109 15.5224 8.87109 14.7207V13.2637H7.41504ZM14.7207 13.2637C13.9192 13.2639 13.2647 13.9191 13.2646 14.7207C13.2646 15.5223 13.9192 16.1775 14.7207 16.1777H18.3682C19.1699 16.1777 19.8252 15.5224 19.8252 14.7207C19.8251 13.919 19.1698 13.2637 18.3682 13.2637H14.7207ZM7.41504 9.60547C6.61334 9.60547 5.95801 10.2608 5.95801 11.0625C5.95825 11.864 6.61349 12.5186 7.41504 12.5186H11.0625C11.8639 12.5183 12.5183 11.8639 12.5186 11.0625C12.5186 10.2609 11.864 9.60571 11.0625 9.60547H7.41504ZM14.7207 5.95801C13.9192 5.95823 13.2646 6.61344 13.2646 7.41504V11.0625C13.2649 11.8639 13.9193 12.5183 14.7207 12.5186C15.5223 12.5186 16.1775 11.864 16.1777 11.0625V7.41504C16.1777 6.6133 15.5224 5.95801 14.7207 5.95801ZM18.3682 9.60547C17.5665 9.60547 16.9111 10.2608 16.9111 11.0625V12.5186H18.3682C19.1696 12.5184 19.824 11.864 19.8242 11.0625C19.8242 10.2608 19.1698 9.60559 18.3682 9.60547ZM11.0615 5.95801C10.2599 5.9581 9.60547 6.61336 9.60547 7.41504C9.60566 8.21656 10.26 8.871 11.0615 8.87109H12.5186V7.41504C12.5186 6.6133 11.8632 5.95801 11.0615 5.95801Z" fill="white"></path>				</symbol>
+			</svg>
+						<svg style="display:none" width="25" height="25" viewbox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" x="0px" y="0px">
+				<symbol id="social-discord">
+					<path d="M12.5 0C19.4036 2.57703e-07 25 5.59644 25 12.5C25 19.4036 19.4036 25 12.5 25C5.59644 25 2.57711e-07 19.4036 0 12.5C0 5.59644 5.59644 0 12.5 0ZM14.8438 7.58301C14.7086 7.82467 14.5865 8.07355 14.4775 8.32812C13.4253 8.16956 12.355 8.16958 11.3027 8.32812C11.1937 8.07356 11.0707 7.82471 10.9355 7.58301C9.94712 7.75158 8.98507 8.04872 8.07324 8.46582C6.26288 11.1444 5.77219 13.7561 6.01758 16.3311C7.0777 17.1143 8.26397 17.7105 9.52539 18.0928C9.80947 17.7107 10.0613 17.3051 10.2773 16.8809C9.86707 16.7276 9.47086 16.5381 9.09375 16.3154C9.19293 16.2435 9.29006 16.1696 9.38379 16.0977C10.4811 16.6137 11.679 16.8809 12.8916 16.8809C14.1042 16.8809 15.3021 16.6137 16.3994 16.0977C16.4942 16.175 16.5914 16.2489 16.6895 16.3154C16.3117 16.5384 15.9148 16.7283 15.5039 16.8818C15.7196 17.3059 15.9706 17.7113 16.2549 18.0928C17.5175 17.7121 18.7052 17.1161 19.7656 16.332C20.0535 13.3459 19.2745 10.7576 17.7051 8.46289C16.794 8.04579 15.8317 7.75016 14.8438 7.58301ZM10.5859 11.9736C11.2872 11.9737 11.8479 12.5999 11.8359 13.3633C11.8239 14.1267 11.2848 14.7471 10.5879 14.7471C9.90414 14.747 9.33887 14.1267 9.33887 13.3633C9.33894 12.5999 9.88469 11.9736 10.5859 11.9736ZM15.1953 11.9736C15.8975 11.9738 16.4533 12.6 16.4414 13.3633C16.4294 14.1266 15.8921 14.7469 15.1953 14.7471C14.5104 14.7471 13.9473 14.1267 13.9473 13.3633C13.9473 12.5999 14.493 11.9736 15.1953 11.9736Z" fill="white"></path>				</symbol>
+			</svg>
+						<svg style="display:none" width="25" height="25" viewbox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" x="0px" y="0px">
+				<symbol id="social-youtube">
+					<path d="M12.5 0C19.4036 2.57703e-07 25 5.59644 25 12.5C25 19.4036 19.4036 25 12.5 25C5.59644 25 2.57711e-07 19.4036 0 12.5C0 5.59644 5.59644 0 12.5 0ZM12.5 7.91699C12.4912 7.91699 8.32992 7.91736 7.29102 8.20312C6.71736 8.36054 6.26568 8.8241 6.1123 9.41309C5.83576 10.473 5.83302 12.6762 5.83301 12.708C5.83301 12.708 5.83374 14.9362 6.1123 16.0039C6.26575 16.5928 6.71744 17.0564 7.29102 17.2139C8.33001 17.4995 12.4912 17.5 12.5 17.5C12.5 17.5 16.669 17.4999 17.709 17.2139C18.2826 17.0564 18.7343 16.5928 18.8877 16.0039C19.1663 14.9362 19.167 12.708 19.167 12.708C19.167 12.6762 19.1643 10.473 18.8877 9.41309C18.7343 8.82409 18.2826 8.36054 17.709 8.20312C16.6691 7.91704 12.5 7.91699 12.5 7.91699Z" fill="white"></path><path d="M11.25 14.9998V10.8331L14.5833 12.9165L11.25 14.9998Z" fill="white"></path>				</symbol>
+			</svg>
+					<!--[if lte IE 8]>
+		<script src="//js.hsforms.net/forms/v2-legacy.js"></script>
+		<![endif]-->
+		<script src="//js.hsforms.net/forms/v2.js"></script>
+		<script>
+			const lead_type_map = {
+				'demo': 'book_demo',
+				'contact-us': 'contact_us',
+				'ebook-whitepaper': 'ebook_download',
+				'event': 'event_registration',
+				'tidb-enterprise': 'get_tidb_enterprise_edition',
+			};
+			if (window.hbspt !== 'undefined') {
+									hbspt.forms.create({
+						...{"portalId":"4466002","formId":"d74dfb7c-a14a-4f8d-ab28-eba7a00e7900","target":".hs-form-container--d74dfb7c-a14a-4f8d-ab28-eba7a00e7900-6ab35090d54e1","sfdcCampaignId":"","css":""},
+						onFormSubmit: function($form) {
+							window.gtag && window.gtag({
+								event: 'lead_form_submit_complete',
+								button_name: 'SUBMIT',
+								lead_type: lead_type_map[window.location.pathname.split('/')[1]] || ''
+							});
+						}
+					});
+								window.addEventListener('message', (event) => {
+					if (event.data.type === 'hsFormCallback' && event.data.eventName === 'onFormReady') {
+						document.querySelectorAll('.hs-form-container').forEach(el => {
+							el.addEventListener('submit', function(event) {
+								window.gtag && window.gtag({
+									event: 'lead_form_submit_click',
+									button_name: 'SUBMIT',
+									lead_type: lead_type_map[window.location.pathname.split('/')[1]] || ''
+								});
+							});
+						})
+					}
+				});
+
+			}
+		</script>
+<script id="eztoc-scroll-scriptjs-js-extra">
+var eztoc_smooth_local = {"scroll_offset":"30","add_request_uri":"","add_self_reference_link":""};
+//# sourceURL=eztoc-scroll-scriptjs-js-extra
+</script>
+<script defer id="eztoc-scroll-scriptjs-js" src="https://www.pingcap.com/core/plugins/easy-table-of-contents/assets/js/smooth_scroll.min.js?ver=2.0.86"></script>
+<script defer id="eztoc-js-cookie-js" src="https://www.pingcap.com/core/plugins/easy-table-of-contents/vendor/js-cookie/js.cookie.min.js?ver=2.2.1"></script>
+<script defer id="eztoc-jquery-sticky-kit-js" src="https://www.pingcap.com/core/plugins/easy-table-of-contents/vendor/sticky-kit/jquery.sticky-kit.min.js?ver=1.9.2"></script>
+<script id="eztoc-js-js-extra">
+var ezTOC = {"smooth_scroll":"1","scroll_offset":"30","fallbackIcon":"\u003Cspan class=\"\"\u003E\u003Cspan class=\"eztoc-hide\" style=\"display:none;\"\u003EToggle\u003C/span\u003E\u003Cspan class=\"ez-toc-icon-toggle-span\"\u003E\u003Csvg style=\"fill: #999;color:#999\" xmlns=\"http://www.w3.org/2000/svg\" class=\"list-377408\" width=\"20px\" height=\"20px\" viewBox=\"0 0 24 24\" fill=\"none\"\u003E\u003Cpath d=\"M6 6H4v2h2V6zm14 0H8v2h12V6zM4 11h2v2H4v-2zm16 0H8v2h12v-2zM4 16h2v2H4v-2zm16 0H8v2h12v-2z\" fill=\"currentColor\"\u003E\u003C/path\u003E\u003C/svg\u003E\u003Csvg style=\"fill: #999;color:#999\" class=\"arrow-unsorted-368013\" xmlns=\"http://www.w3.org/2000/svg\" width=\"10px\" height=\"10px\" viewBox=\"0 0 24 24\" version=\"1.2\" baseProfile=\"tiny\"\u003E\u003Cpath d=\"M18.2 9.3l-6.2-6.3-6.2 6.3c-.2.2-.3.4-.3.7s.1.5.3.7c.2.2.4.3.7.3h11c.3 0 .5-.1.7-.3.2-.2.3-.5.3-.7s-.1-.5-.3-.7zM5.8 14.7l6.2 6.3 6.2-6.3c.2-.2.3-.5.3-.7s-.1-.5-.3-.7c-.2-.2-.4-.3-.7-.3h-11c-.3 0-.5.1-.7.3-.2.2-.3.5-.3.7s.1.5.3.7z\"/\u003E\u003C/svg\u003E\u003C/span\u003E\u003C/span\u003E","chamomile_theme_is_on":""};
+//# sourceURL=eztoc-js-js-extra
+</script>
+<script defer id="eztoc-js-js" src="https://www.pingcap.com/core/plugins/easy-table-of-contents/assets/js/front.min.js?ver=2.0.86-1786507884"></script>
+<script id="master_js-js-extra">
+var siteConfig = {"apiSettings":{"base":"https://www.pingcap.com/wp-json/","nonce":""},"prism":{"assetBase":"https://www.pingcap.com/core/themes/pingcap/prism-js","availableLanguages":["abap","abnf","actionscript","ada","agda","al","antlr4","apacheconf","apex","apl","applescript","aql","arduino","arff","asciidoc","asm6502","asmatmel","aspnet","autohotkey","autoit","avisynth","avro-idl","bash","basic","batch","bbcode","bicep","birb","bison","bnf","brainfuck","brightscript","bro","bsl","c","cfscript","chaiscript","cil","clike","clojure","cmake","cobol","coffeescript","concurnas","coq","core","cpp","crystal","csharp","cshtml","csp","css-extras","css","csv","cypher","d","dart","dataweave","dax","dhall","diff","django","dns-zone-file","docker","dot","ebnf","editorconfig","eiffel","ejs","elixir","elm","erb","erlang","etlua","excel-formula","factor","false","firestore-security-rules","flow","fortran","fsharp","ftl","gap","gcode","gdscript","gedcom","gherkin","git","glsl","gml","gn","go","graphql","groovy","haml","handlebars","haskell","haxe","hcl","hlsl","hoon","hpkp","hsts","http","ichigojam","icon","icu-message-format","idris","iecst","ignore","inform7","ini","io","j","java","javadoc","javadoclike","javascript","javastacktrace","jexl","jolie","jq","js-extras","js-templates","jsdoc","json","json5","jsonp","jsstacktrace","jsx","julia","keepalived","keyman","kotlin","kumir","kusto","latex","latte","less","lilypond","liquid","lisp","livescript","llvm","log","lolcode","lua","magma","makefile","markdown","markup-templating","markup","matlab","maxscript","mel","mermaid","mizar","mongodb","monkey","moonscript","n1ql","n4js","nand2tetris-hdl","naniscript","nasm","neon","nevod","nginx","nim","nix","nsis","objectivec","ocaml","opencl","openqasm","oz","parigp","parser","pascal","pascaligo","pcaxis","peoplecode","perl","php-extras","php","phpdoc","plsql","powerquery","powershell","processing","prolog","promql","properties","protobuf","psl","pug","puppet","pure","purebasic","purescript","python","q","qml","qore","qsharp","r","racket","reason","regex","rego","renpy","rest","rip","roboconf","robotframework","ruby","rust","sas","sass","scala","scheme","scss","shell-session","smali","smalltalk","smarty","sml","solidity","solution-file","soy","sparql","splunk-spl","sqf","sql","squirrel","stan","stylus","swift","systemd","t4-cs","t4-templating","t4-vb","tap","tcl","textile","toml","tremor","tsx","tt2","turtle","twig","typescript","typoscript","unrealscript","uri","v","vala","vbnet","velocity","verilog","vhdl","vim","visual-basic","warpscript","wasm","wiki","wolfram","wren","xeora","xml-doc","xojo","xquery","yaml","yang","zig"],"availableThemes":["prism-ateliersulphurpool-light","prism-coy","prism-dark","prism-funky","prism-okaidia","prism-solarizedlight","prism-tomorrow","prism-twilight","prism"],"availablePlugins":["command-line","copy-to-clipboard","line-highlight","line-numbers","toolbar"]}};
+//# sourceURL=master_js-js-extra
+</script>
+<script id="master_js-js" defer src="https://static.pingcap.com/dist/js/master.aa073145c0fdabd44aeb.js"></script>
+<!-- Start of HubSpot Embed Code wp -->
+<script type="text/javascript" id="hs-script-loader" async defer src="//js.hs-scripts.com/4466002.js"></script>
+<!-- End of HubSpot Embed Code --></body>
+
+</html>
+<!--
+Performance optimized by Redis Object Cache. Learn more: https://wprediscache.com
+
+Retrieved 8439 objects (2 MB) from Redis using Predis (v2.4.0).
+-->
+
+<!-- Dynamic page generated in 0.464 seconds. -->
+<!-- Cached page generated by WP-Super-Cache on 2026-09-22 21:07:44 -->
+
+<!-- Compression = gzip -->

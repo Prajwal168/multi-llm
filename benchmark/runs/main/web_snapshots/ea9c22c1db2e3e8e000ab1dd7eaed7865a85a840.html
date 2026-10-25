@@ -1,0 +1,2898 @@
+<!DOCTYPE html>
+
+
+
+
+<html lang="en">
+    <head><!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-2EBR0PQ64G"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-2EBR0PQ64G');
+</script>
+
+
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Creating Tables and Schema Design</title>
+        
+        <link rel="stylesheet" href="/assets/css/main.css?v=1789943003" type="text/css">
+        <link rel="stylesheet" href="/assets/css/ptor.css?v=1789943003" type="text/css">
+        <script
+  type="text/javascript"
+  src="https://app.termly.io/embed.min.js"
+  data-auto-block="on"
+  data-website-uuid="7b440827-940f-4d19-8062-aa783b781908"
+  ></script>
+        
+   
+        <!-- <link rel=stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" type=text/css"> -->
+        <!-- <script src="https://kit.fontawesome.com/a66cf5c2cf.js" crossorigin="anonymous"></script> -->
+        <!-- <link rel="stylesheet" href="https://kit.fontawesome.com/a66cf5c2cf.css" crossorigin="anonymous"> -->
+        <link rel="stylesheet" href="https://kit.fontawesome.com/a66cf5c2cf.css" crossorigin="anonymous">
+        <script src="https://kit.fontawesome.com/a66cf5c2cf.js" crossorigin="anonymous"></script>
+        <!-- <script defer src="https://pro.fontawesome.com/releases/v5.15.4/js/all.js" integrity="sha384-8nTbev/iV1sg3ESYOAkRPRDMDa5s0sknqroAe9z4DiM+WDr1i/VKi5xLWsn87Car" crossorigin="anonymous"></script> -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+        
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
+        <link rel="stylesheet" href="https://use.typekit.net/bne3rnt.css">
+        <link rel="stylesheet"
+      href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+
+<script>hljs.highlightAll();</script>
+        
+    
+    
+    <meta property="og:image" content="https://www.kevsrobots.com/learn/sqlite3/assets/database.png" />
+    <meta name="twitter:image" content="https://www.kevsrobots.com/learn/sqlite3/assets/database.png" />
+
+
+<meta property="og:description" content="Creating tables in SQLite databases and understanding the principles of schema design. We will explore how to define table structure, data types, constraints, and primary keys" />
+<meta property="description" content="Creating tables in SQLite databases and understanding the principles of schema design. We will explore how to define table structure, data types, constraints, and primary keys" />
+<meta name="description" content="Creating tables in SQLite databases and understanding the principles of schema design. We will explore how to define table structure, data types, constraints, and primary keys" />
+
+
+
+<meta property="date" content="2023-07-15T00:00:00+00:00" />
+
+
+
+<meta property="author" content="Kevin McAleer" />
+
+
+
+<meta property="page-type" content="lesson" />
+
+
+
+
+
+<meta property="twitter:domain" content="https://www.kevsrobots.com" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:url" content="https://www.kevsrobots.com/learn/sqlite3/03_creating_tables_and_schema.html" />
+
+
+<meta name="twitter:description" content="Creating tables in SQLite databases and understanding the principles of schema design. We will explore how to define table structure, data types, constraints, and primary keys" />
+
+
+
+<meta name="twitter:title" content="Creating Tables and Schema Design" />
+
+
+<meta name="twitter:site" content="@kevsmac" />
+
+
+
+<link href="/feeds/videos.xml" type="application/rss+xml" rel="alternate" title="All Videos" />
+
+<link href="/feeds/feed.xml" type="application/rss+xml" rel="alternate" title="All Posts" />
+
+<link href="/feeds/recent.xml" type="application/rss+xml" rel="alternate" title="10 most recent Posts" />
+
+
+        <!-- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3353325295884627"
+     crossorigin="anonymous"></script> -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/js-yaml/4.1.0/js-yaml.min.js"></script>
+        <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({ startOnLoad: false });
+        document.querySelectorAll('pre code.language-mermaid').forEach((block) => {
+            const pre = block.parentElement;
+            const div = document.createElement('div');
+            div.className = 'mermaid';
+            div.textContent = block.textContent;
+            pre.replaceWith(div);
+        });
+        await mermaid.run();
+        </script>
+        <script>
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('pre > code').forEach(codeBlock => {
+    const button = document.createElement('button');
+    button.className = 'copy-code-button';
+    button.type = 'button';
+    button.innerText = 'ð';
+    button.title = 'Copy to clipboard';
+
+
+    const pre = codeBlock.parentNode;
+    pre.style.position = 'relative';
+    pre.appendChild(button);
+
+    button.addEventListener('click', async () => {
+      const code = codeBlock.innerText;
+      if (!navigator.clipboard) {
+        // Fallback
+        try {
+          const textarea = document.createElement('textarea');
+          textarea.value = code;
+          document.body.appendChild(textarea);
+          textarea.select();
+          document.execCommand('copy');
+          document.body.removeChild(textarea);
+          button.innerText = 'â';
+        } catch (err) {
+          console.error('Fallback copy failed:', err);
+          button.innerText = 'â';
+        }
+        return;
+      }
+
+      try {
+        await navigator.clipboard.writeText(code);
+        button.innerText = 'â';
+        setTimeout(() => button.innerText = 'ð', 2000);
+      } catch (err) {
+        console.error('Clipboard write failed:', err);
+        button.innerText = 'â';
+      }
+    });
+  });
+});
+</script>
+
+    </head>
+    <body class="p-0 m-0 ">
+        
+        
+<div class="container-fluid bg-dark sticky-top navbar p-0">
+
+<div class="d-block">
+<ul class="nav mb-0 m-0 mb-lg-0 white-nav">
+    <li class="nav-item top-nav m-2">
+        <i class="fa-sharp fa-solid fa-share white-text"></i>&nbsp;
+        <a href="https://www.youtube.com/@kevinmcaleer28?sub_confirmation=1" class="btn btn-danger white-text p-1"><i class="fab fa-youtube mx-1"></i>Subscribe on YouTube</a>
+    </li>
+    <li class="nav-item top-nav m-2">
+        <a href="/robotmaker" class="btn btn-primary white-text p-1"><i class="fa-solid fa-robot mx-1"></i>Join the Robot Army</a>
+    </li>
+</ul>
+</div>
+</div>
+
+        <!-- <div class="debug text-white sticky-top">
+    <div class="debug-extra-small">
+      <p>Extra Small</p>
+    </div>
+    <div class="debug-small">
+      <p>Small</p>
+    </div>
+    <div class="debug-medium">
+      <p>Medium</p>
+    </div>
+    <div class="debug-large">
+      <p>Large</p>
+    </div>
+    <div class="debug-extra-large">
+      <p>Extra Large</p>
+    </div>
+    <div class="debug-oversize">
+      <p>Oversize</p>
+    </div>
+  </div>
+   -->
+        
+
+
+
+
+
+
+
+<nav class="navbar navbar-expand-md justify-content-between" id="myNavbar">
+    <div class="container-fluid">
+        <div class="navbar-brand mx-3"><a href="/"><img class="logo" src="/assets/img/logo_red.png" alt="The kevsrobots site logo, a graphic of a robot looking at the user combined with the letters K and R"></a></div>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle Navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav me-auto mb-2 mb-0">
+
+        <li class="nav-item">
+    <a href="/" class="nav-link ">Home</a>
+</li>
+
+        <li class="nav-item">
+    <a href="/ideas/" class="nav-link ">Ideas</a>
+</li>
+        <li class="nav-item">
+    <a href="/learn/" class="nav-link ">Learn</a>
+</li>
+
+        
+        <li class="nav-item">
+    <a href="/projects/hub" class="nav-link ">Projects</a>
+</li>
+
+        <li class="nav-item">
+    <a href="/all_videos" class="nav-link " role="button">Watch</a>
+</li>
+        <li class="nav-item">
+    <a href="/blog/" class="nav-link ">Blog</a>
+</li>
+
+        <li class="nav-item">
+    <a href="/about/" class="nav-link " role="button">About</a>
+</li>
+
+
+        
+        
+
+    </ul>
+
+    <form class="form-inline my-2 my-lg-0" onsubmit="performSearch(event)">
+        <div class="input-group">
+        <input class="form-control mr-sm-2" id="search-box" type="search" placeholder="watcha lookin for?" aria-label="Search">
+        <div class="input-group-append">
+        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+        </div>
+    </div>
+      </form>
+
+      <!-- User Menu -->
+      <div class="dropdown d-flex align-items-center ms-3 mr-3" id="user-menu">
+        <!-- Not logged in state -->
+        <a class="nav-link dropdown-toggle mr-3" href="#" id="navbarDropdownGuest" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="display: none;">
+          Login
+        </a>
+        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownGuest">
+          <li><a class="dropdown-item" href="/login" id="login-link"><i class="fa-solid fa-right-to-bracket me-2"></i>Login</a></li>
+          <li><a class="dropdown-item" href="/register" id="register-link"><i class="fa-solid fa-user-plus me-2"></i>Sign Up</a></li>
+        </ul>
+
+        <!-- Logged in state -->
+        <a class="nav-link dropdown-toggle mr-3" href="#" id="navbarDropdownUser" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="display: none;">
+          <span id="username-display"></span>
+        </a>
+        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownUser">
+          <li><a class="dropdown-item" href="/account"><i class="fa-solid fa-user-gear me-2"></i>My Account</a></li>
+          <li><hr class="dropdown-divider"></li>
+          <li><a class="dropdown-item" href="#" id="logout-btn"><i class="fa-solid fa-right-from-bracket me-2"></i>Logout</a></li>
+        </ul>
+      </div>
+
+    </div>
+    </div>
+</nav>
+
+        <script>
+    function performSearch(event) {
+        event.preventDefault(); // Add this line to prevent default form submission
+        var query = document.getElementById('search-box').value;
+        console.log("Search query: ", query); // For debugging
+        window.location.href = '/search-results.html?query=' + encodeURIComponent(query) + '&page=1';
+    }
+    </script>
+
+<style>
+.search-autocomplete {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    z-index: 1050;
+    background: #fff;
+    border: 1px solid rgba(0,0,0,.15);
+    border-top: none;
+    border-radius: 0 0 .375rem .375rem;
+    box-shadow: 0 4px 12px rgba(0,0,0,.1);
+    display: none;
+    max-height: 400px;
+    overflow-y: auto;
+}
+.search-autocomplete .list-group-item {
+    border-left: none;
+    border-right: none;
+    padding: .5rem .75rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+}
+.search-autocomplete .list-group-item:first-child {
+    border-top: none;
+}
+.search-autocomplete .list-group-item:hover,
+.search-autocomplete .list-group-item.ac-active {
+    background-color: #f0f0f0;
+}
+.search-autocomplete .ac-title {
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: .9rem;
+    color: #212529;
+}
+.search-autocomplete .ac-type {
+    font-size: .7rem;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+.search-autocomplete .ac-viewall {
+    text-align: center;
+    font-size: .85rem;
+    padding: .5rem;
+    border-top: 1px solid rgba(0,0,0,.1);
+    color: #0d6efd;
+    cursor: pointer;
+}
+.search-autocomplete .ac-viewall:hover {
+    background-color: #f0f0f0;
+}
+</style>
+
+<script>
+(function() {
+    var DEBOUNCE_MS = 300;
+    var MIN_CHARS = 2;
+    var API_BASE = 'https://search.kevsrobots.com';
+
+    function initAutocomplete(inputId) {
+        var input = document.getElementById(inputId);
+        if (!input) return;
+
+        var inputGroup = input.closest('.input-group');
+        if (!inputGroup) return;
+
+        // Wrap the input-group in a position:relative container
+        var wrapper = inputGroup.parentElement;
+        if (getComputedStyle(wrapper).position === 'static') {
+            wrapper.style.position = 'relative';
+        }
+
+        // Create dropdown
+        var dropdown = document.createElement('div');
+        dropdown.className = 'search-autocomplete list-group';
+        wrapper.appendChild(dropdown);
+
+        var debounceTimer = null;
+        var controller = null;
+        var activeIndex = -1;
+        var items = [];
+        var currentQuery = '';
+
+        function showDropdown() {
+            if (items.length > 0) dropdown.style.display = 'block';
+        }
+        function hideDropdown() {
+            dropdown.style.display = 'none';
+            activeIndex = -1;
+            updateHighlight();
+        }
+        function updateHighlight() {
+            var els = dropdown.querySelectorAll('.list-group-item');
+            els.forEach(function(el, i) {
+                el.classList.toggle('ac-active', i === activeIndex);
+            });
+        }
+
+        function renderResults(results, query) {
+            items = results;
+            dropdown.innerHTML = '';
+            if (!results || results.length === 0) {
+                hideDropdown();
+                return;
+            }
+
+            results.forEach(function(r, i) {
+                var a = document.createElement('a');
+                a.className = 'list-group-item list-group-item-action';
+                a.href = r.url;
+
+                var title = document.createElement('span');
+                title.className = 'ac-title';
+                title.textContent = r.page_title || r.description || 'Untitled';
+
+                var badge = document.createElement('span');
+                badge.className = 'badge ac-type';
+                var t = r.page_type || 'page';
+                if (t === 'lesson') { badge.classList.add('bg-primary'); badge.textContent = 'Course'; }
+                else if (t === 'blog') { badge.classList.add('bg-success'); badge.textContent = 'Blog'; }
+                else if (t === 'glossary') { badge.classList.add('bg-warning', 'text-dark'); badge.textContent = 'Glossary'; }
+                else { badge.classList.add('bg-secondary'); badge.textContent = t.charAt(0).toUpperCase() + t.slice(1); }
+
+                a.appendChild(title);
+                a.appendChild(badge);
+                dropdown.appendChild(a);
+            });
+
+            // "View all results" link
+            var viewAll = document.createElement('div');
+            viewAll.className = 'ac-viewall';
+            viewAll.innerHTML = 'View all results &rarr;';
+            viewAll.addEventListener('mousedown', function(e) {
+                e.preventDefault();
+                window.location.href = '/search-results.html?query=' + encodeURIComponent(query) + '&page=1';
+            });
+            dropdown.appendChild(viewAll);
+
+            activeIndex = -1;
+            showDropdown();
+        }
+
+        function fetchSuggestions(query) {
+            if (controller) controller.abort();
+            controller = new AbortController();
+
+            var url = API_BASE + '/search/?query=' + encodeURIComponent(query) + '&page_size=5&prefix=true';
+            fetch(url, { signal: controller.signal })
+                .then(function(res) { return res.json(); })
+                .then(function(data) {
+                    currentQuery = query;
+                    renderResults(data.results || [], query);
+                })
+                .catch(function(err) {
+                    if (err.name !== 'AbortError') console.error('Autocomplete error:', err);
+                });
+        }
+
+        input.addEventListener('input', function() {
+            var val = input.value.trim();
+            clearTimeout(debounceTimer);
+            if (val.length < MIN_CHARS) {
+                hideDropdown();
+                if (controller) controller.abort();
+                return;
+            }
+            debounceTimer = setTimeout(function() { fetchSuggestions(val); }, DEBOUNCE_MS);
+        });
+
+        input.addEventListener('keydown', function(e) {
+            if (dropdown.style.display === 'none') return;
+            var visibleItems = dropdown.querySelectorAll('.list-group-item');
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                activeIndex = Math.min(activeIndex + 1, visibleItems.length - 1);
+                updateHighlight();
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                activeIndex = Math.max(activeIndex - 1, -1);
+                updateHighlight();
+            } else if (e.key === 'Enter') {
+                if (activeIndex >= 0 && activeIndex < visibleItems.length) {
+                    e.preventDefault();
+                    visibleItems[activeIndex].click();
+                }
+                // If nothing highlighted, let the form submit normally
+                hideDropdown();
+            } else if (e.key === 'Escape') {
+                hideDropdown();
+            }
+        });
+
+        input.addEventListener('focus', function() {
+            if (items.length > 0 && input.value.trim().length >= MIN_CHARS) showDropdown();
+        });
+
+        document.addEventListener('click', function(e) {
+            if (!wrapper.contains(e.target)) hideDropdown();
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        initAutocomplete('search-box');
+        initAutocomplete('results-search-box');
+    });
+})();
+</script>
+
+                
+        <div class="container-fluid p-0 m-0">
+            <div class="container-fluid px-3">
+
+<nav class="navbar my-0 py-0 bg-nav">
+    <div class="container-fluid">
+        <ul class="nav me-auto my-0">
+        
+        <li class="nav-item">
+            <a href="/learn/" class="nav-link ">All Courses</a>
+        </li>
+        
+        <li class="nav-item">
+            <a href="/learn/recent" class="nav-link ">Recent courses</a>
+        </li>
+        
+        <li class="nav-item">
+            <a href="/learn/learning_pathways/" class="nav-link ">Learning Pathways</a>
+        </li>
+        
+        </ul>
+    </div>
+</nav>
+
+
+
+<div class="breadcrumb-area border-0 ">
+  <nav aria-label="breadcrumb bg-light">
+  <ol class="breadcrumb my-3 m-0">
+    
+    <li class="breadcrumb-item"><a href="/" class="">Home </a></li>
+    
+      
+        <li class="breadcrumb-item "><a href="/learn/">Learn</a></li>
+      
+    
+      
+        <li class="breadcrumb-item "><a href="/learn/sqlite3/">Sqlite3</a></li>
+      
+    
+      
+        <li class="breadcrumb-item  active">Creating tables and schema design</li>
+      
+    
+  </ol>
+  </nav>
+</div>
+<script>
+document.addEventListener('keydown', function (e) {
+  // Ignore keys if an input is focused
+  if (document.activeElement.tagName === 'INPUT' || document.activeElement.tagName === 'TEXTAREA') return;
+
+  if (e.key === 'ArrowLeft') {
+    const prev = document.querySelector('link[rel="prev"]');
+    if (prev) window.location.href = prev.href;
+  } else if (e.key === 'ArrowRight') {
+    const next = document.querySelector('link[rel="next"]');
+    if (next) window.location.href = next.href;
+  }
+});
+</script>
+
+</div>
+<div class="row m-0 p-0">
+    <div class="col-12 col-md-12 col-lg-3 bg-light">
+        
+        <div class="container-fluid py-3">
+            <div class="learn-nav m-0 p-0">
+        <div class="card border-0 shadow-lg">
+            <div class="card-header bg-learnhead py-0">
+              <p class="text-white my-0 text-center text-nowrap text-truncate ">
+                <i class="fa-sharp fa-solid fa-graduation-cap "></i>&nbsp;&nbsp; KevsRobots Learning Platform</p>
+            </div>
+            <div class="card-body">
+                <div class="container mb-3">
+                    <h5>Create Databases with Python and SQLite3</h5>
+                    
+                    <div class="progress">
+                        <div class="progress-bar" role="progressbar" style="width: 20%" aria-valuenow="" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                    <p class="text-small">20% Percent Complete</p>
+                </div>
+            </div>
+            </div>  
+        </div>
+        </div>
+        
+        <div class="container-fluid m-0 test">
+            
+            
+            
+            
+            
+            <h5 class="course-heading">Overview</h5>
+    
+            <ul class="nav flex-column m-0 p-0">
+            
+            
+            
+            
+                <!-- <li class="nav-link m-0 mb-1 p-0 "><a href="00_intro.html" class="nav-item dotted ">Course Overview</a></li> -->
+                <li class="course-nav-link m-0 mb-1 p-0 "><a href="00_intro.html" class="course-nav-item ">Course Overview</a></li>
+                
+            </ul>
+            <hr class="m-1 p-0"/>
+            
+            
+            <h5 class="course-heading">Getting Started</h5>
+    
+            <ul class="nav flex-column m-0 p-0">
+            
+            
+            
+            
+                <!-- <li class="nav-link m-0 mb-1 p-0 "><a href="01_introduction_to_databases.html" class="nav-item dotted ">Introduction to Databases</a></li> -->
+                <li class="course-nav-link m-0 mb-1 p-0 "><a href="01_introduction_to_databases.html" class="course-nav-item ">Introduction to Databases</a></li>
+                
+            
+            
+            
+                <!-- <li class="nav-link m-0 mb-1 p-0 "><a href="02_getting_started_with_sqlite3.html" class="nav-item dotted ">Getting Started with Python and SQLite3</a></li> -->
+                <li class="course-nav-link m-0 mb-1 p-0 "><a href="02_getting_started_with_sqlite3.html" class="course-nav-item ">Getting Started with Python and SQLite3</a></li>
+                
+            
+            
+            
+                <!-- <li class="nav-link m-0 mb-1 p-0 active"><a href="03_creating_tables_and_schema.html" class="nav-item dotted active">Creating Tables and Schema Design</a></li> -->
+                <li class="course-nav-link m-0 mb-1 p-0 active"><a href="03_creating_tables_and_schema.html" class="course-nav-item active">Creating Tables and Schema Design</a></li>
+                
+            
+            
+            
+                <!-- <li class="nav-link m-0 mb-1 p-0 "><a href="04.inserting_and_retrieving_data.html" class="nav-item dotted ">Inserting and Retrieving Data</a></li> -->
+                <li class="course-nav-link m-0 mb-1 p-0 "><a href="04.inserting_and_retrieving_data.html" class="course-nav-item ">Inserting and Retrieving Data</a></li>
+                
+            
+            
+            
+                <!-- <li class="nav-link m-0 mb-1 p-0 "><a href="05_updating_and_deleting_data.html" class="nav-item dotted ">Updating and Deleting Data</a></li> -->
+                <li class="course-nav-link m-0 mb-1 p-0 "><a href="05_updating_and_deleting_data.html" class="course-nav-item ">Updating and Deleting Data</a></li>
+                
+            </ul>
+            <hr class="m-1 p-0"/>
+            
+            
+            <h5 class="course-heading">Advanced topics</h5>
+    
+            <ul class="nav flex-column m-0 p-0">
+            
+            
+            
+            
+                <!-- <li class="nav-link m-0 mb-1 p-0 "><a href="06_querying_and_joining_tables.html" class="nav-item dotted ">Querying and Joining Tables</a></li> -->
+                <li class="course-nav-link m-0 mb-1 p-0 "><a href="06_querying_and_joining_tables.html" class="course-nav-item ">Querying and Joining Tables</a></li>
+                
+            
+            
+            
+                <!-- <li class="nav-link m-0 mb-1 p-0 "><a href="07_advanced_queries.html" class="nav-item dotted ">Advanced SQL Queries</a></li> -->
+                <li class="course-nav-link m-0 mb-1 p-0 "><a href="07_advanced_queries.html" class="course-nav-item ">Advanced SQL Queries</a></li>
+                
+            
+            
+            
+                <!-- <li class="nav-link m-0 mb-1 p-0 "><a href="08_transations_and_error_handling.html" class="nav-item dotted ">Database Transactions and Error Handling</a></li> -->
+                <li class="course-nav-link m-0 mb-1 p-0 "><a href="08_transations_and_error_handling.html" class="course-nav-item ">Database Transactions and Error Handling</a></li>
+                
+            
+            
+            
+                <!-- <li class="nav-link m-0 mb-1 p-0 "><a href="09_indexes_and_performance.html" class="nav-item dotted ">Working with Indexes and Performance Optimization</a></li> -->
+                <li class="course-nav-link m-0 mb-1 p-0 "><a href="09_indexes_and_performance.html" class="course-nav-item ">Working with Indexes and Performance Optimization</a></li>
+                
+            
+            
+            
+                <!-- <li class="nav-link m-0 mb-1 p-0 "><a href="10_securing_and_backing_up.html" class="nav-item dotted ">Securing and Backing Up SQLite Databases</a></li> -->
+                <li class="course-nav-link m-0 mb-1 p-0 "><a href="10_securing_and_backing_up.html" class="course-nav-item ">Securing and Backing Up SQLite Databases</a></li>
+                
+            </ul>
+            <hr class="m-1 p-0"/>
+            
+            
+            <h5 class="course-heading">Summary and Conclusion</h5>
+    
+            <ul class="nav flex-column m-0 p-0">
+            
+            
+            
+            
+                <!-- <li class="nav-link m-0 mb-1 p-0 "><a href="11_summary.html" class="nav-item dotted ">Course Summary</a></li> -->
+                <li class="course-nav-link m-0 mb-1 p-0 "><a href="11_summary.html" class="course-nav-item ">Course Summary</a></li>
+                
+            </ul>
+            <hr class="m-1 p-0"/>
+            
+            
+            <h5 class="course-heading">bonus</h5>
+    
+            <ul class="nav flex-column m-0 p-0">
+            
+            
+            
+            
+                <!-- <li class="nav-link m-0 mb-1 p-0 "><a href="13_1nf.html" class="nav-item dotted ">First Normal Form (1NF)</a></li> -->
+                <li class="course-nav-link m-0 mb-1 p-0 "><a href="13_1nf.html" class="course-nav-item ">First Normal Form (1NF)</a></li>
+                
+            
+            
+            
+                <!-- <li class="nav-link m-0 mb-1 p-0 "><a href="14_2nf.html" class="nav-item dotted ">Second Normal Form (2NF)</a></li> -->
+                <li class="course-nav-link m-0 mb-1 p-0 "><a href="14_2nf.html" class="course-nav-item ">Second Normal Form (2NF)</a></li>
+                
+            
+            
+            
+                <!-- <li class="nav-link m-0 mb-1 p-0 "><a href="15_3nf.html" class="nav-item dotted ">Third Normal Form (3NF)</a></li> -->
+                <li class="course-nav-link m-0 mb-1 p-0 "><a href="15_3nf.html" class="course-nav-item ">Third Normal Form (3NF)</a></li>
+                
+            
+            
+            
+                <!-- <li class="nav-link m-0 mb-1 p-0 "><a href="12_boyce_codd_normal_form.html" class="nav-item dotted ">Boyce-Codd Normal Form (BCNF)</a></li> -->
+                <li class="course-nav-link m-0 mb-1 p-0 "><a href="12_boyce_codd_normal_form.html" class="course-nav-item ">Boyce-Codd Normal Form (BCNF)</a></li>
+                
+            
+            
+            
+                <!-- <li class="nav-link m-0 mb-1 p-0 "><a href="16_demo_program.html" class="nav-item dotted ">Demo program</a></li> -->
+                <li class="course-nav-link m-0 mb-1 p-0 "><a href="16_demo_program.html" class="course-nav-item ">Demo program</a></li>
+                
+            
+            
+            
+                <!-- <li class="nav-link m-0 mb-1 p-0 "><a href="17_tools.html" class="nav-item dotted ">Tools</a></li> -->
+                <li class="course-nav-link m-0 mb-1 p-0 "><a href="17_tools.html" class="course-nav-item ">Tools</a></li>
+                
+            </ul>
+            <hr class="m-1 p-0"/>
+            
+            
+            </div>
+
+        </div>
+    
+    <div class="col-12 col-md-12 col-lg-9">
+        <div class="px-3 m-3">
+            <h1>Creating Tables and Schema Design</h1>
+            <h2>Creating tables in SQLite databases and understanding the principles of schema design. We will explore how to define table structure, data types, constraints, and primary keys</h2>
+            <div class="container m-0 p-0">
+            <div class="d-flex justify-content-between m-0 p-0">
+                <div class="m-0 p-0">
+                <p class="text-small text-body-secondary text-start m-0 p-0">By Kevin McAleer,&nbsp; <i class="fa-regular fa-clock"></i>&nbsp; 3 Minutes</p>
+                </div>    
+                
+                </div>
+            </div>
+            <hr />
+
+        
+
+        <p>Module 3 focuses on creating tables in SQLite databases and understanding the principles of schema design. We will explore how to define table structure, data types, constraints, and primary keys.</p>
+
+<h3 id="understanding-table-structure">Understanding Table Structure</h3>
+
+<p>Tables are the foundation of a relational database. They organize and store data in a structured manner. In this section, we will explore the components of table structure.</p>
+
+<h4 id="rows-records-and-columns">Rows (Records) and Columns</h4>
+
+<p>A table consists of rows, also known as records or tuples, and columns, also known as fields or attributes.</p>
+
+<ul>
+  <li><strong>Rows</strong>: Each row represents a distinct record or entry in the table. For example, in a âBooksâ table, each row might represent a specific book with information like the title, author, and publication year.</li>
+  <li><strong>Columns</strong>: Columns define the specific types of data that can be stored in a table. Each column corresponds to a specific attribute or piece of information about the records. For instance, in the âBooksâ table, columns might include âTitle,â âAuthor,â and âPublication Year.â</li>
+</ul>
+
+<h3 id="creating-tables">Creating Tables</h3>
+
+<p>To create tables in a SQLite database, we use the SQL <code class="language-plaintext highlighter-rouge">CREATE TABLE</code> statement. This statement specifies the table name, column names, data types, and constraints.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Create a table
+</span><span class="n">connection</span><span class="p">.</span><span class="nf">execute</span><span class="p">(</span><span class="sh">'''</span><span class="s">
+    CREATE TABLE books (
+        id INTEGER PRIMARY KEY,
+        title TEXT,
+        author TEXT,
+        year INTEGER
+    )
+</span><span class="sh">'''</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>In this example, we create a table named âbooksâ with four columns: âid,â âtitle,â âauthor,â and âyear.â The <code class="language-plaintext highlighter-rouge">INTEGER</code> data type is used for the âidâ and âyearâ columns, while <code class="language-plaintext highlighter-rouge">TEXT</code> is used for the âtitleâ and âauthorâ columns. The âidâ column is defined as the primary key.</p>
+
+<h3 id="defining-primary-keys">Defining Primary Keys</h3>
+
+<p>A primary key uniquely identifies each record in a table. It ensures data integrity and serves as a reference point for establishing relationships between tables. In SQLite, primary keys can be defined using the <code class="language-plaintext highlighter-rouge">PRIMARY KEY</code> constraint.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Create a table with a primary key
+</span><span class="n">connection</span><span class="p">.</span><span class="nf">execute</span><span class="p">(</span><span class="sh">'''</span><span class="s">
+    CREATE TABLE students (
+        id INTEGER PRIMARY KEY,
+        name TEXT,
+        age INTEGER,
+        grade TEXT
+    )
+</span><span class="sh">'''</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>In this example, we create a âstudentsâ table with an âidâ column as the primary key. Each record in the table will have a unique âidâ value.</p>
+
+<h3 id="modifying-tables">Modifying Tables</h3>
+
+<p>Sometimes, we need to modify the structure of existing tables. SQLite provides the <code class="language-plaintext highlighter-rouge">ALTER TABLE</code> statement to add, modify, or delete columns from a table.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Add a new column to a table
+</span><span class="n">connection</span><span class="p">.</span><span class="nf">execute</span><span class="p">(</span><span class="sh">"</span><span class="s">ALTER TABLE students ADD COLUMN email TEXT</span><span class="sh">"</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>In this example, we add a new âemailâ column to the âstudentsâ table. This new column will store email addresses for each student.</p>
+
+<h3 id="schema-design-considerations">Schema Design Considerations</h3>
+
+<p>When designing a database schema, itâs important to consider several factors to ensure efficient data storage and retrieval. Some key considerations include:</p>
+
+<ul>
+  <li><strong>Normalization</strong>: Organize data into tables and reduce redundancy.</li>
+  <li><strong>Data Types</strong>: Choose appropriate data types for columns to optimize storage and enforce data integrity.</li>
+  <li><strong>Constraints</strong>: Define constraints (e.g., <code class="language-plaintext highlighter-rouge">NOT NULL</code>, <code class="language-plaintext highlighter-rouge">UNIQUE</code>) to maintain data integrity and consistency.</li>
+  <li><strong>Relationships</strong>: Establish relationships between tables using foreign keys to represent connections between entities.</li>
+  <li><strong>Indexing</strong>: Use indexes to improve query performance on frequently searched columns.</li>
+</ul>
+
+<p>By understanding these considerations, we can design efficient and well-structured databases.</p>
+
+<hr />
+
+            
+        
+        <p class="text-center">
+        
+        <a href="02_getting_started_with_sqlite3.html" class="btn btn-primary"> < Previous</a>
+        
+        
+        <a href="04.inserting_and_retrieving_data.html" class="btn btn-primary">Next ></a>
+        
+        
+        <link rel="prev" href="02_getting_started_with_sqlite3.html">
+        
+        
+        <link rel="next" href="04.inserting_and_retrieving_data.html">
+        
+        </p>
+        <p class="text-center">
+        <span>You can use the arrows&nbsp;</span><code> â â </code><span>on your keyboard to navigate between lessons.</span>
+        </p>
+        
+        <hr />
+        
+
+
+<div class="like-comment-section mt-4" data-url="/learn/sqlite3/03_creating_tables_and_schema.html">
+
+  <!-- Stats Section -->
+  <div class="engagement-stats mb-3 d-flex align-items-center gap-3">
+    <!-- Page Views -->
+    <div class="view-stats">
+      <i class="fa-solid fa-chart-simple text-dark"></i>
+      <span class="view-count text-dark ms-1" id="view-count">0</span>
+      <span class="text-dark small ms-1">views</span>
+    </div>
+
+    <!-- Like Button -->
+    <div class="like-stats">
+      <button class="btn btn-link p-0 like-button text-decoration-none text-dark" id="like-btn" aria-label="Like this content">
+        <i class="fa-regular fa-heart heart-outline" style="font-size: 1.5rem; color: #dc3545;"></i>
+        <i class="fa-solid fa-heart heart-filled" style="font-size: 1.5rem; color: #dc3545; display: none;"></i>
+      </button>
+      <span class="like-count text-dark ms-1" id="like-count">0</span>
+    </div>
+  </div>
+
+  <!-- Mini Page View Graph -->
+  <div class="page-view-graph mb-3" data-url="/learn/sqlite3/03_creating_tables_and_schema.html"></div>
+
+  <!-- Comment Input Section -->
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h5 class="text-dark mb-0">Comments</h5>
+    <div class="btn-group btn-group-sm" role="group" aria-label="Sort comments">
+      <button type="button" class="btn btn-outline-secondary active" id="sort-recent-btn" onclick="sortComments('recent')">
+        <i class="fa-solid fa-clock me-1"></i>Recent
+      </button>
+      <button type="button" class="btn btn-outline-secondary" id="sort-popular-btn" onclick="sortComments('popular')">
+        <i class="fa-solid fa-fire me-1"></i>Popular
+      </button>
+    </div>
+  </div>
+  <div class="comment-input-section mb-4">
+    <div class="position-relative">
+      <textarea class="form-control comment-input" id="comment-textarea" rows="3" placeholder="Post your comment..." style="resize: vertical; min-height: 80px;"></textarea>
+      <div class="d-flex justify-content-end mt-2">
+        <button class="btn btn-primary btn-sm" id="post-comment-btn" disabled>
+          <i class="fa-solid fa-paper-plane me-1"></i> Post Comment
+        </button>
+      </div>
+    </div>
+    <div id="comment-error" class="alert alert-danger mt-2" style="display: none;"></div>
+    <div id="comment-success" class="alert alert-success mt-2" style="display: none;"></div>
+  </div>
+
+  <!-- Comments List Section -->
+  <div class="comments-list" id="comments-list">
+    <div class="text-center text-dark py-3" id="comments-loading">
+      <div class="spinner-border spinner-border-sm me-2" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+      Loading comments...
+    </div>
+    <div id="comments-container"></div>
+    <div class="text-center text-dark py-3" id="no-comments" style="display: none;">
+      <i class="fa-regular fa-comment me-2"></i>No comments yet. Be the first to comment!
+    </div>
+  </div>
+</div>
+
+<link rel="stylesheet" href="/assets/css/like-comment.css?v=20251103-3">
+<link rel="stylesheet" href="/assets/css/page-view-graph.css">
+<script src="/assets/js/like-comment.js?v=20251103-3"></script>
+<script src="/assets/js/page-view-graph.js?v=20251103-3"></script>
+
+        
+    </div>
+</div>
+
+
+        </div>
+        <!-- Lazy loading script for images -->
+<script>
+// Add lazy loading to all images that don't have it
+document.addEventListener('DOMContentLoaded', function() {
+    const images = document.querySelectorAll('img:not([loading])');
+    images.forEach(img => {
+        img.setAttribute('loading', 'lazy');
+    });
+});
+</script>
+        <!-- Scroll-triggered animations using Intersection Observer -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const containers = document.querySelectorAll('.animate-on-scroll');
+
+    if (containers.length === 0) return;
+
+    // Observe individual cards/cols for per-row animation
+    const cardObserver = new IntersectionObserver((entries) => {
+        // Group entries that are intersecting by their top position (same row)
+        const rowGroups = {};
+
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const rect = entry.target.getBoundingClientRect();
+                // Round to nearest 10px to group cards in same row
+                const rowKey = Math.round(rect.top / 10) * 10;
+
+                if (!rowGroups[rowKey]) {
+                    rowGroups[rowKey] = [];
+                }
+                rowGroups[rowKey].push(entry.target);
+                cardObserver.unobserve(entry.target);
+            }
+        });
+
+        // Animate each row with staggered delays
+        Object.values(rowGroups).forEach(rowCards => {
+            // Sort by horizontal position (left to right)
+            rowCards.sort((a, b) => a.getBoundingClientRect().left - b.getBoundingClientRect().left);
+
+            rowCards.forEach((card, index) => {
+                card.style.transitionDelay = `${index * 0.1}s`;
+                card.classList.add('in-view');
+            });
+        });
+    }, {
+        threshold: 0.1,
+        rootMargin: '0px 0px -30px 0px'
+    });
+
+    // Find and observe all cards/cols inside animate-on-scroll containers
+    containers.forEach(container => {
+        const cards = container.querySelectorAll(':scope > .col, :scope > [class*="col-"], :scope > .card, :scope > a');
+        cards.forEach(card => cardObserver.observe(card));
+    });
+});
+</script>
+
+        
+<div class="container-fluid bg-dark navbar p-0 m-0">
+
+<!-- Show on Large or higher -->
+<div class="d-lg-block d-md-none d-sm-none d-none mx-auto justify-content-center">
+<ul class="nav m-0  mb-lg-0 white-nav">
+    
+    
+    
+    <li class="nav-item top-nav m-2">
+        <a href="/discord" class="nav-link white-text p-1"><i class="fab fa-discord mx-1"></i>Join our Discord</a>
+    </li>
+    
+    <li class="nav-item top-nav m-2">
+        <a href="/robotmaker" class="nav-link white-text p-1"><i class="fas fa-stars mx-1"></i>Join the Robot Overlord Army</a>
+    </li>
+    
+    <li class="nav-item top-nav m-2">
+        <a href="https://action.smarsfan.com/join-the-list" class="nav-link white-text p-1"><i class="fas fa-envelope mx-1"></i>Sign up for our newsletter</a>
+    </li>
+    
+</ul>
+</div>
+
+<!-- Show on Medium and smaller -->
+<div class="d-lg-none d-sm-block">
+<ul class="nav m-0 mb-lg-0 justify-content-center white-nav ">
+    
+    
+    <li class="nav-item top-nav m-2">
+        <a href="/discord" class="nav-link white-text p-0"><i class="fab fa-discord mx-1"></i></a>
+    </li>
+    
+    <li class="nav-item top-nav m-2">
+        <a href="/robotmaker" class="nav-link white-text p-0"><i class="fas fa-stars mx-1"></i></a>
+    </li>
+    
+    <li class="nav-item top-nav m-2">
+        <a href="https://action.smarsfan.com/join-the-list" class="nav-link white-text p-0"><i class="fas fa-envelope mx-1"></i></a>
+    </li>
+    
+</ul>
+</div>
+
+<div class="d-block">
+<ul class="nav m-0 mb-lg-0 justify-content-center white-nav">
+    
+    
+    <li class="nav-item top-nav m-2">
+        <a href="https://www.youtube.com/kevinmcaleer28" class="nav-link white-text p-1"><i class="fab fa-youtube mx-1"></i></a>
+    </li>
+    
+    <li class="nav-item top-nav m-2">
+        <a href="https://www.twitter.com/kevsmac" class="nav-link white-text p-1"><i class="fa-brands fa-x-twitter mx-1"></i></a>
+    </li>
+    
+    <li class="nav-item top-nav m-2">
+        <a href="https://www.instagram.com/kevinmcaleer" class="nav-link white-text p-1"><i class="fab fa-instagram mx-1"></i></a>
+    </li>
+    
+    <li class="nav-item top-nav m-2">
+        <a href="https://mastodon.social/@kevsmac" class="nav-link white-text p-1"><i class="fab fa-mastodon mx-1"></i></a>
+    </li>
+    
+    <li class="nav-item top-nav m-2">
+        <a href="https://www.tiktok.com/kevinmcaleer6" class="nav-link white-text p-1"><i class="fab fa-tiktok mx-1"></i></a>
+    </li>
+    
+    <li class="nav-item top-nav m-2">
+        <a href="https://www.threads.net/@kevinmcaleer" class="nav-link white-text p-1"><i class="fa-brands fa-threads mx-1"></i></a>
+    </li>
+    
+</ul>
+</div>
+</div>
+
+        <footer class="bg-secondary bg-gradient mb-0 pb-0">
+    <div class="container-fluid">
+      
+    <h5 class="text-white pt-3">Discover More</h5>
+    <div class="container-fluid sitemap mt-0 bg-secondary bg-gradient m-0 p-0">
+    <div class="row row-cols-1 row-cols-sm-3 row-cols-md-4 row-cols-lg-6 g-2 mt-0 pt-0">
+        <div class="col-sm-4 col-md-3 col-lg-2 mt-4">
+            <div class="card bg-transparent border-0 h-100">
+                <div class="card-body">
+            <h5>Posts</h5>
+            
+    <ul class="decoration-none flex-column m-0 p-0">
+        
+        <li class="text-nowrap text-truncate m-0 p-0 text-white list-unstyled"><a class="footer-link px-0 small " href="/blog/my-robot-dodges-obstacles-and-i-never-coded-it.html">My Robot Dodges Obstacles, and I Never Coded It</a></li>
+        
+        <li class="text-nowrap text-truncate m-0 p-0 text-white list-unstyled"><a class="footer-link px-0 small " href="/blog/mpy-files-explained.html">MicroPython's .mpy Format Explained â and How to Use It With One Right-Click</a></li>
+        
+        <li class="text-nowrap text-truncate m-0 p-0 text-white list-unstyled"><a class="footer-link px-0 small " href="/blog/they-all-gave-up-on-ros-and-micropython.html">They All Gave Up on ROS and MicroPython â I Didn't</a></li>
+        
+        <li class="text-nowrap text-truncate m-0 p-0 text-white list-unstyled"><a class="footer-link px-0 small " href="/blog/my-first-robot-just-got-five-new-senses.html">My First Robot Just Got Five New Senses</a></li>
+        
+        <li class="text-nowrap text-truncate m-0 p-0 text-white list-unstyled"><a class="footer-link px-0 small " href="/blog/meshcore.html">Off-Grid Messaging with MeshCore</a></li>
+        
+    </ul>
+    </div>
+    <div class="card-footer bg-transparent">
+        <a href="/blog/" class="text-nowrap text-truncate"><i class="fa-solid fa-newspaper"></i> More Articles >></a>
+    </div>        
+    </div>
+    </div>
+        <div class="col-sm-4 col-md-3 col-lg-2 mt-4">
+            <div class="card bg-transparent border-0 h-100">
+                <div class="card-body">
+            <h5 class="">Robots</h5>
+            <ul class="decoration-none flex-column m-0 p-0">
+                
+                <li class="text-nowrap text-truncate m-0 p-0 text-white list-unstyled"><a class="footer-link px-0 small" href="/blog/modulino-smars.html">Modulino SMARS</a></li>
+                
+                <li class="text-nowrap text-truncate m-0 p-0 text-white list-unstyled"><a class="footer-link px-0 small" href="/blog/eyemech.html">Eye Mech</a></li>
+                
+                <li class="text-nowrap text-truncate m-0 p-0 text-white list-unstyled"><a class="footer-link px-0 small" href="/projects/cubie-3/">Cubie-3</a></li>
+                
+                <li class="text-nowrap text-truncate m-0 p-0 text-white list-unstyled"><a class="footer-link px-0 small" href="/blog/cyberbricks.html">Cyberbricks</a></li>
+                
+                <li class="text-nowrap text-truncate m-0 p-0 text-white list-unstyled"><a class="footer-link px-0 small" href="/blog/alvik-maze.html">Arduino Alvik Maze Navigation</a></li>
+                
+                
+                </ul>
+                </div>
+                <div class="card-footer bg-transparent">
+        <a href="/robots/" class="text-nowrap text-truncate"><i class="fa-solid fa-robot"></i> More Robots >></a>
+        </div>
+    </div>
+    </div>
+    
+        <div class="col-sm-4 col-md-3 col-lg-2 mt-4">
+            <div class="card bg-transparent border-0 h-100">
+                <div class="card-body ">
+            <h5 class="">Projects</h5>
+            <ul class="decoration-none flex-column m-0 p-0">
+            
+            <li class="text-nowrap text-truncate m-0 p-0 text-white list-unstyled"><a class="footer-link px-0 small" href="/projects/cubie-3/index.html">Cubie 3</a></li>
+            
+            <li class="text-nowrap text-truncate m-0 p-0 text-white list-unstyled"><a class="footer-link px-0 small" href="/blog/n8n.html">homelab automation with n8n</a></li>
+            
+            <li class="text-nowrap text-truncate m-0 p-0 text-white list-unstyled"><a class="footer-link px-0 small" href="/blog/pikon2.html">PiKon II</a></li>
+            
+            <li class="text-nowrap text-truncate m-0 p-0 text-white list-unstyled"><a class="footer-link px-0 small" href="/projects/pico_plotter/index.html">Pico Plotter</a></li>
+            
+            <li class="text-nowrap text-truncate m-0 p-0 text-white list-unstyled"><a class="footer-link px-0 small" href="/blog/tinyfx.html">Tiny FX</a></li>
+            
+            </ul>
+        </div>
+        <div class="card-footer bg-transparent">
+        <a href="/robots/projects" class="text-nowrap text-truncate"><i class="fa-solid fa-wrench"></i> More Projects >></a>
+        </div>
+    </div>
+</div>
+    <div class="col-sm-12 col-md-12 col-lg-6 mt-4">
+        <div class="card bg-transparent h-100 border-0">
+        <div class="card-body">
+        <h5 class="">Videos</h5>
+        <ul class="decoration-none flex-column m-0 p-0">
+        
+        <li class="text-nowrap text-truncate m-0 p-0 text-white list-unstyled"><a class="footer-link px-0 small text-truncate" href="https://www.youtube.com/watch?v=HJYdGICcw0k">My Robot Dodges Obstacles, and I Never Coded It</a></li>
+        
+        <li class="text-nowrap text-truncate m-0 p-0 text-white list-unstyled"><a class="footer-link px-0 small text-truncate" href="https://www.youtube.com/watch?v=vbLEdFrCbho">They All Gave Up on ROS and MicroPython â I Didn't</a></li>
+        
+        <li class="text-nowrap text-truncate m-0 p-0 text-white list-unstyled"><a class="footer-link px-0 small text-truncate" href="https://www.youtube.com/watch?v=1K1A1YGcOEE">My First Robot Just Got Five New Senses (with Arduino Modulinos)</a></li>
+        
+        <li class="text-nowrap text-truncate m-0 p-0 text-white list-unstyled"><a class="footer-link px-0 small text-truncate" href="https://www.youtube.com/watch?v=gf6UostVYdc">My Phone Had No Signal â It Sent the Message Anyway</a></li>
+        
+        <li class="text-nowrap text-truncate m-0 p-0 text-white list-unstyled"><a class="footer-link px-0 small text-truncate" href="https://www.youtube.com/watch?v=VBVsachP54s">Xiao - the smallest MicroPython board</a></li>
+        
+        </ul>
+        </div>
+        <div class="card-footer bg-transparent">
+        <a href="/videos" class="text-nowrap text-truncate"><i class="fa-brands fa-youtube"></i> More videos >></a>
+        </div>
+        </div>
+    </div>
+</div>  
+<div class="row row-cols-1 row-cols-sm-3 row-cols-md-4 row-cols-lg-6 mt-0 pt-0">
+    <div class="col-sm-4 col-md-3 col-lg-2 mt-4">
+        <div class="card bg-transparent border-0 h-100">
+            <div class="card-body">
+            <h5 class="text-nowrap text-truncate m-0 p-0 text-white">How it works</h5>
+            <ul class="decoration-none flex-column m-0 p-0">
+            
+            <li class="text-nowrap text-truncate m-0 p-0 text-white list-unstyled"><a class="footer-link px-0 small" href="/resources/how_it_works/inverse-kinematics.html">Inverse Kinematics</a></li>
+            
+            <li class="text-nowrap text-truncate m-0 p-0 text-white list-unstyled"><a class="footer-link px-0 small" href="/resources/how_it_works/lidar.html">LiDAR</a></li>
+            
+            <li class="text-nowrap text-truncate m-0 p-0 text-white list-unstyled"><a class="footer-link px-0 small" href="/resources/how_it_works/encoders.html">Encoders</a></li>
+            
+            <li class="text-nowrap text-truncate m-0 p-0 text-white list-unstyled"><a class="footer-link px-0 small" href="/resources/how_it_works/diodes.html">Diodes</a></li>
+            
+            <li class="text-nowrap text-truncate m-0 p-0 text-white list-unstyled"><a class="footer-link px-0 small" href="/resources/how_it_works/buck-converters.html">Buck Converters</a></li>
+            
+            </ul>
+            </div>
+        <div class="card-footer bg-transparent">
+        <a href="/resources/how_it_works/" class="text-nowrap text-truncate"><i class="fa-solid fa-square-question"></i> More articles >></a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-sm-4 col-md-3 col-lg-2 mt-4">
+        <div class="card bg-transparent h-100 border-0">
+            <div class="card-body">
+        <h5 class="">Courses</h5>
+        <ul class="decoration-none flex-column m-0 p-0">
+        
+        <li class="text-nowrap text-truncate m-0 p-0 text-white list-unstyled"><a class="footer-link px-0 small" href="/learn/arduino_to_python/00_intro.html">Arduino to MicroPython - A Quick Start Guide</a></li>
+        
+        <li class="text-nowrap text-truncate m-0 p-0 text-white list-unstyled"><a class="footer-link px-0 small" href="/learn/bottango/00_intro.html">Bottango Basics</a></li>
+        
+        <li class="text-nowrap text-truncate m-0 p-0 text-white list-unstyled"><a class="footer-link px-0 small" href="/learn/brachiograph/00_intro.html">BrachioGraph Tutorial</a></li>
+        
+        <li class="text-nowrap text-truncate m-0 p-0 text-white list-unstyled"><a class="footer-link px-0 small" href="/learn/burgerbot/00_intro.html">Build your own BurgerBot</a></li>
+        
+        <li class="text-nowrap text-truncate m-0 p-0 text-white list-unstyled"><a class="footer-link px-0 small" href="/learn/c_pico/01_intro.html">Getting Started with C on the Raspberry Pi Pico</a></li>
+        
+        </ul>
+    </div>
+    <div class="card-footer bg-transparent">
+    <a href="/learn/" class="text-nowrap text-truncate"><i class="fa-solid fa-graduation-cap"></i> More Courses >></a>
+    </div>
+        </div>
+</div>
+    <div class="col-sm-4 col-md-3 col-lg-2 mt-4">
+        <div class="card bg-transparent border-0 h-100">
+            <div class="card-body">
+        <h5 class="">Reviews</h5>
+        <ul class="decoration-none flex-column m-0 p-0">
+        
+        
+        <li class="text-nowrap text-truncate m-0 p-0 text-white list-unstyled"><a class="footer-link px-0 small" href="/reviews/weller-we2010.html">Weller WE2010 Soldering Station</a></li>
+        
+        <li class="text-nowrap text-truncate m-0 p-0 text-white list-unstyled"><a class="footer-link px-0 small" href="/reviews/arduino-nano-motor-carrier.html">Arduino Nano Motor Carrier</a></li>
+        
+        <li class="text-nowrap text-truncate m-0 p-0 text-white list-unstyled"><a class="footer-link px-0 small" href="/reviews/waveshare-cm5-poe-base-a.html">Waveshare CM5-PoE-Base-A</a></li>
+        
+        <li class="text-nowrap text-truncate m-0 p-0 text-white list-unstyled"><a class="footer-link px-0 small" href="/reviews/waveshare-cm5-nano-b.html">Waveshare CM5-Nano-B</a></li>
+        
+        <li class="text-nowrap text-truncate m-0 p-0 text-white list-unstyled"><a class="footer-link px-0 small" href="/reviews/waveshare-cm5-nano-a.html">Waveshare CM5-Nano-A</a></li>
+        
+    </div>
+    <div class="card-footer bg-transparent">
+    <a href="/reviews/" class="text-nowrap text-truncate"><i class="fa-solid fa-star-sharp"></i> More Reviews >></a>
+    </div>  
+    </div>
+    </div>
+    <div class="col-sm-4 col-md-3 col-lg-2 mt-4">
+        <div class="card bg-transparent border-0 h-100">
+            <div class="card-body">
+        <h5 class="">Links</h5>
+        <ul class="decoration-none flex-column m-0 p-0">
+        
+        <li class="text-nowrap text-truncate m-0 p-0 text-white list-unstyled"><a class="footer-link px-0 small" href="https://www.smarsfan.com">SMARSFan</a></li>
+        
+        <li class="text-nowrap text-truncate m-0 p-0 text-white list-unstyled"><a class="footer-link px-0 small" href="http://www.clustered-pi.com">Clustered-Pi.com</a></li>
+        
+        <li class="text-nowrap text-truncate m-0 p-0 text-white list-unstyled"><a class="footer-link px-0 small" href="https://www.youtube.com/kevinmcaleer28">Kevin McAleers YouTube Channel</a></li>
+        
+        <li class="text-nowrap text-truncate m-0 p-0 text-white list-unstyled"><a class="footer-link px-0 small" href="https://action.smarsfan.com/join-discord">Discord</a></li>
+        
+        <li class="text-nowrap text-truncate m-0 p-0 text-white list-unstyled"><a class="footer-link px-0 small" href="https://www.smarsfan.com">SMARSFan</a></li>
+        
+        </ul>
+    </div>
+    <div class="card-footer bg-transparent">
+    <a href="/links/" class="text-nowrap text-truncate"><i class="fa-solid fa-link"></i> More links >></a>
+    </div>
+    </div>
+</div>
+    <div class="col-sm-4 col-md-3 col-lg-2 mt-4">
+        <div class="card bg-transparent border-0 h-100">
+            <div class="card-body">
+        <h5 class="">Gear</h5>
+        <ul class="decoration-none flex-column m-0 p-0">
+        
+        
+        <li class="text-nowrap text-truncate m-0 p-0 text-white list-unstyled"><a class="footer-link px-0 small" href="https://shop.pimoroni.com/products/micro-metal-gearmotor-with-micro-metal-motor-encoder">Micro Metal Motors with Encoders (MMME)</a></li>
+        
+        <li class="text-nowrap text-truncate m-0 p-0 text-white list-unstyled"><a class="footer-link px-0 small" href="https://amzn.to/3pD2jeN">Raspberry Pi Pico</a></li>
+        
+        <li class="text-nowrap text-truncate m-0 p-0 text-white list-unstyled"><a class="footer-link px-0 small" href="">Motor 2040</a></li>
+        
+        <li class="text-nowrap text-truncate m-0 p-0 text-white list-unstyled"><a class="footer-link px-0 small" href="https://amzn.to/3cllAOL">Raspberry Pi 400</a></li>
+        
+        <li class="text-nowrap text-truncate m-0 p-0 text-white list-unstyled"><a class="footer-link px-0 small" href="https://amzn.to/3Tbg81x">Raspberry Pi Compute Module 4 IO Board</a></li>
+        
+        </ul>
+    </div>
+    <div class="card-footer bg-transparent">
+    <a href="/gear/" class="text-nowrap text-truncate"><i class="fa-solid fa-hammer"></i> More Gear >></a>
+    </div>
+    </div>
+</div>
+    <div class="col-sm-4 col-md-3 col-lg-2 mt-4">
+        <div class="card bg-transparent border-0 h-100">
+            <div class="card-body">
+        <h5 class="">Boards</h5>
+        <ul class="decoration-none flex-column m-0 p-0">
+        
+        <li class="text-nowrap text-truncate m-0 p-0 text-white list-unstyled"><a class="footer-link px-0 small" href="/resources/boards/arduino.html">Arduino Uno R3</a></li>
+        
+        <li class="text-nowrap text-truncate m-0 p-0 text-white list-unstyled"><a class="footer-link px-0 small" href="/resources/boards/circuitplayground.html">Circuit Playground Express</a></li>
+        
+        <li class="text-nowrap text-truncate m-0 p-0 text-white list-unstyled"><a class="footer-link px-0 small" href="/resources/boards/esp32.html">Espressif ESP32</a></li>
+        
+        <li class="text-nowrap text-truncate m-0 p-0 text-white list-unstyled"><a class="footer-link px-0 small" href="/resources/boards/esp8266.html">Espressif ESP8266</a></li>
+        
+        <li class="text-nowrap text-truncate m-0 p-0 text-white list-unstyled"><a class="footer-link px-0 small" href="/resources/boards/microbit.html">Micro:Bit</a></li>
+        
+    </div>
+    <div class="card-footer bg-transparent">
+    <a href="/resources/boards/" class="text-nowrap text-truncate"><i class="fa-solid fa-brain-circuit"></i> More Boards >></a>
+    </div>
+</div>
+</div>
+</div>
+<div class="row row-cols-1 row-cols-sm-3 row-cols-md-4 row-cols-lg-6 mt-0 pt-0">
+    <div class="col-sm-4 col-md-3 col-lg-2 mt-4">
+        <div class="card bg-transparent border-0 h-100">
+            <div class="card-body">
+        <h5 class="">RSS Feeds</h5>
+        <ul class="decoration-none flex-column m-0 p-0">
+        
+        <li class="text-nowrap text-truncate m-0 p-0 text-white list-unstyled"><a class="footer-link px-0 small" href="/feeds/videos.xml">All Videos</a></li>
+        
+        <li class="text-nowrap text-truncate m-0 p-0 text-white list-unstyled"><a class="footer-link px-0 small" href="/feeds/feed.xml">All Posts</a></li>
+        
+        <li class="text-nowrap text-truncate m-0 p-0 text-white list-unstyled"><a class="footer-link px-0 small" href="/feeds/recent.xml">10 most recent Posts</a></li>
+        
+    </div>
+    <div class="card-footer bg-transparent">
+    <a href="/feeds/" class="text-nowrap text-truncate"><i class="fa-solid fa-brain-circuit"></i> More Feeds >></a>
+    </div>
+</div>
+    </div>
+    <div class="col-sm-4 col-md-3 col-lg-2 mt-4">
+        <div class="card bg-transparent border-0 h-100">
+            <div class="card-body">
+        <h5 class="">Periodic Table</h5>
+        <div class="ptor-footer-tiles mb-2">
+        
+        
+            
+            <a class="ptor-cat-boards" href="/periodic-table/ar.html" title="Arduino">Ar</a>
+        
+            
+            <a class="ptor-cat-code" href="/periodic-table/py.html" title="Python">Py</a>
+        
+            
+            <a class="ptor-cat-code" href="/periodic-table/mp.html" title="MicroPython">Mp</a>
+        
+            
+            <a class="ptor-cat-boards" href="/periodic-table/rp.html" title="Raspberry Pi">Rp</a>
+        
+            
+            <a class="ptor-cat-boards" href="/periodic-table/pi.html" title="Raspberry Pi Pico">Pi</a>
+        
+            
+            <a class="ptor-cat-robots" href="/periodic-table/sm.html" title="SMARS">Sm</a>
+        
+        </div>
+    </div>
+    <div class="card-footer bg-transparent">
+    <a href="/periodic-table/" class="text-nowrap text-truncate"><i class="fa-solid fa-atom"></i> Full table >></a>
+    </div>
+</div>
+    </div>
+</div>
+</div>
+    <div class="bg-red text-white rounded-3 mt-3 p-3 pb-1">
+    <p class="text-center">Proudly Powered by Raspberry Pi. See <a href="https://www.clustered-pi.com" class="dotted text-white">Clustered-Pi</a> for more information. </p>
+</div>
+    </div>
+    
+     <a href="https://page_count.kevsrobots.com/stats"><div id="visit-count" style="font-size: 0.9em; color: #fff; text-align: center; margin-top: 2rem;">
+  Loading visits...
+</div>
+</a>
+
+<script>
+(function() {
+  const endpoint = 'https://page_count.kevsrobots.com/';
+  const currentURL = window.location.href;
+
+  fetch(`${endpoint}?url=${encodeURIComponent(currentURL)}`)
+    .then(response => response.json())
+    .then(data => {
+      const visits = data.visits || '?';
+      document.getElementById('visit-count').textContent =
+        `This page has been visited ${visits} time${visits === 1 ? '' : 's'}.`;
+    })
+    .catch(err => {
+      console.warn("Visit tracker failed:", err);
+      document.getElementById('visit-count').textContent =
+        "Visit count unavailable.";
+    });
+})();
+</script>
+
+
+    <p class="text-white text-center p-3 m-0">Copyright 2024 - 2026 Kevin McAleer. All rights reserved 
+        | <a class="text-white" href="/privacy.html">Privacy Policy</a>
+        | <a class="text-white" href="/terms_and_conditions.html">Terms and Conditions</a>
+        | <a class="text-white" href="/disclaimer.html">Disclaimer</a>
+    </p> 
+</footer>
+
+
+        
+        
+          <style>
+/* ============================================
+   NIBSY WIDGET â FIXED POSITION ASSISTANT
+   ============================================ */
+
+#nibsy-widget {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 9999;
+  pointer-events: none;
+}
+
+#nibsy-widget * {
+  pointer-events: auto;
+}
+
+#nibsy-widget .nibsy-char {
+  width: 200px;
+  height: 240px;
+  cursor: pointer;
+  position: relative;
+  transition: filter 0.2s ease;
+}
+
+#nibsy-widget .nibsy-char:hover {
+  filter: drop-shadow(0 2px 8px rgba(74, 144, 217, 0.4));
+}
+
+/* ---- Entrance animation ---- */
+
+#nibsy-widget .nibsy-stage {
+  position: relative;
+  overflow: visible;
+}
+
+#nibsy-widget.nibsy-entering .nibsy-char {
+  animation: nibsy-walk-on 1.2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+@keyframes nibsy-walk-on {
+  0% {
+    transform: translateX(220px) rotate(5deg);
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+  }
+  40% {
+    transform: translateX(10px) rotate(-3deg);
+  }
+  60% {
+    transform: translateX(-5px) rotate(2deg);
+  }
+  80% {
+    transform: translateX(3px) rotate(-1deg);
+  }
+  100% {
+    transform: translateX(0) rotate(0deg);
+  }
+}
+
+/* ---- Exit animation ---- */
+
+#nibsy-widget.nibsy-exiting .nibsy-char {
+  animation: nibsy-walk-off 0.6s ease-in forwards;
+}
+
+@keyframes nibsy-walk-off {
+  0% {
+    transform: translateX(0) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(220px) rotate(5deg);
+    opacity: 0;
+  }
+}
+
+/* ---- Hidden state ---- */
+
+#nibsy-widget.nibsy-hidden .nibsy-char,
+#nibsy-widget.nibsy-hidden .nibsy-menu,
+#nibsy-widget.nibsy-hidden .nibsy-widget-speech {
+  display: none;
+}
+
+#nibsy-widget.nibsy-hidden .nibsy-show-btn {
+  display: flex;
+}
+
+.nibsy-show-btn {
+  display: none;
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: white;
+  border: 2px solid #D0D0D0;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.12);
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  transition: all 0.2s ease;
+  z-index: 10000;
+}
+
+.nibsy-show-btn:hover {
+  transform: scale(1.1);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.18);
+}
+
+/* ---- Menu ---- */
+
+.nibsy-menu {
+  position: absolute;
+  bottom: 100%;
+  right: 0;
+  margin-bottom: 8px;
+  background: white;
+  border: 2px solid #D0D0D0;
+  border-radius: 16px;
+  padding: 12px 8px 8px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+  transform: scale(0) translateY(10px);
+  transform-origin: bottom right;
+  opacity: 0;
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.2s ease;
+  pointer-events: none;
+  min-width: 200px;
+}
+
+.nibsy-menu.open {
+  transform: scale(1) translateY(0);
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.nibsy-menu::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  right: 55px;
+  width: 0;
+  height: 0;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-top: 8px solid white;
+}
+
+.nibsy-menu::before {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  right: 54px;
+  width: 0;
+  height: 0;
+  border-left: 9px solid transparent;
+  border-right: 9px solid transparent;
+  border-top: 9px solid #D0D0D0;
+}
+
+.nibsy-menu-header {
+  font-size: 13px;
+  font-weight: 600;
+  color: #666;
+  padding: 0 8px 8px;
+  border-bottom: 1px solid #eee;
+  margin-bottom: 4px;
+}
+
+.nibsy-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  color: #333;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background 0.15s ease;
+  cursor: pointer;
+  border: none;
+  background: none;
+  width: 100%;
+  text-align: left;
+}
+
+.nibsy-menu-item:hover {
+  background: #f0f4f8;
+  color: #333;
+  text-decoration: none;
+}
+
+.nibsy-menu-item i {
+  width: 20px;
+  text-align: center;
+  color: #4A90D9;
+  font-size: 15px;
+}
+
+.nibsy-menu-divider {
+  height: 1px;
+  background: #eee;
+  margin: 4px 8px;
+}
+
+.nibsy-menu-item.nibsy-hide-btn {
+  color: #999;
+  font-size: 13px;
+}
+
+.nibsy-menu-item.nibsy-hide-btn:hover {
+  background: #fff0f0;
+  color: #cc4444;
+}
+
+.nibsy-menu-item.nibsy-hide-btn i {
+  color: #999;
+  font-size: 13px;
+}
+
+.nibsy-menu-item.nibsy-hide-btn:hover i {
+  color: #cc4444;
+}
+
+/* ---- Speech bubble (widget version) ---- */
+
+.nibsy-widget-speech {
+  position: absolute;
+  bottom: 100%;
+  right: 0;
+  margin-bottom: 8px;
+  background: white;
+  border: 2px solid #D0D0D0;
+  border-radius: 14px;
+  padding: 8px 14px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #333;
+  white-space: nowrap;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  transform: scale(0);
+  transform-origin: bottom right;
+  opacity: 0;
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.2s ease;
+  pointer-events: none;
+  max-width: 220px;
+  white-space: normal;
+  line-height: 1.4;
+}
+
+.nibsy-widget-speech.has-link {
+  pointer-events: auto;
+}
+
+.nibsy-tip-nav {
+  display: none;
+  justify-content: space-between;
+  margin-top: 6px;
+  gap: 6px;
+}
+
+.nibsy-widget-speech.has-nav .nibsy-tip-nav {
+  display: flex;
+}
+
+.nibsy-tip-nav button {
+  background: #eee;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  width: 28px;
+  height: 22px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #555;
+  cursor: pointer;
+  padding: 0;
+  line-height: 20px;
+}
+
+.nibsy-tip-nav button:hover {
+  background: #ddd;
+  color: #333;
+}
+
+.nibsy-widget-speech a {
+  color: #4A90D9;
+  text-decoration: underline;
+  font-weight: 600;
+}
+
+.nibsy-widget-speech a:hover {
+  color: #2a6cb5;
+}
+
+.nibsy-widget-speech::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  right: 55px;
+  width: 0;
+  height: 0;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-top: 8px solid white;
+}
+
+.nibsy-widget-speech::before {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  right: 54px;
+  width: 0;
+  height: 0;
+  border-left: 9px solid transparent;
+  border-right: 9px solid transparent;
+  border-top: 9px solid #D0D0D0;
+}
+
+.nibsy-widget-speech.visible {
+  transform: scale(1);
+  opacity: 1;
+}
+
+/* ---- Idle animations ---- */
+
+@keyframes nw-bob {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-3px); }
+}
+
+@keyframes nw-antenna-wobble {
+  0%, 100% { transform: rotate(0deg); }
+  30%      { transform: rotate(4deg); }
+  70%      { transform: rotate(-4deg); }
+}
+
+@keyframes nw-blink {
+  0%   { transform: scaleY(1); }
+  40%  { transform: scaleY(0.05); }
+  60%  { transform: scaleY(0.05); }
+  100% { transform: scaleY(1); }
+}
+
+@keyframes nw-breathe {
+  0%, 100% { transform: scale(1, 1); }
+  50%      { transform: scale(1.01, 1.008); }
+}
+
+#nibsy-widget.nibsy-idle .nibsy-char svg {
+  animation: nw-bob 3s ease-in-out infinite;
+}
+
+#nibsy-widget.nibsy-idle #nw-antenna {
+  animation: nw-antenna-wobble 2.5s ease-in-out infinite;
+  transform-origin: 100px 88px;
+}
+
+#nibsy-widget.nibsy-idle #nw-body-shape {
+  animation: nw-breathe 4s ease-in-out infinite;
+  transform-origin: 100px 150px;
+}
+
+#nibsy-widget.nibsy-blinking #nw-eye-left,
+#nibsy-widget.nibsy-blinking #nw-eye-right {
+  animation: nw-blink 0.18s ease-in-out forwards;
+}
+
+#nw-eye-left  { transform-origin: 78px 128px; }
+#nw-eye-right { transform-origin: 122px 128px; }
+
+/* ---- Sleep animations ---- */
+
+@keyframes nw-sleep-bob {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(2px); }
+}
+
+@keyframes nw-zzz-float {
+  0%   { transform: translate(0, 0) scale(0.5); opacity: 0; }
+  20%  { opacity: 1; }
+  100% { transform: translate(15px, -30px) scale(1.2); opacity: 0; }
+}
+
+@keyframes nw-zzz-float-2 {
+  0%   { transform: translate(0, 0) scale(0.4); opacity: 0; }
+  25%  { opacity: 0.8; }
+  100% { transform: translate(20px, -35px) scale(1); opacity: 0; }
+}
+
+@keyframes nw-zzz-float-3 {
+  0%   { transform: translate(0, 0) scale(0.3); opacity: 0; }
+  30%  { opacity: 0.6; }
+  100% { transform: translate(12px, -28px) scale(0.9); opacity: 0; }
+}
+
+@keyframes nw-head-droop {
+  0%, 100% { transform: rotate(0deg); }
+  50%      { transform: rotate(5deg); }
+}
+
+#nibsy-widget.nibsy-sleeping .nibsy-char svg {
+  animation: nw-sleep-bob 4s ease-in-out infinite;
+}
+
+#nibsy-widget.nibsy-sleeping #nw-body-shape {
+  animation: nw-breathe 5s ease-in-out infinite;
+  transform-origin: 100px 150px;
+}
+
+#nibsy-widget.nibsy-sleeping #nw-antenna {
+  animation: nw-head-droop 3s ease-in-out infinite;
+  transform-origin: 100px 88px;
+}
+
+#nibsy-widget.nibsy-sleeping #nw-eye-left,
+#nibsy-widget.nibsy-sleeping #nw-eye-right {
+  display: none;
+}
+
+#nibsy-widget.nibsy-sleeping .nw-eye-highlight {
+  display: none;
+}
+
+#nw-eye-left-closed,
+#nw-eye-right-closed {
+  display: none;
+}
+
+#nibsy-widget.nibsy-sleeping #nw-eye-left-closed,
+#nibsy-widget.nibsy-sleeping #nw-eye-right-closed {
+  display: block;
+}
+
+#nw-mouth-sleep, #nw-mouth-giggle { display: none; }
+#nibsy-widget.nibsy-sleeping #nw-mouth-normal { display: none; }
+#nibsy-widget.nibsy-sleeping #nw-mouth-sleep { display: block; }
+#nibsy-widget.nibsy-giggling #nw-mouth-normal { display: none; }
+#nibsy-widget.nibsy-giggling #nw-mouth-giggle { display: block; }
+
+#nw-zzz { display: none; }
+#nibsy-widget.nibsy-sleeping #nw-zzz { display: block; }
+
+#nibsy-widget.nibsy-sleeping #nw-zzz-1 {
+  animation: nw-zzz-float 2.5s ease-out infinite;
+}
+#nibsy-widget.nibsy-sleeping #nw-zzz-2 {
+  animation: nw-zzz-float-2 2.5s ease-out infinite 0.8s;
+}
+#nibsy-widget.nibsy-sleeping #nw-zzz-3 {
+  animation: nw-zzz-float-3 2.5s ease-out infinite 1.6s;
+}
+
+/* ---- Giggle animation ---- */
+
+@keyframes nw-giggle-shake {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  10%  { transform: translateY(-3px) rotate(-2deg); }
+  20%  { transform: translateY(0) rotate(2deg); }
+  30%  { transform: translateY(-4px) rotate(-1deg); }
+  40%  { transform: translateY(0) rotate(1deg); }
+  50%  { transform: translateY(-2px) rotate(-2deg); }
+  60%  { transform: translateY(0) rotate(1deg); }
+  70%  { transform: translateY(-3px) rotate(-1deg); }
+  80%  { transform: translateY(0) rotate(0deg); }
+}
+
+@keyframes nw-antenna-boing {
+  0%   { transform: rotate(0deg); }
+  15%  { transform: rotate(15deg); }
+  30%  { transform: rotate(-12deg); }
+  45%  { transform: rotate(8deg); }
+  60%  { transform: rotate(-5deg); }
+  75%  { transform: rotate(3deg); }
+  100% { transform: rotate(0deg); }
+}
+
+@keyframes nw-cheek-blush {
+  0%, 100% { opacity: 0.5; }
+  30%      { opacity: 0.9; }
+}
+
+#nibsy-widget.nibsy-giggling .nibsy-char svg {
+  animation: nw-giggle-shake 0.8s ease-in-out;
+}
+
+#nibsy-widget.nibsy-giggling #nw-antenna {
+  animation: nw-antenna-boing 0.8s ease-in-out !important;
+  transform-origin: 100px 88px;
+}
+
+#nibsy-widget.nibsy-giggling #nw-cheeks circle {
+  animation: nw-cheek-blush 0.8s ease-in-out;
+}
+
+#nw-antenna { cursor: pointer; }
+
+/* ---- Idle fidget animations ---- */
+
+/* Think: eyes look up, thought bubble appears */
+#nw-thought { display: none; }
+#nibsy-widget.nibsy-thinking #nw-thought { display: block; }
+
+@keyframes nw-thought-appear {
+  0%   { transform: scale(0); opacity: 0; }
+  20%  { transform: scale(1.1); opacity: 1; }
+  80%  { transform: scale(1); opacity: 1; }
+  100% { transform: scale(0); opacity: 0; }
+}
+
+@keyframes nw-eyes-look-up {
+  0%, 100% { transform: translateY(0); }
+  20%, 80% { transform: translateY(-3px); }
+}
+
+#nibsy-widget.nibsy-thinking #nw-thought {
+  animation: nw-thought-appear 3s ease-in-out forwards;
+  transform-origin: 45px 20px;
+}
+
+#nibsy-widget.nibsy-thinking #nw-eyes {
+  animation: nw-eyes-look-up 3s ease-in-out;
+}
+
+/* Look around: eyes glance left then right */
+@keyframes nw-look-around {
+  0%, 100% { transform: translateX(0); }
+  20%, 35% { transform: translateX(-3px); }
+  45%      { transform: translateX(0); }
+  60%, 75% { transform: translateX(3px); }
+  90%      { transform: translateX(0); }
+}
+
+#nibsy-widget.nibsy-looking #nw-eyes {
+  animation: nw-look-around 2.5s ease-in-out;
+}
+
+/* Wave: right arm wiggles */
+@keyframes nw-wave {
+  0%, 100% { transform: rotate(20deg); }
+  15%      { transform: rotate(-15deg); }
+  30%      { transform: rotate(-25deg); }
+  45%      { transform: rotate(-10deg); }
+  60%      { transform: rotate(-25deg); }
+  75%      { transform: rotate(-15deg); }
+  90%      { transform: rotate(10deg); }
+}
+
+#nibsy-widget.nibsy-waving #nw-arm-right {
+  animation: nw-wave 1.5s ease-in-out;
+  transform-origin: 142px 152px;
+}
+
+/* Wiggle/dance: body shimmies side to side */
+@keyframes nw-wiggle {
+  0%, 100% { transform: translateX(0) rotate(0deg); }
+  15%      { transform: translateX(-3px) rotate(-2deg); }
+  30%      { transform: translateX(3px) rotate(2deg); }
+  45%      { transform: translateX(-3px) rotate(-2deg); }
+  60%      { transform: translateX(3px) rotate(2deg); }
+  75%      { transform: translateX(-2px) rotate(-1deg); }
+  90%      { transform: translateX(0) rotate(0deg); }
+}
+
+@keyframes nw-arm-dance-left {
+  0%, 100% { transform: rotate(-20deg); }
+  25%      { transform: rotate(-35deg); }
+  50%      { transform: rotate(-15deg); }
+  75%      { transform: rotate(-30deg); }
+}
+
+@keyframes nw-arm-dance-right {
+  0%, 100% { transform: rotate(20deg); }
+  25%      { transform: rotate(35deg); }
+  50%      { transform: rotate(15deg); }
+  75%      { transform: rotate(30deg); }
+}
+
+#nibsy-widget.nibsy-wiggling .nibsy-char svg {
+  animation: nw-wiggle 1.8s ease-in-out;
+}
+
+#nibsy-widget.nibsy-wiggling #nw-arm-left {
+  animation: nw-arm-dance-left 0.9s ease-in-out 2;
+  transform-origin: 58px 152px;
+}
+
+#nibsy-widget.nibsy-wiggling #nw-arm-right {
+  animation: nw-arm-dance-right 0.9s ease-in-out 2;
+  transform-origin: 142px 152px;
+}
+
+/* Curious tilt: body leans to one side */
+@keyframes nw-tilt {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  25%, 70% { transform: translateY(-2px) rotate(8deg); }
+}
+
+#nibsy-widget.nibsy-tilting .nibsy-char svg {
+  animation: nw-tilt 2s ease-in-out;
+  transform-origin: 100px 200px;
+}
+
+/* Bounce: excited hop */
+@keyframes nw-bounce {
+  0%, 100% { transform: translateY(0) scaleY(1); }
+  10%      { transform: translateY(0) scaleY(0.92); }
+  25%      { transform: translateY(-12px) scaleY(1.05); }
+  40%      { transform: translateY(0) scaleY(0.95); }
+  55%      { transform: translateY(-6px) scaleY(1.02); }
+  70%      { transform: translateY(0) scaleY(0.98); }
+  85%      { transform: translateY(-2px) scaleY(1); }
+}
+
+#nibsy-widget.nibsy-bouncing .nibsy-char svg {
+  animation: nw-bounce 1.2s ease-in-out;
+}
+
+/* Peek: peeks sideways */
+@keyframes nw-peek {
+  0%, 100% { transform: translateX(0) rotate(0deg); }
+  20%, 75% { transform: translateX(8px) rotate(-3deg); }
+}
+
+@keyframes nw-peek-eyes {
+  0%, 100% { transform: translateX(0); }
+  20%, 75% { transform: translateX(3px); }
+}
+
+#nibsy-widget.nibsy-peeking .nibsy-char svg {
+  animation: nw-peek 2.5s ease-in-out;
+  transform-origin: 100px 200px;
+}
+
+#nibsy-widget.nibsy-peeking #nw-eyes {
+  animation: nw-peek-eyes 2.5s ease-in-out;
+}
+
+/* ---- Click surprised reaction ---- */
+
+#nw-mouth-surprised { display: none; }
+#nibsy-widget.nibsy-surprised #nw-mouth-normal { display: none; }
+#nibsy-widget.nibsy-surprised #nw-mouth-surprised { display: block; }
+
+@keyframes nw-surprise-blink {
+  0%   { transform: scaleY(1); }
+  15%  { transform: scaleY(0.05); }
+  30%  { transform: scaleY(1); }
+  55%  { transform: scaleY(0.05); }
+  70%  { transform: scaleY(1); }
+  100% { transform: scaleY(1); }
+}
+
+@keyframes nw-mouth-pop {
+  0%   { transform: scale(0.5); opacity: 0.5; }
+  20%  { transform: scale(1.2); opacity: 1; }
+  40%  { transform: scale(1); opacity: 1; }
+  70%  { transform: scale(0.8); opacity: 0.8; }
+  100% { transform: scale(0); opacity: 0; }
+}
+
+#nibsy-widget.nibsy-surprised #nw-eyes {
+  animation: nw-surprise-blink 0.5s ease-in-out;
+  transform-origin: 100px 128px;
+}
+
+#nibsy-widget.nibsy-surprised #nw-mouth-surprised {
+  animation: nw-mouth-pop 0.5s ease-in-out forwards;
+  transform-origin: 100px 152px;
+}
+</style>
+
+<div id="nibsy-widget" class="nibsy-entering">
+  <div class="nibsy-widget-speech" id="nw-speech">
+    <span id="nw-speech-text"></span>
+    <div class="nibsy-tip-nav">
+      <button id="nw-tip-prev" title="Previous tip">&lt;</button>
+      <button id="nw-tip-next" title="Next tip">&gt;</button>
+    </div>
+  </div>
+  <div class="nibsy-menu" id="nw-menu">
+    <div class="nibsy-menu-header">What are you looking for?</div>
+    <a href="/all_videos" class="nibsy-menu-item"><i class="fas fa-play-circle"></i> Watch Videos</a>
+    <a href="/robots/" class="nibsy-menu-item"><i class="fas fa-lightbulb"></i> Get Ideas</a>
+    <a href="/learn/" class="nibsy-menu-item"><i class="fas fa-graduation-cap"></i> Learn Something</a>
+    <a href="/reviews/" class="nibsy-menu-item"><i class="fas fa-star"></i> Read a Review</a>
+    <a href="/blog/" class="nibsy-menu-item"><i class="fas fa-newspaper"></i> Read the Blog</a>
+    <a href="/search" class="nibsy-menu-item"><i class="fas fa-search"></i> Search</a>
+    <div class="nibsy-menu-divider"></div>
+    <button class="nibsy-menu-item" id="nw-trending-btn"><i class="fas fa-fire"></i> What's Trending</button>
+    <button class="nibsy-menu-item" id="nw-tip-btn"><i class="fas fa-lightbulb"></i> Show New Tip</button>
+    <button class="nibsy-menu-item nibsy-hide-btn" id="nw-hide-btn"><i class="fas fa-eye-slash"></i> Hide Nibsy</button>
+  </div>
+  <div class="nibsy-stage">
+    <div class="nibsy-char" id="nw-char">
+      <svg id="nw-svg" viewBox="0 0 200 240" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <radialGradient id="nw-body-grad" cx="40%" cy="35%" r="60%">
+            <stop offset="0%" stop-color="#FFFFFF" />
+            <stop offset="100%" stop-color="#F0F0F0" />
+          </radialGradient>
+          <radialGradient id="nw-cheek-grad" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#FFB6C1" />
+            <stop offset="100%" stop-color="#FFB6C1" stop-opacity="0" />
+          </radialGradient>
+        </defs>
+        <g id="nw-root">
+          <ellipse cx="100" cy="218" rx="45" ry="6" fill="#00000010" />
+          <g id="nw-legs">
+            <ellipse cx="80" cy="202" rx="16" ry="10" fill="url(#nw-body-grad)" stroke="#CCC" stroke-width="2" />
+            <ellipse cx="120" cy="202" rx="16" ry="10" fill="url(#nw-body-grad)" stroke="#CCC" stroke-width="2" />
+          </g>
+          <g id="nw-arm-left">
+            <ellipse cx="46" cy="152" rx="18" ry="12" fill="url(#nw-body-grad)" stroke="#CCC" stroke-width="2" transform="rotate(-20,46,152)" />
+          </g>
+          <g id="nw-arm-right">
+            <ellipse cx="154" cy="152" rx="18" ry="12" fill="url(#nw-body-grad)" stroke="#CCC" stroke-width="2" transform="rotate(20,154,152)" />
+          </g>
+          <g id="nw-body">
+            <g id="nw-body-shape">
+              <path d="M40,140 Q40,88 100,85 Q160,88 160,140 Q160,200 100,200 Q40,200 40,140 Z" fill="url(#nw-body-grad)" stroke="#D0D0D0" stroke-width="2.5" />
+            </g>
+          </g>
+          <g id="nw-head-dots">
+            <circle cx="140" cy="105" r="3.5" fill="#CCC" />
+            <circle cx="146" cy="114" r="3.5" fill="#CCC" />
+            <circle cx="149" cy="124" r="3.5" fill="#CCC" />
+            <circle cx="148" cy="134" r="3.5" fill="#CCC" />
+            <circle cx="144" cy="143" r="3" fill="#CCC" />
+          </g>
+          <g id="nw-antenna">
+            <line x1="100" y1="85" x2="100" y2="62" stroke="#D0D0D0" stroke-width="3" stroke-linecap="round" />
+            <circle cx="100" cy="58" r="8" fill="#F5C542" stroke="#E0A800" stroke-width="1.5" />
+          </g>
+          <g id="nw-eyes">
+            <circle cx="78" cy="128" r="11" fill="#FFF" opacity="0.5" />
+            <circle cx="122" cy="128" r="11" fill="#FFF" opacity="0.5" />
+            <circle id="nw-eye-left" cx="78" cy="128" r="8" fill="#222" />
+            <circle id="nw-eye-right" cx="122" cy="128" r="8" fill="#222" />
+            <!-- Closed eyes for sleep -->
+            <path id="nw-eye-left-closed" d="M 70,128 Q 78,133 86,128" stroke="#222" stroke-width="2.5" fill="none" stroke-linecap="round" />
+            <path id="nw-eye-right-closed" d="M 114,128 Q 122,133 130,128" stroke="#222" stroke-width="2.5" fill="none" stroke-linecap="round" />
+            <!-- Eye highlights -->
+            <circle class="nw-eye-highlight" cx="81" cy="125" r="3" fill="#FFF" opacity="0.8" />
+            <circle class="nw-eye-highlight" cx="125" cy="125" r="3" fill="#FFF" opacity="0.8" />
+            <circle class="nw-eye-highlight" cx="76" cy="130" r="1.5" fill="#FFF" opacity="0.5" />
+            <circle class="nw-eye-highlight" cx="120" cy="130" r="1.5" fill="#FFF" opacity="0.5" />
+          </g>
+          <g id="nw-cheeks">
+            <circle cx="67" cy="143" r="10" fill="url(#nw-cheek-grad)" opacity="0.5" />
+            <circle cx="133" cy="143" r="10" fill="url(#nw-cheek-grad)" opacity="0.5" />
+          </g>
+          <g id="nw-mouth">
+            <path id="nw-mouth-normal" d="M92,150 Q100,158 108,150" stroke="#555" stroke-width="2" fill="none" stroke-linecap="round" />
+            <ellipse id="nw-mouth-sleep" cx="100" cy="152" rx="4" ry="3" fill="#555" opacity="0.6" />
+            <path id="nw-mouth-giggle" d="M88,148 Q100,164 112,148" stroke="#555" stroke-width="2" fill="none" stroke-linecap="round" />
+            <ellipse id="nw-mouth-surprised" cx="100" cy="153" rx="5" ry="6" fill="#555" opacity="0.7" />
+          </g>
+          <g id="nw-buttons">
+            <circle cx="93" cy="170" r="3.5" fill="#4A90D9" />
+            <circle cx="100" cy="178" r="3.5" fill="#5CB85C" />
+            <circle cx="93" cy="186" r="3.5" fill="#F5C542" />
+          </g>
+          <!-- Thought bubble -->
+          <g id="nw-thought">
+            <circle cx="125" cy="55" r="4" fill="#fff" stroke="#ccc" stroke-width="1" />
+            <circle cx="118" cy="42" r="6" fill="#fff" stroke="#ccc" stroke-width="1" />
+            <ellipse cx="100" cy="18" rx="32" ry="18" fill="#fff" stroke="#ccc" stroke-width="1.5" />
+            <text id="nw-thought-text" x="100" y="22" text-anchor="middle" font-family="sans-serif" font-size="10" fill="#666">...</text>
+          </g>
+          <!-- ZZZ for sleep -->
+          <g id="nw-zzz">
+            <text id="nw-zzz-1" x="130" y="100" font-family="sans-serif" font-size="16" font-weight="bold" fill="#4A90D9" opacity="0">Z</text>
+            <text id="nw-zzz-2" x="138" y="92" font-family="sans-serif" font-size="13" font-weight="bold" fill="#6ab0ff" opacity="0">Z</text>
+            <text id="nw-zzz-3" x="134" y="96" font-family="sans-serif" font-size="10" font-weight="bold" fill="#4A90D9" opacity="0">z</text>
+          </g>
+        </g>
+      </svg>
+    </div>
+  </div>
+  <button class="nibsy-show-btn" id="nw-show-btn" title="Show Nibsy">ð¤</button>
+</div>
+
+<script>
+(function() {
+  const widget = document.getElementById('nibsy-widget');
+  const charEl = document.getElementById('nw-char');
+  const svgEl = document.getElementById('nw-svg');
+  const menu = document.getElementById('nw-menu');
+  const speech = document.getElementById('nw-speech');
+  const speechText = document.getElementById('nw-speech-text');
+  const tipPrevBtn = document.getElementById('nw-tip-prev');
+  const tipNextBtn = document.getElementById('nw-tip-next');
+  const hideBtn = document.getElementById('nw-hide-btn');
+  const showBtn = document.getElementById('nw-show-btn');
+  const tipBtn = document.getElementById('nw-tip-btn');
+  const trendingBtn = document.getElementById('nw-trending-btn');
+  const eyeLeft = document.getElementById('nw-eye-left');
+  const eyeRight = document.getElementById('nw-eye-right');
+
+  // --- Nibsy API integration (#71) ---
+  const NIBSY_API = 'https://nibsy.kevsrobots.com';
+  const nibsySession = sessionStorage.getItem('nibsy-sid') || (() => {
+    const sid = crypto.randomUUID ? crypto.randomUUID() : Math.random().toString(36).slice(2);
+    sessionStorage.setItem('nibsy-sid', sid);
+    return sid;
+  })();
+  let apiTips = null;
+
+  function sendBeaconJSON(path, data) {
+    try {
+      const blob = new Blob([JSON.stringify(data)], { type: 'application/json' });
+      navigator.sendBeacon(NIBSY_API + path, blob);
+    } catch (e) { /* non-critical */ }
+  }
+
+  function trackClick(contentId, url) {
+    sendBeaconJSON('/api/track/click', {
+      content_id: contentId,
+      content_url: url,
+      source_page: window.location.pathname,
+      session_id: nibsySession
+    });
+  }
+
+  function trackImpressions(contentIds) {
+    sendBeaconJSON('/api/track/impression', {
+      content_ids: contentIds,
+      source_page: window.location.pathname,
+      session_id: nibsySession
+    });
+  }
+
+  async function fetchRecommendations() {
+    try {
+      const page = window.location.pathname;
+      const res = await fetch(NIBSY_API + '/api/recommendations?page=' + encodeURIComponent(page) + '&limit=6');
+      if (!res.ok) return;
+      const data = await res.json();
+      const recs = data.recommendations || [];
+      if (recs.length === 0) return;
+      apiTips = recs.map(r => ({
+        text: r.title,
+        html: (r.reason ? r.reason + ' â ' : '') + '<a href="' + r.url + '" data-nibsy-id="' + r.content_id + '" data-nibsy-url="' + r.url + '">' + r.title + '</a>',
+        duration: 6000,
+        contentId: r.content_id,
+        url: r.url
+      }));
+      trackImpressions(recs.map(r => r.content_id));
+    } catch (e) { /* fall back to hardcoded tips */ }
+  }
+
+  async function fetchTrending() {
+    try {
+      const res = await fetch(NIBSY_API + '/api/trending?limit=5');
+      if (!res.ok) return null;
+      const data = await res.json();
+      return data.trending || [];
+    } catch (e) { return null; }
+  }
+
+  let menuOpen = false;
+  let blinkTimer = null;
+  let speechTimer = null;
+  let inactivityTimer = null;
+  let inactivitySeconds = 0;
+  let sleeping = false;
+  let hidden = localStorage.getItem('nibsy-hidden') === 'true';
+
+  const EYE_LEFT_CX = 78;
+  const EYE_LEFT_CY = 128;
+  const EYE_RIGHT_CX = 122;
+  const EYE_RIGHT_CY = 128;
+  const EYE_MAX_OFFSET = 3.5;
+
+  // --- Entrance ---
+
+  function init() {
+    if (hidden) {
+      widget.classList.remove('nibsy-entering');
+      widget.classList.add('nibsy-hidden');
+      return;
+    }
+
+    widget.classList.add('nibsy-entering');
+    setTimeout(() => {
+      widget.classList.remove('nibsy-entering');
+      widget.classList.add('nibsy-idle');
+      startBlinking();
+      startEyeTracking();
+      startInactivityWatch();
+      showSpeech("Hi! I'm Nibsy! Click me for help ð", 4000);
+      setTimeout(showContextGreeting, 6000);
+      setTimeout(() => { if (shouldShowCTA()) setTimeout(showCTA, CTA_DELAY_MS); else scheduleCTA(); }, 100);
+      fetchRecommendations();
+      setTimeout(scheduleNavTip, 12000);
+      scheduleFidget();
+    }, 1400);
+  }
+
+  // --- Page awareness ---
+
+  function getPageContext() {
+    const path = window.location.pathname;
+    if (path === '/' || path === '/index.html') return 'home';
+    if (path.startsWith('/blog')) return 'blog';
+    if (path.startsWith('/learn')) return 'learn';
+    if (path.startsWith('/reviews')) return 'reviews';
+    if (path.startsWith('/robots')) return 'ideas';
+    if (path.startsWith('/all_videos') || path.startsWith('/videos')) return 'videos';
+    if (path.startsWith('/search')) return 'search';
+    if (path.startsWith('/about')) return 'about';
+    if (path.startsWith('/groups')) return 'groups';
+    if (path.startsWith('/gear')) return 'gear';
+    return 'other';
+  }
+
+  const contextMessages = {
+    home:    ["Welcome to KevsRobots!", "Hey there, welcome back!", "Good to see you!"],
+    blog:    ["You've found the blog!", "Lots of maker news here!", "Check out the latest posts!"],
+    learn:   ["Ready to learn something new?", "Great courses await you here!", "Level up your skills!"],
+    reviews: ["Looking for a review?", "Honest takes on maker gear!", "Find the right kit here!"],
+    ideas:   ["Need project inspiration?", "So many robots to build!", "Find your next project here!"],
+    videos:  ["Grab some popcorn!", "Lots of videos to watch!", "See builds come to life!"],
+    search:  ["Looking for something?", "I can help you find things!", "Let's find it together!"],
+    about:   ["That's Kev! He made me!", "Learn about KevsRobots!", "The story behind the site!"],
+    groups:  ["Great ideas in here!", "Find your next project!", "So much inspiration!"],
+    gear:    ["Checking out the gear?", "Great tools for makers!", "Find the right equipment!"],
+    other:   ["Exploring, are we?", "Nice find!", "Happy browsing!"]
+  };
+
+  function showContextGreeting() {
+    const ctx = getPageContext();
+    const msgs = contextMessages[ctx];
+    const msg = msgs[Math.floor(Math.random() * msgs.length)];
+    showSpeech(msg, 4000);
+  }
+
+  // --- Navigation tips (gentle, frequent nudges) ---
+
+  const TIPS_INTERVAL_MS = 20 * 1000;
+  let tipsTimer = null;
+
+  const navTips = [
+    // Site sections
+    { text: 'Looking for project ideas?', html: 'Looking for project ideas? <a href="/robots/">Browse projects</a>', duration: 5000 },
+    { text: 'Want to learn something new?', html: 'Want to learn something new? <a href="/learn/">Start a course</a>', duration: 5000 },
+    { text: 'Fancy watching some videos?', html: 'Fancy watching some videos? <a href="/all_videos">Watch now</a>', duration: 5000 },
+    { text: 'Curious about a product?', html: 'Curious about a product? <a href="/reviews/">Read reviews</a>', duration: 5000 },
+    { text: 'Check out the latest blog posts!', html: 'Check out the latest posts! <a href="/blog/">Read the blog</a>', duration: 5000 },
+    { text: 'Looking for something specific?', html: 'Looking for something specific? <a href="/search">Search the site</a>', duration: 5000 },
+    { text: 'Need some robot inspiration?', html: 'Need some robot inspiration? <a href="/robots/">Get ideas</a>', duration: 5000 },
+    { text: 'Have you seen the courses?', html: 'Have you seen the courses? <a href="/learn/">Take a look</a>', duration: 5000 },
+    { text: 'Want to see what I can build?', html: 'Want to see what I can build? <a href="/all_videos">Watch a video</a>', duration: 5000 },
+    // Idea categories
+    { text: 'Into 3D design?', html: 'Into 3D design? <a href="/ideas/3ddesign.html">3D design ideas</a>', duration: 5000 },
+    { text: 'Into 3D printing?', html: 'Into 3D printing? <a href="/ideas/3dprinting.html">3D printing ideas</a>', duration: 5000 },
+    { text: 'Try some AI projects!', html: 'Try some AI projects? <a href="/ideas/ai.html">AI ideas</a>', duration: 5000 },
+    { text: 'Interested in Arduino?', html: 'Interested in Arduino? <a href="/ideas/arduino.html">Arduino ideas</a>', duration: 5000 },
+    { text: 'Explore electronics!', html: 'Explore electronics! <a href="/ideas/electronics.html">Electronics ideas</a>', duration: 5000 },
+    { text: 'Love making games?', html: 'Love making games? <a href="/ideas/games.html">Game ideas</a>', duration: 5000 },
+    { text: 'Got a green thumb?', html: 'Got a green thumb? <a href="/ideas/garden.html">Garden ideas</a>', duration: 5000 },
+    { text: 'Feeling hacky?', html: 'Feeling hacky? <a href="/ideas/hacks.html">Hack ideas</a>', duration: 5000 },
+    { text: 'Love Halloween?', html: 'Love Halloween? <a href="/ideas/halloween.html">Spooky ideas</a>', duration: 5000 },
+    { text: 'Fancy some laser cutting?', html: 'Fancy some laser cutting? <a href="/ideas/lasercutting.html">Laser cutting ideas</a>', duration: 5000 },
+    { text: 'Love Lego?', html: 'Love Lego? <a href="/ideas/lego.html">Lego ideas</a>', duration: 5000 },
+    { text: 'Love MicroPython?', html: 'Love MicroPython? <a href="/ideas/micropython.html">MicroPython ideas</a>', duration: 5000 },
+    { text: 'Make some music!', html: 'Make some music! <a href="/ideas/music.html">Music ideas</a>', duration: 5000 },
+    { text: 'Design your own PCBs!', html: 'Design your own PCBs! <a href="/ideas/pcb.html">PCB ideas</a>', duration: 5000 },
+    { text: 'Projects for your pets!', html: 'Projects for your pets! <a href="/ideas/pets.html">Pet ideas</a>', duration: 5000 },
+    { text: 'Into photography?', html: 'Into photography? <a href="/ideas/photography.html">Photography ideas</a>', duration: 5000 },
+    { text: 'Love the Pico?', html: 'Love the Pico? <a href="/ideas/pico.html">Pico ideas</a>', duration: 5000 },
+    { text: 'Boost your productivity!', html: 'Boost your productivity! <a href="/ideas/productivity.html">Productivity ideas</a>', duration: 5000 },
+    { text: 'Love Python?', html: 'Love Python? <a href="/ideas/python.html">Python ideas</a>', duration: 5000 },
+    { text: 'Raspberry Pi projects!', html: 'Raspberry Pi projects! <a href="/ideas/raspberrypi.html">Take a look</a>', duration: 5000 },
+    { text: 'Feeling retro?', html: 'Feeling retro? <a href="/ideas/retro.html">Retro ideas</a>', duration: 5000 },
+    { text: 'Robot arms are cool!', html: 'Robot arms are cool! <a href="/ideas/robotarms.html">Robot arm ideas</a>', duration: 5000 },
+    { text: 'Want to build a robot?', html: 'Want to build a robot? <a href="/ideas/robots.html">Robot ideas</a>', duration: 5000 },
+    { text: 'Seasonal projects!', html: 'Seasonal projects! <a href="/ideas/seasonal.html">Seasonal ideas</a>', duration: 5000 },
+    { text: 'Need a stand or case?', html: 'Need a stand or case? <a href="/ideas/stands-and-cases.html">Stands &amp; cases</a>', duration: 5000 },
+    { text: 'Make something wearable!', html: 'Make something wearable! <a href="/ideas/wearable.html">Wearable ideas</a>', duration: 5000 },
+    { text: 'Fancy something weird?', html: 'Fancy something weird? <a href="/ideas/weird.html">Weird ideas</a>', duration: 5000 }
+  ];
+
+  let lastTipIndex = -1;
+
+  function activeTips() { return apiTips || navTips; }
+
+  function showNavTip(force) {
+    if (!force && (hidden || sleeping || menuOpen || giggling || surprising)) {
+      scheduleNavTip();
+      return;
+    }
+    if (!force && speech.classList.contains('visible')) {
+      scheduleNavTip();
+      return;
+    }
+    const tips = activeTips();
+    let idx;
+    do { idx = Math.floor(Math.random() * tips.length); } while (idx === lastTipIndex && tips.length > 1);
+    lastTipIndex = idx;
+    showTipByIndex(idx);
+    scheduleNavTip();
+  }
+
+  function showTipByIndex(idx) {
+    const tips = activeTips();
+    lastTipIndex = idx;
+    const tip = tips[idx];
+    showSpeech(tip.html, tip.duration, true, true);
+  }
+
+  function showPrevTip() {
+    const tips = activeTips();
+    const idx = lastTipIndex <= 0 ? tips.length - 1 : lastTipIndex - 1;
+    showTipByIndex(idx);
+    scheduleNavTip();
+  }
+
+  function showNextTip() {
+    const tips = activeTips();
+    const idx = lastTipIndex >= tips.length - 1 ? 0 : lastTipIndex + 1;
+    showTipByIndex(idx);
+    scheduleNavTip();
+  }
+
+  tipPrevBtn.addEventListener('click', (e) => { e.stopPropagation(); showPrevTip(); });
+  tipNextBtn.addEventListener('click', (e) => { e.stopPropagation(); showNextTip(); });
+
+  function scheduleNavTip() {
+    if (tipsTimer) clearTimeout(tipsTimer);
+    tipsTimer = setTimeout(showNavTip, TIPS_INTERVAL_MS);
+  }
+
+  function stopNavTips() {
+    if (tipsTimer) { clearTimeout(tipsTimer); tipsTimer = null; }
+  }
+
+  // --- Promotional CTAs ---
+
+  const CTA_INTERVAL_MS = 5 * 60 * 1000;
+  const CTA_DELAY_MS = 30 * 1000;
+
+  const ctaMessages = [
+    {
+      html: 'ðº Love robots? <a href="https://www.youtube.com/@kevinmcaleer28?sub_confirmation=1" target="_blank">Subscribe on YouTube</a> for weekly builds!',
+      duration: 8000
+    },
+    {
+      html: 'ð¬ Get the weekly newsletter! <a href="/newsletter" target="_blank">Join the list</a> for tips & projects.',
+      duration: 8000
+    },
+    {
+      html: 'ð¬ Join our maker community on <a href="/discord" target="_blank">Discord</a>!',
+      duration: 8000
+    },
+    {
+      html: 'ð Never miss a build â <a href="https://www.youtube.com/@kevinmcaleer28?sub_confirmation=1" target="_blank">subscribe on YouTube</a>!',
+      duration: 8000
+    },
+    {
+      html: 'âï¸ Weekly maker tips in your inbox â <a href="/newsletter" target="_blank">sign up here</a>!',
+      duration: 8000
+    },
+    {
+      html: 'ð¤ Chat with other makers on <a href="/discord" target="_blank">Discord</a>!',
+      duration: 8000
+    }
+  ];
+
+  let ctaTimer = null;
+
+  function shouldShowCTA() {
+    const lastShown = parseInt(localStorage.getItem('nibsy-cta-last') || '0', 10);
+    return Date.now() - lastShown > CTA_INTERVAL_MS;
+  }
+
+  function showCTA() {
+    if (hidden || sleeping || menuOpen || giggling || surprising) return;
+    if (!shouldShowCTA()) return;
+    const cta = ctaMessages[Math.floor(Math.random() * ctaMessages.length)];
+    showSpeech(cta.html, cta.duration, true);
+    localStorage.setItem('nibsy-cta-last', String(Date.now()));
+    scheduleCTA();
+  }
+
+  function scheduleCTA() {
+    if (ctaTimer) clearTimeout(ctaTimer);
+    ctaTimer = setTimeout(showCTA, CTA_INTERVAL_MS);
+  }
+
+  // --- Eye tracking ---
+
+  function startEyeTracking() {
+    document.addEventListener('mousemove', onMouseMove);
+  }
+
+  function stopEyeTracking() {
+    document.removeEventListener('mousemove', onMouseMove);
+    eyeLeft.setAttribute('cx', EYE_LEFT_CX);
+    eyeLeft.setAttribute('cy', EYE_LEFT_CY);
+    eyeRight.setAttribute('cx', EYE_RIGHT_CX);
+    eyeRight.setAttribute('cy', EYE_RIGHT_CY);
+  }
+
+  function onMouseMove(e) {
+    if (hidden) return;
+    if (sleeping) { wakeUp(); return; }
+    resetInactivity();
+
+    const rect = svgEl.getBoundingClientRect();
+    const svgCenterX = rect.left + rect.width / 2;
+    const svgCenterY = rect.top + rect.height * 0.53;
+
+    const dx = e.clientX - svgCenterX;
+    const dy = e.clientY - svgCenterY;
+    const dist = Math.sqrt(dx * dx + dy * dy);
+
+    const maxDist = Math.max(window.innerWidth, window.innerHeight) * 0.5;
+    const factor = Math.min(dist / maxDist, 1);
+
+    const angle = Math.atan2(dy, dx);
+    const offsetX = Math.cos(angle) * EYE_MAX_OFFSET * factor;
+    const offsetY = Math.sin(angle) * EYE_MAX_OFFSET * factor;
+
+    eyeLeft.setAttribute('cx', EYE_LEFT_CX + offsetX);
+    eyeLeft.setAttribute('cy', EYE_LEFT_CY + offsetY);
+    eyeRight.setAttribute('cx', EYE_RIGHT_CX + offsetX);
+    eyeRight.setAttribute('cy', EYE_RIGHT_CY + offsetY);
+  }
+
+  // --- Inactivity / Sleep ---
+
+  function startInactivityWatch() {
+    document.addEventListener('keydown', resetInactivity);
+    document.addEventListener('click', resetInactivity);
+    document.addEventListener('scroll', resetInactivity);
+    inactivitySeconds = 0;
+    inactivityTimer = setInterval(() => {
+      if (hidden || sleeping) return;
+      inactivitySeconds++;
+      if (inactivitySeconds >= 30) {
+        goToSleep();
+      }
+    }, 1000);
+  }
+
+  function resetInactivity() {
+    inactivitySeconds = 0;
+    if (sleeping) wakeUp();
+  }
+
+  function goToSleep() {
+    if (sleeping || hidden) return;
+    sleeping = true;
+    stopBlinking();
+    stopFidgets();
+    widget.classList.remove('nibsy-idle');
+    widget.classList.add('nibsy-sleeping');
+  }
+
+  function wakeUp() {
+    if (!sleeping) return;
+    sleeping = false;
+    widget.classList.remove('nibsy-sleeping');
+    widget.classList.add('nibsy-idle');
+    startBlinking();
+    scheduleFidget();
+    showSpeech("*yawn* ...oh, hi! ð", 2500);
+
+    eyeLeft.setAttribute('cx', EYE_LEFT_CX);
+    eyeLeft.setAttribute('cy', EYE_LEFT_CY);
+    eyeRight.setAttribute('cx', EYE_RIGHT_CX);
+    eyeRight.setAttribute('cy', EYE_RIGHT_CY);
+  }
+
+  // --- Blinking ---
+
+  function startBlinking() {
+    scheduleBlink();
+  }
+
+  function stopBlinking() {
+    if (blinkTimer) { clearTimeout(blinkTimer); blinkTimer = null; }
+  }
+
+  function scheduleBlink() {
+    if (sleeping) return;
+    blinkTimer = setTimeout(() => {
+      doBlink();
+    }, 2500 + Math.random() * 4500);
+  }
+
+  function doBlink() {
+    if (sleeping) return;
+    widget.classList.add('nibsy-blinking');
+    const onEnd = () => {
+      widget.classList.remove('nibsy-blinking');
+      eyeLeft.removeEventListener('animationend', onEnd);
+      if (Math.random() < 0.2) {
+        setTimeout(() => {
+          widget.classList.add('nibsy-blinking');
+          const onEnd2 = () => {
+            widget.classList.remove('nibsy-blinking');
+            eyeLeft.removeEventListener('animationend', onEnd2);
+            scheduleBlink();
+          };
+          eyeLeft.addEventListener('animationend', onEnd2);
+        }, 180);
+      } else {
+        scheduleBlink();
+      }
+    };
+    eyeLeft.addEventListener('animationend', onEnd);
+  }
+
+  // --- Idle fidgets ---
+
+  const thoughtTexts = ['hmm...', 'ð¤', 'ð¡', 'ð§', 'ð¤', '...?', 'â¨', 'ð¦', 'ooh!'];
+
+  const fidgets = [
+    { name: 'thinking', duration: 3000, setup: () => {
+      const t = document.getElementById('nw-thought-text');
+      if (t) t.textContent = thoughtTexts[Math.floor(Math.random() * thoughtTexts.length)];
+    }},
+    { name: 'looking',  duration: 2500 },
+    { name: 'waving',   duration: 1500 },
+    { name: 'wiggling', duration: 1800 },
+    { name: 'tilting',  duration: 2000 },
+    { name: 'bouncing', duration: 1200 },
+    { name: 'peeking',  duration: 2500 }
+  ];
+
+  let fidgetTimer = null;
+  let fidgeting = false;
+  let lastFidgetIndex = -1;
+
+  function scheduleFidget() {
+    if (fidgetTimer) clearTimeout(fidgetTimer);
+    fidgetTimer = setTimeout(doFidget, 6000 + Math.random() * 6000);
+  }
+
+  function doFidget() {
+    if (hidden || sleeping || menuOpen || giggling || surprising || fidgeting) {
+      scheduleFidget();
+      return;
+    }
+    let idx;
+    do { idx = Math.floor(Math.random() * fidgets.length); } while (idx === lastFidgetIndex && fidgets.length > 1);
+    lastFidgetIndex = idx;
+    const f = fidgets[idx];
+    fidgeting = true;
+    if (f.setup) f.setup();
+    widget.classList.add('nibsy-' + f.name);
+    setTimeout(() => {
+      widget.classList.remove('nibsy-' + f.name);
+      fidgeting = false;
+      scheduleFidget();
+    }, f.duration);
+  }
+
+  function stopFidgets() {
+    if (fidgetTimer) { clearTimeout(fidgetTimer); fidgetTimer = null; }
+    fidgeting = false;
+    fidgets.forEach(f => widget.classList.remove('nibsy-' + f.name));
+  }
+
+  // --- Speech ---
+
+  function showSpeech(text, duration, isHTML, showNav) {
+    if (menuOpen) return;
+    if (speechTimer) clearTimeout(speechTimer);
+    if (isHTML) {
+      speechText.innerHTML = text;
+      speech.classList.add('has-link');
+    } else {
+      speechText.textContent = text;
+      speech.classList.remove('has-link');
+    }
+    if (showNav) {
+      speech.classList.add('has-nav', 'has-link');
+    } else {
+      speech.classList.remove('has-nav');
+    }
+    speech.classList.add('visible');
+    speechTimer = setTimeout(() => {
+      speech.classList.remove('visible', 'has-link', 'has-nav');
+      speechTimer = null;
+    }, duration || 3000);
+  }
+
+  function hideSpeech() {
+    if (speechTimer) clearTimeout(speechTimer);
+    speech.classList.remove('visible', 'has-link', 'has-nav');
+    speechTimer = null;
+  }
+
+  // --- Giggle ---
+
+  const giggleMessages = [
+    "Hehe, that tickles!",
+    "Tee-hee!",
+    "Stop it, that tickles!",
+    "Hahaha!",
+    "That's my antenna!"
+  ];
+  let giggling = false;
+
+  function giggle() {
+    if (giggling) return;
+    giggling = true;
+    resetInactivity();
+    if (sleeping) wakeUp();
+    closeMenu();
+    widget.classList.add('nibsy-giggling');
+    showSpeech(giggleMessages[Math.floor(Math.random() * giggleMessages.length)], 2000);
+    setTimeout(() => {
+      widget.classList.remove('nibsy-giggling');
+      giggling = false;
+    }, 800);
+  }
+
+  document.getElementById('nw-antenna').addEventListener('click', (e) => {
+    e.stopPropagation();
+    giggle();
+  });
+
+  // --- Menu ---
+
+  function toggleMenu() {
+    menuOpen = !menuOpen;
+    if (menuOpen) {
+      hideSpeech();
+      menu.classList.add('open');
+    } else {
+      menu.classList.remove('open');
+    }
+  }
+
+  function closeMenu() {
+    menuOpen = false;
+    menu.classList.remove('open');
+  }
+
+  let surprising = false;
+
+  function surprised(callback) {
+    if (surprising) { if (callback) callback(); return; }
+    surprising = true;
+    widget.classList.add('nibsy-surprised');
+    setTimeout(() => {
+      widget.classList.remove('nibsy-surprised');
+      surprising = false;
+      if (callback) callback();
+    }, 500);
+  }
+
+  charEl.addEventListener('click', (e) => {
+    e.stopPropagation();
+    resetInactivity();
+    if (sleeping) {
+      wakeUp();
+      return;
+    }
+    surprised(() => toggleMenu());
+  });
+
+  document.addEventListener('click', (e) => {
+    if (menuOpen && !menu.contains(e.target) && !charEl.contains(e.target)) {
+      closeMenu();
+    }
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && menuOpen) closeMenu();
+  });
+
+  // --- Click tracking on recommendation links ---
+
+  speech.addEventListener('click', (e) => {
+    const link = e.target.closest('a[data-nibsy-id]');
+    if (link) {
+      trackClick(parseInt(link.dataset.nibsyId, 10), link.dataset.nibsyUrl);
+    }
+  });
+
+  // --- What's Trending ---
+
+  trendingBtn.addEventListener('click', async (e) => {
+    e.stopPropagation();
+    closeMenu();
+    showSpeech('Checking what\'s hot...', 2000);
+    const items = await fetchTrending();
+    if (!items || items.length === 0) {
+      showSpeech('Nothing trending right now â check back later!', 4000);
+      return;
+    }
+    const links = items.slice(0, 3).map(t =>
+      '<a href="' + t.url + '" data-nibsy-id="' + t.id + '" data-nibsy-url="' + t.url + '">' + t.title + '</a>'
+    ).join('<br>');
+    showSpeech('ð¥ Trending now:<br>' + links, 8000, true);
+  });
+
+  // --- Show New Tip ---
+
+  tipBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    closeMenu();
+    showNavTip(true);
+  });
+
+  // --- Hide / Show ---
+
+  hideBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    closeMenu();
+    stopBlinking();
+    stopEyeTracking();
+    stopNavTips();
+    stopFidgets();
+    if (inactivityTimer) { clearInterval(inactivityTimer); inactivityTimer = null; }
+
+    widget.classList.remove('nibsy-idle', 'nibsy-sleeping');
+    sleeping = false;
+    widget.classList.add('nibsy-exiting');
+
+    setTimeout(() => {
+      widget.classList.remove('nibsy-exiting');
+      widget.classList.add('nibsy-hidden');
+      hidden = true;
+      localStorage.setItem('nibsy-hidden', 'true');
+    }, 600);
+  });
+
+  showBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    hidden = false;
+    sleeping = false;
+    localStorage.setItem('nibsy-hidden', 'false');
+    widget.classList.remove('nibsy-hidden');
+    widget.classList.add('nibsy-entering');
+
+    setTimeout(() => {
+      widget.classList.remove('nibsy-entering');
+      widget.classList.add('nibsy-idle');
+      startBlinking();
+      startEyeTracking();
+      startInactivityWatch();
+      showSpeech("I'm back! ð", 2500);
+    }, 1400);
+  });
+
+  // --- Init ---
+  init();
+})();
+</script>
+
+        
+
+        
+
+        <!-- User Authentication Menu Script -->
+        <script src="/assets/js/user-auth.js?v=1789943003"></script>
+
+        <!-- Like and Comment Summary Script -->
+        <script src="/assets/js/like-comment-summary.js?v=1789943003"></script>
+
+        <!-- Universal Page View Tracker -->
+        <script src="/assets/js/page-view-tracker.js?v=1789943003"></script>
+    </body>
+    <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-YM0MEJN8GT"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-YM0MEJN8GT');
+</script>
+</html>

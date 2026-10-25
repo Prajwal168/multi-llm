@@ -1,0 +1,1721 @@
+<!DOCTYPE html><html lang="en"><head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1" name="viewport">
+  <title>Monolithic vs microservices architecture: When to choose each approach</title>
+
+  <link as="font" crossorigin="" data-cms-original-href="/fonts/dx-sans-regular.woff2" href="/fonts/dx-sans-regular.woff2?_cchid=617384ba88ea7fd6de0a9d4820adcf63" rel="preload" type="font/woff2">
+  <link as="font" crossorigin="" data-cms-original-href="/fonts/dx-sans-medium.woff2" href="/fonts/dx-sans-medium.woff2?_cchid=842e6bf8c66a2feed57c44a18b42e579" rel="preload" type="font/woff2">
+  <link as="font" crossorigin="" data-cms-original-href="/fonts/InterVariable.woff2" href="/fonts/InterVariable.woff2?_cchid=e2b698673a1818da61aaea2fae23d7f2" rel="preload" type="font/woff2">
+
+  <style>
+    @font-face {
+      font-family: 'Inter';
+      src: url(/fonts/InterVariable.woff2?_cchid=e2b698673a1818da61aaea2fae23d7f2) format('woff2-variations');
+      font-weight: 100 900;
+      font-display: swap;
+    }
+  </style>
+
+  <link data-cms-original-href="/style.css" href="/style.css?_cchid=0968bbfbbe1356b0082ba6d78af0be3b" rel="stylesheet">
+
+  <script>
+    window.dataLayer = window.dataLayer || [];
+  </script>
+
+  
+
+  <script data-cms-original-src="/js/header.js" defer="" src="/js/header.js?_cchid=13f7a3bc20730744a3ce706aaf91cf47"></script>
+  <script data-cms-original-src="/js/alpine.js" defer="" src="/js/alpine.js?_cchid=3627d9e559a664a3cfc8f021d09ca6bc"></script>
+  <script data-cms-original-src="/js/form-utm.js" defer="" src="/js/form-utm.js?_cchid=9cb79e6b5530f174201eec27448f58c4"></script>
+  <script data-cms-original-src="/js/form-validation.js" defer="" src="/js/form-validation.js?_cchid=f4e67fbc1565c29376f70c00414f779c"></script>
+  <script data-cms-original-src="/js/form-timestamp.js" defer="" src="/js/form-timestamp.js?_cchid=1e3a0bfaa274628eeb010f4cb4d04261"></script>
+  <script data-cms-original-src="/js/form-submission.js" defer="" src="/js/form-submission.js?_cchid=b0a5cc3adadcfdb79c002507615b7729"></script>
+  <script data-cms-original-src="/js/form-gravity.js" defer="" src="/js/form-gravity.js?_cchid=81e6f3b3f2a6b152da1f0ae7fbbb9f19"></script>
+  <script data-cms-original-src="/js/event-tracking.js" defer="" src="/js/event-tracking.js?_cchid=3a11467a2e3617eac9769949ca0e2e49"></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      setTimeout(initGTM, 3000);
+
+      // Unify tag
+      !function(){
+        var e=["identify","page","startAutoPage","stopAutoPage","startAutoIdentify","stopAutoIdentify"];
+        function t(o){return Object.assign([],e.reduce(function(r,n){return r[n]=function(){return o.push([n,[].slice.call(arguments)]),r},r},{}))}
+        window.unify||(window.unify=t(window.unify));
+        window.unifyBrowser||(window.unifyBrowser=t(window.unifyBrowser));
+        var n=document.createElement("script");
+        n.async = true;
+        n.setAttribute("src", "https://tag.unifyintent.com/v1/NxXLaRFmkGeMDHGDXfeQ56/script.js");
+        n.setAttribute("data-api-key", "wk_JYjk2xDS_4xfSGQmuQo9VFR8shvV7eySbrgjUTkX8");
+        n.setAttribute("id", "unifytag");
+        (document.body || document.head).appendChild(n);
+      }();
+    });
+
+    document.addEventListener('scroll', initGTMOnEvent);
+    document.addEventListener('mousemove', initGTMOnEvent);
+    document.addEventListener('touchstart', initGTMOnEvent);
+
+    function initGTMOnEvent(event) {
+      initCookieYes();
+      initGTM();
+      event.currentTarget.removeEventListener(event.type, initGTMOnEvent);
+    }
+
+    function initCookieYes() {
+      if (window.cookieYesDidInit) return;
+      window.cookieYesDidInit = true;
+
+      const script = document.createElement('script');
+      script.id = 'cookieyes';
+      script.type = 'text/javascript';
+      script.src = 'https://cdn-cookieyes.com/client_data/729d07a18efd8eb6adfb7bc1/script.js';
+      document.head.appendChild(script);
+    }
+
+    function initGTM() {
+      if (window.gtmDidInit) return;
+      window.gtmDidInit = true;
+
+      window.dataLayer = window.dataLayer || [];
+      window.dataLayer.push({'gtm.start': new Date().getTime(), event: 'gtm.js'});
+
+      const script = document.createElement('script');
+      script.type = 'text/javascript';
+      script.async = true;
+      script.src = 'https://www.googletagmanager.com/gtm.js?id=GTM-PC83CJ6';
+      document.head.appendChild(script);
+    }
+  </script>
+
+  <script data-cms-original-src="/js/dropdown-toggle.js" defer="" src="/js/dropdown-toggle.js?_cchid=ddfb7e5cd42d6dc7ec48f3da32bcdcbe"></script>
+
+  <link data-cms-original-href="/favicon.ico" href="/favicon.ico?_cchid=24b039a43b3f13f8521c1c495b629712" rel="icon" sizes="any">
+  <link data-cms-original-href="/favicon.svg" href="/favicon.svg?_cchid=32c32714ac4184a50d31539514bf5033" rel="icon" type="image/svg+xml">
+  
+    <link href="https://getdx.com/blog/monolithic-vs-microservices/" rel="canonical">
+  
+  
+
+  <meta content="Learn when to choose monolithic vs microservices architecture for your development team. Compare frameworks, testing strategies, and decision criteria based on team size and organizational maturity." name="description">
+  <meta content="Monolithic vs microservices architecture: When to choose each approach" property="og:title">
+  <meta content="Learn when to choose monolithic vs microservices architecture for your development team. Compare frameworks, testing strategies, and decision criteria based on team size and organizational maturity." property="og:description">
+  <meta content="https://getdx.com/blog/monolithic-vs-microservices/" property="og:url">
+  
+    <meta content="https://getdx.com/og_images/blog-post-monolithic-vs-microservices.jpg" property="og:image">
+  
+
+  <meta content="#aaaaaa" name="theme-color">
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "DX",
+      "url": "https://getdx.com"
+    }
+  </script>
+
+</head>
+
+<body class="flex flex-col">
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PC83CJ6" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+
+  
+    
+<div class="z-[100]" id="banner">
+  <div class="bg-indigo pt-2 pb-2.5 sm:pt-2 sm:pb-2.5 text-white">
+    <div class="container md:full-width relative flex items-start sm:items-center justify-start sm:justify-center">
+      <p class="grow sm:text-center origin-left scale-95 sm:origin-center text-sm"><a class="font-medium underline underline-white/50 underline-offset-[3px] decoration-1" href="https://getdx.com/webinar/cafes-framework-improving-agent-effectiveness//?utm_source=web-banner" target="_blank">Join the live webinar</a><span class="inline">: Introducing the CAFE(S) framework for improving agent effectiveness</span></p>
+      <button class="mt-0.5 sm:mt-0 flex items-center justify-center rounded text-lg sm:text-sm leading-none" onclick="dismissBanner()" type="button">
+        ✕
+      </button>
+    </div>
+  </div>
+</div>
+<script>
+  if (localStorage.getItem("cafes-framework-improving-ai-agent-effectiveness")) {
+    document.getElementById("banner").style.display = "none";
+  }
+
+  function dismissBanner() {
+    document.getElementById("banner").style.display = "none";
+    localStorage.setItem("cafes-framework-improving-ai-agent-effectiveness", 1);
+  }
+</script>
+
+  
+
+  <div class="grow relative">
+    
+  
+  <div class="h-px"></div>
+  <header class="sticky top-0 z-50 ">
+    <a class="sr-only focus:not-sr-only" href="#content">Skip to content</a>
+    <nav aria-label="main" class="container md:full-width h-12 md:h-16 flex z-50 justify-between items-center" id="desktop-nav">
+      <div class="text-sm flex items-center">
+        <a class="z-50 relative" href="/">
+          <svg aria-label="Home" class="h-6" fill="none" role="img" viewBox="0 0 42 24" xmlns="http://www.w3.org/2000/svg"><path d="M34.8556 15.3011L40.9139 24.0001H35.011C34.3712 23.2851 33.7497 22.4242 33.1994 21.6295C32.3551 20.4101 32.3572 18.7365 33.2295 17.537L34.8556 15.3011Z" fill="currentColor"></path><path d="M25.8458 8.69914L19.7876 0.000123978L25.6905 0.000123462C26.3303 0.715145 26.9518 1.57604 27.5021 2.37076C28.3464 3.59015 28.3443 5.26378 27.4719 6.46328L25.8458 8.69914Z" fill="currentColor"></path><path d="M34.4674 1.47573C35.0887 0.466019 35.7878 0.0776699 36.8751 0.0776699L41.6907 0L26.0252 23.1209C25.6855 23.6223 25.1215 23.9223 24.5185 23.9223H19.2635C24.288 16.4232 29.6074 9.07903 34.4674 1.47573Z" fill="currentColor"></path><path d="M0 23.9225H8.51678C16.1318 23.9225 20.7743 19.2717 20.7743 11.9965C20.7743 4.72135 16.1318 0.0705566 8.51678 0.0705566H0L5.28155 4.75457H3.1068C1.39096 4.75457 0 6.14553 0 7.86137V19.2385V23.9225ZM5.44406 19.2385V4.75457H8.48339C12.8253 4.75457 15.2634 7.61149 15.2634 11.9965C15.2634 16.3816 12.8253 19.2385 8.51678 19.2385H5.44406Z" fill="currentColor"></path></svg>
+        </a>
+
+        <div class="hidden md:flex md:ml-8 lg:ml-10 md:space-x-5">
+          <div class="group relative">
+            <button aria-controls="products-sub" aria-expanded="false" class="toggle-sub peer flex items-center space-x-px text-gray-700 group-hover:text-black relative z-10" type="button">
+              <span> Products </span>
+              <svg aria-hidden="true" class="opacity-80 top-px h-3 w-3 transform duration-200 ease-in-out group-hover:-rotate-180" fill="none" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><path d="m4.5 6.5 3.146 3.146a.5.5 0 0 0 .708 0L11.5 6.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"></path></svg>
+            </button>
+
+            <div class="
+                hidden opacity-0 group-hover:block group-hover:opacity-100 peer-hover:animate-slide-down
+                transform duration-200 ease-in-out absolute top-0 -left-[6.15rem] lg:-left-[6.66rem] xl:-left-16
+              " id="products-sub">
+              <div class="w-screen max-w-[73rem] mt-9 bg-white rounded-lg shadow-2xl border">
+                <div class="grid grid-cols-4 gap-x-3 lg:gap-x-8 xl:gap-x-10 pl-4 xl:pl-6 pr-6 xl:pr-8 py-6">
+                  
+                    
+                  
+                    
+                      
+                      
+                      <div class="space-y-1.5 lg:space-y-2">
+                        <div class="group/header relative flex items-center gap-x-1 rounded-md p-2 hover:bg-gray-50">
+                          <a class="text-black text-base font-medium" href="/developer-experience/">
+                            Developer Experience
+                            <span class="absolute inset-0"></span>
+                          </a>
+                          <svg aria-hidden="true" class="hidden lg:block size-3 text-black shrink-0 group-hover/header:translate-x-0.5 group-hover/header:-translate-y-0.5 transition-transform duration-200" fill="none" viewBox="0 0 12 12" xmlns="http://www.w3.org/2000/svg"><path d="M1.75 10.25L10.073 1.927" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path><path d="M10.25 6.5V1.75H5.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                        </div>
+                        <div class="space-y-1.5 lg:space-y-2">
+                          
+                            <div class="relative flex rounded-md p-2 hover:bg-gray-50">
+                              <a class="text-black text-sm" href="/developer-experience-index/">
+                                Developer Experience Index (DXI)
+                                <span class="absolute inset-0"></span>
+                              </a>
+                            </div>
+                          
+                            <div class="relative flex rounded-md p-2 hover:bg-gray-50">
+                              <a class="text-black text-sm" href="/industry-benchmarking/">
+                                Industry Benchmarking
+                                <span class="absolute inset-0"></span>
+                              </a>
+                            </div>
+                          
+                            <div class="relative flex rounded-md p-2 hover:bg-gray-50">
+                              <a class="text-black text-sm" href="/workflow-analysis/">
+                                Workflow Analysis
+                                <span class="absolute inset-0"></span>
+                              </a>
+                            </div>
+                          
+                            <div class="relative flex rounded-md p-2 hover:bg-gray-50">
+                              <a class="text-black text-sm" href="/executive-reporting/">
+                                Executive Reporting
+                                <span class="absolute inset-0"></span>
+                              </a>
+                            </div>
+                          
+                            <div class="relative flex rounded-md p-2 hover:bg-gray-50">
+                              <a class="text-black text-sm" href="/devsat/">
+                                DevSat
+                                <span class="absolute inset-0"></span>
+                              </a>
+                            </div>
+                          
+                            <div class="relative flex rounded-md p-2 hover:bg-gray-50">
+                              <a class="text-black text-sm" href="/targeted-studies/">
+                                Targeted Studies
+                                <span class="absolute inset-0"></span>
+                              </a>
+                            </div>
+                          
+                            <div class="relative flex rounded-md p-2 hover:bg-gray-50">
+                              <a class="text-black text-sm" href="/experience-sampling/">
+                                Experience Sampling
+                                <span class="absolute inset-0"></span>
+                              </a>
+                            </div>
+                          
+                            <div class="relative flex rounded-md p-2 hover:bg-gray-50">
+                              <a class="text-black text-sm" href="/ai-recommendations/">
+                                AI Recommendations
+                                <span class="absolute inset-0"></span>
+                              </a>
+                            </div>
+                          
+                        </div>
+                      </div>
+                    
+                  
+                    
+                      
+                      
+                      <div class="space-y-1.5 lg:space-y-2">
+                        <div class="group/header relative flex items-center gap-x-1 rounded-md p-2 hover:bg-gray-50">
+                          <a class="text-black text-base font-medium" href="/engineering-productivity/">
+                            Engineering Productivity
+                            <span class="absolute inset-0"></span>
+                          </a>
+                          <svg aria-hidden="true" class="hidden lg:block size-3 text-black shrink-0 group-hover/header:translate-x-0.5 group-hover/header:-translate-y-0.5 transition-transform duration-200" fill="none" viewBox="0 0 12 12" xmlns="http://www.w3.org/2000/svg"><path d="M1.75 10.25L10.073 1.927" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path><path d="M10.25 6.5V1.75H5.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                        </div>
+                        <div class="space-y-1.5 lg:space-y-2">
+                          
+                            <div class="relative flex rounded-md p-2 hover:bg-gray-50">
+                              <a class="text-black text-sm" href="/sdlc-analytics/">
+                                SDLC Analytics
+                                <span class="absolute inset-0"></span>
+                              </a>
+                            </div>
+                          
+                            <div class="relative flex rounded-md p-2 hover:bg-gray-50">
+                              <a class="text-black text-sm" href="/dx-core-4/">
+                                DX Core 4
+                                <span class="absolute inset-0"></span>
+                              </a>
+                            </div>
+                          
+                            <div class="relative flex rounded-md p-2 hover:bg-gray-50">
+                              <a class="text-black text-sm" href="/truethroughput/">
+                                TrueThroughput™
+                                <span class="absolute inset-0"></span>
+                              </a>
+                            </div>
+                          
+                            <div class="relative flex rounded-md p-2 hover:bg-gray-50">
+                              <a class="text-black text-sm" href="/team-dashboards/">
+                                Team Dashboards
+                                <span class="absolute inset-0"></span>
+                              </a>
+                            </div>
+                          
+                            <div class="relative flex rounded-md p-2 hover:bg-gray-50">
+                              <a class="text-black text-sm" href="/custom-reporting/">
+                                Custom Reporting
+                                <span class="absolute inset-0"></span>
+                              </a>
+                            </div>
+                          
+                            <div class="relative flex rounded-md p-2 hover:bg-gray-50">
+                              <a class="text-black text-sm" href="/engineering-allocation/">
+                                Engineering Allocation
+                                <span class="absolute inset-0"></span>
+                              </a>
+                            </div>
+                          
+                            <div class="relative flex rounded-md p-2 hover:bg-gray-50">
+                              <a class="text-black text-sm" href="/sprint-analytics/">
+                                Sprint Analytics
+                                <span class="absolute inset-0"></span>
+                              </a>
+                            </div>
+                          
+                            <div class="relative flex rounded-md p-2 hover:bg-gray-50">
+                              <a class="text-black text-sm" href="/software-capitalization/">
+                                R&amp;D Capitalization
+                                <span class="absolute inset-0"></span>
+                              </a>
+                            </div>
+                          
+                        </div>
+                      </div>
+                    
+                  
+                    
+                      
+                      
+                      <div class="space-y-1.5 lg:space-y-2">
+                        <div class="group/header relative flex items-center gap-x-1 rounded-md p-2 hover:bg-gray-50">
+                          <a class="text-black text-base font-medium" href="/ai-measurement/">
+                            AI Measurement
+                            <span class="absolute inset-0"></span>
+                          </a>
+                          <svg aria-hidden="true" class="hidden lg:block size-3 text-black shrink-0 group-hover/header:translate-x-0.5 group-hover/header:-translate-y-0.5 transition-transform duration-200" fill="none" viewBox="0 0 12 12" xmlns="http://www.w3.org/2000/svg"><path d="M1.75 10.25L10.073 1.927" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path><path d="M10.25 6.5V1.75H5.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                        </div>
+                        <div class="space-y-1.5 lg:space-y-2">
+                          
+                            <div class="relative flex rounded-md p-2 hover:bg-gray-50">
+                              <a class="text-black text-sm" href="/ai-strategic-planning/">
+                                Strategic Planning
+                                <span class="absolute inset-0"></span>
+                              </a>
+                            </div>
+                          
+                            <div class="relative flex rounded-md p-2 hover:bg-gray-50">
+                              <a class="text-black text-sm" href="/vendor-evaluation/">
+                                Vendor Evaluation
+                                <span class="absolute inset-0"></span>
+                              </a>
+                            </div>
+                          
+                            <div class="relative flex rounded-md p-2 hover:bg-gray-50">
+                              <a class="text-black text-sm" href="/ai-usage-analytics/">
+                                Usage Analytics
+                                <span class="absolute inset-0"></span>
+                              </a>
+                            </div>
+                          
+                            <div class="relative flex rounded-md p-2 hover:bg-gray-50">
+                              <a class="text-black text-sm" href="/ai-code-insights/">
+                                AI Code Insights
+                                <span class="absolute inset-0"></span>
+                              </a>
+                            </div>
+                          
+                            <div class="relative flex rounded-md p-2 hover:bg-gray-50">
+                              <a class="text-black text-sm" href="/ai-impact-analysis/">
+                                Impact Analysis
+                                <span class="absolute inset-0"></span>
+                              </a>
+                            </div>
+                          
+                            <div class="relative flex rounded-md p-2 hover:bg-gray-50">
+                              <a class="text-black text-sm" href="/ai-workflow-optimization/">
+                                AI Workflow Optimization
+                                <span class="absolute inset-0"></span>
+                              </a>
+                            </div>
+                          
+                        </div>
+                      </div>
+                    
+                  
+                    
+                      
+                      
+                      <div class="space-y-1.5 lg:space-y-2">
+                        <div class="group/header relative flex items-center gap-x-1 rounded-md p-2 hover:bg-gray-50">
+                          <a class="text-black text-base font-medium" href="/ai-enablement/">
+                            AI Enablement
+                            <span class="absolute inset-0"></span>
+                          </a>
+                          <svg aria-hidden="true" class="hidden lg:block size-3 text-black shrink-0 group-hover/header:translate-x-0.5 group-hover/header:-translate-y-0.5 transition-transform duration-200" fill="none" viewBox="0 0 12 12" xmlns="http://www.w3.org/2000/svg"><path d="M1.75 10.25L10.073 1.927" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path><path d="M10.25 6.5V1.75H5.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                        </div>
+                        <div class="space-y-1.5 lg:space-y-2">
+                          
+                            <div class="relative flex rounded-md p-2 hover:bg-gray-50">
+                              <a class="text-black text-sm" href="/systems-catalog/">
+                                Systems Catalog
+                                <span class="absolute inset-0"></span>
+                              </a>
+                            </div>
+                          
+                            <div class="relative flex rounded-md p-2 hover:bg-gray-50">
+                              <a class="text-black text-sm" href="/context-management/">
+                                Context Management
+                                <span class="absolute inset-0"></span>
+                              </a>
+                            </div>
+                          
+                            <div class="relative flex rounded-md p-2 hover:bg-gray-50">
+                              <a class="text-black text-sm" href="/ai-readiness/">
+                                AI Readiness
+                                <span class="absolute inset-0"></span>
+                              </a>
+                            </div>
+                          
+                            <div class="relative flex rounded-md p-2 hover:bg-gray-50">
+                              <a class="text-black text-sm" href="/agent-ops-tools/">
+                                Agent Ops Tools
+                                <span class="absolute inset-0"></span>
+                              </a>
+                            </div>
+                          
+                            <div class="relative flex rounded-md p-2 hover:bg-gray-50">
+                              <a class="text-black text-sm" href="/scorecards/">
+                                Scorecards
+                                <span class="absolute inset-0"></span>
+                              </a>
+                            </div>
+                          
+                            <div class="relative flex rounded-md p-2 hover:bg-gray-50">
+                              <a class="text-black text-sm" href="/developer-self-service/">
+                                Developer Self-service
+                                <span class="absolute inset-0"></span>
+                              </a>
+                            </div>
+                          
+                            <div class="relative flex rounded-md p-2 hover:bg-gray-50">
+                              <a class="text-black text-sm" href="/internal-developer-portal/">
+                                Internal Developer Portal
+                                <span class="absolute inset-0"></span>
+                              </a>
+                            </div>
+                          
+                        </div>
+                      </div>
+                    
+                  
+                </div>
+
+                <div class="py-3 bg-black text-white rounded-b-lg">
+                  <div class="flex items-center justify-between px-6 xl:px-8">
+                    <div class="flex items-center gap-x-4 text-sm">
+                      <a class="group/link flex items-center gap-x-1 font-medium" href="/platform">DX Platform Overview <svg aria-hidden="true" class="size-3 text-white shrink-0 group-hover/link:translate-x-0.5 group-hover/link:-translate-y-0.5 transition-transform duration-200" fill="none" viewBox="0 0 12 12" xmlns="http://www.w3.org/2000/svg"><path d="M1.75 10.25L10.073 1.927" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path><path d="M10.25 6.5V1.75H5.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path></svg></a>
+                      <a class="group/link flex items-center gap-x-1 font-medium" href="/connectors">Data Connectors <svg aria-hidden="true" class="size-3 text-white shrink-0 group-hover/link:translate-x-0.5 group-hover/link:-translate-y-0.5 transition-transform duration-200" fill="none" viewBox="0 0 12 12" xmlns="http://www.w3.org/2000/svg"><path d="M1.75 10.25L10.073 1.927" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path><path d="M10.25 6.5V1.75H5.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path></svg></a>
+                      <a class="group/link flex items-center gap-x-1 font-medium" href="/platform/dx-ai/">DX AI <svg aria-hidden="true" class="size-3 text-white shrink-0 group-hover/link:translate-x-0.5 group-hover/link:-translate-y-0.5 transition-transform duration-200" fill="none" viewBox="0 0 12 12" xmlns="http://www.w3.org/2000/svg"><path d="M1.75 10.25L10.073 1.927" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path><path d="M10.25 6.5V1.75H5.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path></svg></a>
+                    </div>
+                    <div class="flex items-center gap-x-4 text-sm">
+                      <a class="font-medium" href="/demo/">Get a demo</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="group relative">
+            <button aria-controls="research-sub" aria-expanded="false" class="toggle-sub peer flex items-center space-x-px text-gray-700 group-hover:text-black relative z-10" type="button">
+              <span> Research </span>
+              <svg aria-hidden="true" class="opacity-80 top-px h-3 w-3 transform duration-200 ease-in-out group-hover:-rotate-180" fill="none" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><path d="m4.5 6.5 3.146 3.146a.5.5 0 0 0 .708 0L11.5 6.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"></path></svg>
+            </button>
+
+            <div class="
+                 hidden group-hover:block opacity-0 group-hover:opacity-100 peer-hover:animate-slide-down
+                transform duration-200 ease-in-out absolute top-0 -left-36 lg:-left-2
+              " id="research-sub">
+              <div class="w-[46rem] mt-9 py-7 px-8 bg-white rounded-lg shadow-2xl border">
+                <div class="flex gap-x-7">
+                  <div class="-ml-3 flex flex-col gap-y-1 min-w-44">
+                    <span class="text-brow text-gray-700 text-3xs px-3 mb-4">Research</span>
+                    <a class="py-2 px-3 block text-black hover:bg-gray-50 rounded-md" href="/research/overview"> Overview </a>
+                    <a class="py-2 px-3 block text-black hover:bg-gray-50 rounded-md" href="/research"> Archive </a>
+                    <a class="py-2 px-3 block text-black hover:bg-gray-50 rounded-md" href="/research/benchmarks/"> Core 4 Benchmarks </a>
+                  </div>
+
+                  <div class="flex flex-col gap-y-1.5 border-l border-gray-200 pl-12">
+                    <span class="text-brow text-gray-700 text-3xs mb-3">Featured</span>
+
+                    <div class="flex gap-7">
+                      <div class="group relative p-1.5 -ml-1.5 w-full rounded-md hover:bg-gray-50">
+                        <div class="mb-4 border bg-white border-gray-200 h-36 rounded-md flex-shrink-0 transition-colors duration-200 grid place-items-center p-6">
+                          <svg aria-hidden="true" class="w-24 h-auto block aspect-square" fill="none" viewBox="0 0 91 91" xmlns="http://www.w3.org/2000/svg"><g clip-path="url(#clip0_181_1989)"><path d="M0.783995 28.1342V57.4058C0.705149 58.2983 0.666687 59.2025 0.666687 60.1183V30.8544C0.666687 29.9386 0.707072 29.0325 0.783995 28.1342Z" fill="black"></path><path d="M5.47628 14.2178V43.4856C5.31282 43.7422 5.15321 44.0028 4.99744 44.2633V14.9994C5.15321 14.735 5.31282 14.4744 5.47628 14.2197V14.2178Z" fill="black"></path><path d="M10.1706 8.48166V37.7436C9.92056 37.9828 9.6744 38.2278 9.43787 38.4747V9.20888C9.67825 8.95999 9.92248 8.71694 10.1706 8.48166Z" fill="black"></path><path d="M14.8628 4.77945V34.0433C14.5282 34.2572 14.1994 34.4789 13.8763 34.7025V5.44251C14.2013 5.21501 14.5301 4.99334 14.8628 4.78139V4.77945Z" fill="black"></path><path d="M19.5552 2.31778V31.5836C19.1359 31.7567 18.7225 31.9414 18.3129 32.1339V2.87C18.7225 2.6775 19.1359 2.49278 19.5552 2.31972V2.31778Z" fill="black"></path><path d="M24.2474 0.801108V30.0669C23.7436 30.1836 23.2455 30.3139 22.7513 30.4597V1.19194C23.2455 1.04805 23.7436 0.917775 24.2474 0.799164V0.801108Z" fill="black"></path><path d="M28.9398 0.0797272V29.3456C28.3494 29.3864 27.7667 29.4467 27.1879 29.5244V0.26056C27.7667 0.182783 28.3494 0.122505 28.9398 0.0797272Z" fill="black"></path><path d="M33.634 0.0933333V29.26H31.6263V0C32.3013 0.00777778 32.9686 0.0408333 33.634 0.0933333Z" fill="black"></path><path d="M38.3244 0.843892V29.262H36.0648V0.386948C36.8263 0.511392 37.5821 0.665003 38.3244 0.843892Z" fill="black"></path><path d="M43.0186 2.39749V29.26H40.5032V1.45833C41.3571 1.73444 42.1975 2.04749 43.0186 2.39749Z" fill="black"></path><path d="M47.709 4.90195V29.2619H44.9398V3.29584C45.1859 3.42028 45.4282 3.54862 45.6686 3.68084C46.3648 4.06195 47.0455 4.46639 47.7071 4.90195H47.709Z" fill="black"></path><path d="M52.4032 8.6625V29.2619H49.3782V6.06667C50.4417 6.86583 51.4513 7.73111 52.4032 8.6625Z" fill="black"></path><path d="M57.0936 14.5133V29.26H53.8148V10.1364C55.0321 11.4917 56.1282 12.9558 57.0936 14.5133Z" fill="black"></path><path d="M61.6821 29.3008C61.1725 29.2756 60.6628 29.262 60.1475 29.262H58.2532V16.5647C60.2455 20.405 61.4571 24.7236 61.6802 29.3008H61.6821Z" fill="black"></path><path d="M62.834 0.118611H33.8725C32.9898 0.0388889 32.0936 0 31.1898 0H60.1436C61.0494 0 61.9475 0.0408333 62.834 0.118611Z" fill="black"></path><path d="M76.5994 4.86306H47.6417C47.3878 4.69778 47.1301 4.53639 46.8724 4.37889H75.8282C76.0897 4.53639 76.3474 4.69778 76.5994 4.86306Z" fill="black"></path><path d="M82.2763 9.60555H53.3244C53.0879 9.35277 52.8455 9.10388 52.6013 8.86472H81.5571C81.8032 9.10777 82.0436 9.35472 82.2763 9.60555Z" fill="black"></path><path d="M85.9378 14.3481H56.984C56.7724 14.0097 56.5532 13.6792 56.3301 13.3506H85.2821C85.5071 13.6792 85.7263 14.0097 85.9378 14.3481Z" fill="black"></path><path d="M88.3744 19.0906H59.4186C59.2474 18.6667 59.0647 18.2486 58.8724 17.8344H87.8282C88.0186 18.2486 88.2013 18.6667 88.3744 19.0906Z" fill="black"></path><path d="M89.8763 23.8331H60.9205C60.8051 23.3236 60.6763 22.82 60.532 22.3203H89.4878C89.6301 22.82 89.759 23.3236 89.8763 23.8331Z" fill="black"></path><path d="M90.5878 28.5775H61.6321C61.5917 27.9825 61.5321 27.3914 61.4551 26.8081H90.409C90.4859 27.3914 90.5455 27.9825 90.5878 28.5775Z" fill="black"></path><path d="M90.5744 33.32H61.7167V31.2919H90.6667C90.659 31.9725 90.6263 32.6492 90.5744 33.32Z" fill="black"></path><path d="M89.834 38.0625H61.7186V35.7778H90.2859C90.1629 36.5478 90.0109 37.3119 89.834 38.0625Z" fill="black"></path><path d="M88.2956 42.8069H61.7186V40.2636H89.2263C88.9532 41.1269 88.6417 41.9747 88.2975 42.8069H88.2956Z" fill="black"></path><path d="M85.8186 47.5475H61.7186V44.7495H87.4071C87.284 44.9983 87.1571 45.2433 87.0263 45.4864C86.6494 46.1903 86.2494 46.8786 85.8186 47.5475Z" fill="black"></path><path d="M82.0974 52.2919H61.7167V49.2353H84.6648C83.8744 50.3106 83.0167 51.3314 82.0974 52.2919Z" fill="black"></path><path d="M76.309 57.0345H61.7186V53.7211H80.6398C79.2994 54.9519 77.8494 56.0603 76.309 57.0345Z" fill="black"></path><path d="M61.6782 61.67C61.7032 61.1547 61.7167 60.6394 61.7167 60.1183V58.205H74.2801C70.4801 60.2175 66.209 61.4425 61.6782 61.67Z" fill="black"></path><path d="M90.5494 62.8658V33.5942C90.6282 32.7017 90.6667 31.7975 90.6667 30.8817V60.1456C90.6667 61.0614 90.6263 61.9675 90.5494 62.8658Z" fill="black"></path><path d="M85.8571 76.7822V47.5144C86.0205 47.2578 86.1801 46.9972 86.3359 46.7367V76.0025C86.1801 76.2669 86.0205 76.5275 85.8571 76.7822Z" fill="black"></path><path d="M81.1628 82.5183V53.2564C81.4128 53.0172 81.659 52.7722 81.8955 52.5253V81.7911C81.6552 82.04 81.4109 82.2831 81.1628 82.5183Z" fill="black"></path><path d="M76.4705 86.2206V56.9567C76.8051 56.7428 77.134 56.5211 77.4571 56.2975V85.5594C77.1321 85.7869 76.8032 86.0086 76.4705 86.2206Z" fill="black"></path><path d="M71.7783 88.6822V59.4164C72.1975 59.2433 72.6109 59.0586 73.0206 58.8661V88.1319C72.6109 88.3244 72.1975 88.5092 71.7783 88.6822Z" fill="black"></path><path d="M67.0859 90.1989V60.9331C67.5898 60.8164 68.0879 60.6861 68.5821 60.5403V89.8061C68.0879 89.95 67.5898 90.0803 67.0859 90.1989Z" fill="black"></path><path d="M62.3936 90.9203V61.6544C62.984 61.6136 63.5667 61.5533 64.1455 61.4756V90.7394C63.5667 90.8172 62.984 90.8775 62.3936 90.9203Z" fill="black"></path><path d="M57.6994 90.9067V61.74H59.7071V91C59.0321 90.9922 58.3648 90.9592 57.6994 90.9067Z" fill="black"></path><path d="M53.009 90.1561V61.7381H55.2686V90.6111C54.507 90.4867 53.7513 90.3331 53.009 90.1542V90.1561Z" fill="black"></path><path d="M48.3148 88.6025V61.74H50.8301V89.5417C49.9763 89.2656 49.1359 88.9525 48.3148 88.6025Z" fill="black"></path><path d="M43.6244 86.0981V61.7381H46.3936V87.7022C46.1475 87.5778 45.9052 87.4494 45.6648 87.3172C44.9686 86.9361 44.2879 86.5317 43.6263 86.0961L43.6244 86.0981Z" fill="black"></path><path d="M38.9302 82.3375V61.7381H41.9552V84.9333C40.8917 84.1342 39.8821 83.2689 38.9302 82.3375Z" fill="black"></path><path d="M34.2397 76.4867V61.74H37.5186V80.8636C36.3013 79.5083 35.2051 78.0442 34.2397 76.4867Z" fill="black"></path><path d="M29.6513 61.6992C30.1609 61.7244 30.6705 61.7381 31.1859 61.7381H33.0802V74.4353C31.0878 70.595 29.8763 66.2764 29.6532 61.6992H29.6513Z" fill="black"></path><path d="M28.4994 90.8814H57.4609C58.3436 90.9611 59.2398 91 60.1436 91H31.1898C30.284 91 29.3859 90.9592 28.4994 90.8814Z" fill="black"></path><path d="M14.734 86.1369H43.6917C43.9455 86.3022 44.2032 86.4636 44.4609 86.6211H15.5052C15.2436 86.4636 14.9859 86.3022 14.734 86.1369Z" fill="black"></path><path d="M9.05707 81.3944H38.009C38.2455 81.6472 38.4878 81.8961 38.7321 82.1353H9.7763C9.53014 81.8922 9.28976 81.6453 9.05707 81.3944Z" fill="black"></path><path d="M5.39554 76.6519H34.3494C34.5609 76.9903 34.7802 77.3208 35.0032 77.6494H6.04938C5.82438 77.3208 5.60515 76.9903 5.39362 76.6519H5.39554Z" fill="black"></path><path d="M2.95898 71.9095H31.9148C32.0859 72.3333 32.2686 72.7514 32.4609 73.1656H3.50514C3.31475 72.7514 3.13206 72.3333 2.95898 71.9095Z" fill="black"></path><path d="M1.45709 67.1669H30.4129C30.5282 67.6764 30.6571 68.18 30.8013 68.6797H1.84555C1.70325 68.18 1.5744 67.6764 1.45709 67.1669Z" fill="black"></path><path d="M0.745544 62.4225H29.7013C29.7417 63.0175 29.8013 63.6086 29.8782 64.1919H0.924391C0.847468 63.6086 0.787852 63.0175 0.745544 62.4225Z" fill="black"></path><path d="M0.758995 57.68H29.6167V59.7081H0.666687C0.674379 59.0275 0.707072 58.3508 0.758995 57.68Z" fill="black"></path><path d="M1.49938 52.9375H29.6148V55.2222H1.04938C1.17245 54.4522 1.32438 53.6881 1.5013 52.9375H1.49938Z" fill="black"></path><path d="M3.03785 48.1931H29.6148V50.7364H2.10901C2.38209 49.8731 2.69362 49.0253 3.03785 48.1931Z" fill="black"></path><path d="M5.51476 43.4525H29.6148V46.2506H3.92822C4.0513 46.0017 4.17822 45.7567 4.30899 45.5136C4.68592 44.8097 5.08592 44.1214 5.51668 43.4525H5.51476Z" fill="#5F59EE"></path><path d="M9.23595 38.7081H29.6167V41.7647H6.66864C7.45902 40.6894 8.31672 39.6686 9.23595 38.7081Z" fill="black"></path><path d="M15.0244 33.9656H29.6148V37.2789H10.6956C12.0359 36.0481 13.4859 34.9397 15.0263 33.9656H15.0244Z" fill="black"></path><path d="M29.6551 29.33C29.6301 29.8453 29.6167 30.3606 29.6167 30.8817V32.795H17.0532C20.8532 30.7825 25.1244 29.5575 29.6551 29.33Z" fill="black"></path></g><defs><clipPath id="clip0_181_1989"><rect fill="white" height="91" transform="translate(0.666687)" width="90"></rect></clipPath></defs></svg>
+                        </div>
+
+                        <p>
+                          <a href="/research/measuring-ai-code-assistants-and-agents/">
+                            <span class="absolute inset-0 flex-1 transition-all ease-in-out duration-150 rounded-md"></span>AI Measurement Framework</a>
+                        </p>
+                        <p class="mt-2.5 mb-px text-gray-700 text-xs leading-normal">
+                          Measure utilization, impact, and ROI of AI-assisted engineering in your organization.
+                        </p>
+                      </div>
+                      <div class="group relative p-1.5 -ml-1.5 w-full rounded-md hover:bg-gray-50">
+                        <div class="mb-4 border bg-white border-gray-200 h-36 rounded-md flex-shrink-0 transition-colors duration-200 grid place-items-center p-6">
+                          <svg aria-hidden="true" class="w-24 h-auto block aspect-square" fill="#121212" viewBox="0 0 360 360"><path d="M315.004 315.003V330.579L344.425 360H360.001V344.424L330.58 315.003H315.004Z" fill="#5F59EE"></path><path d="M269.998 315.003V328.603L301.404 360H315.004V346.401L283.606 315.003H269.998Z"></path><path d="M225.001 315.003V326.626L258.375 360H269.998V348.378L236.624 315.003H225.001Z"></path><path d="M180.005 315.003V324.649L215.347 360H225.002V350.354L189.651 315.003H180.005Z"></path><path d="M134.999 315.003V322.681L172.326 360H180.005V352.322L142.677 315.003H134.999Z"></path><path d="M90.002 315.003V320.705L129.297 360H134.999V354.299L95.7034 315.003H90.002Z"></path><path d="M44.9971 315.003V318.728L86.2778 360H90.0026V356.275L48.7307 315.003H44.9971Z"></path><path d="M0 315.003V316.752L43.2485 360H44.9967V358.252L1.74821 315.003H0Z"></path><path d="M315.004 269.998V283.606L346.401 315.004H360.001V301.404L328.603 269.998H315.004Z"></path><path d="M315.004 315.004V303.091L281.91 269.998H269.998V281.91L303.091 315.004H315.004Z"></path><path d="M269.998 315.004V304.787L235.218 269.998H225.001V280.215L259.79 315.004H269.998Z"></path><path d="M225.002 315.004V306.482L188.526 269.998H180.005V278.528L216.48 315.004H225.002Z"></path><path d="M180.005 315.004V308.169L141.834 269.998H134.999V276.833L173.17 315.004H180.005Z"></path><path d="M134.999 315.004V309.864L95.1412 269.998H90.002V275.137L129.859 315.004H134.999Z"></path><path d="M90.0026 315.004V311.56L48.4496 269.998H44.9971V273.45L86.5589 315.004H90.0026Z"></path><path d="M44.9967 315.003V313.246L1.74821 269.998H0V271.755L43.2485 315.003H44.9967Z"></path><path d="M315.004 225.001V236.624L348.378 269.998H360.001V258.376L326.626 225.001H315.004Z"></path><path d="M315.004 269.998V259.79L280.215 225.001H269.998V235.218L304.787 269.998H315.004Z"></path><path d="M269.998 269.998V261.196L233.804 225.001H225.001V233.804L261.195 269.998H269.998Z"></path><path d="M225.002 269.998V262.61L187.393 225.001H180.005V232.398L217.605 269.998H225.002Z"></path><path d="M180.005 269.998V264.016L140.982 225.001H134.999V230.984L174.013 269.998H180.005Z"></path><path d="M134.999 269.998V265.43L94.5702 225.001H90.002V229.578L130.431 269.998H134.999Z"></path><path d="M90.0026 269.998V266.836L48.1597 225.001H44.9971V228.164L86.84 269.998H90.0026Z"></path><path d="M44.9967 269.998V268.25L1.74821 225.001H0V226.758L43.2485 269.998H44.9967Z"></path><path d="M315.004 180.005V189.65L350.355 225.001H360.001V215.347L324.65 180.005H315.004Z"></path><path d="M315.004 225.001V216.48L278.528 180.005H269.998V188.526L306.482 225.001H315.004Z"></path><path d="M269.998 225.001V217.604L232.398 180.005H225.001V187.393L262.61 225.001H269.998Z"></path><path d="M225.002 225.001V218.738L186.269 180.005H180.005V186.268L218.738 225.001H225.002Z"></path><path d="M180.005 225.001V219.862L140.138 180.005H134.999V185.135L174.865 225.001H180.005Z"></path><path d="M134.999 225.001V220.995L94.0079 180.005H90.002V184.01L130.993 225.001H134.999Z"></path><path d="M90.0026 225.001V222.12L47.8785 180.005H44.9971V182.886L87.1211 225.001H90.0026Z"></path><path d="M44.9967 225.001V223.253L1.74821 180.005H0V181.753L43.2485 225.001H44.9967Z"></path><path d="M315.004 134.999V142.677L352.323 180.004H360.001V172.326L322.682 134.999H315.004Z"></path><path d="M315.004 180.004V173.17L276.833 134.999H269.998V141.834L308.169 180.004H315.004Z"></path><path d="M269.998 180.004V174.013L230.984 134.999H225.001V140.981L264.015 180.004H269.998Z"></path><path d="M225.002 180.004V174.865L185.135 134.999H180.005V140.138L219.862 180.004H225.002Z"></path><path d="M180.005 180.004V175.708L139.295 134.999H134.999V139.295L175.709 180.004H180.005Z"></path><path d="M134.999 180.004V176.552L93.4457 134.999H90.002V138.443L131.555 180.004H134.999Z"></path><path d="M90.0026 180.004V177.404L47.5974 134.999H44.9971V137.599L87.4022 180.004H90.0026Z"></path><path d="M44.9967 180.004V178.247L1.74821 134.999H0V136.756L43.2485 180.004H44.9967Z"></path><path d="M315.004 90.0023V95.7037L354.299 134.999H360.001V129.298L320.705 90.0023H315.004Z"></path><path d="M315.004 134.999V129.86L275.137 90.0023H269.998V95.1415L309.864 134.999H315.004Z"></path><path d="M269.998 134.999V130.431L229.578 90.0023H225.001V94.5705L265.43 134.999H269.998Z"></path><path d="M225.002 134.999V130.993L184.011 90.0023H180.005V94.0082L220.996 134.999H225.002Z"></path><path d="M180.005 134.999V131.555L138.443 90.0023H134.999V93.446L176.552 134.999H180.005Z"></path><path d="M134.999 134.999V132.118L92.8834 90.0023H90.002V92.8837L132.117 134.999H134.999Z"></path><path d="M90.0026 134.999V132.689L47.3163 90.0023H44.9971V92.3215L87.6834 134.999H90.0026Z"></path><path d="M44.9967 134.999V133.251L1.74821 90.0023H0V91.7505L43.2485 134.999H44.9967Z"></path><path d="M315.004 44.9968V48.7304L356.276 90.0023H360.001V86.2775L318.729 44.9968H315.004Z"></path><path d="M315.004 90.0023V86.5586L273.451 44.9968H269.998V48.4493L311.56 90.0023H315.004Z"></path><path d="M269.998 90.0023V86.8397L228.164 44.9968H225.001V48.1594L266.835 90.0023H269.998Z"></path><path d="M225.002 90.0023V87.1209L182.886 44.9968H180.005V47.8783L222.12 90.0023H225.002Z"></path><path d="M180.005 90.0023V87.402L137.599 44.9968H134.999V47.5972L177.404 90.0023H180.005Z"></path><path d="M134.999 90.0023V87.6831L92.3212 44.9968H90.002V47.3161L132.688 90.0023H134.999Z"></path><path d="M90.0026 90.0023V87.9642L47.0352 44.9968H44.9971V47.0349L87.9645 90.0023H90.0026Z"></path><path d="M44.9967 90.0023V88.2453L1.74821 44.9968H0V46.7538L43.2485 90.0023H44.9967Z"></path><path d="M315.004 0V1.74821L358.252 44.9967H360.001V43.2485L316.752 0H315.004Z"></path><path d="M313.247 44.9967H315.004V43.2485L271.755 0H269.998V1.74821L313.247 44.9967Z"></path><path d="M268.25 44.9967H269.998V43.2485L226.758 0H225.001V1.74821L268.25 44.9967Z"></path><path d="M223.253 44.9967H225.002V43.2485L181.753 0H180.005V1.74821L223.253 44.9967Z"></path><path d="M178.248 44.9967H180.005V43.2485L136.756 0H134.999V1.74821L178.248 44.9967Z"></path><path d="M133.25 44.9967H134.999V43.2485L91.7502 0H90.002V1.74821L133.25 44.9967Z"></path><path d="M88.2456 44.9967H90.0026V43.2485L46.7541 0H44.9971V1.74821L88.2456 44.9967Z"></path><path d="M0 0V1.74821L43.2485 44.9967H44.9967V43.2485L1.74821 0H0Z"></path></svg>
+                        </div>
+
+                        <p>
+                          <a href="/research/measuring-developer-productivity-with-the-dx-core-4/">
+                            <span class="absolute inset-0 flex-1 transition-all ease-in-out duration-150 rounded-md"></span>DX Core 4</a>
+                        </p>
+                        <p class="mt-2.5 mb-px text-gray-700 text-xs leading-normal">
+                          Measurement framework for productivity that encapsulates DORA, SPACE, and DevEx.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <a class="relative text-gray-700 hover:text-black" href="/why-dx"> Why DX </a>
+          <a class="relative text-gray-700 hover:text-black" href="/customers"> Customers </a>
+
+          <div class="group relative">
+            <button aria-controls="resources-sub" aria-expanded="false" class="toggle-sub peer flex items-center space-x-px text-gray-700 group-hover:text-black relative z-10" type="button">
+              <span> Resources </span>
+              <svg aria-hidden="true" class="opacity-80 top-px h-3 w-3 transform duration-200 ease-in-out group-hover:-rotate-180" fill="none" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><path d="m4.5 6.5 3.146 3.146a.5.5 0 0 0 .708 0L11.5 6.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"></path></svg>
+            </button>
+
+            <div class="
+                hidden group-hover:block opacity-0 group-hover:opacity-100 peer-hover:animate-slide-down
+                absolute top-0 -right-48  lg:right-auto lg:-left-56 xl:-left-2 transform duration-200 ease-in-out
+              " id="resources-sub">
+              <div class="w-[46rem] mt-9 py-7 pl-8 pr-10 bg-white rounded-lg shadow-2xl border">
+                <div class="flex gap-x-7">
+                  <div class="-ml-3 flex flex-col gap-y-1 min-w-44">
+                    <span class="text-brow text-gray-700 text-3xs px-3 mb-4">Resources</span>
+                    <a class="py-2 px-3 block text-black hover:bg-gray-50 rounded-md" href="/resources/">Reports &amp; Guides</a>
+                    <a class="py-2 px-3 block text-black hover:bg-gray-50 rounded-md" href="/resources/webinars/">Webinars</a>
+                    <a class="py-2 px-3 block text-black hover:bg-gray-50 rounded-md" href="https://newsletter.getdx.com" target="_blank">Newsletter</a>
+                    <a class="py-2 px-3 block text-black hover:bg-gray-50 rounded-md" href="/podcast/">Podcast</a>
+                    <a class="py-2 px-3 block text-black hover:bg-gray-50 rounded-md" href="/research/overview/">Research</a>
+                    <a class="py-2 px-3 block text-black hover:bg-gray-50 rounded-md" href="/blog/">Blog</a>
+                  </div>
+
+                  <div class="flex flex-col gap-y-1.5 border-l border-gray-200 pl-12">
+                    <span class="text-brow text-gray-700 text-3xs mb-3">Featured</span>
+
+                    
+                    
+
+                    <div class="flex gap-7">
+                      <!-- podcast -->
+                      <div class="group relative p-1.5 -ml-1.5 w-full hover:bg-gray-50">
+                        <div class="mb-4 border bg-white border-gray-200 h-36 rounded-md flex-shrink-0 transition-colors duration-200 grid place-items-center p-6">
+                          <picture>
+		<source data-cms-original-srcset="/img/optimized/0dEsyyOhg5-400.webp 400w, /img/optimized/0dEsyyOhg5-636.webp 636w" sizes="400px" srcset="/img/optimized/0dEsyyOhg5-400.webp?_cchid=c0de1744f93c4aad5aa5b65997fc3e94 400w, /img/optimized/0dEsyyOhg5-636.webp?_cchid=b19c243cf30017ba13fffd59a10c6e1d 636w" type="image/webp">
+<source data-cms-original-srcset="/img/optimized/0dEsyyOhg5-400.jpeg 400w, /img/optimized/0dEsyyOhg5-636.jpeg 636w" sizes="400px" srcset="/img/optimized/0dEsyyOhg5-400.jpeg?_cchid=380301c6852ff888dc86381e9ac6947c 400w, /img/optimized/0dEsyyOhg5-636.jpeg?_cchid=af2a3ee875ab142a8fdb80d9d04754a5 636w" type="image/jpeg">
+		<img alt="" class="w-full h-auto block" data-cms-original-src="/img/optimized/0dEsyyOhg5-636.webp" decoding="async" height="432" loading="eager" src="/img/optimized/0dEsyyOhg5-636.webp?_cchid=b19c243cf30017ba13fffd59a10c6e1d" width="636">
+	</picture>
+                        </div>
+
+                        <p>
+                          <a href="/podcast/">
+                            <span class="absolute inset-0 flex-1 transition-all ease-in-out duration-150 rounded-md"></span>Engineering Enablement Podcast</a>
+                        </p>
+                        <p class="mt-2.5 mb-px text-gray-700 text-xs leading-snug">
+                          Listen now <span class="inline-flex relative top-px transform -rotate-45 opacity-90">→</span>
+                        </p>
+                      </div>
+
+                      <!-- guide -->
+                      <div class="group relative p-1.5 -ml-1.5 w-full hover:bg-gray-50">
+                        <div class="mb-4 border bg-white border-gray-200 h-36 rounded-md flex-shrink-0 transition-colors duration-200 grid place-items-center overflow-hidden">
+                          <picture>
+		<source data-cms-original-srcset="/img/optimized/ebEpQ0RzgS-400.webp 400w, /img/optimized/ebEpQ0RzgS-1836.webp 1836w" sizes="400px" srcset="/img/optimized/ebEpQ0RzgS-400.webp?_cchid=e26dbf3743c57f889ea720c58fbf5519 400w, /img/optimized/ebEpQ0RzgS-1836.webp?_cchid=b7e20948e7869e3922a28fdf512acfc9 1836w" type="image/webp">
+<source data-cms-original-srcset="/img/optimized/ebEpQ0RzgS-400.jpeg 400w, /img/optimized/ebEpQ0RzgS-1836.jpeg 1836w" sizes="400px" srcset="/img/optimized/ebEpQ0RzgS-400.jpeg?_cchid=ffd89e1a6ba79e028866d0707cb82b66 400w, /img/optimized/ebEpQ0RzgS-1836.jpeg?_cchid=354bc5eefe26d56a113d81545af96ff4 1836w" type="image/jpeg">
+		<img alt="" class="w-24 h-auto mx-auto shadow-cover-small" data-cms-original-src="/img/optimized/ebEpQ0RzgS-1836.webp" decoding="async" height="2379" loading="eager" src="/img/optimized/ebEpQ0RzgS-1836.webp?_cchid=b7e20948e7869e3922a28fdf512acfc9" width="1836">
+	</picture>
+                        </div>
+
+                        <p>
+                          <a href="/whitepaper/ai-measurement-framework/">
+                            <span class="absolute inset-0 flex-1 transition-all ease-in-out duration-150 rounded-md"></span>Measuring AI code assistants and agents</a>
+                        </p>
+                        <p class="mt-2.5 mb-px text-gray-700 text-xs leading-snug">
+                          Read whitepaper <span class="inline-flex relative top-px transform -rotate-45 opacity-90">→</span>
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="text-sm flex items-center">
+        <a class="hidden lg:block text-gray-700 hover:text-black" href="https://app.getdx.com/signin"> Sign in </a>
+        <a class="hidden md:flex ml-5 btn-primary btn-base" href="/demo/"> Get a demo </a>
+        <button aria-controls="mobile-nav" aria-expanded="false" aria-label="Open navigation" class="md:hidden -mt-0.5 -mr-2.5 w-10 h-10 relative" id="hamburger-nav-btn">
+          <div class="block w-6 absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2">
+            <span class="hamburger-nav-btn-line-top"> </span>
+            <span aria-hidden="true" class="hamburger-nav-btn-line-middle"> </span>
+            <span aria-hidden="true" class="hamburger-nav-btn-line-bottom"> </span>
+          </div>
+        </button>
+      </div>
+    </nav>
+
+    <nav aria-label="Main mobile" class="hamburger-nav" id="mobile-nav">
+  <div class="container pt-5 pb-56">
+    <a class="btn-outline btn-base ring-gray-500 flex" href="https://app.getdx.com/signin">Sign in</a>
+    <a class="mt-4 btn-primary btn-base flex" href="/demo/">Get a demo</a>
+
+    <div class="mt-10">
+      <div data-menu-level="" id="main-menu">
+        <button aria-controls="products-menu" aria-expanded="false" class="flex justify-between items-center w-full py-4 hover:text-indigo" data-mobile-sub="">
+          Products <svg aria-hidden="true" class="h-6 w-6 stroke-2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 40 40"><path d="M15 8.33325L25 19.9999L15 31.6666"></path></svg>
+        </button>
+        <button aria-controls="research-menu" aria-expanded="false" class="flex justify-between items-center w-full py-4 hover:text-indigo" data-mobile-sub="">
+          Research <svg aria-hidden="true" class="h-6 w-6 stroke-2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 40 40"><path d="M15 8.33325L25 19.9999L15 31.6666"></path></svg>
+        </button>
+        <a class="flex justify-between items-center w-full py-4 hover:text-indigo" href="/why-dx/">Why DX</a>
+        <a class="flex justify-between items-center w-full py-4 hover:text-indigo" href="/customers/">Customers</a>
+        <button aria-controls="resources-menu" aria-expanded="false" class="flex justify-between items-center w-full py-4 hover:text-indigo" data-mobile-sub="">
+          Resources <svg aria-hidden="true" class="h-6 w-6 stroke-2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 40 40"><path d="M15 8.33325L25 19.9999L15 31.6666"></path></svg>
+        </button>
+      </div>
+
+      
+      <div class="hidden" data-menu-level="" id="products-menu">
+        <button aria-controls="main-menu" class="flex items-center w-full py-5 text-sm" data-mobile-sub="">
+          <svg aria-hidden="true" class="mr-2 h-3 stroke-2" fill="none" viewBox="0 0 8 17" xmlns="http://www.w3.org/2000/svg"><path d="M7 15.5L0.999999 8.5L7 1.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"></path></svg> Back
+        </button>
+
+        <div class="space-y-11">
+          
+            
+          
+            
+              
+              
+
+              <div>
+                
+                <div class="relative flex items-center gap-x-1 py-3.5">
+                  <a class="text-black text-base font-medium hover:text-indigo" href="/developer-experience/">
+                    Developer Experience
+                    <span class="absolute inset-0"></span>
+                  </a>
+                  <svg aria-hidden="true" class="size-3 text-black" fill="none" viewBox="0 0 12 12" xmlns="http://www.w3.org/2000/svg"><path d="M1.75 10.25L10.073 1.927" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path><path d="M10.25 6.5V1.75H5.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                </div>
+
+                
+                
+                  <a class="text-black text-base block w-full py-4 hover:text-indigo" href="/developer-experience-index/">
+                    Developer Experience Index (DXI)
+                  </a>
+                
+                  <a class="text-black text-base block w-full py-4 hover:text-indigo" href="/industry-benchmarking/">
+                    Industry Benchmarking
+                  </a>
+                
+                  <a class="text-black text-base block w-full py-4 hover:text-indigo" href="/workflow-analysis/">
+                    Workflow Analysis
+                  </a>
+                
+                  <a class="text-black text-base block w-full py-4 hover:text-indigo" href="/executive-reporting/">
+                    Executive Reporting
+                  </a>
+                
+                  <a class="text-black text-base block w-full py-4 hover:text-indigo" href="/devsat/">
+                    DevSat
+                  </a>
+                
+                  <a class="text-black text-base block w-full py-4 hover:text-indigo" href="/targeted-studies/">
+                    Targeted Studies
+                  </a>
+                
+                  <a class="text-black text-base block w-full py-4 hover:text-indigo" href="/experience-sampling/">
+                    Experience Sampling
+                  </a>
+                
+                  <a class="text-black text-base block w-full py-4 hover:text-indigo" href="/ai-recommendations/">
+                    AI Recommendations
+                  </a>
+                
+              </div>
+            
+          
+            
+              
+              
+
+              <div>
+                
+                <div class="relative flex items-center gap-x-1 py-3.5">
+                  <a class="text-black text-base font-medium hover:text-indigo" href="/engineering-productivity/">
+                    Engineering Productivity
+                    <span class="absolute inset-0"></span>
+                  </a>
+                  <svg aria-hidden="true" class="size-3 text-black" fill="none" viewBox="0 0 12 12" xmlns="http://www.w3.org/2000/svg"><path d="M1.75 10.25L10.073 1.927" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path><path d="M10.25 6.5V1.75H5.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                </div>
+
+                
+                
+                  <a class="text-black text-base block w-full py-4 hover:text-indigo" href="/sdlc-analytics/">
+                    SDLC Analytics
+                  </a>
+                
+                  <a class="text-black text-base block w-full py-4 hover:text-indigo" href="/dx-core-4/">
+                    DX Core 4
+                  </a>
+                
+                  <a class="text-black text-base block w-full py-4 hover:text-indigo" href="/truethroughput/">
+                    TrueThroughput™
+                  </a>
+                
+                  <a class="text-black text-base block w-full py-4 hover:text-indigo" href="/team-dashboards/">
+                    Team Dashboards
+                  </a>
+                
+                  <a class="text-black text-base block w-full py-4 hover:text-indigo" href="/custom-reporting/">
+                    Custom Reporting
+                  </a>
+                
+                  <a class="text-black text-base block w-full py-4 hover:text-indigo" href="/engineering-allocation/">
+                    Engineering Allocation
+                  </a>
+                
+                  <a class="text-black text-base block w-full py-4 hover:text-indigo" href="/sprint-analytics/">
+                    Sprint Analytics
+                  </a>
+                
+                  <a class="text-black text-base block w-full py-4 hover:text-indigo" href="/software-capitalization/">
+                    R&amp;D Capitalization
+                  </a>
+                
+              </div>
+            
+          
+            
+              
+              
+
+              <div>
+                
+                <div class="relative flex items-center gap-x-1 py-3.5">
+                  <a class="text-black text-base font-medium hover:text-indigo" href="/ai-measurement/">
+                    AI Measurement
+                    <span class="absolute inset-0"></span>
+                  </a>
+                  <svg aria-hidden="true" class="size-3 text-black" fill="none" viewBox="0 0 12 12" xmlns="http://www.w3.org/2000/svg"><path d="M1.75 10.25L10.073 1.927" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path><path d="M10.25 6.5V1.75H5.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                </div>
+
+                
+                
+                  <a class="text-black text-base block w-full py-4 hover:text-indigo" href="/ai-strategic-planning/">
+                    Strategic Planning
+                  </a>
+                
+                  <a class="text-black text-base block w-full py-4 hover:text-indigo" href="/vendor-evaluation/">
+                    Vendor Evaluation
+                  </a>
+                
+                  <a class="text-black text-base block w-full py-4 hover:text-indigo" href="/ai-usage-analytics/">
+                    Usage Analytics
+                  </a>
+                
+                  <a class="text-black text-base block w-full py-4 hover:text-indigo" href="/ai-code-insights/">
+                    AI Code Insights
+                  </a>
+                
+                  <a class="text-black text-base block w-full py-4 hover:text-indigo" href="/ai-impact-analysis/">
+                    Impact Analysis
+                  </a>
+                
+                  <a class="text-black text-base block w-full py-4 hover:text-indigo" href="/ai-workflow-optimization/">
+                    AI Workflow Optimization
+                  </a>
+                
+              </div>
+            
+          
+            
+              
+              
+
+              <div>
+                
+                <div class="relative flex items-center gap-x-1 py-3.5">
+                  <a class="text-black text-base font-medium hover:text-indigo" href="/ai-enablement/">
+                    AI Enablement
+                    <span class="absolute inset-0"></span>
+                  </a>
+                  <svg aria-hidden="true" class="size-3 text-black" fill="none" viewBox="0 0 12 12" xmlns="http://www.w3.org/2000/svg"><path d="M1.75 10.25L10.073 1.927" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path><path d="M10.25 6.5V1.75H5.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                </div>
+
+                
+                
+                  <a class="text-black text-base block w-full py-4 hover:text-indigo" href="/systems-catalog/">
+                    Systems Catalog
+                  </a>
+                
+                  <a class="text-black text-base block w-full py-4 hover:text-indigo" href="/context-management/">
+                    Context Management
+                  </a>
+                
+                  <a class="text-black text-base block w-full py-4 hover:text-indigo" href="/ai-readiness/">
+                    AI Readiness
+                  </a>
+                
+                  <a class="text-black text-base block w-full py-4 hover:text-indigo" href="/agent-ops-tools/">
+                    Agent Ops Tools
+                  </a>
+                
+                  <a class="text-black text-base block w-full py-4 hover:text-indigo" href="/scorecards/">
+                    Scorecards
+                  </a>
+                
+                  <a class="text-black text-base block w-full py-4 hover:text-indigo" href="/developer-self-service/">
+                    Developer Self-service
+                  </a>
+                
+                  <a class="text-black text-base block w-full py-4 hover:text-indigo" href="/internal-developer-portal/">
+                    Internal Developer Portal
+                  </a>
+                
+              </div>
+            
+          
+        </div>
+      </div>
+
+      
+      <div class="hidden" data-menu-level="" id="research-menu">
+        <button aria-controls="main-menu" class="flex items-center w-full py-5 text-sm" data-mobile-sub="">
+          <svg aria-hidden="true" class="mr-2 h-3 stroke-2" fill="none" viewBox="0 0 8 17" xmlns="http://www.w3.org/2000/svg"><path d="M7 15.5L0.999999 8.5L7 1.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"></path></svg> Back
+        </button>
+
+        <a class="block w-full py-4 hover:text-indigo" href="/research/overview/">Overview</a>
+        <a class="block w-full py-4 hover:text-indigo" href="/research/">Archive</a>
+        <a class="block w-full py-4 hover:text-indigo" href="/research/measuring-developer-productivity-with-the-dx-core-4/">DX Core 4</a>
+        <a class="block w-full py-4 hover:text-indigo" href="/research/the-one-number-you-need-to-increase-roi-per-engineer/">Developer Experience Index</a>
+        <a class="block w-full py-4 hover:text-indigo" href="/research/benchmarks/">Core 4 Benchmarks</a>
+      </div>
+
+      
+      <div class="hidden" data-menu-level="" id="resources-menu">
+        <button aria-controls="main-menu" class="flex items-center w-full py-5 text-sm" data-mobile-sub="">
+          <svg aria-hidden="true" class="mr-2 h-3 stroke-2" fill="none" viewBox="0 0 8 17" xmlns="http://www.w3.org/2000/svg"><path d="M7 15.5L0.999999 8.5L7 1.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"></path></svg> Back
+        </button>
+
+        <a class="block w-full py-4 hover:text-indigo" href="/resources/"> Reports &amp; Guides</a>
+        <a class="block w-full py-4 hover:text-indigo" href="/resources/webinars/">Webinars</a>
+        <a class="block w-full py-4 hover:text-indigo" href="https://newsletter.getdx.com" target="_blank">Newsletter</a>
+        <a class="block w-full py-4 hover:text-indigo" href="/podcast/">Podcast</a>
+        <a class="block w-full py-4 hover:text-indigo" href="/research/overview/">Research</a>
+        <a class="block w-full py-4 hover:text-indigo" href="/blog/">Blog</a>
+      </div>
+    </div>
+  </div>
+</nav>
+
+  </header>
+
+
+    <main data-cms-content-wrapper="/src/_layouts/default.liquid" id="content">
+
+
+
+<section class="border-t mb-16 md:mb-24">
+  <div class="border-b shadow-inset">
+  <div class="container flex items-center justify-between h-14">
+    <div class="flex-1 relative md:hidden">
+      <div class="relative flex items-center flex-wrap h-12">
+        
+        <button aria-expanded="false" aria-haspopup="true" class="font-semibold text-xs tracking-wider uppercase flex items-center justify-between w-full py-2" id="dropdownToggle">
+          <span class="pointer-events-none">Blog</span>
+          <svg aria-hidden="true" class="absolute right-0 top-3 h-5 w-5 duration-200 ease-in-out pointer-events-none" fill="none" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><path d="m4.5 6.5 3.146 3.146a.5.5 0 0 0 .708 0L11.5 6.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"></path></svg>
+        </button>
+
+        <div class="absolute z-40 top-12 left-0 w-full overflow-hidden h-0 hidden shadow-lg bg-white border rounded border-gray-300" id="dropdownTarget">
+          <div>
+            
+              <a class="text-sm text-gray-700 py-2.5 block px-4 hover:bg-gray-200" href="/blog/">
+                All posts
+              </a>
+            
+              <a class="text-sm text-gray-700 py-2.5 block px-4 hover:bg-gray-200" href="/blog/insights/">
+                Research &amp; Insights
+              </a>
+            
+              <a class="text-sm text-gray-700 py-2.5 block px-4 hover:bg-gray-200" href="/blog/product/">
+                Product
+              </a>
+            
+              <a class="text-sm text-gray-700 py-2.5 block px-4 hover:bg-gray-200" href="/blog/customers/">
+                Customers
+              </a>
+            
+              <a class="text-sm text-gray-700 py-2.5 block px-4 hover:bg-gray-200" href="/blog/news/">
+                News
+              </a>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+
+    
+    <div class="hidden md:flex relative justify-center w-full">
+      <span class="absolute left-0 h-full flex items-center font-semibold text-xs tracking-wider uppercase text-gray-700">Blog</span>
+      <nav aria-label="Blog categories" class="flex space-x-8 items-center">
+        
+          <a class="text-gray-700 hover:text-black text-sm" href="/blog/">
+            All posts
+          </a>
+        
+          <a class="text-gray-700 hover:text-black text-sm" href="/blog/insights/">
+            Research &amp; Insights
+          </a>
+        
+          <a class="text-gray-700 hover:text-black text-sm" href="/blog/product/">
+            Product
+          </a>
+        
+          <a class="text-gray-700 hover:text-black text-sm" href="/blog/customers/">
+            Customers
+          </a>
+        
+          <a class="text-gray-700 hover:text-black text-sm" href="/blog/news/">
+            News
+          </a>
+        
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+  <div class="mt-14 md:mt-20 container">
+    <div class="flex justify-between">
+      <article class="md:w-0 md:grow max-w-prose" data-pagefind-body="">
+        <header class="space-y-6">
+          <h1 class="text-h3 lg:text-h2 max-w-var" style="--max-width: 48rem">
+            Monolithic vs microservices architecture: When to choose each approach
+          </h1>
+          
+            <p class="lg:text-lg text-gray-700">
+              A practical guide to choosing between monolithic and microservices architecture based on team size, organizational maturity, and business requirements
+            </p>
+          
+          
+            <div class="flex items-center justify-between mb-5">
+              <div class="flex items-center">
+                
+                
+                <picture>
+		<source data-cms-original-srcset="/img/optimized/KftQ3WyGHp-80.webp 80w, /img/optimized/KftQ3WyGHp-200.webp 200w" sizes="80px" srcset="/img/optimized/KftQ3WyGHp-80.webp?_cchid=cbe89d81b200e131fe0d0b04c9465025 80w, /img/optimized/KftQ3WyGHp-200.webp?_cchid=b3c219a1101df15df98a809a5248a694 200w" type="image/webp">
+<source data-cms-original-srcset="/img/optimized/KftQ3WyGHp-80.jpeg 80w, /img/optimized/KftQ3WyGHp-200.jpeg 200w" sizes="80px" srcset="/img/optimized/KftQ3WyGHp-80.jpeg?_cchid=2248734d8500a8edfa597261f76e4a1b 80w, /img/optimized/KftQ3WyGHp-200.jpeg?_cchid=c844583f0a9b13479ebd6d7744c14212 200w" type="image/jpeg">
+		<img alt="" class="w-10 rounded-full overflow-hidden mr-3.5" data-cms-original-src="/img/optimized/KftQ3WyGHp-200.webp" decoding="async" height="200" loading="eager" src="/img/optimized/KftQ3WyGHp-200.webp?_cchid=b3c219a1101df15df98a809a5248a694" width="200">
+	</picture>
+                
+                  <div>
+                    <p class="text-sm font-semibold">
+                      Taylor Bruneaux
+                    </p>
+                    
+                      <p class="text-sm text-gray-700">
+                        Analyst
+                      </p>
+                    
+                  </div>
+                
+              </div>
+            </div>
+          
+        </header>
+        
+        
+          <aside class="p-6 rounded-lg border border-gray-300 my-12">
+			<a class="sr-only focus:not-sr-only focus:bg-white focus:p-1" href="#toc-skipped" id="skip-toc">Skip table of contents</a>
+			<h2 class="text-xl tracking-tight font-semibold mb-5">Table of contents</h2>
+			<nav><ol class="space-y-1"><li><a class="py-1 text-indigo hover:underline" href="#the-fundamental-insight-architecture-follows-organization">The fundamental insight: Architecture follows organization</a></li><li><a class="py-1 text-indigo hover:underline" href="#when-to-choose-monolithic-vs-microservices">When to choose monolithic vs microservices</a></li><li><a class="py-1 text-indigo hover:underline" href="#core-architectural-principles">Core architectural principles</a></li><li><a class="py-1 text-indigo hover:underline" href="#the-recommended-path-start-modular">The recommended path: Start modular</a></li><li><a class="py-1 text-indigo hover:underline" href="#why-this-matters-now">Why this matters now</a></li><li><a class="py-1 text-indigo hover:underline" href="#essential-frameworks-and-tools">Essential frameworks and tools</a></li><li><a class="py-1 text-indigo hover:underline" href="#testing-strategies-by-architecture">Testing strategies by architecture</a></li><li><a class="py-1 text-indigo hover:underline" href="#quick-reference-guides">Quick reference guides</a></li><li><a class="py-1 text-indigo hover:underline" href="#key-takeaways">Key takeaways</a></li></ol></nav>
+			<div id="toc-skipped"></div>
+			</aside>
+        
+        <div class="prose prose-neutral prose-h2:text-3xl prose-h2:font-normal prose-h2:mb-4 prose-h3:font-normal max-w-prose mt-6">
+          <p>Most engineering leaders we speak with face the same architectural dilemma: their teams need to ship features quickly, but they’re paralyzed by the monolithic vs. microservices decision.</p>
+<p>The conventional wisdom—follow the latest trend, copy what successful companies do, optimize for theoretical scale—breaks down when confronted with real constraints. What we’ve learned from working with hundreds of engineering teams is that architecture decisions require a different approach: treat them as organizational problems, not technical ones.</p>
+
+<section>
+<h2 id="the-fundamental-insight-architecture-follows-organization" tabindex="-1"><a class="heading-anchor" href="#the-fundamental-insight-architecture-follows-organization"><strong>The fundamental insight: Architecture follows organization</strong></a></h2>
+<p>When teams rush into microservices without understanding the organizational tradeoffs, they discover that distributed complexity far exceeds their readiness. Instead of solving scaling problems, they’ve created new ones around coordination, consistency, and operational overhead.</p>
+<p><a href="https://www.atlassian.com/blog/teamwork/what-is-conways-law-acmi">Conway’s Law</a> isn’t a suggestion—it’s physics. Your architecture will mirror your team structure, whether you plan for it or not. Understanding how team structure influences architecture explains why identical technical approaches succeed in some organizations and fail in others.</p>
+<p>Here’s what we’ve observed across engineering organizations: architecture decisions work best when they focus on organizational capabilities over technical characteristics. This means embedding architectural thinking into business strategy, not following industry trends.</p>
+</section>
+
+<section>
+<h2 id="when-to-choose-monolithic-vs-microservices" tabindex="-1"><a class="heading-anchor" href="#when-to-choose-monolithic-vs-microservices"><strong>When to choose monolithic vs microservices</strong></a></h2>
+<p>The decision centers on a fundamental tradeoff: monoliths optimize for simplicity and development speed, while microservices optimize for team autonomy and independent scaling.</p>
+<h3 id="the-case-for-monolithic-architecture" tabindex="-1"><a class="heading-anchor" href="#the-case-for-monolithic-architecture"><strong>The case for monolithic architecture</strong></a></h3>
+<p>Monoliths excel in the early stages when speed and simplicity matter most. They consolidate complexity into a single codebase that’s easier to understand but harder to change at scale.</p>
+<p><strong>Choose monolithic architecture when:</strong></p>
+<ul>
+<li>Teams under 8-10 developers</li>
+<li>Pre-product-market fit stage</li>
+<li>Simple deployment requirements</li>
+<li>Limited operational expertise</li>
+</ul>
+<p>Monoliths enable <a href="https://www.databricks.com/glossary/acid-transactions">ACID transactions</a> across the entire system and benefit from simpler testing strategies due to centralized data and unified deployment. Unit testing remains straightforward with shared dependencies, and debugging test failures is more straightforward with centralized logging.</p>
+<h3 id="the-case-for-microservices-architecture" tabindex="-1"><a class="heading-anchor" href="#the-case-for-microservices-architecture"><strong>The case for microservices architecture</strong></a></h3>
+<p>Microservices excel when teams and complexity grow beyond what coordination can handle effectively. They distribute complexity across service boundaries, enabling independent development but requiring sophisticated coordination.</p>
+<p><strong>Choose microservices architecture when:</strong></p>
+<ul>
+<li>Teams exceed 10-15 developers</li>
+<li>Different scaling requirements across domains</li>
+<li>Need for independent team deployments</li>
+<li>Strong DevOps and operational capabilities</li>
+</ul>
+<p>Research from <a href="https://www.researchgate.net/publication/350312029_Monolithic_vs_Microservice_Architecture_A_Performance_and_Scalability_Evaluation">academic studies</a> shows measurable performance and scalability tradeoffs between these approaches.</p>
+</section>
+
+<section>
+<h2 id="core-architectural-principles" tabindex="-1"><a class="heading-anchor" href="#core-architectural-principles"><strong>Core architectural principles</strong></a></h2>
+<h3 id="service-boundaries-must-align-with-team-boundaries" tabindex="-1"><a class="heading-anchor" href="#service-boundaries-must-align-with-team-boundaries"><strong>Service boundaries must align with team boundaries</strong></a></h3>
+<p>Here’s what we’ve learned matters most: service boundaries should align with team boundaries, not just technical domains. Each <a href="https://getdx.com/blog/introducing-software-catalogs-scorecards-and-self-service/">service needs ownership</a> by a team that can develop, deploy, and operate it independently.</p>
+<h3 id="deployment-patterns-drive-coordination-costs" tabindex="-1"><a class="heading-anchor" href="#deployment-patterns-drive-coordination-costs"><strong>Deployment patterns drive coordination costs</strong></a></h3>
+<p>Independent deployments enable faster feature delivery but require sophisticated coordination mechanisms. Shared deployments simplify coordination but create bottlenecks as teams grow.</p>
+<p>The tradeoff we repeatedly see: deployment independence scales with team size, but coordination overhead scales with the number of services. <a href="https://aws.amazon.com/compare/the-difference-between-monolithic-and-microservices-architecture/">AWS’s architectural guidance</a> emphasizes considering these operational costs early in the decision-making process.</p>
+<h3 id="data-consistency-shapes-system-design" tabindex="-1"><a class="heading-anchor" href="#data-consistency-shapes-system-design"><strong>Data consistency shapes system design</strong></a></h3>
+<p>Monoliths enable ACID transactions across the entire system. Microservices often adopt eventual consistency, although techniques like <a href="https://microservices.io/patterns/data/saga.html">Sagas</a> and orchestration frameworks (such as <a href="https://temporal.io/">Temporal</a>) can provide stronger guarantees when needed.</p>
+<p>Match data strategy to business requirements: strong consistency where required, eventual consistency where acceptable.</p>
+</section>
+
+<section>
+<h2 id="the-recommended-path-start-modular" tabindex="-1"><a class="heading-anchor" href="#the-recommended-path-start-modular"><strong>The recommended path: Start modular</strong></a></h2>
+<p>What we recommend to most teams: begin with clear domain boundaries within a single deployable unit. This provides a low-risk path to microservices, should they be needed later.</p>
+<p>Modular monoliths combine the simplicity of monoliths with the flexibility of microservices. Well-defined modules can be extracted into services when team structure and requirements demand it.</p>
+<h3 id="when-to-make-the-transition" tabindex="-1"><a class="heading-anchor" href="#when-to-make-the-transition"><strong>When to make the transition</strong></a></h3>
+<p>Split a monolith based on organizational signals, not technical preferences. Reliable indicators from our experience: team growth, deployment bottlenecks, and scaling requirements.</p>
+<p>Common triggers for considering microservices include team sizes exceeding 8-10 people, deployment coordination becoming a bottleneck, differing scaling requirements across domains, and compliance requirements that necessitate service isolation.</p>
+<h3 id="avoiding-common-pitfalls" tabindex="-1"><a class="heading-anchor" href="#avoiding-common-pitfalls"><strong>Avoiding common pitfalls</strong></a></h3>
+<p><strong>Distributed monolith</strong>: Services that are tightly coupled but deployed separately. This often occurs when services share databases, require synchronous cross-service calls, or need coordinated deployments. Combines the worst aspects of both approaches—distributed system complexity with monolith coupling.</p>
+<p><strong>Premature optimization</strong>: Splitting into microservices before organizational maturity supports it. From our observations, operational overhead far exceeds benefits. <a href="https://www.atlassian.com/microservices/architecture/microservices-vs-monolith">Industry analysis</a> confirms that timing and organizational readiness matter more than technical capability.</p>
+</section>
+
+<section>
+<h2 id="why-this-matters-now" tabindex="-1"><a class="heading-anchor" href="#why-this-matters-now"><strong>Why this matters now</strong></a></h2>
+<p>Architecture choices impact hiring, operational costs, development velocity, and business agility in ways that extend far beyond technical tradeoffs.</p>
+<p>Monoliths require fewer specialized skills but may limit career growth for senior engineers. Microservices require expertise in distributed systems, but they also offer more interesting technical challenges. Understanding <a href="https://getdx.com/blog/developer-experience/">what developer experience</a> means to your team helps inform these architectural decisions and their impact on talent retention.</p>
+<p>Microservices typically increase operational costs through additional infrastructure, monitoring, and tooling requirements. <a href="https://www.dynatrace.com/news/blog/microservices-vs-monolithic-architecture-understanding-the-difference/">Monitoring and observability platforms</a> become essential for microservices, often representing a significant ongoing operational investment that teams underestimate during architectural planning.</p>
+<p>The right architecture enables faster feature delivery, while the wrong choice creates bottlenecks that constrain business growth. What matters isn’t technical elegance—it’s business velocity.</p>
+<hr>
+</section>
+
+<section>
+<h2 id="essential-frameworks-and-tools" tabindex="-1"><a class="heading-anchor" href="#essential-frameworks-and-tools"><strong>Essential frameworks and tools</strong></a></h2>
+<h3 id="monolith-frameworks" tabindex="-1"><a class="heading-anchor" href="#monolith-frameworks"><strong>Monolith frameworks</strong></a></h3>
+<p>The proper monolith framework reduces complexity while maintaining flexibility for future architectural evolution.</p>
+<p><a href="https://rubyonrails.org/">Ruby on Rails</a> dominates rapid application development. Its conventions enable small teams to build complex applications quickly, with strong admin tooling and ecosystem support.</p>
+<p><a href="https://spring.io/projects/spring-boot">Spring Boot</a> provides enterprise-grade capabilities for Java applications. Extensive configuration options and a mature ecosystem make it suitable for complex business domains.</p>
+<p><a href="https://www.djangoproject.com/">Django</a> offers batteries-included development for Python applications. A strong admin interface and ORM make it an excellent choice for content-heavy applications.</p>
+<p><a href="https://laravel.com/">Laravel</a> enables rapid PHP development with modern features. Good balance of simplicity and capability for web applications.</p>
+<table><thead><tr><th><p><strong>Framework</strong></p></th><th><p><strong>Best for</strong></p></th><th><p><strong>Learning curve</strong></p></th><th><p><strong>Ecosystem</strong></p></th></tr></thead><tbody><tr><td><p><strong>Ruby on Rails</strong></p></td><td><p>Rapid CRUD applications</p></td><td><p>Medium</p></td><td><p>Mature</p></td></tr><tr><td><p><strong>Spring Boot</strong></p></td><td><p>Enterprise applications</p></td><td><p>High</p></td><td><p>Extensive</p></td></tr><tr><td><p><strong>Django</strong></p></td><td><p>Content-heavy applications</p></td><td><p>Medium</p></td><td><p>Strong</p></td></tr><tr><td><p><strong>Laravel</strong></p></td><td><p>Modern PHP applications</p></td><td><p>Low</p></td><td><p>Growing</p></td></tr></tbody></table>
+<h3 id="microservices-development-frameworks" tabindex="-1"><a class="heading-anchor" href="#microservices-development-frameworks"><strong>Microservices development frameworks</strong></a></h3>
+<p>Effective microservices development requires language-specific frameworks optimized for distributed systems. The choice of development stack has a significant impact on team productivity and system maintainability.</p>
+<p><strong>Java microservices framework</strong> options lead enterprise adoption:</p>
+<p><a href="https://stackoverflow.com/questions/42659920/is-there-a-compatibility-matrix-of-spring-boot-and-spring-cloud">Spring Boot with Spring Cloud</a> provides the most mature Java microservices framework ecosystem. Features like service discovery, circuit breakers, and distributed configuration make it the standard for enterprise microservices development.</p>
+<p><a href="https://quarkus.io/">Quarkus</a> offers a modern Java microservices framework designed for containers and cloud-native environments. Faster startup times and lower memory usage make it attractive for resource-constrained deployments.</p>
+<p><a href="https://micronaut.io/">Micronaut</a> delivers a lightweight Java microservices framework with compile-time dependency injection. Reduces runtime overhead while maintaining familiar Java development patterns.</p>
+<p><a href="https://www.reddit.com/r/golang/comments/16fi4sb/go_and_microservices/">Microservices with Go</a> represent another popular approach:</p>
+<p><strong>Go’s built-in concurrency</strong> and lightweight runtime make it excellent for microservices development. The language’s simplicity and fast compilation enable rapid development cycles.</p>
+<p><strong>Go frameworks</strong> like <a href="https://gin-gonic.com/">Gin</a>, <a href="https://echo.labstack.com/">Echo</a>, and <a href="https://go-chi.io/">Chi</a> provide minimal overhead for building HTTP services. The standard library handles most microservices requirements without heavy framework dependencies.</p>
+<h3 id="microservices-management-and-tooling" tabindex="-1"><a class="heading-anchor" href="#microservices-management-and-tooling"><strong>Microservices management and tooling</strong></a></h3>
+<p>Beyond development frameworks, microservices management requires sophisticated operational tooling. From our work with engineering teams, we find that most underestimate the expertise required for effective microservices management.</p>
+<p><strong>Service mesh</strong> (<a href="https://istio.io/">Istio</a>, <a href="https://linkerd.io/">Linkerd</a>) handles service-to-service communication, security, and observability. Essential for production microservices, but adds significant operational complexity.</p>
+<p><strong>API gateways</strong> (<a href="https://konghq.com/products/kong-gateway">Kong</a>, <a href="https://aws.amazon.com/api-gateway/">Amazon API Gateway</a>) manage external API access, rate limiting, and authentication. Centralizes cross-cutting concerns but can become a bottleneck.</p>
+<p><strong>Event streaming</strong> (<a href="https://kafka.apache.org/">Apache Kafka</a>, <a href="https://nats.io/">NATS</a>) enables asynchronous communication between services. Powerful for decoupling but requires distributed systems expertise.</p>
+<p><strong>Container orchestration</strong> (<a href="https://kubernetes.io/">Kubernetes</a>, <a href="https://docs.docker.com/engine/swarm/">Docker Swarm</a>) manages service deployment and scaling. Kubernetes dominates but has a steep learning curve and significant operational overhead that makes it unsuitable for many teams starting out.</p>
+<p>The operational complexity here overlaps significantly with <a href="https://getdx.com/blog/site-reliability-engineering/">site reliability engineering</a> practices, which become essential for managing distributed systems at scale.</p>
+<p>Modern teams also benefit from <a href="https://getdx.com/blog/developer-portals/">internal developer portals</a> to provide self-service access to architectural components and reduce coordination overhead across services.</p>
+<table><thead><tr><th><p><strong>Tool category</strong></p></th><th><p><strong>Best option</strong></p></th><th><p><strong>Setup complexity</strong></p></th><th><p><strong>Operational overhead</strong></p></th></tr></thead><tbody><tr><td><p><strong>Service mesh</strong></p></td><td><p>Istio</p></td><td><p>High</p></td><td><p>High</p></td></tr><tr><td><p><strong>API gateway</strong></p></td><td><p>Kong</p></td><td><p>Medium</p></td><td><p>Medium</p></td></tr><tr><td><p><strong>Event streaming</strong></p></td><td><p>Apache Kafka</p></td><td><p>High</p></td><td><p>High</p></td></tr><tr><td><p><strong>Orchestration</strong></p></td><td><p>Kubernetes</p></td><td><p>High</p></td><td><p>High</p></td></tr><tr><td><p><strong>Service discovery</strong></p></td><td><p>Consul</p></td><td><p>Medium</p></td><td><p>Medium</p></td></tr></tbody></table>
+</section>
+
+<section>
+<h2 id="testing-strategies-by-architecture" tabindex="-1"><a class="heading-anchor" href="#testing-strategies-by-architecture"><strong>Testing strategies by architecture</strong></a></h2>
+<h3 id="microservices-testing-approaches" tabindex="-1"><a class="heading-anchor" href="#microservices-testing-approaches"><strong>Microservices testing approaches</strong></a></h3>
+<p>Testing microservices requires sophisticated strategies to handle the complexity of distributed systems. Microservices testing differs fundamentally from monolithic testing due to the service boundaries and network communication involved.</p>
+<p><strong>Contract testing</strong> becomes essential for maintaining service compatibility and ensuring seamless operation. Tools like Pact ensure service interfaces remain stable across changes.</p>
+<p><strong>Service virtualization</strong> enables testing individual services without requiring the entire system to be run. Reduces test environment complexity and improves test reliability.</p>
+<p><strong>Distributed tracing</strong> helps debug test failures across service boundaries. Tools like Jaeger provide visibility into cross-service request flows.</p>
+<p><strong>Testing in production</strong> becomes necessary for validating the behavior of distributed systems. Techniques like canary deployments and feature flags enable safe production testing.</p>
+<h3 id="monolith-testing-approaches" tabindex="-1"><a class="heading-anchor" href="#monolith-testing-approaches"><strong>Monolith testing approaches</strong></a></h3>
+<p>Monoliths benefit from simpler testing strategies due to centralized data and unified deployment.</p>
+<p><strong>Unit testing</strong> remains straightforward with shared dependencies and access to a single codebase. Test isolation is easier when everything runs in the same process.</p>
+<p><strong>Integration testing</strong> leverages shared database access and a unified application context. Test data setup and cleanup are simplified.</p>
+<p><strong>End-to-end testing</strong> requires orchestrating only a single instance of the application. Debugging test failures is more straightforward with centralized logging.</p>
+<table><thead><tr><th><p><strong>Testing strategy</strong></p></th><th><p><strong>Monolith</strong></p></th><th><p><strong>Microservices</strong></p></th></tr></thead><tbody><tr><td><p><strong>Unit tests</strong></p></td><td><p>Simple, fast execution</p></td><td><p>Per-service scope, isolation required</p></td></tr><tr><td><p><strong>Integration tests</strong></p></td><td><p>Shared database simplifies setup</p></td><td><p>Requires service mocks or test containers</p></td></tr><tr><td><p><strong>Contract tests</strong></p></td><td><p>Less common, but increasingly used in modular monoliths</p></td><td><p>Essential for microservices testing</p></td></tr><tr><td><p><strong>End-to-end tests</strong></p></td><td><p>Single application orchestration</p></td><td><p>Complex service coordination required</p></td></tr><tr><td><p><strong>Performance tests</strong></p></td><td><p>Straightforward load testing</p></td><td><p>Distributed system performance testing</p></td></tr></tbody></table>
+</section>
+
+<section>
+<h2 id="quick-reference-guides" tabindex="-1"><a class="heading-anchor" href="#quick-reference-guides"><strong>Quick reference guides</strong></a></h2>
+<h3 id="architecture-decision-checklist" tabindex="-1"><a class="heading-anchor" href="#architecture-decision-checklist"><strong>Architecture decision checklist</strong></a></h3>
+<p><strong>Before choosing microservices, verify:</strong></p>
+<ul>
+<li>[ ] Teams exceed 10-15 developers</li>
+<li>[ ] DevOps pipeline maturity</li>
+<li>[ ] Monitoring and observability capabilities</li>
+<li>[ ] Service discovery infrastructure</li>
+<li>[ ] Distributed tracing tools</li>
+<li>[ ] Container orchestration expertise</li>
+<li>[ ] Clear service boundary definitions</li>
+<li>[ ] Data consistency strategy</li>
+</ul>
+<p><strong>Before choosing monolithic, verify:</strong></p>
+<ul>
+<li>[ ] Teams under 10 developers</li>
+<li>[ ] Rapid feature development priority</li>
+<li>[ ] Simple deployment requirements</li>
+<li>[ ] Shared data model works well</li>
+<li>[ ] Limited operational overhead tolerance</li>
+</ul>
+<h3 id="faq" tabindex="-1"><a class="heading-anchor" href="#faq"><strong>FAQ</strong></a></h3>
+<p><strong>When should you split a monolith into microservices?</strong> Split when deployment coordination becomes a bottleneck, teams exceed 8-10 people, or different domains have distinct scaling needs.</p>
+<p><strong>What team size works best for microservices?</strong> 15-20+ developers typically justify microservices complexity. Below this, coordination overhead often exceeds benefits.</p>
+<p><strong>Which is faster to develop: monolith or microservices?</strong> Monoliths are faster initially. Microservices maintain velocity at scale but require upfront investment in tooling.</p>
+<p><strong>What are the main microservices disadvantages?</strong> Operational complexity, network latency, data consistency challenges, and debugging difficulty across service boundaries.</p>
+<p><strong>How do you test microservices effectively?</strong> Use contract testing, service virtualization, distributed tracing, and testing in production with feature flags.</p>
+<p><strong>When should a startup choose microservices over a monolith?</strong> Most startups should start with a modular monolith. Microservices make sense early only when specific requirements demand them: extreme scaling needs, fault isolation requirements, or when building API-first platforms where service boundaries align with business domains.</p>
+<p><strong>How do you know when to split a monolith?</strong> Look for organizational signals, such as deployment coordination becoming a bottleneck, teams stepping on each other’s code, differing scaling requirements across domains, or compliance requiring service isolation. <a href="https://arxiv.org/abs/1911.11514">Framework research</a> provides systematic approaches for evaluating when monolithic systems should transition to microservices.</p>
+<p><strong>What’s the biggest mistake teams make with microservices?</strong> Underestimating operational complexity. Based on our observations, teams aren’t adequately prepared for the investment required in service discovery, monitoring, distributed tracing, and on-call capabilities.</p>
+<p><strong>Can you have both monoliths and microservices in the same system?</strong> Yes, hybrid approaches work well. Start with a monolith for core functionality and extract specific services for specialized requirements, such as payments, notifications, or analytics.</p>
+<p><strong>How do you handle data consistency across services?</strong> Design for eventual consistency where possible, use Saga patterns or orchestration frameworks for complex workflows, and maintain strong consistency only where business requirements demand it. Avoid distributed transactions except in rare cases.</p>
+</section>
+
+<section>
+<h2 id="key-takeaways" tabindex="-1"><a class="heading-anchor" href="#key-takeaways"><strong>Key takeaways</strong></a></h2>
+<ul>
+<li>
+<p><strong>Match architecture to team maturity</strong>: Monoliths for small teams, microservices for large teams—though exceptions exist for specific scaling or isolation needs</p>
+</li>
+<li>
+<p><strong>Design team structure first</strong>: Conway’s Law ensures architecture follows organizational boundaries</p>
+</li>
+<li>
+<p><strong>Start modular</strong>: Clear domain boundaries enable future extraction</p>
+</li>
+<li>
+<p><strong>Operational overhead compounds</strong>: Microservices require significant tooling and expertise investment</p>
+</li>
+<li>
+<p><strong>Test strategy scales with complexity</strong>: Plan accordingly for distributed architectures</p>
+</li>
+<li>
+<p><strong>Measure developer productivity</strong>: Track <a href="https://getdx.com/blog/developer-productivity-metrics/">developer productivity metrics</a> that reflect architectural impact on team effectiveness</p>
+<div class="py-10">
+  <a class="block no-underline group" href="/backstage-plugins/">
+    <div class="bg-gray-200 px-7 pt-8 pb-7">
+      <div class="tracking-tight font-bold text-2xl md:text-h3 max-w-var" style="--max-width:36rem">
+        Boost adoption with Backstage plugins
+      </div>
+      <div class="mt-3.5 md:text-lg font-normal">
+        Power reporting, scorecarding, and service intelligence with DX's Backstage plugins.
+      </div>
+      <div class="mt-5 md:mt-7 font-semibold tracking-tight">
+        See available Backstage plugins <span class="
+          inline-flex ml-0.5 relative top-px transform -rotate-45
+          transition-all group-hover:translate-x-2 group-hover:-translate-y-2
+        ">→</span>
+      </div>
+    </div>
+  </a>
+</div>
+</li>
+</ul>
+</section>
+        </div>
+        <div class="border-t border-gray-300 mt-14 pt-14">
+          <div class="text-gray-700 uppercase tracking-wide text-xs font-medium">Last Updated</div>
+          <div class="mt-2.5 text-sm">
+            June 27, 2025
+          </div>
+        </div>
+      </article>
+      <div class="ml-10 pl-8 w-80 shrink-0 hidden lg:block">
+        <aside class="top-0 pt-24 -mt-24">
+  
+	
+  <a class="block shadow rounded-xl overflow-hidden" href="/uploads/linear-3.png" target="_blank">
+    <picture>
+		<source data-cms-original-srcset="/img/optimized/ja4xo3VcEh-300.webp 300w, /img/optimized/ja4xo3VcEh-864.webp 864w" sizes="300px" srcset="/img/optimized/ja4xo3VcEh-300.webp?_cchid=147c8df23483bf099dfb728194e4128e 300w, /img/optimized/ja4xo3VcEh-864.webp?_cchid=53578e73a9d684034e107b3023acf352 864w" type="image/webp">
+<source data-cms-original-srcset="/img/optimized/ja4xo3VcEh-300.jpeg 300w, /img/optimized/ja4xo3VcEh-864.jpeg 864w" sizes="300px" srcset="/img/optimized/ja4xo3VcEh-300.jpeg?_cchid=866186771d222206708f85f76ce7675d 300w, /img/optimized/ja4xo3VcEh-864.jpeg?_cchid=8ebe589a3595e792afb59f8027bef9ed 864w" type="image/jpeg">
+		<img alt="Engineering Enablement Newsletter" class="w-full" data-cms-original-src="/img/optimized/ja4xo3VcEh-864.webp" decoding="async" height="864" loading="eager" src="/img/optimized/ja4xo3VcEh-864.webp?_cchid=53578e73a9d684034e107b3023acf352" width="864">
+	</picture>
+  </a>
+  
+	
+  <div class="mt-8 bg-gray-50 border rounded-lg px-6 pt-8 pb-8">
+    <h2 class="text-xl tracking-tight font-semibold mb-5">Resources</h2>
+    <div class="text-sm">
+      <a class="flex items-center space-x-5 group" href="/whitepaper/ai-measurement-framework/">
+        <div>
+          <span class="mb-1 block text-black group-hover:text-indigo leading-snug">
+            Measuring AI code assistants and agents
+          </span>
+          <div class="text-2xs text-gray-500">
+            Report
+          </div>
+        </div>
+        <div class="shrink-0 shadow w-14">
+          <picture>
+		<source data-cms-original-srcset="/img/optimized/GhBidW6e-B-64.webp 64w, /img/optimized/GhBidW6e-B-5100.webp 5100w" sizes="64px" srcset="/img/optimized/GhBidW6e-B-64.webp?_cchid=93157a25428d316506bd91284d97ef47 64w, /img/optimized/GhBidW6e-B-5100.webp?_cchid=7c8ec3e7b28a5bd9241e1f4e02aa9dc5 5100w" type="image/webp">
+<source data-cms-original-srcset="/img/optimized/GhBidW6e-B-64.jpeg 64w, /img/optimized/GhBidW6e-B-5100.jpeg 5100w" sizes="64px" srcset="/img/optimized/GhBidW6e-B-64.jpeg?_cchid=18ebdf7013e85ecc8c821b65dc926eb2 64w, /img/optimized/GhBidW6e-B-5100.jpeg?_cchid=8824636d12585e637dd78bb543fecd12 5100w" type="image/jpeg">
+		<img alt="" class="w-full" data-cms-original-src="/img/optimized/GhBidW6e-B-5100.webp" decoding="async" height="6600" loading="lazy" src="/img/optimized/GhBidW6e-B-5100.webp?_cchid=7c8ec3e7b28a5bd9241e1f4e02aa9dc5" width="5100">
+	</picture>
+        </div>
+      </a>
+      <a class="mt-9 flex items-center space-x-5 group" href="/report/dx-core-4/">
+        <div>
+          <span class="mb-1 block text-black group-hover:text-indigo leading-snug">
+            Measuring productivity with the DX Core 4
+          </span>
+          <div class="text-2xs text-gray-500">
+            Report
+          </div>
+        </div>
+        <div class="shrink-0 shadow w-14">
+          <picture>
+		<source data-cms-original-srcset="/img/optimized/P3Oomw6KCC-64.webp 64w, /img/optimized/P3Oomw6KCC-5100.webp 5100w" sizes="64px" srcset="/img/optimized/P3Oomw6KCC-64.webp?_cchid=67389ce0d832d0943b4ff0456a1a9783 64w, /img/optimized/P3Oomw6KCC-5100.webp?_cchid=3bdad6ee7649d763b10873dd73c13dc0 5100w" type="image/webp">
+<source data-cms-original-srcset="/img/optimized/P3Oomw6KCC-64.jpeg 64w, /img/optimized/P3Oomw6KCC-5100.jpeg 5100w" sizes="64px" srcset="/img/optimized/P3Oomw6KCC-64.jpeg?_cchid=70c74bf15ebcc96d027be20013bf7fac 64w, /img/optimized/P3Oomw6KCC-5100.jpeg?_cchid=0299716f741d95957ca7d991c6b2a904 5100w" type="image/jpeg">
+		<img alt="" class="w-full" data-cms-original-src="/img/optimized/P3Oomw6KCC-5100.webp" decoding="async" height="6600" loading="lazy" src="/img/optimized/P3Oomw6KCC-5100.webp?_cchid=3bdad6ee7649d763b10873dd73c13dc0" width="5100">
+	</picture>
+        </div>
+      </a>
+      <a class="mt-9 flex items-center space-x-5 group" href="/report/ai-and-engineering-velocity-a-longitudinal-analysis/">
+        <div>
+          <span class="mb-1 block text-black group-hover:text-indigo leading-snug">
+            AI and engineering velocity: A longitudinal analysis
+          </span>
+          <div class="text-2xs text-gray-500">
+            Report
+          </div>
+        </div>
+        <div class="shrink-0 shadow w-14">
+          <picture>
+		<source data-cms-original-srcset="/img/optimized/n2KVcZDCW5-64.webp 64w, /img/optimized/n2KVcZDCW5-5100.webp 5100w" sizes="64px" srcset="/img/optimized/n2KVcZDCW5-64.webp?_cchid=ba7085e134da8775d196dd0a8dced33d 64w, /img/optimized/n2KVcZDCW5-5100.webp?_cchid=731b17a8d02ee69e3bad2235cc7b9c5e 5100w" type="image/webp">
+<source data-cms-original-srcset="/img/optimized/n2KVcZDCW5-64.jpeg 64w, /img/optimized/n2KVcZDCW5-5100.jpeg 5100w" sizes="64px" srcset="/img/optimized/n2KVcZDCW5-64.jpeg?_cchid=7a5c1aeeef22198d416649476f877285 64w, /img/optimized/n2KVcZDCW5-5100.jpeg?_cchid=da02c2635dca93aeb6876ff0925021a8 5100w" type="image/jpeg">
+		<img alt="" class="w-full" data-cms-original-src="/img/optimized/n2KVcZDCW5-5100.webp" decoding="async" height="6600" loading="lazy" src="/img/optimized/n2KVcZDCW5-5100.webp?_cchid=731b17a8d02ee69e3bad2235cc7b9c5e" width="5100">
+	</picture>
+        </div>
+      </a>
+    </div>
+  </div>
+</aside>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="container mb-36 ">
+  <div class="pt-28 border-t border-gray-200">
+    <aside class="mx-auto max-w-3xl text-center space-y-10 ">
+      <div class="space-y-6">
+        <h2 class="text-brow">
+          <svg aria-hidden="true" class="" fill="none" viewBox="0 0 19 19" xmlns="http://www.w3.org/2000/svg"><path d="M13.0263 3.63281H4.97369C3.92725 3.63281 3.07895 4.52824 3.07895 5.63281V14.1328C3.07895 15.2374 3.92725 16.1328 4.97369 16.1328H13.0263C14.0728 16.1328 14.9211 15.2374 14.9211 14.1328V5.63281C14.9211 4.52824 14.0728 3.63281 13.0263 3.63281Z" stroke="#6B7280" stroke-linecap="round" stroke-linejoin="round"></path><path d="M5.92105 13.1328H9.23684" stroke="#6B7280" stroke-linecap="round" stroke-linejoin="round"></path><path d="M5.92105 10.1328H12.0789" stroke="#6B7280" stroke-linecap="round" stroke-linejoin="round"></path><path d="M6.15789 7.88281C6.68111 7.88281 7.10526 7.4351 7.10526 6.88281C7.10526 6.33053 6.68111 5.88281 6.15789 5.88281C5.63468 5.88281 5.21053 6.33053 5.21053 6.88281C5.21053 7.4351 5.63468 7.88281 6.15789 7.88281Z" fill="#6B7280"></path></svg>
+          <span>Get started</span>
+        </h2>
+        <p class="editable | text-3xl sm:text-6xl mt-4" data-cms-index="0" data-cms-source="/src/_includes/cta.liquid">Want to explore more?</p>
+        <p class="mx-auto text-base leading-relaxed text-gray-500">See the DX platform in action.</p>
+      </div>
+  <a class="btn-black btn-lg inline-flex" href="/demo/">Get a demo</a>
+    </aside>
+  </div>
+</div>
+
+
+</main>
+    <footer>
+  <h2 class="sr-only">Explore</h2>
+  <div class="container pb-10 pt-20 text-center sm:text-left">
+    
+    <div class="hidden lg:grid gap-y-12 gap-x-6 grid-cols-5">
+      <div>
+        <h3 class="text-black text-brow text-3xs">Developer Experience</h3>
+        <ul class="mt-4 space-y-3" role="list">
+          
+            <li>
+              <a class="text-gray-500 text-sm opacity-75 hover:text-black hover:opacity-95" href="/developer-experience-index/">Developer Experience Index (DXI)</a>
+            </li>
+          
+            <li>
+              <a class="text-gray-500 text-sm opacity-75 hover:text-black hover:opacity-95" href="/industry-benchmarking/">Industry Benchmarking</a>
+            </li>
+          
+            <li>
+              <a class="text-gray-500 text-sm opacity-75 hover:text-black hover:opacity-95" href="/workflow-analysis/">Workflow Analysis</a>
+            </li>
+          
+            <li>
+              <a class="text-gray-500 text-sm opacity-75 hover:text-black hover:opacity-95" href="/executive-reporting/">Executive Reporting</a>
+            </li>
+          
+            <li>
+              <a class="text-gray-500 text-sm opacity-75 hover:text-black hover:opacity-95" href="/devsat/">DevSat</a>
+            </li>
+          
+            <li>
+              <a class="text-gray-500 text-sm opacity-75 hover:text-black hover:opacity-95" href="/targeted-studies/">Targeted Studies</a>
+            </li>
+          
+            <li>
+              <a class="text-gray-500 text-sm opacity-75 hover:text-black hover:opacity-95" href="/experience-sampling/">Experience Sampling</a>
+            </li>
+          
+            <li>
+              <a class="text-gray-500 text-sm opacity-75 hover:text-black hover:opacity-95" href="/ai-recommendations/">AI Recommendations</a>
+            </li>
+          
+        </ul>
+      </div>
+      <div>
+        <h3 class="text-black text-brow text-3xs">Engineering Productivity</h3>
+        <ul class="mt-4 space-y-3" role="list">
+          
+            <li>
+              <a class="text-gray-500 text-sm opacity-75 hover:text-black hover:opacity-95" href="/sdlc-analytics/">SDLC Analytics</a>
+            </li>
+          
+            <li>
+              <a class="text-gray-500 text-sm opacity-75 hover:text-black hover:opacity-95" href="/dx-core-4/">DX Core 4</a>
+            </li>
+          
+            <li>
+              <a class="text-gray-500 text-sm opacity-75 hover:text-black hover:opacity-95" href="/truethroughput/">TrueThroughput™</a>
+            </li>
+          
+            <li>
+              <a class="text-gray-500 text-sm opacity-75 hover:text-black hover:opacity-95" href="/team-dashboards/">Team Dashboards</a>
+            </li>
+          
+            <li>
+              <a class="text-gray-500 text-sm opacity-75 hover:text-black hover:opacity-95" href="/custom-reporting/">Custom Reporting</a>
+            </li>
+          
+            <li>
+              <a class="text-gray-500 text-sm opacity-75 hover:text-black hover:opacity-95" href="/engineering-allocation/">Engineering Allocation</a>
+            </li>
+          
+            <li>
+              <a class="text-gray-500 text-sm opacity-75 hover:text-black hover:opacity-95" href="/sprint-analytics/">Sprint Analytics</a>
+            </li>
+          
+            <li>
+              <a class="text-gray-500 text-sm opacity-75 hover:text-black hover:opacity-95" href="/software-capitalization/">R&amp;D Capitalization</a>
+            </li>
+          
+        </ul>
+      </div>
+      <div>
+        <h3 class="text-black text-brow text-3xs">AI Measurement</h3>
+        <ul class="mt-4 space-y-3" role="list">
+          
+            <li>
+              <a class="text-gray-500 text-sm opacity-75 hover:text-black hover:opacity-95" href="/ai-strategic-planning/">Strategic Planning</a>
+            </li>
+          
+            <li>
+              <a class="text-gray-500 text-sm opacity-75 hover:text-black hover:opacity-95" href="/vendor-evaluation/">Vendor Evaluation</a>
+            </li>
+          
+            <li>
+              <a class="text-gray-500 text-sm opacity-75 hover:text-black hover:opacity-95" href="/ai-usage-analytics/">Usage Analytics</a>
+            </li>
+          
+            <li>
+              <a class="text-gray-500 text-sm opacity-75 hover:text-black hover:opacity-95" href="/ai-code-insights/">AI Code Insights</a>
+            </li>
+          
+            <li>
+              <a class="text-gray-500 text-sm opacity-75 hover:text-black hover:opacity-95" href="/ai-impact-analysis/">Impact Analysis</a>
+            </li>
+          
+            <li>
+              <a class="text-gray-500 text-sm opacity-75 hover:text-black hover:opacity-95" href="/ai-workflow-optimization/">AI Workflow Optimization</a>
+            </li>
+          
+        </ul>
+      </div>
+      <div>
+        <h3 class="text-black text-brow text-3xs">AI Enablement</h3>
+        <ul class="mt-4 space-y-3" role="list">
+          
+            <li>
+              <a class="text-gray-500 text-sm opacity-75 hover:text-black hover:opacity-95" href="/systems-catalog/">Systems Catalog</a>
+            </li>
+          
+            <li>
+              <a class="text-gray-500 text-sm opacity-75 hover:text-black hover:opacity-95" href="/context-management/">Context Management</a>
+            </li>
+          
+            <li>
+              <a class="text-gray-500 text-sm opacity-75 hover:text-black hover:opacity-95" href="/ai-readiness/">AI Readiness</a>
+            </li>
+          
+            <li>
+              <a class="text-gray-500 text-sm opacity-75 hover:text-black hover:opacity-95" href="/agent-ops-tools/">Agent Ops Tools</a>
+            </li>
+          
+            <li>
+              <a class="text-gray-500 text-sm opacity-75 hover:text-black hover:opacity-95" href="/scorecards/">Scorecards</a>
+            </li>
+          
+            <li>
+              <a class="text-gray-500 text-sm opacity-75 hover:text-black hover:opacity-95" href="/developer-self-service/">Developer Self-service</a>
+            </li>
+          
+            <li>
+              <a class="text-gray-500 text-sm opacity-75 hover:text-black hover:opacity-95" href="/internal-developer-portal/">Internal Developer Portal</a>
+            </li>
+          
+        </ul>
+      </div>
+      <div>
+        <h3 class="text-black text-brow text-3xs">Company</h3>
+        <ul class="mt-4 space-y-3" role="list">
+          <li>
+            <a class="text-gray-500 text-sm opacity-75 hover:text-black hover:opacity-95" href="/customers/">Customers</a>
+          </li>
+          <li>
+            <a class="text-gray-500 text-sm opacity-75 hover:text-black hover:opacity-95" href="/careers/">Careers</a>
+          </li>
+          <li>
+            <a class="text-gray-500 text-sm opacity-75 hover:text-black hover:opacity-95" href="/security/">Security</a>
+          </li>
+          <li>
+            <a class="text-gray-500 text-sm opacity-75 hover:text-black hover:opacity-95" href="/about/">About</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    
+    <div class="lg:hidden space-y-12">
+      <div>
+        <h3 class="text-black text-brow text-3xs">Developer Experience</h3>
+        <ul class="mt-4 space-y-3" role="list">
+          
+            <li>
+              <a class="text-gray-500 text-sm opacity-75 hover:text-black hover:opacity-95" href="/developer-experience-index/">Developer Experience Index (DXI)</a>
+            </li>
+          
+            <li>
+              <a class="text-gray-500 text-sm opacity-75 hover:text-black hover:opacity-95" href="/industry-benchmarking/">Industry Benchmarking</a>
+            </li>
+          
+            <li>
+              <a class="text-gray-500 text-sm opacity-75 hover:text-black hover:opacity-95" href="/workflow-analysis/">Workflow Analysis</a>
+            </li>
+          
+            <li>
+              <a class="text-gray-500 text-sm opacity-75 hover:text-black hover:opacity-95" href="/executive-reporting/">Executive Reporting</a>
+            </li>
+          
+            <li>
+              <a class="text-gray-500 text-sm opacity-75 hover:text-black hover:opacity-95" href="/devsat/">DevSat</a>
+            </li>
+          
+            <li>
+              <a class="text-gray-500 text-sm opacity-75 hover:text-black hover:opacity-95" href="/targeted-studies/">Targeted Studies</a>
+            </li>
+          
+            <li>
+              <a class="text-gray-500 text-sm opacity-75 hover:text-black hover:opacity-95" href="/experience-sampling/">Experience Sampling</a>
+            </li>
+          
+            <li>
+              <a class="text-gray-500 text-sm opacity-75 hover:text-black hover:opacity-95" href="/ai-recommendations/">AI Recommendations</a>
+            </li>
+          
+        </ul>
+      </div>
+      <div>
+        <h3 class="text-black text-brow text-3xs">Engineering Productivity</h3>
+        <ul class="mt-4 space-y-3" role="list">
+          
+            <li>
+              <a class="text-gray-500 text-sm opacity-75 hover:text-black hover:opacity-95" href="/sdlc-analytics/">SDLC Analytics</a>
+            </li>
+          
+            <li>
+              <a class="text-gray-500 text-sm opacity-75 hover:text-black hover:opacity-95" href="/dx-core-4/">DX Core 4</a>
+            </li>
+          
+            <li>
+              <a class="text-gray-500 text-sm opacity-75 hover:text-black hover:opacity-95" href="/truethroughput/">TrueThroughput™</a>
+            </li>
+          
+            <li>
+              <a class="text-gray-500 text-sm opacity-75 hover:text-black hover:opacity-95" href="/team-dashboards/">Team Dashboards</a>
+            </li>
+          
+            <li>
+              <a class="text-gray-500 text-sm opacity-75 hover:text-black hover:opacity-95" href="/custom-reporting/">Custom Reporting</a>
+            </li>
+          
+            <li>
+              <a class="text-gray-500 text-sm opacity-75 hover:text-black hover:opacity-95" href="/engineering-allocation/">Engineering Allocation</a>
+            </li>
+          
+            <li>
+              <a class="text-gray-500 text-sm opacity-75 hover:text-black hover:opacity-95" href="/sprint-analytics/">Sprint Analytics</a>
+            </li>
+          
+            <li>
+              <a class="text-gray-500 text-sm opacity-75 hover:text-black hover:opacity-95" href="/software-capitalization/">R&amp;D Capitalization</a>
+            </li>
+          
+        </ul>
+      </div>
+      <div>
+        <h3 class="text-black text-brow text-3xs">AI Measurement</h3>
+        <ul class="mt-4 space-y-3" role="list">
+          
+            <li>
+              <a class="text-gray-500 text-sm opacity-75 hover:text-black hover:opacity-95" href="/ai-strategic-planning/">Strategic Planning</a>
+            </li>
+          
+            <li>
+              <a class="text-gray-500 text-sm opacity-75 hover:text-black hover:opacity-95" href="/vendor-evaluation/">Vendor Evaluation</a>
+            </li>
+          
+            <li>
+              <a class="text-gray-500 text-sm opacity-75 hover:text-black hover:opacity-95" href="/ai-usage-analytics/">Usage Analytics</a>
+            </li>
+          
+            <li>
+              <a class="text-gray-500 text-sm opacity-75 hover:text-black hover:opacity-95" href="/ai-code-insights/">AI Code Insights</a>
+            </li>
+          
+            <li>
+              <a class="text-gray-500 text-sm opacity-75 hover:text-black hover:opacity-95" href="/ai-impact-analysis/">Impact Analysis</a>
+            </li>
+          
+            <li>
+              <a class="text-gray-500 text-sm opacity-75 hover:text-black hover:opacity-95" href="/ai-workflow-optimization/">AI Workflow Optimization</a>
+            </li>
+          
+        </ul>
+      </div>
+      <div>
+        <h3 class="text-black text-brow text-3xs">AI Enablement</h3>
+        <ul class="mt-4 space-y-3" role="list">
+          
+            <li>
+              <a class="text-gray-500 text-sm opacity-75 hover:text-black hover:opacity-95" href="/systems-catalog/">Systems Catalog</a>
+            </li>
+          
+            <li>
+              <a class="text-gray-500 text-sm opacity-75 hover:text-black hover:opacity-95" href="/context-management/">Context Management</a>
+            </li>
+          
+            <li>
+              <a class="text-gray-500 text-sm opacity-75 hover:text-black hover:opacity-95" href="/ai-readiness/">AI Readiness</a>
+            </li>
+          
+            <li>
+              <a class="text-gray-500 text-sm opacity-75 hover:text-black hover:opacity-95" href="/agent-ops-tools/">Agent Ops Tools</a>
+            </li>
+          
+            <li>
+              <a class="text-gray-500 text-sm opacity-75 hover:text-black hover:opacity-95" href="/scorecards/">Scorecards</a>
+            </li>
+          
+            <li>
+              <a class="text-gray-500 text-sm opacity-75 hover:text-black hover:opacity-95" href="/developer-self-service/">Developer Self-service</a>
+            </li>
+          
+            <li>
+              <a class="text-gray-500 text-sm opacity-75 hover:text-black hover:opacity-95" href="/internal-developer-portal/">Internal Developer Portal</a>
+            </li>
+          
+        </ul>
+      </div>
+      <div>
+        <h3 class="text-black text-brow text-3xs">DX Platform</h3>
+        <ul class="mt-4 space-y-3" role="list">
+          <li>
+            <a class="text-gray-500 text-sm opacity-75 hover:text-black hover:opacity-95" href="/platform/">Overview</a>
+          </li>
+          <li>
+            <a class="text-gray-500 text-sm opacity-75 hover:text-black hover:opacity-95" href="/industry-benchmarking/">Industry Benchmarking</a>
+          </li>
+          <li>
+            <a class="text-gray-500 text-sm opacity-75 hover:text-black hover:opacity-95" href="/research/benchmarks/">Benchmarking</a>
+          </li>
+          <li>
+            <a class="text-gray-500 text-sm opacity-75 hover:text-black hover:opacity-95" href="/platform/dx-ai/">DX AI</a>
+          </li>
+          <li>
+            <a class="text-gray-500 text-sm opacity-75 hover:text-black hover:opacity-95" href="/connectors/">Connectors</a>
+          </li>
+        </ul>
+      </div>
+      <div>
+        <h3 class="text-black text-brow text-3xs">Company</h3>
+        <ul class="mt-4 space-y-3" role="list">
+          <li>
+            <a class="text-gray-500 text-sm opacity-75 hover:text-black hover:opacity-95" href="/customers/">Customers</a>
+          </li>
+          <li>
+            <a class="text-gray-500 text-sm opacity-75 hover:text-black hover:opacity-95" href="/careers/">Careers</a>
+          </li>
+          <li>
+            <a class="text-gray-500 text-sm opacity-75 hover:text-black hover:opacity-95" href="/security/">Security</a>
+          </li>
+          <li>
+            <a class="text-gray-500 text-sm opacity-75 hover:text-black hover:opacity-95" href="/articles/">Articles</a>
+          </li>
+          <li>
+            <a class="text-gray-500 text-sm opacity-75 hover:text-black hover:opacity-95" href="/about/">About</a>
+          </li>
+        </ul>
+      </div>
+      <div>
+        <h3 class="text-black text-brow text-3xs">Get Help</h3>
+        <ul class="mt-4 space-y-3" role="list">
+          <li>
+            <a class="text-gray-500 text-sm opacity-75 hover:text-black hover:opacity-95" href="https://docs.getdx.com/">Support</a>
+          </li>
+          <li>
+            <a class="text-gray-500 text-sm opacity-75 hover:text-black hover:opacity-95" href="/terms/">Terms of service</a>
+          </li>
+          <li>
+            <a class="text-gray-500 text-sm opacity-75 hover:text-black hover:opacity-95" href="/privacy/">Privacy policy</a>
+          </li>
+          <li>
+            <a class="text-gray-500 text-sm opacity-75 hover:text-black hover:opacity-95" href="https://dx-status.com" target="_blank">Status</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    
+    <div class="hidden lg:flex text-center mt-28 sm:mt-32 items-center justify-between">
+      <div class="flex flex-wrap gap-x-6 gap-y-2 items-center">
+        <a class="opacity-70 hover:opacity-95" href="/"><span class="sr-only">Home</span><svg aria-hidden="true" class="h-6 text-black" fill="none" viewBox="0 0 42 24" xmlns="http://www.w3.org/2000/svg"><path d="M34.8556 15.3011L40.9139 24.0001H35.011C34.3712 23.2851 33.7497 22.4242 33.1994 21.6295C32.3551 20.4101 32.3572 18.7365 33.2295 17.537L34.8556 15.3011Z" fill="currentColor"></path><path d="M25.8458 8.69914L19.7876 0.000123978L25.6905 0.000123462C26.3303 0.715145 26.9518 1.57604 27.5021 2.37076C28.3464 3.59015 28.3443 5.26378 27.4719 6.46328L25.8458 8.69914Z" fill="currentColor"></path><path d="M34.4674 1.47573C35.0887 0.466019 35.7878 0.0776699 36.8751 0.0776699L41.6907 0L26.0252 23.1209C25.6855 23.6223 25.1215 23.9223 24.5185 23.9223H19.2635C24.288 16.4232 29.6074 9.07903 34.4674 1.47573Z" fill="currentColor"></path><path d="M0 23.9225H8.51678C16.1318 23.9225 20.7743 19.2717 20.7743 11.9965C20.7743 4.72135 16.1318 0.0705566 8.51678 0.0705566H0L5.28155 4.75457H3.1068C1.39096 4.75457 0 6.14553 0 7.86137V19.2385V23.9225ZM5.44406 19.2385V4.75457H8.48339C12.8253 4.75457 15.2634 7.61149 15.2634 11.9965C15.2634 16.3816 12.8253 19.2385 8.51678 19.2385H5.44406Z" fill="currentColor"></path></svg></a>
+        <span class="text-gray-500 opacity-75 text-sm">© 2026 DX</span>
+        <a class="text-gray-500 text-sm opacity-75 hover:text-black hover:opacity-95" href="https://docs.getdx.com/">Support</a>
+        <a class="text-gray-500 text-sm opacity-75 hover:text-black hover:opacity-95" href="/terms/">Terms of service</a>
+        <a class="text-gray-500 text-sm opacity-75 hover:text-black hover:opacity-95" href="/privacy/">Privacy policy</a>
+        <a class="text-gray-500 text-sm opacity-75 hover:text-black hover:opacity-95" href="https://dx-status.com" target="_blank">Status</a>
+      </div>
+      <div class="flex gap-x-10">
+        <a class="text-gray-500 hover:text-black" href="https://x.com/DeveloperXM" target="_blank">
+          <span class="sr-only">X</span>
+          <svg aria-hidden="true" class="w-6 h-6" fill="none" viewBox="0 0 18 16" xmlns="http://www.w3.org/2000/svg"><path d="M13.9389 0.316772H16.5457L10.8507 6.82584L17.5504 15.6832H12.3046L8.19581 10.3113L3.49447 15.6832H0.886112L6.97752 8.72103L0.550415 0.316772H5.92945L9.6434 5.22694L13.9389 0.316772ZM13.024 14.1229H14.4685L5.14458 1.7951H3.59454L13.024 14.1229Z" fill="currentColor"></path></svg>
+        </a>
+        <a class="text-gray-500 hover:text-black" href="https://www.linkedin.com/company/developer-experience" target="_blank">
+          <span class="sr-only">LinkedIn</span>
+          <svg aria-hidden="true" class="w-6 h-6" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><g clip-path="url(#clip0_1_292)"><path d="M22.2234 0H1.77187C0.792187 0 0 0.773438 0 1.72969V22.2656C0 23.2219 0.792187 24 1.77187 24H22.2234C23.2031 24 24 23.2219 24 22.2703V1.72969C24 0.773438 23.2031 0 22.2234 0ZM7.12031 20.4516H3.55781V8.99531H7.12031V20.4516ZM5.33906 7.43438C4.19531 7.43438 3.27188 6.51094 3.27188 5.37187C3.27188 4.23281 4.19531 3.30937 5.33906 3.30937C6.47813 3.30937 7.40156 4.23281 7.40156 5.37187C7.40156 6.50625 6.47813 7.43438 5.33906 7.43438ZM20.4516 20.4516H16.8937V14.8828C16.8937 13.5562 16.8703 11.8453 15.0422 11.8453C13.1906 11.8453 12.9094 13.2937 12.9094 14.7891V20.4516H9.35625V8.99531H12.7687V10.5609H12.8156C13.2891 9.66094 14.4516 8.70938 16.1813 8.70938C19.7859 8.70938 20.4516 11.0813 20.4516 14.1656V20.4516Z" fill="currentColor" id="Vector"></path></g><defs><clipPath id="clip0_1_292"><rect fill="currentColor" height="24" width="24"></rect></clipPath></defs></svg>
+        </a>
+        <a class="text-gray-500 hover:text-black" href="https://www.youtube.com/channel/UCPE0KPDWEDdO3VcgTc5Njjw" target="_blank">
+          <span class="sr-only">YouTube</span>
+          <svg aria-hidden="true" class="w-6 h-6" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M23.7609 7.20005C23.7609 7.20005 23.5266 5.54536 22.8047 4.8188C21.8906 3.86255 20.8688 3.85786 20.4 3.80161C17.0438 3.55786 12.0047 3.55786 12.0047 3.55786H11.9953C11.9953 3.55786 6.95625 3.55786 3.6 3.80161C3.13125 3.85786 2.10938 3.86255 1.19531 4.8188C0.473438 5.54536 0.24375 7.20005 0.24375 7.20005C0.24375 7.20005 0 9.14536 0 11.086V12.9047C0 14.8454 0.239062 16.7907 0.239062 16.7907C0.239062 16.7907 0.473437 18.4454 1.19062 19.1719C2.10469 20.1282 3.30469 20.0954 3.83906 20.1985C5.76094 20.3813 12 20.4375 12 20.4375C12 20.4375 17.0438 20.4282 20.4 20.1891C20.8688 20.1329 21.8906 20.1282 22.8047 19.1719C23.5266 18.4454 23.7609 16.7907 23.7609 16.7907C23.7609 16.7907 24 14.85 24 12.9047V11.086C24 9.14536 23.7609 7.20005 23.7609 7.20005ZM9.52031 15.1125V8.36724L16.0031 11.7516L9.52031 15.1125Z" fill="currentColor"></path></svg>
+        </a>
+        <a class="text-gray-500 hover:text-black" href="https://open.spotify.com/show/3NxjyIsuxeDMQtisDqBy7D?si=340755b6a2a440fd" target="_blank">
+          <span class="sr-only">Spotify</span>
+          <svg aria-hidden="true" class="w-6 h-6" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M11.9633 0C5.35629 0 0 5.35614 0 11.9631C0 18.5704 5.35629 23.9261 11.9633 23.9261C18.571 23.9261 23.9267 18.5704 23.9267 11.9631C23.9267 5.35657 18.571 0.000571425 11.9631 0.000571425L11.9633 0ZM17.4496 17.2543C17.2353 17.6057 16.7753 17.7171 16.4239 17.5014C13.615 15.7857 10.079 15.3971 5.91471 16.3486C5.51343 16.44 5.11343 16.1886 5.022 15.7871C4.93014 15.3857 5.18057 14.9857 5.58286 14.8943C10.14 13.8527 14.049 14.3014 17.2024 16.2286C17.5539 16.4443 17.6653 16.9029 17.4496 17.2543ZM18.9139 13.9964C18.6439 14.4357 18.0696 14.5743 17.631 14.3043C14.4153 12.3273 9.51343 11.7549 5.70986 12.9094C5.21657 13.0584 4.69557 12.7804 4.54586 12.288C4.39729 11.7947 4.67543 11.2747 5.16786 11.1247C9.51257 9.80643 14.9139 10.445 18.6067 12.7143C19.0453 12.9843 19.1839 13.5584 18.9139 13.9964ZM19.0396 10.6044C15.1839 8.31429 8.82243 8.10371 5.14114 9.221C4.55 9.40029 3.92486 9.06657 3.74571 8.47543C3.56657 7.884 3.9 7.25929 4.49157 7.07957C8.71743 5.79671 15.7424 6.04457 20.1816 8.67986C20.7144 8.99543 20.8887 9.68214 20.573 10.2131C20.2587 10.7449 19.5701 10.9201 19.0401 10.6044H19.0396Z" fill="currentColor"></path></svg>
+        </a>
+      </div>
+    </div>
+
+    
+    <div class="lg:hidden mt-16 space-y-7">
+      <div class="flex justify-center gap-x-10">
+        <a class="text-gray-500 hover:text-black" href="https://x.com/DeveloperXM" target="_blank">
+          <span class="sr-only">X</span>
+          <svg aria-hidden="true" class="w-6 h-6" fill="none" viewBox="0 0 18 16" xmlns="http://www.w3.org/2000/svg"><path d="M13.9389 0.316772H16.5457L10.8507 6.82584L17.5504 15.6832H12.3046L8.19581 10.3113L3.49447 15.6832H0.886112L6.97752 8.72103L0.550415 0.316772H5.92945L9.6434 5.22694L13.9389 0.316772ZM13.024 14.1229H14.4685L5.14458 1.7951H3.59454L13.024 14.1229Z" fill="currentColor"></path></svg>
+        </a>
+        <a class="text-gray-500 hover:text-black" href="https://www.linkedin.com/company/developer-experience" target="_blank">
+          <span class="sr-only">LinkedIn</span>
+          <svg aria-hidden="true" class="w-6 h-6" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><g clip-path="url(#clip0_1_292)"><path d="M22.2234 0H1.77187C0.792187 0 0 0.773438 0 1.72969V22.2656C0 23.2219 0.792187 24 1.77187 24H22.2234C23.2031 24 24 23.2219 24 22.2703V1.72969C24 0.773438 23.2031 0 22.2234 0ZM7.12031 20.4516H3.55781V8.99531H7.12031V20.4516ZM5.33906 7.43438C4.19531 7.43438 3.27188 6.51094 3.27188 5.37187C3.27188 4.23281 4.19531 3.30937 5.33906 3.30937C6.47813 3.30937 7.40156 4.23281 7.40156 5.37187C7.40156 6.50625 6.47813 7.43438 5.33906 7.43438ZM20.4516 20.4516H16.8937V14.8828C16.8937 13.5562 16.8703 11.8453 15.0422 11.8453C13.1906 11.8453 12.9094 13.2937 12.9094 14.7891V20.4516H9.35625V8.99531H12.7687V10.5609H12.8156C13.2891 9.66094 14.4516 8.70938 16.1813 8.70938C19.7859 8.70938 20.4516 11.0813 20.4516 14.1656V20.4516Z" fill="currentColor" id="Vector"></path></g><defs><clipPath id="clip0_1_292"><rect fill="currentColor" height="24" width="24"></rect></clipPath></defs></svg>
+        </a>
+        <a class="text-gray-500 hover:text-black" href="https://www.youtube.com/channel/UCPE0KPDWEDdO3VcgTc5Njjw" target="_blank">
+          <span class="sr-only">YouTube</span>
+          <svg aria-hidden="true" class="w-6 h-6" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M23.7609 7.20005C23.7609 7.20005 23.5266 5.54536 22.8047 4.8188C21.8906 3.86255 20.8688 3.85786 20.4 3.80161C17.0438 3.55786 12.0047 3.55786 12.0047 3.55786H11.9953C11.9953 3.55786 6.95625 3.55786 3.6 3.80161C3.13125 3.85786 2.10938 3.86255 1.19531 4.8188C0.473438 5.54536 0.24375 7.20005 0.24375 7.20005C0.24375 7.20005 0 9.14536 0 11.086V12.9047C0 14.8454 0.239062 16.7907 0.239062 16.7907C0.239062 16.7907 0.473437 18.4454 1.19062 19.1719C2.10469 20.1282 3.30469 20.0954 3.83906 20.1985C5.76094 20.3813 12 20.4375 12 20.4375C12 20.4375 17.0438 20.4282 20.4 20.1891C20.8688 20.1329 21.8906 20.1282 22.8047 19.1719C23.5266 18.4454 23.7609 16.7907 23.7609 16.7907C23.7609 16.7907 24 14.85 24 12.9047V11.086C24 9.14536 23.7609 7.20005 23.7609 7.20005ZM9.52031 15.1125V8.36724L16.0031 11.7516L9.52031 15.1125Z" fill="currentColor"></path></svg>
+        </a>
+        <a class="text-gray-500 hover:text-black" href="https://open.spotify.com/show/3NxjyIsuxeDMQtisDqBy7D?si=340755b6a2a440fd" target="_blank">
+          <span class="sr-only">Spotify</span>
+          <svg aria-hidden="true" class="w-6 h-6" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M11.9633 0C5.35629 0 0 5.35614 0 11.9631C0 18.5704 5.35629 23.9261 11.9633 23.9261C18.571 23.9261 23.9267 18.5704 23.9267 11.9631C23.9267 5.35657 18.571 0.000571425 11.9631 0.000571425L11.9633 0ZM17.4496 17.2543C17.2353 17.6057 16.7753 17.7171 16.4239 17.5014C13.615 15.7857 10.079 15.3971 5.91471 16.3486C5.51343 16.44 5.11343 16.1886 5.022 15.7871C4.93014 15.3857 5.18057 14.9857 5.58286 14.8943C10.14 13.8527 14.049 14.3014 17.2024 16.2286C17.5539 16.4443 17.6653 16.9029 17.4496 17.2543ZM18.9139 13.9964C18.6439 14.4357 18.0696 14.5743 17.631 14.3043C14.4153 12.3273 9.51343 11.7549 5.70986 12.9094C5.21657 13.0584 4.69557 12.7804 4.54586 12.288C4.39729 11.7947 4.67543 11.2747 5.16786 11.1247C9.51257 9.80643 14.9139 10.445 18.6067 12.7143C19.0453 12.9843 19.1839 13.5584 18.9139 13.9964ZM19.0396 10.6044C15.1839 8.31429 8.82243 8.10371 5.14114 9.221C4.55 9.40029 3.92486 9.06657 3.74571 8.47543C3.56657 7.884 3.9 7.25929 4.49157 7.07957C8.71743 5.79671 15.7424 6.04457 20.1816 8.67986C20.7144 8.99543 20.8887 9.68214 20.573 10.2131C20.2587 10.7449 19.5701 10.9201 19.0401 10.6044H19.0396Z" fill="currentColor"></path></svg>
+        </a>
+      </div>
+      <p class="text-gray-500 opacity-75 text-xs text-center">© Copyright 2026. All rights reserved.</p>
+    </div>
+  </div>
+</footer>
+
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const sendDemoClick = () => {
+        if (typeof gtag === 'function') {
+          gtag('event', 'click_cta', {
+            event_category: 'demo',
+            event_label: window.location.pathname
+          });
+        }
+      };
+
+      document.querySelectorAll('a[href*="/demo"]').forEach(btn => {
+        btn.addEventListener('click', sendDemoClick);
+      });
+    });
+  </script>
+
+</body></html>

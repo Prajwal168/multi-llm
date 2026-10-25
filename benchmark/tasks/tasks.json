@@ -1,0 +1,529 @@
+[
+  {
+    "id": "S1-01",
+    "stratum": "S1",
+    "query": "What is the difference between a list and a tuple in Python?",
+    "gold_subtasks": [
+      {
+        "id": "g1",
+        "text": "Explain the differences between Python lists and tuples",
+        "depends_on": []
+      }
+    ],
+    "tags": {
+      "needs_web": false,
+      "near_synonym": false,
+      "user_submission": false
+    },
+    "success_criteria": {
+      "content": [
+        "States that lists are mutable and tuples are immutable"
+      ],
+      "evidence": "Claims must be supported by the retrieved evidence or the user's submission; no unsupported claims.",
+      "format": "Addresses every requested part; readable Markdown."
+    }
+  },
+  {
+    "id": "S1-02",
+    "stratum": "S1",
+    "query": "Explain the concept of method overloading in Python.",
+    "gold_subtasks": [
+      {
+        "id": "g1",
+        "text": "Explain method overloading in Python, including that Python does not support it natively",
+        "depends_on": []
+      }
+    ],
+    "tags": {
+      "needs_web": false,
+      "near_synonym": true,
+      "user_submission": false
+    },
+    "success_criteria": {
+      "content": [
+        "Addresses method overloading specifically, not operator overloading",
+        "States that a later def with the same name replaces the earlier one"
+      ],
+      "evidence": "Claims must be supported by the retrieved evidence or the user's submission; no unsupported claims.",
+      "format": "Addresses every requested part; readable Markdown."
+    }
+  },
+  {
+    "id": "S1-03",
+    "stratum": "S1",
+    "query": "Explain the error in this code and give the corrected version:\n\ndef average(nums):\n    total = 0\n    for n in nums:\n        total += n\n    return total / len(nums)\n\nprint(average([]))",
+    "gold_subtasks": [
+      {
+        "id": "g1",
+        "text": "Explain the error in the provided average function (ZeroDivisionError on an empty list)",
+        "depends_on": []
+      },
+      {
+        "id": "g2",
+        "text": "Provide a corrected version of the average function",
+        "depends_on": [
+          "g1"
+        ]
+      }
+    ],
+    "tags": {
+      "needs_web": false,
+      "near_synonym": false,
+      "user_submission": true
+    },
+    "success_criteria": {
+      "content": [
+        "Identifies ZeroDivisionError caused by len(nums) == 0",
+        "Corrected code handles the empty list"
+      ],
+      "evidence": "Claims must be supported by the retrieved evidence or the user's submission; no unsupported claims.",
+      "format": "Addresses every requested part; readable Markdown."
+    }
+  },
+  {
+    "id": "S2-01",
+    "stratum": "S2",
+    "query": "Explain how TCP congestion control works, compare it with UDP's lack of congestion control, and summarize recent alternatives such as BBR.",
+    "gold_subtasks": [
+      {
+        "id": "g1",
+        "text": "Explain how TCP congestion control works",
+        "depends_on": []
+      },
+      {
+        "id": "g2",
+        "text": "Compare TCP congestion control with UDP's lack of congestion control",
+        "depends_on": [
+          "g1"
+        ]
+      },
+      {
+        "id": "g3",
+        "text": "Summarize recent congestion-control alternatives such as BBR",
+        "depends_on": []
+      }
+    ],
+    "tags": {
+      "needs_web": true,
+      "near_synonym": false,
+      "user_submission": false
+    },
+    "success_criteria": {
+      "content": [],
+      "evidence": "Claims must be supported by the retrieved evidence or the user's submission; no unsupported claims.",
+      "format": "Addresses every requested part; readable Markdown."
+    }
+  },
+  {
+    "id": "S2-02",
+    "stratum": "S2",
+    "query": "Explain how B-tree and hash indexes work in a relational database, compare them, and give guidance on when to use each.",
+    "gold_subtasks": [
+      {
+        "id": "g1",
+        "text": "Explain how B-tree indexes work",
+        "depends_on": []
+      },
+      {
+        "id": "g2",
+        "text": "Explain how hash indexes work",
+        "depends_on": []
+      },
+      {
+        "id": "g3",
+        "text": "Compare B-tree and hash indexes and give guidance on when to use each",
+        "depends_on": [
+          "g1",
+          "g2"
+        ]
+      }
+    ],
+    "tags": {
+      "needs_web": false,
+      "near_synonym": false,
+      "user_submission": false
+    },
+    "success_criteria": {
+      "content": [],
+      "evidence": "Claims must be supported by the retrieved evidence or the user's submission; no unsupported claims.",
+      "format": "Addresses every requested part; readable Markdown."
+    }
+  },
+  {
+    "id": "S2-03",
+    "stratum": "S2",
+    "query": "Define retrieval-augmented generation, describe how chunking affects retrieval quality, and summarize current approaches to evaluating RAG systems.",
+    "gold_subtasks": [
+      {
+        "id": "g1",
+        "text": "Define retrieval-augmented generation",
+        "depends_on": []
+      },
+      {
+        "id": "g2",
+        "text": "Describe how chunking affects retrieval quality",
+        "depends_on": []
+      },
+      {
+        "id": "g3",
+        "text": "Summarize current approaches to evaluating RAG systems",
+        "depends_on": []
+      }
+    ],
+    "tags": {
+      "needs_web": true,
+      "near_synonym": false,
+      "user_submission": false
+    },
+    "success_criteria": {
+      "content": [],
+      "evidence": "Claims must be supported by the retrieved evidence or the user's submission; no unsupported claims.",
+      "format": "Addresses every requested part; readable Markdown."
+    }
+  },
+  {
+    "id": "S3-01",
+    "stratum": "S3",
+    "query": "Write a Python function that computes Fibonacci numbers using plain recursion and a second version using memoization, explain each version, and compare their time complexity.",
+    "gold_subtasks": [
+      {
+        "id": "g1",
+        "text": "Write a plain recursive Python Fibonacci function",
+        "depends_on": []
+      },
+      {
+        "id": "g2",
+        "text": "Write a memoized Python Fibonacci function",
+        "depends_on": []
+      },
+      {
+        "id": "g3",
+        "text": "Explain the plain recursive version",
+        "depends_on": [
+          "g1"
+        ]
+      },
+      {
+        "id": "g4",
+        "text": "Explain the memoized version",
+        "depends_on": [
+          "g2"
+        ]
+      },
+      {
+        "id": "g5",
+        "text": "Compare the time complexity of the two versions",
+        "depends_on": [
+          "g1",
+          "g2"
+        ]
+      }
+    ],
+    "tags": {
+      "needs_web": false,
+      "near_synonym": false,
+      "user_submission": false
+    },
+    "success_criteria": {
+      "content": [],
+      "evidence": "Claims must be supported by the retrieved evidence or the user's submission; no unsupported claims.",
+      "format": "Addresses every requested part; readable Markdown."
+    },
+    "fault_query": "Write a Python function that computes Fibonacci numbers using plain recursion and a second version using zq@@## ~~[corrupted instruction]~~ ??, explain each version, and compare their time complexity.",
+    "faulted_gold_id": "g2"
+  },
+  {
+    "id": "S3-02",
+    "stratum": "S3",
+    "query": "Design a SQLite schema for student attendance, design FastAPI endpoints for marking and viewing attendance, then write the attendance-marking module in Python 3.11 and pytest tests for it.",
+    "gold_subtasks": [
+      {
+        "id": "g1",
+        "text": "Design a SQLite schema for student attendance",
+        "depends_on": []
+      },
+      {
+        "id": "g2",
+        "text": "Design FastAPI endpoints for marking and viewing attendance",
+        "depends_on": []
+      },
+      {
+        "id": "g3",
+        "text": "Write the attendance-marking module in Python 3.11",
+        "depends_on": [
+          "g1",
+          "g2"
+        ]
+      },
+      {
+        "id": "g4",
+        "text": "Write pytest tests for the attendance-marking module",
+        "depends_on": [
+          "g3"
+        ]
+      }
+    ],
+    "tags": {
+      "needs_web": false,
+      "near_synonym": false,
+      "user_submission": false
+    },
+    "success_criteria": {
+      "content": [],
+      "evidence": "Claims must be supported by the retrieved evidence or the user's submission; no unsupported claims.",
+      "format": "Addresses every requested part; readable Markdown."
+    },
+    "fault_query": "Design a SQLite schema for student attendance, design FastAPI endpoints ##@@ ~~ [corrupted instruction] ?? zzq, then write the attendance-marking module in Python 3.11 and pytest tests for it.",
+    "faulted_gold_id": "g2"
+  },
+  {
+    "id": "S3-03",
+    "stratum": "S3",
+    "query": "Explain merge sort and quicksort separately, implement each in Python, then compare their average and worst-case time complexity.",
+    "gold_subtasks": [
+      {
+        "id": "g1",
+        "text": "Explain merge sort",
+        "depends_on": []
+      },
+      {
+        "id": "g2",
+        "text": "Explain quicksort",
+        "depends_on": []
+      },
+      {
+        "id": "g3",
+        "text": "Implement merge sort in Python",
+        "depends_on": [
+          "g1"
+        ]
+      },
+      {
+        "id": "g4",
+        "text": "Implement quicksort in Python",
+        "depends_on": [
+          "g2"
+        ]
+      },
+      {
+        "id": "g5",
+        "text": "Compare average and worst-case time complexity of merge sort and quicksort",
+        "depends_on": [
+          "g1",
+          "g2"
+        ]
+      }
+    ],
+    "tags": {
+      "needs_web": false,
+      "near_synonym": false,
+      "user_submission": false
+    },
+    "success_criteria": {
+      "content": [],
+      "evidence": "Claims must be supported by the retrieved evidence or the user's submission; no unsupported claims.",
+      "format": "Addresses every requested part; readable Markdown."
+    },
+    "fault_query": "Explain merge sort and quicksort separately, implement each in Python, then compare their average and worst-case time complexity. Also handle: zq@@## ~~[corrupted instruction for quicksort]~~ ??.",
+    "faulted_gold_id": "g2"
+  },
+  {
+    "id": "S4-01",
+    "stratum": "S4",
+    "query": "Explain the different types of SQL joins and state, for each type, which source in the retrieved material supports your explanation.",
+    "gold_subtasks": [
+      {
+        "id": "g1",
+        "text": "Explain the types of SQL joins (inner, left, right, full, cross)",
+        "depends_on": []
+      },
+      {
+        "id": "g2",
+        "text": "State which retrieved source supports the explanation of each join type",
+        "depends_on": [
+          "g1"
+        ]
+      }
+    ],
+    "tags": {
+      "needs_web": false,
+      "near_synonym": false,
+      "user_submission": false
+    },
+    "success_criteria": {
+      "content": [],
+      "evidence": "Claims must be supported by the retrieved evidence or the user's submission; no unsupported claims.",
+      "format": "Addresses every requested part; readable Markdown."
+    }
+  },
+  {
+    "id": "S4-02",
+    "stratum": "S4",
+    "query": "Describe how recursion works in Python, including base and recursive cases and the recursion depth limit, and cite where each claim comes from.",
+    "gold_subtasks": [
+      {
+        "id": "g1",
+        "text": "Describe how recursion works in Python, including base and recursive cases",
+        "depends_on": []
+      },
+      {
+        "id": "g2",
+        "text": "Describe Python's recursion depth limit",
+        "depends_on": []
+      },
+      {
+        "id": "g3",
+        "text": "Cite the source of each claim",
+        "depends_on": [
+          "g1",
+          "g2"
+        ]
+      }
+    ],
+    "tags": {
+      "needs_web": false,
+      "near_synonym": false,
+      "user_submission": false
+    },
+    "success_criteria": {
+      "content": [],
+      "evidence": "Claims must be supported by the retrieved evidence or the user's submission; no unsupported claims.",
+      "format": "Addresses every requested part; readable Markdown."
+    }
+  },
+  {
+    "id": "S4-03",
+    "stratum": "S4",
+    "query": "Trace this code and explain its output, citing the material that supports your explanation:\n\ndef f(a):\n    for i in range(len(a) + 1):\n        print(a[i])\n\nf([1, 2, 3])",
+    "gold_subtasks": [
+      {
+        "id": "g1",
+        "text": "Trace the provided code and explain its output (prints 1, 2, 3 then raises IndexError)",
+        "depends_on": []
+      },
+      {
+        "id": "g2",
+        "text": "Cite the material supporting the explanation",
+        "depends_on": [
+          "g1"
+        ]
+      }
+    ],
+    "tags": {
+      "needs_web": false,
+      "near_synonym": false,
+      "user_submission": true
+    },
+    "success_criteria": {
+      "content": [
+        "States the output is 1, 2, 3 followed by an IndexError",
+        "Attributes the IndexError to range(len(a) + 1)"
+      ],
+      "evidence": "Claims must be supported by the retrieved evidence or the user's submission; no unsupported claims.",
+      "format": "Addresses every requested part; readable Markdown."
+    }
+  },
+  {
+    "id": "S5-01",
+    "stratum": "S5",
+    "query": "Write a short report on the trade-offs between a monolithic and a microservices architecture for a university attendance system, suitable for a project review.",
+    "gold_subtasks": [
+      {
+        "id": "g1",
+        "text": "Describe monolithic architecture for a university attendance system",
+        "depends_on": []
+      },
+      {
+        "id": "g2",
+        "text": "Describe microservices architecture for a university attendance system",
+        "depends_on": []
+      },
+      {
+        "id": "g3",
+        "text": "Compare the trade-offs of the two architectures",
+        "depends_on": [
+          "g1",
+          "g2"
+        ]
+      },
+      {
+        "id": "g4",
+        "text": "Give a recommendation suitable for a project review",
+        "depends_on": [
+          "g3"
+        ]
+      }
+    ],
+    "tags": {
+      "needs_web": false,
+      "near_synonym": false,
+      "user_submission": false
+    },
+    "success_criteria": {
+      "content": [],
+      "evidence": "Claims must be supported by the retrieved evidence or the user's submission; no unsupported claims.",
+      "format": "Addresses every requested part; readable Markdown."
+    }
+  },
+  {
+    "id": "S5-02",
+    "stratum": "S5",
+    "query": "Write a report explaining how retrieval-augmented generation reduces hallucination in LLMs and where it still fails.",
+    "gold_subtasks": [
+      {
+        "id": "g1",
+        "text": "Explain how RAG reduces hallucination",
+        "depends_on": []
+      },
+      {
+        "id": "g2",
+        "text": "Explain where RAG still fails",
+        "depends_on": [
+          "g1"
+        ]
+      }
+    ],
+    "tags": {
+      "needs_web": true,
+      "near_synonym": false,
+      "user_submission": false
+    },
+    "success_criteria": {
+      "content": [],
+      "evidence": "Claims must be supported by the retrieved evidence or the user's submission; no unsupported claims.",
+      "format": "Addresses every requested part; readable Markdown."
+    }
+  },
+  {
+    "id": "S5-03",
+    "stratum": "S5",
+    "query": "Write an explanatory article for beginners on how the Transformer architecture works, covering attention, positional encoding, and the encoder-decoder structure.",
+    "gold_subtasks": [
+      {
+        "id": "g1",
+        "text": "Explain attention for beginners",
+        "depends_on": []
+      },
+      {
+        "id": "g2",
+        "text": "Explain positional encoding for beginners",
+        "depends_on": []
+      },
+      {
+        "id": "g3",
+        "text": "Explain the encoder-decoder structure for beginners",
+        "depends_on": []
+      }
+    ],
+    "tags": {
+      "needs_web": false,
+      "near_synonym": false,
+      "user_submission": false
+    },
+    "success_criteria": {
+      "content": [],
+      "evidence": "Claims must be supported by the retrieved evidence or the user's submission; no unsupported claims.",
+      "format": "Beginner-friendly article in Markdown covering all three topics."
+    }
+  }
+]

@@ -1,0 +1,1069 @@
+<!DOCTYPE html><!-- Last Published: Fri Sep 18 2026 13:46:12 GMT+0000 (Coordinated Universal Time) --><html data-wf-domain="www.forasoft.com" data-wf-page="6a15b5347349e7ca477bd778" data-wf-site="64e8910adc5a63966a68acc1" lang="en" data-wf-collection="6a15b5347349e7ca477bd759" data-wf-item-slug="congestion-control-bbr-cubic-copa"><head><meta charset="utf-8"/><link href="https://cdn.prod.website-files.com" rel="preconnect" crossorigin="anonymous"/><title>Congestion Control in Plain English: BBR, CUBIC, Copa, and Why It Matters</title><meta content="Congestion control is the algorithm that decides how fast a sender pushes packets into the network without melting it; every TCP and QUIC connection runs one" name="description"/><meta content="Congestion Control in Plain English: BBR, CUBIC, Copa, and Why It Matters" property="og:title"/><meta content="Congestion control is the algorithm that decides how fast a sender pushes packets into the network without melting it; every TCP and QUIC connection runs one" property="og:description"/><meta content="Congestion Control in Plain English: BBR, CUBIC, Copa, and Why It Matters" name="twitter:title"/><meta content="Congestion control is the algorithm that decides how fast a sender pushes packets into the network without melting it; every TCP and QUIC connection runs one" name="twitter:description"/><meta property="og:type" content="website"/><meta content="summary_large_image" name="twitter:card"/><meta content="width=device-width, initial-scale=1" name="viewport"/><link href="https://cdn.prod.website-files.com/64e8910adc5a63966a68acc1/css/test-forasoft.webflow.shared.2bd28e547.min.css" rel="stylesheet" type="text/css" integrity="sha384-K9KOVHHo7vngRgKkxIeYqQXnhRuR8LO4CDRwR3vUqunM8DMgirPefdzBAaRM8xFA" crossorigin="anonymous"/><link href="https://cdn.prod.website-files.com/64e8910adc5a63966a68acc1/css/test-forasoft.webflow.6a15b5347349e7ca477bd778.670173162.opt.min.css" rel="stylesheet" type="text/css" integrity="sha384-ZwFzFi0rzgmPCDB4YX94ZIbM3tb9jMgA9tlI31FniPXI+B2yl5KDfVOW3GWIdLNw" crossorigin="anonymous"/><script type="text/javascript">!function(o,c){var n=c.documentElement,t=" w-mod-";n.className+=t+"js",("ontouchstart"in o||o.DocumentTouch&&c instanceof DocumentTouch)&&(n.className+=t+"touch")}(window,document);</script><link href="https://cdn.prod.website-files.com/64e8910adc5a63966a68acc1/662ce6ca78c55edb337955c0_Favicon_32.png" rel="shortcut icon" type="image/x-icon"/><link href="https://cdn.prod.website-files.com/64e8910adc5a63966a68acc1/662ce63e7bb96441a4c253a4_Webclip.png" rel="apple-touch-icon"/><link href="https://www.forasoft.com/learn/video-streaming/articles-streaming/congestion-control-bbr-cubic-copa" rel="canonical"/><script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebPage",
+      "@id": "https://www.forasoft.com/learn/video-streaming/articles-streaming/congestion-control-bbr-cubic-copa#webpage",
+      "url": "https://www.forasoft.com/learn/video-streaming/articles-streaming/congestion-control-bbr-cubic-copa",
+      "name": "Congestion Control in Plain English: BBR, CUBIC, Copa, and Why It",
+      "description": "Congestion control is the algorithm that decides how fast a sender pushes packets into the network without melting it; every TCP and QUIC connection runs one",
+      "isPartOf": {
+        "@id": "https://www.forasoft.com/#website"
+      },
+      "inLanguage": "en",
+      "mainEntity": {
+        "@id": "https://www.forasoft.com/learn/video-streaming/articles-streaming/congestion-control-bbr-cubic-copa#article"
+      },
+      "breadcrumb": {
+        "@id": "https://www.forasoft.com/learn/video-streaming/articles-streaming/congestion-control-bbr-cubic-copa#breadcrumb"
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://www.forasoft.com/learn/video-streaming/articles-streaming/congestion-control-bbr-cubic-copa#breadcrumb",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://www.forasoft.com/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Learn",
+          "item": "https://www.forasoft.com/learn"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Video streaming",
+          "item": "https://www.forasoft.com/learn/video-streaming"
+        },
+        {
+          "@type": "ListItem",
+          "position": 4,
+          "name": "Block 2. Networks, transport, and the modern internet",
+          "item": "https://www.forasoft.com/learn/video-streaming/blocks/topics-streaming/networks-and-transport"
+        },
+        {
+          "@type": "ListItem",
+          "position": 5,
+          "name": "Congestion Control in Plain English: BBR, CUBIC, Copa, and Why It Matters",
+          "item": "https://www.forasoft.com/learn/video-streaming/articles-streaming/congestion-control-bbr-cubic-copa"
+        }
+      ]
+    },
+    {
+      "@type": "TechArticle",
+      "@id": "https://www.forasoft.com/learn/video-streaming/articles-streaming/congestion-control-bbr-cubic-copa#article",
+      "headline": "Congestion Control in Plain English: BBR, CUBIC, Copa, and Why It Matters",
+      "description": "Congestion control is the algorithm that decides how fast a sender pushes packets into the network without melting it; every TCP and QUIC connection runs one",
+      "datePublished": "2026-05-26T15:30:43.700Z",
+      "dateModified": "2026-05-26T15:30:43.700Z",
+      "author": {
+        "@type": "Person",
+        "@id": "https://www.forasoft.com/team/nikolay-sapunov#person",
+        "name": "Nikolay Sapunov",
+        "url": "https://www.forasoft.com/team/nikolay-sapunov",
+        "jobTitle": "CEO at Fora Soft",
+        "image": "https://cdn.prod.website-files.com/64e8910adc5a63966a68acea/6a0c72a04c29b22a8ddb991b_6a0c728d356dff40621f0967_nikolay_sapunov.avif",
+        "sameAs": [
+          "https://www.linkedin.com/in/sapunov/",
+          "https://github.com/nicksapunov"
+        ],
+        "worksFor": {
+          "@id": "https://www.forasoft.com/#organization"
+        }
+      },
+      "publisher": {
+        "@id": "https://www.forasoft.com/#organization"
+      },
+      "mainEntityOfPage": {
+        "@id": "https://www.forasoft.com/learn/video-streaming/articles-streaming/congestion-control-bbr-cubic-copa#webpage"
+      },
+      "inLanguage": "en"
+    }
+  ]
+}
+</script><script src="https://www.google.com/recaptcha/api.js" type="text/javascript"></script><script async type="module" src="https://cdn.jsdelivr.net/npm/@finsweet/attributes@2/attributes.js" fs-list></script>
+
+<!-- Performance: preload LCP hero image (homepage) -->
+<link rel="preload" as="image" 
+      href="https://cdn.prod.website-files.com/64e8910adc5a63966a68acc1/64ff15bebc7380d05ba1b049_Rectangle-3815-p-500.avif"
+      imagesrcset="https://cdn.prod.website-files.com/64e8910adc5a63966a68acc1/64ff15bebc7380d05ba1b049_Rectangle-3815-p-500.avif 500w, https://cdn.prod.website-files.com/64e8910adc5a63966a68acc1/64ff15bebc7380d05ba1b049_Rectangle-3815.avif 884w"
+      imagesizes="(max-width: 479px) 100vw, 442px"
+      fetchpriority="high">
+
+<!-- Performance: preconnect to third-party JS CDN (Finsweet attributes) -->
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+
+<script>
+// Webflow injects loading="lazy" on all <img>. Override for above-the-fold.
+(function() {
+  var ATF_CLASSES = ['logo', 'image-273', 'close-menu', 'open-icon', 'rectangle-3821-copy'];
+  function fixImg(img) {
+    if (img.classList && ATF_CLASSES.some(c => img.classList.contains(c))) {
+      if (img.loading === 'lazy') {
+        img.loading = 'eager';
+        img.fetchPriority = 'high';
+      }
+    }
+  }
+  // 1) Run early on existing imgs
+  if (document.images) for (var i = 0; i < document.images.length; i++) fixImg(document.images[i]);
+  // 2) Watch for newly added imgs
+  new MutationObserver(function(records) {
+    records.forEach(function(r) {
+      r.addedNodes && r.addedNodes.forEach(function(n) {
+        if (n.tagName === 'IMG') fixImg(n);
+        if (n.querySelectorAll) n.querySelectorAll('img').forEach(fixImg);
+      });
+    });
+  }).observe(document.documentElement, {childList: true, subtree: true});
+})();
+</script>
+
+<!-- Performance: preconnect to Google Tag Manager (loaded via custom GTM block) -->
+<link rel="preconnect" href="https://www.googletagmanager.com">
+
+<link rel="preload" as="font" type="font/woff2" href="https://cdn.prod.website-files.com/64e8910adc5a63966a68acc1/fonts/6a9a81679c9fc76697b77295-IBMPlexSans-Regular-w400-latin.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="https://cdn.prod.website-files.com/64e8910adc5a63966a68acc1/fonts/6a9a81cb978805b7a39700c0-IBMPlexSans-SemiBold-w520-latin.woff2" crossorigin>
+
+<style>
+.no-scroll{overflow:hidden}
+
+textarea{resize:none}
+*{-webkit-tap-highlight-color:transparent;outline:none}
+
+html,body{
+  font-family:"IBM Plex Sans",
+    system-ui,
+    -apple-system,
+    "Segoe UI",
+    Roboto,
+    Arial,
+    sans-serif
+}
+
+.services-navigation-fixed{
+  opacity:0;
+  transition:opacity .3s ease
+}
+.services-navigation-fixed.is-visible{
+  opacity:1
+}
+
+@media screen and (max-width:479px){
+  .all-nav-links{
+    transform:translate3d(0,200dvh,0)!important;
+    height:140dvh!important;
+    min-height:100dvh;
+    margin-top:-100dvh
+  }
+}
+@media screen and (max-width:991px){
+  .all-nav-links{
+    transform:translate3d(0,-200vh,0);
+    height:140dvh!important;
+    min-height:100dvh;
+    margin-top:-100dvh
+  }
+}
+</style>
+
+<!-- Canonical Organization + WebSite (single source; see schema-implementation/00_CORE_NODES_canonical.md) -->
+<script type="application/ld+json">
+{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://www.forasoft.com/#organization","name":"Fora Soft","legalName":"Fora Soft LLC","url":"https://www.forasoft.com/","logo":{"@type":"ImageObject","@id":"https://www.forasoft.com/#logo","url":"https://cdn.prod.website-files.com/64e8910adc5a63966a68acc1/64e8910adc5a63966a68acc4_Logo%20full.svg","caption":"Fora Soft"},"image":{"@id":"https://www.forasoft.com/#logo"},"description":"Specialist software house for video, real-time and AI products. Founded 2005.","foundingDate":"2005","numberOfEmployees":{"@type":"QuantitativeValue","value":50},"founder":[{"@type":"Person","name":"Nikolay Sapunov","jobTitle":"CEO"},{"@type":"Person","name":"Polina Sapunova","jobTitle":"Co-founder, CMO/CFO"}],"email":"eager2develop@forasoft.com","areaServed":["US","GB","ZA","TR","DE","CH","NL","AU","AE","FR","DK","KZ","HK"],"knowsAbout":["WebRTC","LiveKit","Real-time video streaming","Low-latency live streaming","AI video recognition","Computer vision","Speech-to-text","Text-to-speech","Real-time speech translation","Multimodal AI agents","HIPAA-compliant telemedicine software","E-learning and virtual classroom platforms","Video surveillance / VMS","OTT and IPTV"],"contactPoint":[{"@type":"ContactPoint","telephone":"+852-8193-2621","email":"eager2develop@forasoft.com","contactType":"sales","availableLanguage":["en"]},{"@type":"ContactPoint","telephone":"+1-914-775-5855","email":"eager2develop@forasoft.com","contactType":"sales","areaServed":"US","availableLanguage":["en"]},{"@type":"ContactPoint","telephone":"+971-58-539-6367","contactType":"sales","availableLanguage":["en"],"url":"https://wa.me/971585396367"}],"address":[{"@type":"PostalAddress","streetAddress":"Flat A, 8/F, Kingswell Commercial Tower, 171 Lockhart Road, Wan Chai","addressLocality":"Hong Kong","addressCountry":"HK"},{"@type":"PostalAddress","addressLocality":"New York","addressRegion":"NY","addressCountry":"US"}],"sameAs":["https://www.linkedin.com/company/fora-soft-llc-","https://github.com/forasoft","https://www.youtube.com/@eager2develop","https://www.instagram.com/eager2develop","https://dribbble.com/ForaSoft","https://www.behance.net/Fora-Soft","https://forasoft.medium.com","https://clutch.co/profile/fora-soft","https://www.goodfirms.co/company/fora-soft"],"hasOfferCatalog":{"@type":"OfferCatalog","name":"Fora Soft services","itemListElement":[{"@type":"Offer","itemOffered":{"@type":"Service","name":"Video & Audio Streaming Software Development","url":"https://www.forasoft.com/services/video-audio-streaming-software-development"}},{"@type":"Offer","itemOffered":{"@type":"Service","name":"Video Calling, Chat & Conferencing App Development","url":"https://www.forasoft.com/services/video-conference"}},{"@type":"Offer","itemOffered":{"@type":"Service","name":"Custom Video & Audio Processing Software Development","url":"https://www.forasoft.com/services/custom-video-audio-processing-software-development"}},{"@type":"Offer","itemOffered":{"@type":"Service","name":"AI Integration & AI Software Development","url":"https://www.forasoft.com/services/ai-integration"}},{"@type":"Offer","itemOffered":{"@type":"Service","name":"AI Video & Streaming Software Development","url":"https://www.forasoft.com/services/ai-video-guide"}},{"@type":"Offer","itemOffered":{"@type":"Service","name":"Video Surveillance & Video Management Software Development","url":"https://www.forasoft.com/services/video-surveillance"}},{"@type":"Offer","itemOffered":{"@type":"Service","name":"Telemedicine & Healthcare Software Development","url":"https://www.forasoft.com/services/telemedicine"}},{"@type":"Offer","itemOffered":{"@type":"Service","name":"E-Learning & Virtual Classroom Software Development","url":"https://www.forasoft.com/services/e-learning"}},{"@type":"Offer","itemOffered":{"@type":"Service","name":"Internet TV, OTT & IPTV Streaming Development","url":"https://www.forasoft.com/services/internet-tv"}},{"@type":"Offer","itemOffered":{"@type":"Service","name":"Music Software Development","url":"https://www.forasoft.com/services/music"}},{"@type":"Offer","itemOffered":{"@type":"Service","name":"AR and VR Software Development","url":"https://www.forasoft.com/services/ar-vr"}},{"@type":"Offer","itemOffered":{"@type":"Service","name":"Custom Software Development","url":"https://www.forasoft.com/services/custom-software-development"}},{"@type":"Offer","itemOffered":{"@type":"Service","name":"Dedicated Development Team","url":"https://www.forasoft.com/services/dedicated-development-team"}},{"@type":"Offer","itemOffered":{"@type":"Service","name":"Software Product Planning & Analytics","url":"https://www.forasoft.com/services/software-product-planning-analytics"}},{"@type":"Offer","itemOffered":{"@type":"Service","name":"Software Troubleshooting & Optimization","url":"https://www.forasoft.com/services/software-troubleshooting-optimization"}},{"@type":"Offer","itemOffered":{"@type":"Service","name":"Software Product Maintenance & Support","url":"https://www.forasoft.com/services/software-product-maintenance-support"}}]}},{"@type":"WebSite","@id":"https://www.forasoft.com/#website","url":"https://www.forasoft.com/","name":"Fora Soft","publisher":{"@id":"https://www.forasoft.com/#organization"},"inLanguage":"en"}]}
+</script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+
+<style>
+  /* ===== Article body typography ===== */
+  .article-body h2 {
+    font-size: 38px;
+    font-weight: 700;
+    line-height: 1.25;
+    margin: 48px 0 16px;
+    color: #111827;
+  }
+  .article-body h3 {
+    font-size: 22px;
+    font-weight: 600;
+    line-height: 1.4;
+    margin: 32px 0 12px;
+    color: #111827;
+  }
+  .article-body p {
+    font-size: 17px;
+    line-height: 1.7;
+    color: #1f2937;
+    margin: 0 0 16px;
+  }
+  .article-body ul,
+  .article-body ol {
+    margin: 0 0 16px 24px;
+    font-size: 17px;
+    line-height: 1.7;
+    color: #1f2937;
+  }
+  .article-body li {
+    margin-bottom: 6px;
+  }
+  .article-body blockquote {
+    border-left: 4px solid #e5e7eb;
+    padding-left: 16px;
+    margin: 24px 0;
+    color: #4b5563;
+    font-style: italic;
+  }
+  .article-body a {
+    color: #2563eb;
+    text-decoration: underline;
+  }
+  .article-body a:hover {
+    color: #1d4ed8;
+  }
+
+  /* ===== Inline code ===== */
+  .article-body p code,
+  .article-body li code {
+    background: #f4f4f4;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-family: 'JetBrains Mono', 'Fira Code', 'Menlo', monospace;
+    font-size: 0.92em;
+    color: #be185d;
+  }
+
+  /* ===== Code blocks (dark theme for syntax highlighting) ===== */
+  .article-body pre {
+    background: #1e1e1e;
+    color: #f8f8f2;
+    padding: 16px 20px;
+    border-radius: 6px;
+    overflow-x: auto;
+    margin: 20px 0;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+  .article-body pre code {
+    background: transparent;
+    padding: 0;
+    color: inherit;
+    font-family: 'JetBrains Mono', 'Fira Code', 'Menlo', monospace;
+  }
+
+  /* ===== Footnote markers — clean editorial style, no brackets ===== */
+  .article-body a.footnote-ref {
+    font-size: 0.65em !important;
+    line-height: 1 !important;
+    vertical-align: super !important;
+    color: #1B3A6F !important;
+    text-decoration: none !important;
+    font-weight: 600 !important;
+    font-feature-settings: "lnum" 1, "tnum" 1;
+    padding: 0 1px;
+    margin-left: 1px;
+    letter-spacing: 0.02em;
+    border-bottom: 0;
+    transition: color 0.15s ease;
+  }
+  .article-body a.footnote-ref:hover {
+    color: #3DA5D9 !important;
+  }
+  .article-body a.footnote-ref + a.footnote-ref::before {
+    content: "\2009";
+    color: #C5CAD2;
+    margin-right: 1px;
+  }
+  .article-body sup + sup::before {
+    content: "\2009";
+    color: #C5CAD2;
+  }
+  .article-body sup:has(a.footnote-ref) {
+    font-size: inherit !important;
+    vertical-align: baseline !important;
+    line-height: inherit !important;
+    margin-left: 1px;
+  }
+
+  /* ===== References list at the end of the article ===== */
+  .article-body .footnote {
+    margin-top: 64px;
+    padding-top: 24px;
+    border-top: 1px solid #E8EBEF;
+    font-size: 0.9em;
+    color: #4A4E55;
+  }
+  .article-body .footnote::before {
+    content: "References";
+    display: block;
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: #1B3A6F;
+    margin-bottom: 16px;
+  }
+  .article-body .footnote hr { display: none; }
+  .article-body .footnote ol {
+    padding-left: 24px;
+    font-size: inherit;
+  }
+  .article-body .footnote li {
+    margin-bottom: 12px;
+    line-height: 1.5;
+  }
+  .article-body .footnote a.footnote-backref {
+    color: #7A7F87 !important;
+    text-decoration: none !important;
+    margin-left: 6px;
+    font-size: 0.9em;
+  }
+  .article-body .footnote a.footnote-backref:hover { color: #1B3A6F !important; }
+
+  /* ===== Tables ===== */
+  .article-body table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 24px 0;
+    font-size: 0.95em;
+  }
+  .article-body table th,
+  .article-body table td {
+    border: 1px solid #E8EBEF;
+    padding: 10px 14px;
+    text-align: left;
+    vertical-align: top;
+  }
+  .article-body table th {
+    background: #F5F7FA;
+    font-weight: 600;
+    color: #1B3A6F;
+  }
+  .article-body table tr:nth-child(even) td {
+    background: #FBFCFD;
+  }
+
+  /* ===== Body images ===== */
+  .article-body img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 24px auto;
+  }
+
+  /* ===== Mobile ===== */
+  @media screen and (max-width: 767px) {
+    .article-body h2 { font-size: 30px; line-height: 1.25; margin: 36px 0 12px; }
+    .article-body h3 { font-size: 19px; margin: 24px 0 10px; }
+    .article-body p,
+    .article-body ul,
+    .article-body ol { font-size: 16px; line-height: 1.65; }
+    .article-body pre { padding: 12px 16px; font-size: 13px; }
+    .article-body .footnote::before { font-size: 1.2rem; }
+    .article-body table { font-size: 0.88em; }
+    .article-body table th,
+    .article-body table td { padding: 8px 10px; }
+  }
+</style><script src="https://cdn.prod.website-files.com/64e8910adc5a63966a68acc1%2F689e5ba67671442434f3ca35%2F6a82d2c710184daee99a58e7%2Fgtmcontainer-1.0.0.js" type="text/javascript"></script></head><body><header id="Header" class="hv3-header-shell"><header class="hv3-header"><div class="hv3-header__inner"><div class="hv3-header__bar"><a href="https://www.forasoft.com/" class="hv3-header__logo w-inline-block"><img src="https://cdn.prod.website-files.com/64e8910adc5a63966a68acc1/64e8910adc5a63966a68acca_ForaSoft_logo_white.svg" loading="lazy" alt="Fora Soft" class="hv3-header__logo-img"/></a><nav class="hv3-nav"><div data-hover="true" data-delay="300" class="hv3-dd w-dropdown"><div class="hv3-dd__toggle w-dropdown-toggle"><a href="https://www.forasoft.com/services" class="hv3-dd__label">Services</a><div class="hv3-dd__icon w-icon-dropdown-toggle"></div></div><nav class="hv3-dd__list w-dropdown-list"><div class="hv3-mm"><div class="hv3-mm__grid"><div class="hv3-mm__col"><div class="hv3-mm__group"><div class="hv3-mm__h">Industries <!-- -->&amp;<!-- --> use cases</div><a href="/services/ai-integration" class="hv3-mm__link"><span class="hv3-mm__label">AI integration</span></a><a href="/services/video-audio-streaming-software-development" class="hv3-mm__link"><span class="hv3-mm__label">Video <!-- -->&amp;<!-- --> audio streaming</span></a><a href="/services/video-conference" class="hv3-mm__link"><span class="hv3-mm__label">Video chats <!-- -->&amp;<!-- --> conference</span></a><a href="/services/custom-video-audio-processing-software-development" class="hv3-mm__link"><span class="hv3-mm__label">Video <!-- -->&amp;<!-- --> audio processing</span></a><a href="/services/video-surveillance" class="hv3-mm__link"><span class="hv3-mm__label">Video surveillance</span></a><a href="/services/e-learning" class="hv3-mm__link"><span class="hv3-mm__label">E-learning</span></a><a href="/services/telemedicine" class="hv3-mm__link"><span class="hv3-mm__label">Telemedicine</span></a><a href="/services/music" class="hv3-mm__link"><span class="hv3-mm__label">Music</span></a><a href="/services/ar-vr" class="hv3-mm__link"><span class="hv3-mm__label">AR / VR</span></a><a href="/services/internet-tv" class="hv3-mm__link"><span class="hv3-mm__label">Internet TV</span></a></div><div class="hv3-mm__group"><div class="hv3-mm__h">Engagement models</div><a href="/services/software-product-planning-analytics" class="hv3-mm__link"><span class="hv3-mm__n">01</span><span class="hv3-mm__label">Plan <!-- -->&amp;<!-- --> analytics</span></a><a href="/services/custom-software-development" class="hv3-mm__link"><span class="hv3-mm__n">02</span><span class="hv3-mm__label">Custom dev</span></a><a href="/services/software-troubleshooting-optimization" class="hv3-mm__link"><span class="hv3-mm__n">03</span><span class="hv3-mm__label">Troubleshoot <!-- -->&amp;<!-- --> optimize</span></a><a href="/services/software-product-maintenance-support" class="hv3-mm__link"><span class="hv3-mm__n">04</span><span class="hv3-mm__label">Maintain <!-- -->&amp;<!-- --> support</span></a><a href="/services/dedicated-development-team" class="hv3-mm__link"><span class="hv3-mm__n">05</span><span class="hv3-mm__label">Dedicated team</span></a></div></div><div class="hv3-mm__col--div"><div class="hv3-mm__group"><div class="hv3-mm__h">Technology</div><div class="hv3-mm__sub">01 · Real-time <!-- -->&amp;<!-- --> infra</div><a href="/webrtc-software-development-experts" class="hv3-mm__link"><span class="hv3-mm__label">WebRTC</span></a><a href="/livekit-software-development-experts" class="hv3-mm__link"><span class="hv3-mm__label">LiveKit</span></a><a href="/agora-software-development-experts" class="hv3-mm__link"><span class="hv3-mm__label">Agora</span></a><a href="/twilio-software-development-experts" class="hv3-mm__link"><span class="hv3-mm__label">Twilio</span></a><a href="/wowza-streaming-development-experts" class="hv3-mm__link"><span class="hv3-mm__label">Wowza</span></a><a href="/custom-webrtc-architecture-development-experts" class="hv3-mm__link"><span class="hv3-mm__label">Custom WebRTC architecture</span></a><a href="/custom-moq-quic-development" class="hv3-mm__link"><span class="hv3-mm__label">MoQ <!-- -->&amp;<!-- --> QUIC</span></a><a href="/ai-scalable-video-streaming" class="hv3-mm__link"><span class="hv3-mm__label">Scalable AI streaming</span></a></div><div class="hv3-mm__group"><div class="hv3-mm__sub">02 · AI agents <!-- -->&amp;<!-- --> voice</div><a href="/livekit-ai-agent-development-experts" class="hv3-mm__link"><span class="hv3-mm__label">LiveKit AI agent</span></a><a href="/ai-call-agent-development" class="hv3-mm__link"><span class="hv3-mm__label">AI call agent</span></a><a href="/ai-chatbot-voice-assistant-development-experts" class="hv3-mm__link"><span class="hv3-mm__label">AI chatbot <!-- -->&amp;<!-- --> voice</span></a><a href="/custom-speech-to-text-development" class="hv3-mm__link"><span class="hv3-mm__label">ASR / STT</span></a><a href="/custom-text-to-speech-development" class="hv3-mm__link"><span class="hv3-mm__label">TTS <!-- -->&amp;<!-- --> voice cloning</span></a><a href="/generative-ai-development-services" class="hv3-mm__link"><span class="hv3-mm__label">Generative AI development</span></a><a href="https://www.forasoft.com/voice-agent-alternatives" class="hv3-mm__link">Vapi and Retell AI alternatives</a></div></div><div class="hv3-mm__col--div"><div class="hv3-mm__group"><div class="hv3-mm__sub">03 · AI vision</div><a href="/ai-video-recognition-software-experts" class="hv3-mm__link"><span class="hv3-mm__label">AI video recognition</span></a><a href="/computer-vision-for-video-surveillance" class="hv3-mm__link"><span class="hv3-mm__label">Computer vision for surveillance</span></a></div><div class="hv3-mm__group"><div class="hv3-mm__sub">04 · Industry solutions</div><a href="/ai-telehealth-video-platform-development" class="hv3-mm__link"><span class="hv3-mm__label">AI telehealth</span></a><a href="/ai-medical-imaging-development-experts" class="hv3-mm__link"><span class="hv3-mm__label">AI medical imaging</span></a><a href="/elearning-virtual-classroom-development" class="hv3-mm__link"><span class="hv3-mm__label">Virtual classroom <!-- -->&amp;<!-- --> EdTech</span></a><a href="/custom-lms-development" class="hv3-mm__link"><span class="hv3-mm__label">Custom LMS platform</span></a></div><div class="hv3-mm__group"><div class="hv3-mm__sub">05 · Mobile <!-- -->&amp;<!-- --> platform</div><a href="/ai-mobile-app-development" class="hv3-mm__link"><span class="hv3-mm__label">AI mobile app</span></a><a href="/electron-desktop-app-development-services" class="hv3-mm__link"><span class="hv3-mm__label">Electron desktop</span></a><a href="/custom-mdm-development-experts" class="hv3-mm__link"><span class="hv3-mm__label">Custom MDM</span></a></div><div class="hv3-mm__group"><div class="hv3-mm__sub">06 · Code rescue</div><a href="/vibe-code-cleanup" class="hv3-mm__link"><span class="hv3-mm__label">Vibe code cleanup</span></a><a href="/lovable-app-bug-fixing" class="hv3-mm__link"><span class="hv3-mm__label">Lovable <!-- -->&amp;<!-- --> Replit bug fixing</span></a></div></div><a href="https://book.forasoft.com/" class="hv3-mm__card w-inline-block"><div class="hv3-mm__card-top"><div class="hv3-mm__card-eyebrow">Start here</div><div class="hv3-mm__card-title">Free 30-minute architecture session</div><div class="hv3-mm__card-text">A senior engineer replies within 24 hours with a plan and a ballpark estimate.</div></div><div class="hv3-mm__card-stat"><span class="hv3-mm__card-num">250+</span><span class="hv3-mm__card-stat-label">video projects delivered</span></div><span class="hv3-mm__card-cta">Book a call →</span></a></div><div class="hv3-mm__foot"><span class="hv3-mm__foot-txt">Video, real-time and AI software since 2005. 5.0 on Clutch · 31 reviews.</span><div class="hv3-mm__foot-btns"><a href="/services" class="hv3-mm__btn">All services →</a><a href="https://book.forasoft.com/" class="hv3-mm__btn--blue">Get a price in 24 hours</a></div></div></div></nav></div><a href="https://www.forasoft.com/projects" class="hv3-nav__link">Projects</a><a href="https://www.forasoft.com/calculator" class="hv3-nav__link">Cost</a><a href="https://www.forasoft.com/blog" class="hv3-nav__link">Blog</a><a href="https://www.forasoft.com/ship-log" class="hv3-nav__link">Ship Log</a><div data-hover="true" data-delay="300" class="hv3-dd w-dropdown"><div class="hv3-dd__toggle w-dropdown-toggle"><a href="https://www.forasoft.com/learn" class="hv3-dd__label">Learn</a><div class="hv3-dd__icon w-icon-dropdown-toggle"></div></div><nav class="hv3-dd__list w-dropdown-list"><div class="hv3-mm"><div class="hv3-mm__grid"><div class="hv3-mm__col"><div class="hv3-mm__group"><a href="https://www.forasoft.com/learn#guides" class="hv3-mm__h">Architecture guides</a><a href="/learn/webrtc-architecture-production-systems" class="hv3-mm__link"><span class="hv3-mm__label">WebRTC architecture for production systems</span></a><a href="/learn/livekit-for-ai-agents-guide" class="hv3-mm__link"><span class="hv3-mm__label">LiveKit for AI agents</span></a><a href="/learn/real-time-speech-translation-live-video" class="hv3-mm__link"><span class="hv3-mm__label">Real-time speech translation for live video</span></a><a href="/learn/multimodal-agentic-ai-real-time-systems" class="hv3-mm__link"><span class="hv3-mm__label">Multimodal agentic AI in real-time systems</span></a><a href="/learn/ai-video-agent-development" class="hv3-mm__link"><span class="hv3-mm__label">AI video agent development</span></a><a href="/learn/e-learning-platform-development" class="hv3-mm__link"><span class="hv3-mm__label">E-learning platform development</span></a></div></div><div class="hv3-mm__col--div"><div class="hv3-mm__group"><a href="https://www.forasoft.com/learn#courses" class="hv3-mm__h">Learning courses</a><a href="/learn/video-encoding" class="hv3-mm__link"><span class="hv3-mm__label">Video encoding</span></a><a href="/learn/video-streaming" class="hv3-mm__link"><span class="hv3-mm__label">Video streaming</span></a><a href="/learn/ai-for-video-engineering" class="hv3-mm__link"><span class="hv3-mm__label">AI for video engineering</span></a><a href="/learn/audio-for-video" class="hv3-mm__link"><span class="hv3-mm__label">Audio for video</span></a><a href="/learn/video-quality" class="hv3-mm__link"><span class="hv3-mm__label">Video quality measurement</span></a></div></div><div class="hv3-mm__col--div"><div class="hv3-mm__group"><div class="hv3-mm__h">More</div><a href="/vendor-comparisons" class="hv3-mm__link">Vendor comparisons</a><a href="/learn/tools" class="hv3-mm__link"><span class="hv3-mm__label">Tools hub</span></a><a href="/learn/downloads" class="hv3-mm__link"><span class="hv3-mm__label">Downloads hub</span></a><a href="https://www.forasoft.com/learn#gl-ref" class="hv3-mm__link"><span class="hv3-mm__label">Glossary</span></a><a href="https://www.amazon.com/dp/B0HF4R78DN" class="hv3-mm__link"><span class="hv3-mm__label">Handbooks on Amazon</span></a></div></div><a href="https://www.amazon.com/dp/B0HF4R78DN" class="hv3-mm__card w-inline-block"><div class="hv3-mm__card-top"><div class="hv3-mm__card-eyebrow">Now in print</div><div class="hv3-mm__card-title">Our own book series on video engineering</div><div class="hv3-mm__card-text">The knowledge base, bound. Written by Fora Soft engineers — WebRTC, streaming, AI in video.</div></div><div class="hv3-mm__card-stat"><span class="hv3-mm__card-num">7</span><span class="hv3-mm__card-stat-label">volumes · paperback <!-- -->&amp;<!-- --> Kindle</span></div><span class="hv3-mm__card-cta">Read the books →</span></a></div><div class="hv3-mm__foot"><span class="hv3-mm__foot-txt">Guides, courses and tools written by Fora Soft engineers.</span><div class="hv3-mm__foot-btns"><a href="/learn" class="hv3-mm__btn">All courses →</a><a href="https://book.forasoft.com/" class="hv3-mm__btn--blue">Get a price in 24 hours</a></div></div></div></nav></div><a href="https://www.forasoft.com/lab" class="hv3-nav__link">Demos</a><a href="#Contacts" class="hv3-nav__link">Contacts</a></nav><div data-hover="false" data-delay="0" class="hv3-burger w-dropdown"><div class="hv3-burger__toggle w-dropdown-toggle"><div class="hv3-modal-dd__icon w-icon-dropdown-toggle"></div><img src="https://cdn.prod.website-files.com/64e8910adc5a63966a68acc1/6a9b19d25de9ada419a9ebbf_hv3-ic-menu.svg" loading="lazy" alt="Menu" class="hv3-burger__icon"/></div><nav class="hv3-burger__list w-dropdown-list"><div class="hv3-burger__links"><a href="https://www.forasoft.com/services" class="hv3-burger__link">Services</a><div class="hv3-burger__sub"><a href="/services/ai-integration" class="hv3-burger__sublink">AI integration</a><a href="/services/video-audio-streaming-software-development" class="hv3-burger__sublink">Video <!-- -->&amp;<!-- --> audio streaming</a><a href="/services/video-conference" class="hv3-burger__sublink">Video chats <!-- -->&amp;<!-- --> conference</a><a href="/webrtc-software-development-experts" class="hv3-burger__sublink">WebRTC</a><a href="/livekit-ai-agent-development-experts" class="hv3-burger__sublink">LiveKit AI agent</a><a href="/services/dedicated-development-team" class="hv3-burger__sublink">Dedicated team</a><a href="/services" class="hv3-burger__sublink--all">All services →</a></div><a href="https://www.forasoft.com/projects" class="hv3-burger__link">Projects</a><a href="https://www.forasoft.com/calculator" class="hv3-burger__link">Cost</a><a href="https://www.forasoft.com/blog" class="hv3-burger__link">Blog</a><a href="https://www.forasoft.com/ship-log" class="hv3-burger__link">Ship Log</a><a href="https://www.forasoft.com/learn" class="hv3-burger__link">Learn</a><div class="hv3-burger__sub"><a href="/learn/webrtc-architecture-production-systems" class="hv3-burger__sublink">Architecture guides</a><a href="/learn/video-streaming" class="hv3-burger__sublink">Learning courses</a><a href="/learn/tools" class="hv3-burger__sublink">Tools hub</a><a href="/learn/downloads" class="hv3-burger__sublink">Downloads hub</a><a href="https://www.forasoft.com/learn#gl-ref" class="hv3-burger__sublink">Glossary</a><a href="/learn" class="hv3-burger__sublink--all">All guides →</a></div><a href="https://www.forasoft.com/lab" class="hv3-burger__link">Demos</a><a href="#contact" class="hv3-burger__link">Contacts</a></div></nav></div><a href="#" data-w-id="885ec796-ac72-4cd7-81ab-2775422af0b9" class="hv3-header__cta">Reach out</a></div></div></header></header><section class="article-header"><div class="article-container"><div class="breadcrumbs"><a href="/" class="breadcrumb-link">Home</a><div class="breadcrumb-sep">›</div><a href="/learn" class="breadcrumb-link">Learn</a><div class="breadcrumb-sep">›</div><a href="/learn/video-streaming" class="breadcrumb-link">Video Streaming</a><div class="breadcrumb-sep">›</div><a href="/learn/video-streaming/blocks/topics-streaming/networks-and-transport" class="breadcrumb-link w-inline-block"><div><div>Block 2. Networks, transport, and the modern internet</div></div></a><div class="breadcrumb-sep">›</div><div class="breadcrumb-current"><div>Congestion Control in Plain English: BBR, CUBIC, Copa, and Why It Matters</div></div></div><h1 class="article-h1">Congestion Control in Plain English: BBR, CUBIC, Copa, and Why It Matters</h1><div class="article-meta"><img src="https://cdn.prod.website-files.com/64e8910adc5a63966a68acea/6a0c72a04c29b22a8ddb991b_6a0c728d356dff40621f0967_nikolay_sapunov.avif" alt="Author photo" class="author-photo"/><div><div>By</div></div><div class="meta-author-link">Nikolay Sapunov</div><div class="meta-sep">·</div><div><div>Published</div></div><div><div>September 19, 2026</div></div><div class="meta-sep">·</div><div><div>18</div></div><div><div>min read</div></div></div></div></section><section><div class="article-container"><div class="tldr-box"><p class="tldr-label">TL;DR</p><div class="rich-text-block-6 w-richtext"><p>Congestion control is the algorithm that decides how fast a sender pushes packets into the network without melting it; every TCP and QUIC connection runs one, and the choice changes how a video stream behaves when the network gets crowded. CUBIC, the default in Linux, Windows, and Apple stacks, finds the network's capacity by sending faster and faster until it sees a packet loss, then backs off — robust, fair, and the cause of multi-second buffer stalls on lossy mobile links.</p>
+
+<p>BBR, Google's algorithm now standardised as IETF draft-ietf-ccwg-bbr-05 and shipping as BBRv3 in Linux 6.x, builds a model of the path's bottleneck bandwidth and round-trip time and paces packets to that model, giving roughly +45 % throughput on 4G and +120 % on satellite links, with far less buffer bloat. Copa, born at MIT and deployed by Meta for live video upload, optimises directly for the throughput-versus-latency trade-off via a user-chosen <code>delta</code> parameter, which is why it ships in mvfst (Meta's QUIC stack) for live ingest where every 30 ms of extra delay shows up in watch-time metrics. Pick CUBIC for LAN, BBR for the public internet, Copa or BBR for real-time video; the wrong choice silently halves your throughput on a 1 % loss link.</p></div></div><div id="article-body" class="article-body w-richtext"><h2>Why This Matters</h2>
+
+<p>A video product lives or dies on how it behaves when the network is bad, and the algorithm that decides what "bad" looks like is congestion control. The default on a freshly provisioned Linux server in 2026 is still CUBIC, which on a 4 % lossy 4G link will cap a 1080p stream at less than 2 Mbps — the Mathis formula does not care how big your encoder ladder is. Switching the same server to BBR pushes that same link past 6 Mbps without touching the application code. Pick Copa for a real-time upload path and Meta's measurements say live video watch time goes up. None of this requires a code change in your player; the choice is one line in <code>sysctl.conf</code> or one option on a <code>setsockopt</code>. This article gives you four facts: what congestion control actually does, how the three algorithms in active deployment in 2026 differ, which one fits which streaming use case, and how to test the change on your own infrastructure before you flip the switch in production.</p>
+
+<hr>
+<h2>What congestion control actually does</h2>
+
+<p>Before naming algorithms, the layer below them. Two endpoints talking over the public internet do not know in advance how much bandwidth is between them, and they have no central authority to tell them. The path crosses Wi-Fi, a home router, a cable modem, a CMTS, two transit providers, a peering link, a CDN edge, and possibly a satellite hop — each one with its own buffers, its own queueing discipline, and its own cross-traffic. The available bandwidth changes every few hundred milliseconds. The sender's job is to fill the pipe — but not overfill it, because the moment a router's queue overflows, every flow on that router pays for it together.</p>
+
+<p>A <em>congestion-control algorithm</em> is the code inside the transport layer that runs on the sender and decides, in real time, how many bytes to keep "in flight" between sender and receiver. It runs once per acknowledgement, sometimes once per round-trip time, and it adjusts a number called the <em>congestion window</em> (or, in modern algorithms, the <em>sending rate</em>). When the algorithm guesses too low, you waste bandwidth. When it guesses too high, you cause loss and buffer bloat — packets queue up at the bottleneck router, every round-trip gets longer, and the latency budget for your video disappears.</p>
+
+<p>Every transport that runs over the internet — TCP, QUIC, SCTP, and the loss-recovery layers of SRT and RIST — runs a congestion-control algorithm. The choice is not philosophical. It directly sets your throughput floor, your latency floor, and how fairly your video shares a link with someone else's Zoom call.</p>
+
+<img src="https://cdn.prod.website-files.com/64e8910adc5a63966a68acea/6aaed9d2517279493ddf809e_6aaed8d68e1d91c6c9ddf142_02_2-congestion-control-bbr-cubic-copa__01-three-algorithms-over-time.svg" alt="Three panels compare CUBIC, BBR and Copa sending into the same 100 Mbps link with 1 % random loss over 30 seconds. The CUBIC line saws between 30 and 60 Mbps, cutting on every loss; the BBR line climbs once and then paces near 90 Mbps just under the dashed 100 Mbps link cap; the Copa line settles lower, near 75 Mbps, with almost no oscillation. Below the panels three bands answer the same three questions for each algorithm. CUBIC, RFC 9438, Standards Track, August 2023: the signal is a single dropped packet and the link is read as full; the reaction is to cut the window by 30 % (beta = 0.7) and regrow along a cubic curve, which on a deep buffer refills the queue rather than the pipe; the result is the Mathis cap MSS / (RTT × sqrt(loss)) = 0.97 Mbps at 60 ms RTT and 4 % loss, and two CUBIC flows settle on equal shares within a few round trips. BBR, draft-ietf-ccwg-bbr-05, March 2026: the signal is measured BtlBw and RTprop and a loss only feeds the model; the reaction is to pace at BtlBw, hold one bandwidth-delay product in flight, probe 25 % up each cycle and re-measure RTprop every 10 seconds, with Linux needing the fq qdisc; the result is Google's measured +45 % on 4G, +20 % on Wi-Fi and +120 % on satellite, and v2 and v3 answer loss and ECN so CUBIC survives beside it. Copa, NSDI 2018, shipping in Meta's mvfst for live upload: the signal is queueing delay, the current RTT minus the minimum RTT seen; the reaction is to set rate = 1 / (delta × queueing delay) and slow down before a packet is lost, with delta trading throughput against delay; the result is about 70 to 80 % of link rate at the lowest delay of the three, fair next to CUBIC only in competitive mode, which it enters on its own. A closing note says the curves are stylised and that the numbers come from Google's IETF 119 BBRv3 slides (2024), Meta's Copa note (2019) and Mathis et al. (1997).">
+<em>Figure 1. The three algorithms over time on a 100 Mbps bottleneck with 1 % random loss. CUBIC saws; BBR plateaus near the model's estimate of the bottleneck bandwidth; Copa trades a bit of throughput for a tight queue-delay target.</em>
+
+<h2>The three families of congestion control</h2>
+
+<p>There are three families of congestion-control algorithm in the field today, and every algorithm you will meet sits in one of them. Knowing the family tells you, before you read a single benchmark, how the algorithm will behave on a lossy link.</p>
+
+<p>The first family is <em>loss-based</em>. The sender increases its window until it sees a dropped packet — that is the signal the network is full. Then it backs off. Reno, NewReno, and CUBIC are loss-based. Loss-based algorithms work beautifully on the wired, near-lossless networks of the 1990s for which they were designed, and they degrade catastrophically when packet loss is caused by anything other than congestion — Wi-Fi interference, a mobile cell handover, a sun-fade on a satellite link.</p>
+
+<p>The second family is <em>model-based</em> (also called rate-based, also called <em>delivery-rate-based</em>). The sender measures the bottleneck bandwidth and the round-trip time on a rolling basis and paces packets to that estimate. Packet loss is a signal but not the only one; the algorithm believes in its measured model first. BBR is model-based. So is Google's congestion control for QUIC's loss-detection RFC 9002 baseline implementation.</p>
+
+<p>The third family is <em>delay-based</em>. The sender watches the round-trip time and treats a rising RTT as a sign that queues are building. It slows down before any packet is lost. Vegas, Compound TCP, FAST TCP, LEDBAT, and Copa are delay-based. Delay-based algorithms win on latency but historically lose throughput when they share a link with a loss-based algorithm — the loss-based algorithm fills the queue, the delay-based algorithm sees rising RTT and politely backs off, and the loss-based algorithm takes all the bandwidth. Copa's design specifically addresses that fairness problem with a <em>competitive mode</em> that switches behaviour when it detects buffer-filling neighbours.</p>
+
+<h2>CUBIC — the default you already have</h2>
+
+<p>The Congestion Control Using Binary Increase (CUBIC) algorithm is the default TCP congestion controller in Linux (since kernel 2.6.19, 2006), Windows (since Server 2016 / Windows 10), and macOS / iOS (since macOS 10.12, 2016). RFC 9438, published in August 2023, moves CUBIC from Informational to Standards Track and obsoletes the earlier RFC 8312. If you ship a Linux server with no congestion-control tuning, you are running CUBIC.</p>
+
+<p>CUBIC's design is rooted in one observation: the original TCP Reno algorithm grows its congestion window by one packet per round-trip time after a loss, which on a 100 ms RTT, 10 Gbps long-fat-network link takes 50 minutes to refill the pipe after a single drop. That was unacceptable for the data-centre and long-haul networks of the early 2000s, so CUBIC's authors replaced Reno's linear growth with a cubic polynomial: after a loss, the window drops by 30 % (the <em>beta</em> parameter, <code>0.7</code> of the pre-loss window), then re-grows along the curve <code>W(t) = C × (t − K)³ + W_max</code>, where <code>K</code> is the time it would take a cubic curve to reach the pre-loss peak. The shape gives slow, careful growth near the previous maximum (so you do not immediately re-trigger loss), then aggressive growth far from the maximum (so you refill the pipe quickly after a true capacity change).</p>
+
+<p>The mathematical neatness has two consequences worth knowing.</p>
+
+<p>First, CUBIC is <em>loss-triggered</em>. It does not slow down until it sees a packet drop. On a wired data-centre link, that is fine — drops mean queues are full. On a 4 % lossy 4G link, that is a disaster. The Mathis et al. 1997 model gives a back-of-envelope throughput bound for any loss-triggered TCP: <code>throughput ≤ MSS / (RTT × √loss)</code>. Plug in <code>MSS = 1460 bytes</code>, <code>RTT = 60 ms</code>, <code>loss = 0.04</code>: <code>throughput ≤ 1460 / (0.06 × 0.2) bytes/sec ≈ 121,667 bytes/sec ≈ 0.97 Mbps</code>. Roughly one megabit. A CUBIC sender cannot push more than 1 Mbps through that link, ever, regardless of the encoder, regardless of the CDN — because every loss is interpreted as congestion and the window collapses.</p>
+
+<p>Second, CUBIC fills queues. In a router with a buffer measured in megabytes (which most consumer cable modems have, courtesy of the "bigger is safer" reflex of router vendors a decade ago), CUBIC happily fills that buffer until packets start dropping at the tail. The queue is full of CUBIC's own packets, every one of them adding to round-trip time. This is <em>buffer bloat</em>, and the RTT growth it causes can turn a 20 ms wired link into a 400 ms one with no packet loss at all — just sluggishness. ABR algorithms in the player above will then misread the throughput and switch down the ladder, even though the bottleneck capacity is unchanged.</p>
+
+<p>Despite those costs CUBIC has one large virtue: fairness with itself. Two CUBIC flows sharing a link converge on roughly equal shares within a few RTTs. That property — <em>intra-protocol fairness</em> — is the reason the IETF moved CUBIC to Standards Track and the reason most CDNs and most cloud providers still default to it. If you do not know what is on the other end of your link, CUBIC is the diplomatic choice.</p>
+
+<h2>BBR — the model-based challenger</h2>
+
+<p>Bottleneck Bandwidth and Round-trip propagation time (BBR) was published by Google in 2016 and has been iterated through three versions: BBRv1 (2016), BBRv2 (announced 2019, in production at Google by 2021), and BBRv3, which is the version standardised in IETF draft-ietf-ccwg-bbr-05 (March 2026) and now upstreamed into mainline Linux 6.x. The draft sits in the Congestion Control Working Group (CCWG) with an intended status of <em>Experimental</em> and an expiry of September 2026 — it is a near-final draft that streaming engineers can read today as the authoritative specification.</p>
+
+<p>BBR's premise: the network does not give you a clean signal that says "back off". Loss is a noisy proxy. RTT is a noisy proxy. The <em>useful</em> signals are two: the maximum delivery rate the bottleneck can serve (BtlBw) and the minimum round-trip time of the path (RTprop). If a sender knows both, it can pace at exactly BtlBw and keep exactly one bandwidth-delay product of data in flight (<code>BDP = BtlBw × RTprop</code>). At that operating point the bottleneck is fully used, queues are empty, and round-trip latency stays at its minimum.</p>
+
+<p>The algorithm runs four states in a cycle:</p>
+
+<ul>
+<li><strong>Startup</strong> — exponential rate growth (doubling each round-trip) until it can no longer find higher delivery rates.</li>
+<li><strong>Drain</strong> — pace down to drain any queue accidentally created during Startup.</li>
+<li><strong>ProbeBW</strong> — main steady state: pace at the estimated BtlBw, periodically nudge the rate up by 25 % for one RTT to test if more bandwidth is available, then nudge back down.</li>
+<li><strong>ProbeRTT</strong> — once every ~10 seconds, drop in-flight data to four packets for 200 ms to re-measure RTprop without queueing noise.</li>
+</ul>
+
+<p>The behaviour on a lossy link is the point of BBR. Because the algorithm does not interpret loss as a "you are at capacity" signal — only as data to incorporate into its rate model — BBR keeps shovelling bandwidth on a 4 % lossy 4G link instead of collapsing. Google's published measurements show BBRv3 delivering +45 % throughput on 4G LTE (20 ms RTT), +20 % on Wi-Fi (5 ms RTT), and a striking +120 % on satellite links (600 ms RTT), all measured against CUBIC.</p>
+
+<p>BBR is also the congestion controller of choice for QUIC. RFC 9002 (QUIC's loss-recovery and congestion-control companion to RFC 9000) describes a CUBIC-like reference implementation, but Google's production QUIC stack uses BBR, and Cloudflare's <code>quiche</code> and Meta's <code>mvfst</code> both ship BBR as a first-class option. Any time you see a vendor's "low-latency streaming over HTTP/3" claim in 2026, BBR is doing the work underneath.</p>
+
+<p>Two cautions. BBR shares a link unfairly with CUBIC in some configurations — early measurements of BBRv1 showed it could starve a CUBIC flow on a deep-buffer link, and although BBRv2/v3 mitigate this with loss and ECN response, the discipline is "test in your own deployment". The second caution: BBR's pacing means the sender needs accurate timestamps and a queueing discipline that respects them. On Linux, the canonical recipe is <code>tcp_congestion_control = bbr</code> plus <code>default_qdisc = fq</code>; the <code>fq</code> qdisc gives BBR's pacing the per-flow scheduling it expects. Skip the <code>fq</code> step and BBR's measured wins evaporate.</p>
+
+<img src="https://cdn.prod.website-files.com/64e8910adc5a63966a68acea/6aaed9d2517279493ddf80a4_6aaed8f8d41dc001ac8bcf12_02_2-congestion-control-bbr-cubic-copa__02-cubic-bbr-state-machines.svg" alt="Two stacked sections put the CUBIC and BBR state machines side by side. The CUBIC section, RFC 9438, the default in Linux, Windows, macOS and iOS, runs three states down a column: Slow Start, where cwnd doubles every RTT; Congestion Avoidance, with cubic growth toward W_max; and Fast Recovery, which cuts cwnd by 30 % (beta = 0.7). An arrow labelled «ssthresh hit» leads from Slow Start to Congestion Avoidance, an arrow labelled «loss detected» leads down to Fast Recovery, and a return arrow labelled «recover» carries the sender back up to Congestion Avoidance. A card beside the column gives the window growth function W(t) = C × (t - K)^3 + W_max, with K the cube root of (W_max × beta / C), beta = 0.7 as the cut and C = 0.4 as the growth scale, citing RFC 9438 section 4.2. The BBR section, draft-ietf-ccwg-bbr-05, shipping in Linux 6.x and Google QUIC, runs four states: Startup, where the rate doubles every RTT; Drain, which paces down to drain the queue; ProbeBW, which paces at BtlBw and probes 25 % up; and ProbeRTT, which drops to four packets for 200 ms. The arrows are labelled «peak found», «queue drained», «every 10 s» downward and «RTprop» on the return to ProbeBW. Its card gives the path model BDP = BtlBw × RTprop, where BtlBw is the highest delivery rate seen recently and RTprop the lowest round-trip time seen recently, citing section 3 of the BBR draft. A closing note reads: a loss in CUBIC means cut the window and recover; a loss in BBR means update the model and keep pacing.">
+<em>Figure 2. The state machines side by side. CUBIC reacts to loss with a window cut and a cubic re-growth. BBR ignores most losses and paces to a model of the bottleneck.</em>
+
+<h2>Copa — the delay-based contender for live video</h2>
+
+<p>Copa was published at NSDI 2018 by Venkat Arun and Hari Balakrishnan at MIT. It is delay-based: instead of using loss as the congestion signal, Copa watches the queueing delay (the difference between current RTT and the minimum RTT seen recently) and adjusts the sending rate to keep that delay near a target.</p>
+
+<p>The defining feature is a single tuning knob: <code>delta</code>. Copa's sending rate is computed as <code>λ = 1 / (delta × queueing_delay)</code>. A low <code>delta</code> (say <code>0.1</code>) lets the algorithm tolerate more queueing and prioritise throughput. A high <code>delta</code> (say <code>1.0</code>) tightens the latency target and accepts less throughput. The application picks the trade-off; the algorithm enforces it.</p>
+
+<p>Copa runs two modes. In <em>default mode</em>, it minimises a utility function <code>U = log(throughput) − delta × log(queueing_delay)</code> and behaves like a low-delay, low-queue-build flow. In <em>competitive mode</em>, triggered when it detects buffer-filling neighbours (it watches whether queueing delay drops to zero often enough), it switches to a more loss-based behaviour to claim its fair share of the link. Without competitive mode a Copa flow sharing a router with a CUBIC flow loses every time; with it, Copa keeps a fair share.</p>
+
+<p>The reason Copa matters for video is not the algorithm in isolation, but where it has been deployed. Meta's engineering blog, in November 2019, described Copa's production deployment for live video upload on Android: "Copa improves throughput and delay in most settings compared to BBR and Cubic — two widely used congestion control algorithms — and is thus able to deliver better quality video with lower delay. As a result, Facebook has experienced better end-user metrics (video watch time)." Meta's Copa implementation ships inside <code>mvfst</code>, its QUIC stack, which means any product using <code>mvfst</code> for ingest can opt in by setting the algorithm string.</p>
+
+<p>Copa's weakness is symmetric to BBR's. The <code>delta</code> knob is the application's responsibility to tune, and the right value depends on the link. Meta tunes <code>delta</code> dynamically; a naive deployment with <code>delta = 0.5</code> on a satellite link will under-utilise capacity. The 2022 <em>Copa+</em> paper (IEEE) addresses some of these tuning problems with adaptive <code>delta</code> and a tightened competitive-mode entry criterion.</p>
+
+<h2>The comparison table you can hand to your team</h2>
+
+<table><thead><tr><th>Dimension</th><th>CUBIC</th><th>BBR</th><th>Copa</th></tr></thead><tbody><tr><td>Family</td><td>Loss-based</td><td>Model-based (bandwidth + RTT)</td><td>Delay-based (queueing delay)</td></tr><tr><td>Standardisation</td><td>RFC 9438 (Standards Track, August 2023)</td><td>draft-ietf-ccwg-bbr-05 (Experimental, March 2026)</td><td>NSDI 2018 paper; no IETF document</td></tr><tr><td>Default in</td><td>Linux, Windows, macOS, iOS</td><td>Google services, Cloudflare, YouTube</td><td>Meta live video upload (mvfst)</td></tr><tr><td>Behaviour on 1 % random loss (50 ms RTT)</td><td>~3 Mbps cap</td><td>~80 % of link rate</td><td>~70–80 % of link rate, low delay</td></tr><tr><td>Behaviour on deep-buffer router</td><td>Fills the buffer (buffer bloat)</td><td>Targets BDP, mostly empty queue</td><td>Targets queueing-delay budget</td></tr><tr><td>RTT sensitivity</td><td>Slower growth on long RTT but mostly RTT-fair</td><td>Designed for long RTT (satellite, transcontinental)</td><td>Sensitive to RTT-minimum jitter</td></tr><tr><td>Knobs the application sets</td><td>None typically</td><td>None typically</td><td><code>delta</code> (throughput-vs-delay)</td></tr><tr><td>Fairness with itself</td><td>Yes, well-studied</td><td>Yes</td><td>Yes (with competitive mode)</td></tr><tr><td>Fairness with CUBIC</td><td>n/a (same family)</td><td>Approximately fair in v2/v3</td><td>Fair only in competitive mode</td></tr><tr><td>Where it wins</td><td>LAN, data centre, near-lossless</td><td>Public internet, lossy WAN, satellite</td><td>Real-time video upload, RT links</td></tr><tr><td>Where it loses</td><td>Lossy mobile / Wi-Fi (Mathis cap)</td><td>Shallow-buffer queues where the model overshoots</td><td>When neighbours fill queues aggressively</td></tr></tbody></table>
+The comparison is the headline. The detail beneath it is that no algorithm wins every link, which is why the modern stack lets you pick per-socket — and increasingly, per-application — what to run.
+
+<h2>A worked example: 1080p over a 4 % lossy 4G link</h2>
+
+<p>A founder asks why a 6 Mbps top-rung 1080p rendition is rebuffering on a 4G test phone in Seoul. The phone's link reports 60 ms RTT to the origin and packet-loss rate around 4 % during peak.</p>
+
+<p>Step one: apply Mathis to CUBIC. <code>throughput ≤ MSS / (RTT × √loss)</code> = <code>1460 / (0.06 × √0.04)</code> = <code>1460 / (0.06 × 0.2)</code> = <code>1460 / 0.012</code> = <code>121,667 bytes/sec</code> = <code>0.97 Mbps</code>. The CUBIC sender on the CDN edge cannot push more than ~1 Mbps to that phone. The ABR ladder cannot select 6 Mbps; the player downshifts to 720p or below, and rebuffer is now the buffer-fill problem inside that constraint.</p>
+
+<p>Step two: switch the CDN edge to BBR. The same link, same RTT, same 4 % loss. BBR ignores the loss as a congestion signal (it interprets it as random) and paces to its estimate of bottleneck bandwidth, which on the phone's actual link is roughly 25 Mbps. The throughput rises from 0.97 Mbps to roughly 18–22 Mbps in field measurements — comfortably above the 6 Mbps target.</p>
+
+<p>Step three: a colleague asks whether BBR will starve a CUBIC competitor on the same cell. Honest answer: depends on the cell's buffer depth, the BBR version, and the cross-traffic. BBRv3's intent — and what Google reports in their April 2024 IETF 119 deployment slides — is "approximately fair" to CUBIC across a representative mix of paths. The product team's correct test is A/B in the field, not a theoretical argument.</p>
+
+<p>This example is also the argument for QUIC. The CDN edge could keep using CUBIC for HTTP/2 over TCP and ship the same content via QUIC over HTTP/3 with BBR as the congestion controller. Most players in 2026 negotiate HTTP/3 when offered, including hls.js, Shaka, dash.js, and the native Apple HLS player on iOS 17+.</p>
+
+<h2>Common mistakes to avoid</h2>
+
+<ul>
+<li><strong>Switching BBR on without <code>fq</code>.</strong> Linux's <code>tcp_congestion_control = bbr</code> without <code>default_qdisc = fq</code> means the pacing the algorithm computes does not actually shape packet egress. The wins evaporate. Both settings are required.</li>
+<li><strong>Comparing CUBIC and BBR on a clean lab link.</strong> A 0 % loss, 10 ms RTT, 1 Gbps link is the one place CUBIC and BBR look nearly identical. Test on the real network — at least one of your test paths must have 1 % loss or more, 80 ms RTT or more, and a router with a few megabytes of buffer.</li>
+<li><strong>Reading old BBRv1 papers as if they describe today.</strong> The unfair-to-CUBIC behaviour, the over-aggression in shallow buffers, the lack of ECN response — all were addressed in v2 (2019–2021) and v3 (2022–2026). Read draft-ietf-ccwg-bbr-05 for the current behaviour.</li>
+<li><strong>Assuming the cloud provider's default is what you want.</strong> AWS, GCP, Azure, and the major CDNs let you select congestion-control per region or per LB. Default is typically CUBIC. The default is for general-purpose web, not for streaming.</li>
+<li><strong>Picking Copa for a use case where you cannot tune <code>delta</code>.</strong> Without <code>delta</code> tuning Copa loses throughput, sometimes badly. If you do not have telemetry to set it, BBR is the safer choice.</li>
+<li><strong>Ignoring the QUIC angle.</strong> TCP congestion control is one thing; QUIC congestion control is a separate setting, often configured in the application layer (e.g. mvfst, quiche, ngtcp2). Both must be set, and both should match the use case.</li>
+</ul>
+
+<h2>How to test the switch before you ship it</h2>
+
+<p>Three steps, in order, on real infrastructure.</p>
+
+<ol>
+<li><strong>Pick a non-customer-facing edge node</strong> and switch its TCP congestion controller (and qdisc, if Linux) from CUBIC to BBR or to a Copa implementation. Verify with <code>sysctl net.ipv4.tcp_congestion_control</code> and a packet capture. On QUIC, change the algorithm name in the application config.</li>
+</ol>
+
+<ol>
+<li><strong>Drive traffic to that node from at least three test points</strong> representative of your audience: a wired data-centre client (clean baseline), a 4G or 5G mobile client (representative lossy), and one transcontinental client (representative high-RTT). Use a player with throughput telemetry — Mux Data, Conviva, Bitmovin Analytics, or your own — and capture throughput percentiles, rebuffer rate, and time-to-first-frame for at least 24 hours.</li>
+</ol>
+
+<ol>
+<li><strong>Compare against a matched cohort still on CUBIC.</strong> A 5 % swing in throughput or rebuffer rate is the threshold below which you cannot trust an A/B result with fewer than ~5,000 sessions per arm; size your test accordingly. Roll out only after the comparison comes in clean.</li>
+</ol>
+
+<p>The full test plan is in the downloadable <a href="/learn/downloads/congestion-control-decision-sheet" target="_blank" rel="noopener">BBR / CUBIC / Copa Decision Sheet</a>.</p>
+
+<a class="fs-download" href="https://www.forasoft.com/learn/downloads/congestion-control-decision-sheet">
+<span class="fs-dl-icon">&darr;</span>
+<span class="fs-dl-text"><span class="fs-dl-title">Free download: Congestion Control Decision Sheet</span><span class="fs-dl-desc">One page: the three families side by side, the Mathis worked example, the Linux sysctl and qdisc recipe, and the three-step rollout test.</span></span>
+</a>
+
+<h2>Where Fora Soft fits in</h2>
+
+<p>We have shipped 239+ projects since 2005 across video streaming, WebRTC conferencing, OTT, telemedicine, e-learning, video surveillance, and AR/VR — every one of which makes a quiet choice about congestion control somewhere in the stack. On WebRTC products we run Google's <code>goog-cc</code> (a delay-based bandwidth estimator with similarities to Copa) and pair it with simulcast and SVC to ride the bandwidth estimate down without freezing the call. On HLS and DASH origins we default BBRv3 on the edge nodes that face known lossy regions (mobile-first markets, satellite, regional ISPs with deep buffers) and keep CUBIC on intra-data-centre links where the algorithm's fairness properties matter and the latency cost is negligible. On low-latency contribution paths — SRT, RIST, WHIP — we tune the protocol's own loss-recovery in concert with the QUIC congestion controller it sits on. The picking is never "BBR everywhere"; it is "BBR where the network is bad, CUBIC where the network is short and clean, Copa-style behaviour where the application is real-time upload".</p>
+
+<div class="fs-book">
+<a class="fs-book-cover" href="https://www.amazon.com/dp/B0HH8F4R82" target="_blank" rel="noopener"><img src="https://cdn.prod.website-files.com/64e8910adc5a63966a68acea/6aad7027cd40639fa7304dc4_71uo-4M6k0L._SL1500_.jpeg" alt="Video Streaming: A Complete Guide to Video Delivery: From Network Protocols and Transport to Ingest, HLS, and MPEG-DASH - book cover" width="938" height="1500" decoding="async"></a>
+<div class="fs-book-body">
+<p class="fs-eyebrow">The book</p>
+<p class="fs-book-title">Video Streaming: A Complete Guide to Video Delivery: From Network Protocols and Transport to Ingest, HLS, and MPEG-DASH</p>
+<p class="fs-book-desc">This article changes one line on one sender; volume 2 is the transport half of the handbook that line belongs to. It works through TCP against UDP, congestion control, QUIC and HTTP/3, NAT and the last mile, then carries the same stream into ingest, packaging, HLS and MPEG-DASH, so the sysctl you flip here has a pipeline attached to it. Written by Nikolay Sapunov, CEO at Fora Soft.</p>
+<p class="fs-book-row"><a class="fs-btn fs-btn-amazon" href="https://www.amazon.com/dp/B0HH8F4R82" target="_blank" rel="noopener">Read it on Amazon &rarr;</a><span class="fs-book-meta">Kindle &amp; paperback &middot; Fora Soft Video Engineering Handbook</span></p>
+</div>
+</div>
+
+<div class="fs-cta">
+<p class="fs-cta-h">Is your stream losing bitrate on mobile networks?</p>
+<p class="fs-cta-p">Tell us where your viewers are and we will scope the transport side with you: which edges should run BBR, where CUBIC still earns its place, and what an A/B test on your own traffic has to prove before you roll it out. 250+ video products shipped since 2005.</p>
+<p class="fs-cta-row"><a class="fs-btn fs-btn-primary" href="https://calendly.com/vadim-fora-soft/30min" target="_blank" rel="noopener">Book a 30-min call &rarr;</a><a class="fs-btn fs-btn-wa" href="https://wa.me/971585396367" target="_blank" rel="noopener">WhatsApp &rarr;</a><a class="fs-btn fs-btn-mail" href="mailto:eager2develop@forasoft.com">Email us &rarr;</a></p>
+</div>
+
+<h2 class="fs-h2">See our case studies</h2>
+<div class="fs-grid">
+<a class="fs-card" href="https://www.forasoft.com/projects/worldcast-live">
+<p class="fs-eyebrow">Case study</p>
+<p class="fs-card-title">Worldcast Live</p>
+<p class="fs-card-desc">Concerts at 0.4&ndash;0.5 s glass-to-glass for 10,000 simultaneous viewers at 1.5 Gb/s &mdash; a latency budget a queue-filling sender spends in one burst.</p>
+</a>
+<a class="fs-card" href="https://www.forasoft.com/projects/mindbox">
+<p class="fs-eyebrow">Case study</p>
+<p class="fs-card-title">Mindbox</p>
+<p class="fs-card-desc">An RTSP-to-HLS video management system in 50+ deployments across India &mdash; cameras on links where the loss is the network, not congestion.</p>
+</a>
+<a class="fs-card" href="https://www.forasoft.com/projects/speed-space">
+<p class="fs-eyebrow">Case study</p>
+<p class="fs-card-title">Speed.Space</p>
+<p class="fs-card-desc">Remote production recording at 1080p / 8 Mbps for Netflix, Electronic Arts and HBO shoots &mdash; the rung that only survives while the pipe stays full.</p>
+</a>
+</div>
+
+<div id="fs-read-next">
+<h2 class="fs-h2">What to read next</h2>
+<div class="fs-grid">
+<a class="fs-card" href="https://www.forasoft.com/learn/video-streaming/articles-streaming/tcp-vs-udp-for-streaming">
+<p class="fs-eyebrow">Transport</p>
+<p class="fs-card-title">TCP, UDP, and the choice every streaming protocol makes</p>
+<p class="fs-card-desc">The layer below congestion control: what each transport promises, and what it makes you build yourself.</p>
+</a>
+<a class="fs-card" href="https://www.forasoft.com/learn/video-streaming/articles-streaming/network-bandwidth-jitter-loss-streaming">
+<p class="fs-eyebrow">Network</p>
+<p class="fs-card-title">Bandwidth, throughput, jitter, packet loss</p>
+<p class="fs-card-desc">Where the 4 % loss in the Mathis example comes from, and how to measure it on your own paths.</p>
+</a>
+<a class="fs-card" href="https://www.forasoft.com/learn/video-streaming/articles-streaming/http-1-2-3-streaming">
+<p class="fs-eyebrow">Protocols</p>
+<p class="fs-card-title">HTTP/1.1, HTTP/2, HTTP/3: what changed for streaming</p>
+<p class="fs-card-desc">HTTP/3 is where BBR ships by default in 2026; this is what else changes with it.</p>
+</a>
+<a class="fs-card" href="https://www.forasoft.com/learn/video-streaming/articles-streaming/last-mile-mobile-5g-starlink-wifi">
+<p class="fs-eyebrow">Last mile</p>
+<p class="fs-card-title">Last mile: mobile, 5G, Starlink, Wi-Fi 6 and 7</p>
+<p class="fs-card-desc">The links where BBR's +45 % on 4G and +120 % on satellite are actually earned.</p>
+</a>
+</div>
+</div>
+
+<h2>References</h2>
+
+<ol>
+<li>IETF RFC 9438, "CUBIC for Fast and Long-Distance Networks", August 2023 — Standards Track, obsoletes RFC 8312. Primary normative source for CUBIC. <a href="https://datatracker.ietf.org/doc/html/rfc9438" target="_blank" rel="noopener">https://datatracker.ietf.org/doc/html/rfc9438</a></li>
+<li>IETF draft-ietf-ccwg-bbr-05, "BBR Congestion Control", March 2026 — Internet-Draft, intended status Experimental, subject to revision before RFC publication. Primary normative source for BBRv3. <a href="https://datatracker.ietf.org/doc/draft-ietf-ccwg-bbr/" target="_blank" rel="noopener">https://datatracker.ietf.org/doc/draft-ietf-ccwg-bbr/</a></li>
+<li>IETF RFC 5681, "TCP Congestion Control", September 2009 — the baseline TCP congestion-control specification (Reno/NewReno) that CUBIC and BBR replace. <a href="https://datatracker.ietf.org/doc/html/rfc5681" target="_blank" rel="noopener">https://datatracker.ietf.org/doc/html/rfc5681</a></li>
+<li>IETF RFC 9000, "QUIC: A UDP-Based Multiplexed and Secure Transport", May 2021. Section 8 references congestion-control selection. <a href="https://datatracker.ietf.org/doc/html/rfc9000" target="_blank" rel="noopener">https://datatracker.ietf.org/doc/html/rfc9000</a></li>
+<li>IETF RFC 9002, "QUIC Loss Detection and Congestion Control", May 2021. The companion RFC describing QUIC's reference congestion controller. <a href="https://datatracker.ietf.org/doc/html/rfc9002" target="_blank" rel="noopener">https://datatracker.ietf.org/doc/html/rfc9002</a></li>
+<li>IETF RFC 8085, "UDP Usage Guidelines", March 2017. Section 3.1 is the canonical statement of why every UDP application must implement congestion control. <a href="https://datatracker.ietf.org/doc/html/rfc8085" target="_blank" rel="noopener">https://datatracker.ietf.org/doc/html/rfc8085</a></li>
+<li>Venkat Arun and Hari Balakrishnan, "Copa: Practical Delay-Based Congestion Control for the Internet", NSDI 2018, USENIX. The original Copa paper. <a href="https://web.mit.edu/copa/" target="_blank" rel="noopener">https://web.mit.edu/copa/</a></li>
+<li>Meta Engineering, "COPA congestion control for video performance", November 2019 — the production-deployment write-up that placed Copa in Meta's mvfst for live video upload. We cite Meta's published measurements over the Copa paper's lab measurements for the live-video claim, because the article followed the standards-and-deployment hierarchy (lower-tier vendor blog vs. higher-tier academic paper — the spec/paper says delay-based, the blog says production deployment). <a href="https://engineering.fb.com/2019/11/17/video-engineering/copa/" target="_blank" rel="noopener">https://engineering.fb.com/2019/11/17/video-engineering/copa/</a></li>
+<li>Mathis, Semke, Mahdavi, and Ott, "The Macroscopic Behavior of the TCP Congestion Avoidance Algorithm", ACM SIGCOMM CCR 27(3), July 1997. The throughput-vs-loss bound used in the worked example.</li>
+<li>Cardwell, Cheng, et al., "BBRv3: Algorithm Overview and Google's Public Internet Deployment", slides for IETF 119 CCWG meeting, April 2024. The most current published measurements of BBRv3 in production. <a href="https://datatracker.ietf.org/meeting/119/materials/slides-119-ccwg-bbrv3-overview-and-google-deployment-00" target="_blank" rel="noopener">https://datatracker.ietf.org/meeting/119/materials/slides-119-ccwg-bbrv3-overview-and-google-deployment-00</a></li>
+<li>ESnet Fasterdata, "BBR TCP" — third-party reference confirming <code>bbr</code> plus <code>fq</code> qdisc is the canonical Linux recipe. <a href="https://fasterdata.es.net/host-tuning/linux/recent-tcp-enhancements/bbr-tcp/" target="_blank" rel="noopener">https://fasterdata.es.net/host-tuning/linux/recent-tcp-enhancements/bbr-tcp/</a></li>
+<li>Linux kernel networking documentation, kernel.org — <code>Documentation/networking/ip-sysctl.rst</code> for the <code>tcp_congestion_control</code> and <code>default_qdisc</code> sysctls used in the recipe.</li>
+</ol>
+
+<style>
+/* fs-learn-layout v2 — spacing, card blocks, end-of-article order */
+.article-header{padding-top:56px!important;padding-bottom:24px!important}
+.article-meta{margin-bottom:0!important}
+.article-body{margin-top:8px!important}
+.article-body>h2:first-of-type{margin-top:0!important}
+
+h2.fs-h2{font-size:38px;font-weight:700;line-height:1.25;margin:48px 0 16px;color:#111827}
+
+.fs-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;margin:0 0 32px}
+a.fs-card{display:block;padding:22px 24px;border:1px solid #e2e8f0;border-radius:10px;text-decoration:none!important;color:inherit;background:#fff;cursor:pointer;transition:border-color .15s,box-shadow .15s,transform .15s}
+a.fs-card:hover{transform:translateY(-2px);border-color:#bfdbfe;box-shadow:0 8px 24px rgba(0,82,212,.10)}
+.fs-card p.fs-eyebrow{font-size:12px;font-weight:700;color:#0052d4;text-transform:uppercase;letter-spacing:.08em;margin:0 0 8px;cursor:pointer}
+.fs-card p.fs-card-title{font-size:17px;font-weight:700;color:#0f172a;margin:0 0 6px;line-height:1.4;cursor:pointer}
+.fs-card p.fs-card-desc{font-size:14px;line-height:1.6;color:#64748b;margin:0;cursor:pointer}
+
+.fs-cta{background:linear-gradient(135deg,#0052d4 0%,#4364f7 50%,#6fb1fc 100%);padding:36px 32px;border-radius:10px;margin:36px 0}
+.fs-cta p.fs-cta-h{font-size:22px;font-weight:700;color:#fff;margin:0 0 12px;line-height:1.4}
+.fs-cta p.fs-cta-p{font-size:16px;line-height:1.7;color:#dbeafe;margin:0 0 22px}
+.fs-cta p.fs-cta-row{margin:0;display:flex;flex-wrap:wrap;gap:10px}
+a.fs-btn{display:inline-block;padding:14px 24px;border-radius:6px;text-decoration:none!important;font-weight:700;font-size:15px;line-height:1.2;cursor:pointer;transition:transform .15s,box-shadow .15s}
+a.fs-btn:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(15,23,42,.18)}
+a.fs-btn-primary,a.fs-btn-primary:hover{background:#fff;color:#0052d4}
+a.fs-btn-wa,a.fs-btn-wa:hover{background:#25d366;color:#fff}
+a.fs-btn-mail,a.fs-btn-mail:hover{background:rgba(255,255,255,.15);color:#fff;border:1.5px solid #fff}
+
+.fs-book{display:flex;gap:28px;align-items:center;background:linear-gradient(135deg,#f8fafc 0%,#eef4ff 100%);border:1px solid #e2e8f0;border-radius:12px;padding:28px 30px;margin:40px 0 36px}
+a.fs-book-cover{flex:0 0 150px;display:block;text-decoration:none!important;border-radius:6px;transition:transform .15s}
+a.fs-book-cover:hover{transform:translateY(-3px)}
+.fs-book-cover img{width:100%!important;height:auto!important;aspect-ratio:938/1500;max-width:none!important;margin:0!important;display:block!important;border-radius:6px;box-shadow:0 12px 32px rgba(15,23,42,.22);pointer-events:none;cursor:pointer;transition:none}
+.fs-book-cover img:hover{transform:none;box-shadow:0 12px 32px rgba(15,23,42,.22)}
+.fs-book-body{flex:1 1 320px;min-width:0}
+.fs-book-covers{flex:0 0 auto;display:flex;align-items:center;justify-content:center;text-decoration:none!important}
+.fs-book-covers img{height:auto!important;aspect-ratio:938/1500;max-width:none!important;margin:0!important;display:block!important;border-radius:4px;border:2px solid #fff;pointer-events:none;transition:none;position:relative}
+.fs-book-covers img:nth-child(1),.fs-book-covers img:nth-child(3){width:104px!important;z-index:1;box-shadow:0 8px 20px rgba(15,23,42,.16)}
+.fs-book-covers img:nth-child(1){margin-right:-46px!important}
+.fs-book-covers img:nth-child(3){margin-left:-46px!important}
+.fs-book-covers img:nth-child(2){width:126px!important;z-index:2;box-shadow:0 18px 38px rgba(15,23,42,.30)}
+.fs-book-covers img:hover{transform:none}
+.fs-book p.fs-eyebrow{font-size:12px;font-weight:700;color:#0052d4;text-transform:uppercase;letter-spacing:.08em;margin:0 0 8px}
+.fs-book p.fs-book-title{font-size:20px;font-weight:700;color:#0f172a;line-height:1.35;margin:0 0 10px}
+.fs-book p.fs-book-desc{font-size:15px;line-height:1.65;color:#475569;margin:0 0 20px}
+.fs-book p.fs-book-row{margin:0;display:flex;flex-wrap:wrap;gap:14px;align-items:center}
+a.fs-btn-amazon,a.fs-btn-amazon:hover{background:#0f172a;color:#fff}
+.fs-book-meta{font-size:13px;color:#64748b;line-height:1.4}
+
+a.fs-download{display:flex;gap:16px;align-items:flex-start;padding:18px 22px;border:1px dashed #bfdbfe;border-radius:10px;background:#f8fbff;text-decoration:none!important;color:inherit;cursor:pointer;margin:40px 0 8px;transition:border-color .15s,box-shadow .15s,transform .15s}
+a.fs-download:hover{transform:translateY(-2px);border-color:#0052d4;box-shadow:0 8px 24px rgba(0,82,212,.10)}
+.fs-dl-icon{flex:0 0 36px;height:36px;border-radius:50%;background:#0052d4;color:#fff;font-size:18px;font-weight:700;display:flex;align-items:center;justify-content:center;line-height:1}
+.fs-dl-text{display:block}
+.fs-dl-title{display:block;font-size:16px;font-weight:700;color:#0f172a;line-height:1.4;margin-bottom:4px}
+.fs-dl-desc{display:block;font-size:14px;line-height:1.6;color:#64748b}
+
+
+/* Related glossary terms — same hover lift as the cards above */
+.term-card{transition:transform .15s,box-shadow .15s,border-color .15s}
+.term-card:hover{transform:translateY(-2px);border-color:#bfdbfe;box-shadow:0 8px 24px rgba(0,82,212,.10)}
+.term-card:hover h4.term-name{color:#0052d4}
+.term-card h4.term-name,.term-card p.term-def{transition:color .15s;cursor:pointer}
+a.term-card-link{text-decoration:none!important;cursor:pointer}
+
+/* Таблицы: тот же кегль, что у основного текста. Базовая тема сайта даёт
+   0.95em от 20px = 19px на десктопе и 17.6px на мобиле — крупнее абзацев,
+   из-за чего таблица раздувается и вылезает за колонку. */
+.article-body table{display:block;overflow-x:auto;-webkit-overflow-scrolling:touch;max-width:100%;font-size:17px;line-height:1.5}
+.article-body table th,.article-body table td{font-size:17px;line-height:1.5}
+@media (max-width:767px){
+.article-body table,.article-body table th,.article-body table td{font-size:16px;line-height:1.45}
+}
+.article-body>code{display:block;overflow-x:auto;-webkit-overflow-scrolling:touch;max-width:100%}
+
+@media (max-width:640px){
+.article-body pre,.article-body pre code{white-space:pre-wrap;overflow-wrap:anywhere}
+.article-body p,.article-body li,.article-body td,.article-body th,.article-body blockquote,.article-body>em,.article-body>strong,.article-body>span,.article-body>a{overflow-wrap:anywhere}
+.article-h1{overflow-wrap:anywhere}
+.article-header{padding-top:36px!important}
+h2.fs-h2{font-size:28px;margin:36px 0 12px}
+.fs-book{flex-direction:column;align-items:flex-start;gap:20px;padding:24px 22px}
+a.fs-book-cover{flex:none;width:140px}
+.fs-book-covers img:nth-child(1),.fs-book-covers img:nth-child(3){width:80px!important}
+.fs-book-covers img:nth-child(2){width:98px!important}
+.fs-book-covers img:nth-child(1){margin-right:-34px!important}
+.fs-book-covers img:nth-child(3){margin-left:-34px!important}
+.fs-cta{padding:28px 22px}
+}
+</style>
+</div><div class="takeaways-box"><p class="takeaways-label">Key takeaways</p><div class="w-richtext"><ul>
+<li>Congestion control is the algorithm inside TCP and QUIC that decides how fast to send, and the choice changes streaming throughput.</li>
+<li>CUBIC, the default everywhere, collapses on lossy links because it treats every packet drop as congestion.</li>
+<li>BBR (draft-ietf-ccwg-bbr-05) ignores loss as a primary signal and paces to a model of the path, winning on lossy and high-RTT links.</li>
+<li>Copa (NSDI 2018, deployed by Meta) tunes the throughput-versus-delay trade-off directly via a <code>delta</code> parameter.</li>
+<li>On Linux, switch with <code>sysctl tcp_congestion_control=bbr</code> and pair with <code>default_qdisc=fq</code>.</li>
+<li>Test on a real lossy path before flipping production — the lab link will not show the win.</li>
+</ul></div></div></div></section><section><div class="article-container"><h2 class="section-heading">Related glossary terms</h2><div class="related-terms-grid w-dyn-list"><div role="list" class="w-dyn-items"><div role="listitem" class="term-card w-dyn-item"><a href="/learn/video-streaming/glossary/terms-streaming/contribution" class="term-card-link w-inline-block"><h4 class="term-name">Contribution</h4><p class="term-def">The first hop of the streaming pipeline — getting a live signal from the source (camera, switcher, OB van) to the encoder or origin. Optimised for reliability over one or two streams, not for fan-out to viewers.</p></a></div><div role="listitem" class="term-card w-dyn-item"><a href="/learn/video-streaming/glossary/terms-streaming/bitmovin-analytics" class="term-card-link w-inline-block"><h4 class="term-name">Bitmovin Analytics</h4><p class="term-def">Bitmovin&#x27;s QoE analytics product, tightly integrated with their player SDK but usable with hls.js, Shaka, Video.js, AVPlayer and ExoPlayer. Strong on detailed playback diagnostics.</p></a></div><div role="listitem" class="term-card w-dyn-item"><a href="/learn/video-streaming/glossary/terms-streaming/simulcast" class="term-card-link w-inline-block"><h4 class="term-name">Simulcast</h4><p class="term-def">WebRTC technique where the sender encodes the same video at multiple resolution/bitrate combinations and sends all of them. The SFU then picks which layer to forward to each receiver.</p></a></div><div role="listitem" class="term-card w-dyn-item"><a href="/learn/video-streaming/glossary/terms-streaming/mux-data" class="term-card-link w-inline-block"><h4 class="term-name">Mux Data</h4><p class="term-def">Mux&#x27;s QoE analytics product. A player-side SDK plus a backend that ingests video performance metrics — startup time, rebuffer ratio, EBVS, bitrate, errors — and presents them in a dashboard.</p></a></div><div role="listitem" class="term-card w-dyn-item"><a href="/learn/video-streaming/glossary/terms-streaming/packet-loss" class="term-card-link w-inline-block"><h4 class="term-name">Packet loss</h4><p class="term-def">The fraction of packets that fail to reach the receiver. Streaming protocols mask it via retransmission (ARQ), redundancy (FEC), or quality degradation (skipped frames).</p></a></div><div role="listitem" class="term-card w-dyn-item"><a href="/learn/video-streaming/glossary/terms-streaming/peering" class="term-card-link w-inline-block"><h4 class="term-name">Peering</h4><p class="term-def">An arrangement where two networks exchange traffic directly, often at an IXP, without paying a transit provider. The reason CDN POPs are co-located in major data centres next to ISPs.</p></a></div><div role="listitem" class="term-card w-dyn-item"><a href="/learn/video-streaming/glossary/terms-streaming/conviva" class="term-card-link w-inline-block"><h4 class="term-name">Conviva</h4><p class="term-def">The longest-standing dedicated video QoE analytics company (founded 2006). Player-side SDK plus large-enterprise analytics dashboard. Default at Disney+, HBO Max, Paramount+ and most tier-1 OTT.</p></a></div><div role="listitem" class="term-card w-dyn-item"><a href="/learn/video-streaming/glossary/terms-streaming/congestion-control" class="term-card-link w-inline-block"><h4 class="term-name">Congestion control</h4><p class="term-def">The algorithm a transport uses to decide how fast to send without overwhelming the network. CUBIC is the long-time TCP default; BBR is increasingly used for streaming.</p></a></div></div></div><div class="author-bio-card"><img src="https://cdn.prod.website-files.com/64e8910adc5a63966a68acea/6a0c72a04c29b22a8ddb991b_6a0c728d356dff40621f0967_nikolay_sapunov.avif" alt="Author photo" class="author-bio-photo"/><div class="author-bio-body"><p class="author-bio-name">Nikolay Sapunov</p><p class="author-bio-role">CEO at Fora Soft</p><div class="w-richtext"><p>Nikolay Sapunov is the CEO of Fora Soft, a software studio specialising in video-centric products — streaming platforms, WebRTC apps, video conferencing, and AI-driven video tools. He writes the Video Encoding knowledge base to give product and engineering teams a clear, no-jargon way to reason about codecs, compression, HDR, and the trade-offs behind every video architecture decision.</p></div><a href="/team/nikolay-sapunov" class="author-bio-link">View profile →</a></div></div></div></section><section class="block-nav-section"><div class="article-container"><div class="block-nav"><div class="block-nav-cell-prev w-dyn-list"><div role="list" class="w-dyn-items"><div role="listitem" class="w-dyn-item"><a href="/learn/video-streaming/articles-streaming/tcp-vs-udp-for-streaming" class="block-nav-link block-nav-prev w-inline-block"><div class="block-nav-direction"><div>← Previous article</div></div><div class="block-nav-name"><div>TCP, UDP, and the Choice Every Streaming Protocol Must Make</div></div></a></div></div></div><div class="block-nav-cell-next w-dyn-list"><div role="list" class="w-dyn-items"><div role="listitem" class="w-dyn-item"><a href="/learn/video-streaming/articles-streaming/quic-deep-dive" class="block-nav-link block-nav-next w-inline-block"><div class="block-nav-direction"><div>Next article →</div></div><div class="block-nav-name"><div>QUIC: The New Transport Layer</div></div></a></div></div></div></div></div></section><div id="Contacts" class="hv3-footer-shell"><footer class="hv3-footer"><div class="hv3-footer__inner"><div class="hv3-footer__grid"><div class="hv3-footer__brand"><img src="https://cdn.prod.website-files.com/64e8910adc5a63966a68acc1/64e8910adc5a63966a68acca_ForaSoft_logo_white.svg" loading="lazy" alt="Fora Soft" class="hv3-footer__logo"/><p class="hv3-footer__about">Specialist software house for video, real-time and AI products. Founded 2005. 50 in-house engineers.</p></div><div class="hv3-footer__col"><div class="hv3-footer__h">Company</div><a href="https://www.forasoft.com/services" class="hv3-footer__link">Services</a><a href="https://www.forasoft.com/projects" class="hv3-footer__link">Projects</a><a href="https://www.forasoft.com/lab" class="hv3-footer__link">Demos</a><a href="https://www.forasoft.com/calculator" class="hv3-footer__link">Calculator</a></div><div class="hv3-footer__col"><div class="hv3-footer__h">Knowledge base</div><a href="https://www.forasoft.com/blog" class="hv3-footer__link">Blog</a><a href="https://www.forasoft.com/learn#guides" class="hv3-footer__link">Guides</a><a href="https://www.forasoft.com/learn#courses" class="hv3-footer__link">Courses</a><a href="https://www.forasoft.com/learn#gl-ref" class="hv3-footer__link">Glossary</a><a href="https://www.forasoft.com/learn/downloads" class="hv3-footer__link">Downloads</a></div><div class="hv3-footer__col"><div class="hv3-footer__h">Contacts</div><a href="https://wa.me/971585396367" class="hv3-footer__contact"><span class="hv3-footer__contact-main">+971-58-539-6367</span><span class="hv3-footer__contact-sub">WhatsApp</span></a><a href="tel:+19147755855" class="hv3-footer__contact"><span class="hv3-footer__contact-main">+1 (914) 775-5855</span><span class="hv3-footer__contact-sub">New York · USA</span></a><a href="mailto:eager2develop@forasoft.com" class="hv3-footer__contact"><span class="hv3-footer__contact-main">eager2develop@forasoft.com</span><span class="hv3-footer__contact-sub">Email</span></a></div></div><div class="hv3-footer__bottom"><span class="hv3-footer__copy">© Fora Soft, 2005–2026</span><div class="hv3-footer__legal"><a href="https://www.forasoft.com/legal" class="hv3-footer__legal-link">Privacy Policy</a><a href="https://www.forasoft.com/trust" class="hv3-footer__legal-link">Trust</a></div><div class="hv3-footer__social"><a href="https://www.instagram.com/eager2develop" aria-label="Instagram" class="hv3-social w-inline-block"><img src="https://cdn.prod.website-files.com/64e8910adc5a63966a68acc1/6572e49c2e345879335a916d_social-inst.svg" loading="lazy" alt="Instagram" class="hv3-social__img"/></a><a href="https://www.youtube.com/@eager2develop" aria-label="Youtube" class="hv3-social w-inline-block"><img src="https://cdn.prod.website-files.com/64e8910adc5a63966a68acc1/6572e49cb0629b88aca1ac72_social-youtube.svg" loading="lazy" alt="Youtube" class="hv3-social__img"/></a><a href="https://github.com/forasoft" aria-label="Github" class="hv3-social w-inline-block"><img src="https://cdn.prod.website-files.com/64e8910adc5a63966a68acc1/6572e49c10e3dc944fabd72d_social-github.svg" loading="lazy" alt="Github" class="hv3-social__img"/></a><a href="https://www.behance.net/Fora-Soft" aria-label="Behance" class="hv3-social w-inline-block"><img src="https://cdn.prod.website-files.com/64e8910adc5a63966a68acc1/6572e49ce35e8d399a2c2a91_social-behance.svg" loading="lazy" alt="Behance" class="hv3-social__img"/></a><a href="https://dribbble.com/ForaSoft" aria-label="Dribbble" class="hv3-social w-inline-block"><img src="https://cdn.prod.website-files.com/64e8910adc5a63966a68acc1/6572e49cb20bde1e8f6ff3ca_social-dribbble.svg" loading="lazy" alt="Dribbble" class="hv3-social__img"/></a><a href="https://linkedin.com/company/fora-soft-llc-" aria-label="LinkedIn" class="hv3-social w-inline-block"><img src="https://cdn.prod.website-files.com/64e8910adc5a63966a68acc1/6572e49c720cb8a64ce75980_social-linkedin.svg" loading="lazy" alt="LinkedIn" class="hv3-social__img"/></a><a href="https://forasoft.medium.com" aria-label="Medium" class="hv3-social w-inline-block"><img src="https://cdn.prod.website-files.com/64e8910adc5a63966a68acc1/6572e49c0155f1acbea2b259_social-medium.svg" loading="lazy" alt="Medium" class="hv3-social__img"/></a></div></div></div></footer><section class="window-wrapper"><div data-w-id="6d22fa56-f763-7034-a90f-25a2d2d4cac9" class="hv3-modal__backdrop"></div><div class="hv3-modal__panel"><a href="#" data-w-id="1b658331-89ec-c206-adac-0c035728bce9" class="hv3-modal__close w-inline-block"><img src="https://cdn.prod.website-files.com/64e8910adc5a63966a68acc1/6a9b19cf3b4cc2231bb2f4b5_hv3-ic-close.svg" loading="lazy" alt="Close" class="hv3-modal__close-img"/></a><div class="hv3-modal__copy"><span class="hv3-pill"><span class="hv3-pill__dot"></span><span class="hv3-pill__txt">Start the conversation</span></span><h2 class="hv3-modal__h2">Describe your project and we will get in touch</h2><p class="hv3-modal__lead">Within 24 hours you get a realistic estimate, technical recommendations and next steps. Free, no obligations.</p><div class="hv3-steps-table"><div class="hv3-step-row"><span class="hv3-step-row__n">01</span><div class="hv3-step-row__body"><span class="hv3-step-row__title">A senior architect reads it</span><span class="hv3-step-row__text">Reply the same business day, Mon–Fri.</span></div></div><div class="hv3-step-row"><span class="hv3-step-row__n">02</span><div class="hv3-step-row__body"><span class="hv3-step-row__title">30-min call to scope it</span><span class="hv3-step-row__text">We ask the questions that change the budget.</span></div></div><div class="hv3-step-row"><span class="hv3-step-row__n">03</span><div class="hv3-step-row__body"><span class="hv3-step-row__title">Estimate in 24 hours</span><span class="hv3-step-row__text">Budget, timeline, architecture notes. Yours to keep.</span></div></div></div></div><div class="hv3-modal__form w-form"><form method="get" name="" data-name="Home v3 modal" data-wf-page-id="6a15b5347349e7ca477bd778" data-wf-element-id="1b658331-89ec-c206-adac-0c035728bd0e"><div class="hv3-tiles"><a href="https://book.forasoft.com/" class="hv3-tile-card"><span class="hv3-tile-card__icon--call"><img src="https://cdn.prod.website-files.com/64e8910adc5a63966a68acc1/6a9abbe93824b51a2a2ac6e8_fs-cal-mark-light.avif" loading="lazy" sizes="100vw" srcset="https://cdn.prod.website-files.com/64e8910adc5a63966a68acc1/6a9abbe93824b51a2a2ac6e8_fs-cal-mark-light-p-500.avif 500w, https://cdn.prod.website-files.com/64e8910adc5a63966a68acc1/6a9abbe93824b51a2a2ac6e8_fs-cal-mark-light.avif 1024w" alt="Minimalist white computer monitor icon with a solid blue dot in the upper left corner on a black background." class="hv3-tile-card__img"/></span><span class="hv3-tile-card__txt"><span class="hv3-tile-card__title">Book a call</span><span class="hv3-tile-card__sub">Pick a slot</span></span></a><a href="https://wa.me/971585396367" class="hv3-tile-card"><span class="hv3-tile-card__icon--wa"><img src="https://cdn.prod.website-files.com/64e8910adc5a63966a68acc1/6a9abf67927016e6008f6306_fs-whatsapp-white.avif" loading="lazy" sizes="100vw" srcset="https://cdn.prod.website-files.com/64e8910adc5a63966a68acc1/6a9abf67927016e6008f6306_fs-whatsapp-white-p-500.avif 500w, https://cdn.prod.website-files.com/64e8910adc5a63966a68acc1/6a9abf67927016e6008f6306_fs-whatsapp-white-p-800.avif 800w, https://cdn.prod.website-files.com/64e8910adc5a63966a68acc1/6a9abf67927016e6008f6306_fs-whatsapp-white.avif 2000w" alt="White WhatsApp logo showing a phone handset inside a speech bubble on a transparent background." class="hv3-tile-card__img-sm"/></span><span class="hv3-tile-card__txt"><span class="hv3-tile-card__title">WhatsApp</span><span class="hv3-tile-card__sub">Text us</span></span></a><a href="mailto:eager2develop@forasoft.com" class="hv3-tile-card"><span class="hv3-tile-card__icon--mail">@</span><span class="hv3-tile-card__txt"><span class="hv3-tile-card__title">Email us</span><span class="hv3-tile-card__sub">eager2develop@forasoft.com</span></span></a></div><div class="hv3-divider-label"><span class="hv3-divider-label__line"></span><span class="hv3-divider-label__txt">Or write here</span><span class="hv3-divider-label__line"></span></div><textarea class="hv3-textarea w-input" maxlength="5000" name="Message" data-name="Message" placeholder="Drop a link to your specs, or briefly tell us what you&#x27;re trying to build" rows="5" id="field-3"></textarea><div class="hv3-form__row"><input class="hv3-input w-input" maxlength="256" name="Email" data-name="Email" placeholder="Email" type="email" id="field-3" required=""/><input class="hv3-input w-input" maxlength="256" name="Name" data-name="Name" placeholder="Name" type="text" id="field-3" required=""/><div data-sitekey="6LcnRuYsAAAAAPkJxcdqLKU5qrOyFjElIfkbXJ0U" class="w-form-formrecaptcha g-recaptcha g-recaptcha-error g-recaptcha-disabled"></div></div><div class="hv3-modal__foot"><input type="submit" data-wait="Please wait..." class="hv3-modal__submit w-button" value="Send"/><span class="hv3-modal__consent">By sending this form you agree with the <a href="https://www.forasoft.com/legal" class="hv3-modal__consent-link">Personal Data Processing Policy.</a></span></div></form><div class="hv3-form__done w-form-done"><div class="hv3-form__done-text">Got it — your message is in. A real engineer will reply within 24 hours with a realistic estimate and next steps. Check your inbox (and spam, just in case).</div></div><div class="hv3-form__fail w-form-fail"><div class="hv3-form__fail-text">Hmm — that didn’t go through. Please try again. If the issue keeps happening, email us at eager2develop@forasoft.com and a real engineer will pick it up.</div></div></div></div></section></div><script src="https://d3e54v103j8qbb.cloudfront.net/js/jquery-3.5.1.min.dc5e7f18c8.js?site=64e8910adc5a63966a68acc1" type="text/javascript" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script><script src="https://cdn.prod.website-files.com/64e8910adc5a63966a68acc1/js/webflow.4eea8057.4c4b98d767e4af56.js" type="text/javascript" integrity="sha384-RR63DoSgbmgX2aZ5xCPoh1dBbKCJ2yo+x5QaYC0d3dv+aWeka0XbuCwy6XFmUQsv" crossorigin="anonymous"></script><style>
+  img { aspect-ratio: attr(width) / attr(height); }
+  .logo { width: 142px; height: 32px; }
+  .close-menu, .open-icon { width: 24px; height: 24px; }
+  .image-273 { width: 32px; height: 32px; }
+  .social-icon { width: 24px; height: 24px; }
+  .rectangle-3821-copy { aspect-ratio: 442 / 690; max-width: 442px; }
+</style>
+
+<script>
+(function () {
+  function onIdle(cb) {
+    if ('requestIdleCallback' in window) requestIdleCallback(cb, { timeout: 1500 });
+    else setTimeout(cb, 300);
+  }
+
+  function initServicesNav() {
+    const el = document.querySelector('.services-navigation-fixed');
+    if (!el) return;
+    if (window.innerWidth >= 768) el.classList.add('is-visible');
+  }
+
+  document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('.hamburger').forEach(el => {
+      el.addEventListener('click', () => document.body.classList.toggle('no-scroll'));
+    });
+
+    document.querySelectorAll('.hamburger-close,.link-menu').forEach(el => {
+      el.addEventListener('click', () => document.body.classList.remove('no-scroll'));
+    });
+
+    requestAnimationFrame(initServicesNav);
+
+    let resizeT;
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeT);
+      resizeT = setTimeout(initServicesNav, 150);
+    });
+
+    onIdle(() => {
+      document.querySelectorAll('[wr-type="error"]').forEach(el => el.style.display = 'none');
+      document.querySelectorAll('[wr-type="required-field"]').forEach(el => el.classList.remove('error'));
+
+      function fieldError(field) {
+        const err = field.parentElement?.querySelector('[wr-type="error"]');
+        if (err) err.style.display = 'block';
+        field.classList.add('error');
+        return true;
+      }
+
+      function validate(field) {
+        if (!field.value) return fieldError(field);
+        if (field.type === 'email' && (!field.value.includes('@') || !field.value.includes('.')))
+          return fieldError(field);
+        return false;
+      }
+
+      document.querySelectorAll('form').forEach(form => {
+        const required = form.querySelectorAll('[wr-type="required-field"]');
+        const submit = form.querySelector('[wr-type="submit"]');
+        if (!submit) return;
+
+        submit.addEventListener('click', e => {
+          let hasErrors = false;
+          required.forEach(f => { if (validate(f)) hasErrors = true; });
+          if (hasErrors) {
+            e.preventDefault();
+            return;
+          }
+        });
+      });
+
+      document.addEventListener('input', e => {
+        if (e.target.matches('[wr-type="required-field"]')) {
+          e.target.classList.remove('error');
+          const err = e.target.parentElement?.querySelector('[wr-type="error"]');
+          if (err) err.style.display = 'none';
+        }
+      });
+
+      const textarea = document.querySelector('#comment-form');
+      if (textarea) {
+        textarea.addEventListener('input', function () {
+          this.style.height = '60px';
+          this.style.height = Math.max(this.scrollHeight, 60) + 'px';
+        });
+      }
+
+      window.dataLayer = window.dataLayer || [];
+
+      const idToEvent = {
+        'open-modal-footer': 'form_view',
+        'open-modal': 'form_view',
+        'whatsapp-button': 'whatsapp_button_click',
+        'whatsapp-button-footer': 'whatsapp_button_click',
+        'book-a-consultation': 'calendly_button_click',
+        'book-a-consultation-2': 'calendly_button_click',
+        'start-your-project': 'calendly_button_click',
+        'get-a-consultation': 'calendly_button_click',
+        'book-a-call': 'calendly_button_click',
+        'book-a-call-in-popup': 'calendly_button_click',
+        'book-a-call-in-footer': 'calendly_button_click',
+        'book-a-consultation-3': 'calendly_button_click',
+        'whatsapp-button-calculator': 'whatsapp_button_click',
+        'calendly-button-calculator': 'calendly_button_click'
+      };
+
+      document.addEventListener('click', e => {
+        const el = e.target.closest('[id]');
+        if (!el) return;
+        const ev = idToEvent[el.id];
+        if (!ev) return;
+        window.dataLayer.push({
+          event: ev,
+          event_category: 'engagement',
+          event_label: (el.innerText || '').trim(),
+          value: 1
+        });
+      });
+    });
+  });
+})();
+</script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  var form = document.getElementById('wf-form-Search');
+  if (!form) return;
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    e.stopImmediatePropagation();
+    return false;
+  });
+});
+</script>
+
+<script>
+(function() {
+  'use strict';
+  
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+  
+  async function init() {
+    // 1. Оборачиваем filter-контейнеры в <form> (требование Finsweet v2)
+    document.querySelectorAll('[fs-list-element="filters"]').forEach(function(el) {
+      if (el.tagName === 'FORM') return;
+      var form = document.createElement('form');
+      for (var i = 0; i < el.attributes.length; i++) {
+        form.setAttribute(el.attributes[i].name, el.attributes[i].value);
+      }
+      while (el.firstChild) form.appendChild(el.firstChild);
+      el.replaceWith(form);
+    });
+    
+    // 2. Превентим submit всех filter-форм (как уже сделано для wf-form-Search)
+    document.querySelectorAll('form[fs-list-element="filters"]').forEach(function(form) {
+      form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        return false;
+      });
+    });
+    
+    // 3. Ждём, пока Finsweet загрузит все items (fs-list-load="all")
+    var fs = window.FinsweetAttributes;
+    if (!fs || !fs.modules || !fs.modules.list || !fs.modules.list.loading) {
+      console.warn('[Custom filter] Finsweet List module not loaded');
+      return;
+    }
+    
+    var instances;
+    try {
+      instances = await fs.modules.list.loading;
+    } catch (e) {
+      console.warn('[Custom filter] Finsweet loading failed:', e);
+      return;
+    }
+    
+    var blog = instances.find(function(i) { return i.instance === 'blog'; });
+    if (!blog) { console.warn('[Custom filter] Blog instance not found'); return; }
+    
+    var items = blog.items && (blog.items.value || blog.items);
+    if (!items || !items.length) { console.warn('[Custom filter] No items loaded'); return; }
+    
+    // 4. Кешируем categories + title text каждого item
+    var itemData = items.map(function(item) {
+      var categories = ((item.fields && item.fields['category-new-2'] && item.fields['category-new-2'].value) || [])
+        .map(function(s) { return String(s).toLowerCase(); });
+      var title = String(
+        (item.fields && item.fields['title'] && item.fields['title'].value) ||
+        item.element.textContent || ''
+      ).toLowerCase();
+      return { el: item.element, categories: categories, title: title };
+    });
+    
+    // 5. Состояние и применение фильтра
+    var state = { activeCategories: new Set(), query: '' };
+    var applyTimeout;
+    
+    function applyFilter() {
+      clearTimeout(applyTimeout);
+      applyTimeout = setTimeout(function() {
+        var visibleCount = 0;
+        itemData.forEach(function(d) {
+          var catMatch = state.activeCategories.size === 0;
+          if (!catMatch) {
+            state.activeCategories.forEach(function(c) {
+              if (d.categories.indexOf(c.toLowerCase()) !== -1) catMatch = true;
+            });
+          }
+          var queryMatch = !state.query || d.title.indexOf(state.query) !== -1;
+          var show = catMatch && queryMatch;
+          d.el.style.display = show ? '' : 'none';
+          if (show) visibleCount++;
+        });
+        var emptyEl = document.querySelector('[fs-list-element="empty"]');
+        if (emptyEl) emptyEl.style.display = visibleCount === 0 ? '' : 'none';
+      }, 50);
+    }
+    
+    // 6. Хукаем чекбоксы категорий
+    document.querySelectorAll('input[type="checkbox"][fs-list-value][fs-list-field="category-new-2"]')
+      .forEach(function(input) {
+        input.addEventListener('change', function() {
+          var val = input.getAttribute('fs-list-value');
+          var label = input.closest('label');
+          if (input.checked) {
+            state.activeCategories.add(val);
+            if (label) label.classList.add('is-active');
+          } else {
+            state.activeCategories.delete(val);
+            if (label) label.classList.remove('is-active');
+          }
+          applyFilter();
+        });
+      });
+    
+    // 7. Хукаем search input с debounce
+    document.querySelectorAll('input[fs-list-element="search"]')
+      .forEach(function(input) {
+        var debounce;
+        input.addEventListener('input', function() {
+          clearTimeout(debounce);
+          var val = input.value.trim().toLowerCase();
+          debounce = setTimeout(function() {
+            state.query = val;
+            applyFilter();
+          }, 150);
+        });
+      });
+    
+    applyFilter();
+  }
+})();
+</script>
+
+<script src="https://book.forasoft.com/embed.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-c.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-yaml.min.js"></script>
+
+<style>
+  /* Make body images look clickable + slightly bigger by default */
+  .article-body img {
+    cursor: zoom-in;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .article-body img:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(17, 24, 39, 0.08);
+  }
+
+  /* Lightbox overlay */
+  .lb-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(17, 24, 39, 0.92);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease;
+    cursor: zoom-out;
+    padding: 32px;
+  }
+  .lb-overlay.is-open {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  .lb-overlay img {
+    max-width: 95vw;
+    max-height: 90vh;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    border-radius: 6px;
+    background: #fff;
+    transform: scale(0.96);
+    transition: transform 0.25s ease;
+  }
+  .lb-overlay.is-open img {
+    transform: scale(1);
+  }
+  .lb-close {
+    position: absolute;
+    top: 20px;
+    right: 24px;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.12);
+    color: #fff;
+    border: none;
+    font-size: 24px;
+    line-height: 1;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s ease;
+  }
+  .lb-close:hover {
+    background: rgba(255, 255, 255, 0.22);
+  }
+  .lb-caption {
+    position: absolute;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: rgba(255, 255, 255, 0.78);
+    font-size: 14px;
+    max-width: 80vw;
+    text-align: center;
+  }
+  body.lb-locked {
+    overflow: hidden;
+  }
+</style>
+
+<script>
+(function () {
+  // Build overlay once
+  var overlay = document.createElement('div');
+  overlay.className = 'lb-overlay';
+  overlay.setAttribute('role', 'dialog');
+  overlay.setAttribute('aria-modal', 'true');
+  overlay.innerHTML = '<button class="lb-close" aria-label="Close">✕</button>' +
+                     '<img alt="" />' +
+                     '<div class="lb-caption"></div>';
+  document.body.appendChild(overlay);
+
+  var lbImg = overlay.querySelector('img');
+  var lbCap = overlay.querySelector('.lb-caption');
+  var lbClose = overlay.querySelector('.lb-close');
+
+  function openLB(src, alt) {
+    lbImg.src = src;
+    lbImg.alt = alt || '';
+    lbCap.textContent = alt || '';
+    overlay.classList.add('is-open');
+    document.body.classList.add('lb-locked');
+  }
+  function closeLB() {
+    overlay.classList.remove('is-open');
+    document.body.classList.remove('lb-locked');
+    // delay clearing src so the fade-out is clean
+    setTimeout(function () { lbImg.src = ''; }, 250);
+  }
+
+  // Attach click to every image inside .article-body
+  document.querySelectorAll('.article-body img').forEach(function (img) {
+    img.addEventListener('click', function () {
+      openLB(img.currentSrc || img.src, img.alt);
+    });
+  });
+
+  // Close handlers
+  lbClose.addEventListener('click', function (e) {
+    e.stopPropagation();
+    closeLB();
+  });
+  overlay.addEventListener('click', function (e) {
+    if (e.target === overlay || e.target === lbImg) closeLB();
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && overlay.classList.contains('is-open')) closeLB();
+  });
+})();
+</script><script src="https://cdn.prod.website-files.com/64e8910adc5a63966a68acc1%2F689e5ba67671442434f3ca35%2F6a82d2c710184daee99a590c%2Fforatracking-1.0.0.js" type="text/javascript"></script><script src="https://cdn.prod.website-files.com/64e8910adc5a63966a68acc1%2F689e5ba67671442434f3ca35%2F6a8d5baeb6f5e1c6bbed4d78%2Fcanonicalslashfix-1.0.0.js" type="text/javascript"></script><script src="https://cdn.prod.website-files.com/64e8910adc5a63966a68acc1%2F689e5ba67671442434f3ca35%2F6a9abfc50d49f28e15703c39%2Fbookerprefill-1.0.3.js" type="text/javascript"></script></body></html>

@@ -1,0 +1,2345 @@
+
+
+<!doctype html>
+
+<html lang="en">
+
+  <head>
+    
+    
+    <link href="https://files.realpython.com" rel="preconnect">
+
+    <title>A Python Guide to the Fibonacci Sequence – Real Python</title>
+    <meta name="author" content="Real Python">
+    <meta name="description" content="In this step-by-step tutorial, you&#x27;ll explore the Fibonacci sequence in Python, which serves as an invaluable springboard into the world of recursion, and learn how to optimize recursive algorithms in the process.">
+    <meta name="keywords" content="">
+
+    
+  
+
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, viewport-fit=cover">
+    
+    <meta name="theme-color" content="#18354c">
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <meta name="color-scheme" content="light dark">
+    <script>
+      (function () {
+        var query = window.matchMedia("(prefers-color-scheme: dark)");
+        function apply() {
+          document.documentElement.setAttribute("data-bs-theme", query.matches ? "dark" : "light");
+        }
+        query.addEventListener("change", apply);
+        apply();
+      })();
+    </script>
+    
+
+    
+      <link rel="stylesheet" href="/static/realpython.min.4229cd90c897.css">
+      
+      <link rel="stylesheet" href="/static/gfonts/font.5ac42994de49.css">
+      <link rel="preload" href="/static/glightbox.min.9b438b29cef1.css" as="style" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="/static/glightbox.min.9b438b29cef1.css"></noscript>
+      
+    
+
+    
+  
+  <link rel="preload" as="image" href="https://files.realpython.com/media/Fibonacci-Sequence-in-Python_Watermarked.79104bd455b7.jpg" imagesrcset="/cdn-cgi/image/width=480,format=auto/https://files.realpython.com/media/Fibonacci-Sequence-in-Python_Watermarked.79104bd455b7.jpg 480w, /cdn-cgi/image/width=640,format=auto/https://files.realpython.com/media/Fibonacci-Sequence-in-Python_Watermarked.79104bd455b7.jpg 640w, /cdn-cgi/image/width=960,format=auto/https://files.realpython.com/media/Fibonacci-Sequence-in-Python_Watermarked.79104bd455b7.jpg 960w, /cdn-cgi/image/width=1920,format=auto/https://files.realpython.com/media/Fibonacci-Sequence-in-Python_Watermarked.79104bd455b7.jpg 1920w" imagesizes="(min-width: 1200px) 690px, (min-width: 780px) calc(-5vw + 669px), (min-width: 580px) 510px, calc(100vw - 30px)">
+
+
+    
+    
+      <link rel="canonical" href="https://realpython.com/fibonacci-sequence-python/">
+
+      
+      
+        <meta name="twitter:card" content="summary_large_image">
+        <meta name="twitter:image" content="https://files.realpython.com/media/Fibonacci-Sequence-in-Python_Watermarked.79104bd455b7.jpg">
+        <meta property="og:image" content="https://files.realpython.com/media/Fibonacci-Sequence-in-Python_Watermarked.79104bd455b7.jpg">
+        <meta name="robots" content="max-image-preview:large">
+      
+      <meta name="twitter:creator" content="@realpython">
+      <meta name="twitter:site" content="@realpython">
+      <meta property="og:title" content="A Python Guide to the Fibonacci Sequence – Real Python">
+      <meta property="og:type" content="article">
+      <meta property="og:site_name" content="Real Python">
+      <meta property="og:url" content="https://realpython.com/fibonacci-sequence-python/">
+      <meta property="og:description" content="In this step-by-step tutorial, you&#x27;ll explore the Fibonacci sequence in Python, which serves as an invaluable springboard into the world of recursion, and learn how to optimize recursive algorithms in the process.">
+    
+
+    <link href="/static/favicon.68cbf4197b0c.png" rel="icon">
+    <link href="/static/apple-touch-icon.871bf7196125.png" rel="apple-touch-icon">
+    <meta name="apple-mobile-web-app-title" content="Real Python">
+    <link href="https://realpython.com/atom.xml" rel="alternate" title="Real Python" type="application/atom+xml">
+    <link rel="manifest" href="/manifest.json">
+
+    
+
+    
+    
+
+    
+    <script id="icons-data" type="application/json">{"iconsUrl": "/static/icons.8f1dcd28e216.svg", "maiaMarkUrl": "/static/mentor/maia.f5d7e1f0f56c.svg"}</script>
+    <script id="optins-data" type="application/json">{"turnstileSiteKey": "0x4AAAAAAAQQUCLRXBi8NnUh"}</script>
+
+    
+    
+
+
+
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-L7L6L5F6Y6"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-L7L6L5F6Y6', { 'content_group': 'article', 'has_widgets': 'false', });
+
+  gtag('get', 'G-L7L6L5F6Y6', 'client_id', (clid) => {
+    document.cookie = 'gaclid=' + clid + ';max-age=86400000;path=/;secure';
+  });
+  
+</script>
+
+
+  </head>
+  <body data-authenticated="false">
+    
+      
+        
+
+
+
+  
+
+
+<nav class="navbar fixed-top navbar-expand-lg navbar-dark flex-column  user-select-none">
+  <div class="container flex-row">
+
+    <a class="navbar-brand" href="/">
+      <img src="/static/real-python-logo.893c30edea53.svg" width="165" height="40" class="d-inline-block align-top" alt="Real Python">
+    </a>
+
+    
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse navbar-nav-scroll" id="navbarSupportedContent" role="navigation" aria-label="Main Navigation">
+
+      <ul class="navbar-nav me-2">
+
+        <li class="nav-item">
+          <a class="nav-link rounded" href="/start-here/">Start&nbsp;Here</a>
+        </li>
+
+        <li class="nav-item dropdown">
+          <a class="nav-link rounded dropdown-toggle" href="#" id="navbarDropdownLibrary" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <span class="icon baseline" aria-hidden="true"><svg aria-hidden="true"><use href="/static/icons.8f1dcd28e216.svg#brands--python"/></svg></span> Learn Python
+          </a>
+          <div class="dropdown-menu dropdown-menu-mega" aria-labelledby="navbarDropdownLibrary">
+            <div class="dropdown-mega-row">
+              <div class="dropdown-mega-col">
+                <div class="dropdown-mega-section">
+                  <h6 class="dropdown-mega-header">Start Learning</h6>
+                  
+<a class="dropdown-item d-flex align-items-center " href="/account/learning-plan/" style="line-height: 110%;"><span class="d-inline-flex align-items-center justify-content-center rounded flex-shrink-0 me-2 bg-pastel-yellow text-pastel-yellow" style="width: 2rem; height: 2rem; font-size: 0.9rem;"><span class="icon" aria-hidden="true"><svg aria-hidden="true"><use href="/static/icons.8f1dcd28e216.svg#solid--book-sparkles"/></svg></span></span><span class="flex-grow-1" style="min-width: 0; line-height: 0.985;"><span class="d-flex align-items-center justify-content-between"><span>Your Learning Plan&nbsp;→</span></span><small class="text-white-50">Your personalized Python learning plan</small></span></a>
+
+                  
+<a class="dropdown-item d-flex align-items-center " href="/search?kind=article&kind=course&order=newest" style="line-height: 110%;"><span class="d-inline-flex align-items-center justify-content-center rounded flex-shrink-0 me-2 bg-pastel-yellow text-pastel-yellow" style="width: 2rem; height: 2rem; font-size: 0.9rem;"><span class="icon" aria-hidden="true"><svg aria-hidden="true"><use href="/static/icons.8f1dcd28e216.svg#solid--graduation-cap"/></svg></span></span><span class="flex-grow-1" style="min-width: 0; line-height: 0.985;"><span class="d-flex align-items-center justify-content-between"><span>Python Tutorials&nbsp;→</span></span><small class="text-white-50">In-depth articles and video courses</small></span></a>
+
+                  
+<a class="dropdown-item d-flex align-items-center " href="/learning-paths/" style="line-height: 110%;"><span class="d-inline-flex align-items-center justify-content-center rounded flex-shrink-0 me-2 bg-pastel-yellow text-pastel-yellow" style="width: 2rem; height: 2rem; font-size: 0.9rem;"><span class="icon" aria-hidden="true"><svg aria-hidden="true"><use href="/static/icons.8f1dcd28e216.svg#@learning-path"/></svg></span></span><span class="flex-grow-1" style="min-width: 0; line-height: 0.985;"><span class="d-flex align-items-center justify-content-between"><span>Learning Paths&nbsp;→</span></span><small class="text-white-50">Guided study plans for accelerated learning</small></span></a>
+
+                </div>
+                <div class="dropdown-mega-section">
+                  <h6 class="dropdown-mega-header">Practice</h6>
+                  
+<a class="dropdown-item d-flex align-items-center " href="/search?kind=exercise&kind=quiz" style="line-height: 110%;"><span class="d-inline-flex align-items-center justify-content-center rounded flex-shrink-0 me-2 bg-pastel-blue text-pastel-blue" style="width: 2rem; height: 2rem; font-size: 0.9rem;"><span class="icon" aria-hidden="true"><svg aria-hidden="true"><use href="/static/icons.8f1dcd28e216.svg#@quiz"/></svg></span></span><span class="flex-grow-1" style="min-width: 0; line-height: 0.985;"><span class="d-flex align-items-center justify-content-between"><span>Quizzes & Exercises&nbsp;→</span></span><small class="text-white-50">Check your learning progress</small></span></a>
+
+                  
+<a class="dropdown-item d-flex align-items-center " href="/tutorials/all/" style="line-height: 110%;"><span class="d-inline-flex align-items-center justify-content-center rounded flex-shrink-0 me-2 bg-pastel-blue text-pastel-blue" style="width: 2rem; height: 2rem; font-size: 0.9rem;"><span class="icon" aria-hidden="true"><svg aria-hidden="true"><use href="/static/icons.8f1dcd28e216.svg#@category"/></svg></span></span><span class="flex-grow-1" style="min-width: 0; line-height: 0.985;"><span class="d-flex align-items-center justify-content-between"><span>Browse Topics&nbsp;→</span></span><small class="text-white-50">Focus on a specific area or skill level</small></span></a>
+
+                  
+<a class="dropdown-item d-flex align-items-center " href="/ref/" style="line-height: 110%;"><span class="d-inline-flex align-items-center justify-content-center rounded flex-shrink-0 me-2 bg-pastel-blue text-pastel-blue" style="width: 2rem; height: 2rem; font-size: 0.9rem;"><span class="icon" aria-hidden="true"><svg aria-hidden="true"><use href="/static/icons.8f1dcd28e216.svg#@reference"/></svg></span></span><span class="flex-grow-1" style="min-width: 0; line-height: 0.985;"><span class="d-flex align-items-center justify-content-between"><span>Reference&nbsp;→</span></span><small class="text-white-50">Concise definitions for common Python terms</small></span></a>
+
+                </div>
+              </div>
+              <div class="dropdown-mega-col">
+                <div class="dropdown-mega-section">
+                  <h6 class="dropdown-mega-header">Get Help</h6>
+                  
+<a class="dropdown-item d-flex align-items-center " href="/mentor/" style="line-height: 110%;"><span class="d-inline-flex align-items-center justify-content-center rounded flex-shrink-0 me-2 bg-pastel-red text-pastel-red" style="width: 2rem; height: 2rem; font-size: 0.9rem;"><span class="icon" aria-hidden="true"><svg aria-hidden="true"><use href="/static/icons.8f1dcd28e216.svg#@code-mentor"/></svg></span></span><span class="flex-grow-1" style="min-width: 0; line-height: 0.985;"><span class="d-flex align-items-center justify-content-between"><span>Code Mentor&nbsp;→</span><span class="badge rounded-pill text-bg-indigo ms-2">Beta</span></span><small class="text-white-50">Personalized code assistance &amp; learning tools</small></span></a>
+
+                  
+<a class="dropdown-item d-flex align-items-center " href="/office-hours/" style="line-height: 110%;"><span class="d-inline-flex align-items-center justify-content-center rounded flex-shrink-0 me-2 bg-pastel-red text-pastel-red" style="width: 2rem; height: 2rem; font-size: 0.9rem;"><span class="icon" aria-hidden="true"><svg aria-hidden="true"><use href="/static/icons.8f1dcd28e216.svg#solid--users"/></svg></span></span><span class="flex-grow-1" style="min-width: 0; line-height: 0.985;"><span class="d-flex align-items-center justify-content-between"><span>Office Hours&nbsp;→</span></span><small class="text-white-50">Live Q&A calls with Python experts</small></span></a>
+
+                  
+<a class="dropdown-item d-flex align-items-center " href="/community/" style="line-height: 110%;"><span class="d-inline-flex align-items-center justify-content-center rounded flex-shrink-0 me-2 bg-pastel-red text-pastel-red" style="width: 2rem; height: 2rem; font-size: 0.9rem;"><span class="icon" aria-hidden="true"><svg aria-hidden="true"><use href="/static/icons.8f1dcd28e216.svg#solid--message-smile"/></svg></span></span><span class="flex-grow-1" style="min-width: 0; line-height: 0.985;"><span class="d-flex align-items-center justify-content-between"><span>Community Chat&nbsp;→</span></span><small class="text-white-50">Learn with other Pythonistas</small></span></a>
+
+                </div>
+                <div class="dropdown-mega-section">
+                  <h6 class="dropdown-mega-header">Go Deeper</h6>
+                  
+<a class="dropdown-item d-flex align-items-center " href="/live/" style="line-height: 110%;"><span class="d-inline-flex align-items-center justify-content-center rounded flex-shrink-0 me-2 bg-pastel-violet text-pastel-violet" style="width: 2rem; height: 2rem; font-size: 0.9rem;"><span class="icon" aria-hidden="true"><svg aria-hidden="true"><use href="/static/icons.8f1dcd28e216.svg#solid--rocket-launch"/></svg></span></span><span class="flex-grow-1" style="min-width: 0; line-height: 0.985;"><span class="d-flex align-items-center justify-content-between"><span>Live Courses&nbsp;→</span></span><small class="text-white-50">Live, instructor-led Python courses</small></span></a>
+
+                  
+<a class="dropdown-item d-flex align-items-center " href="/products/books/" style="line-height: 110%;"><span class="d-inline-flex align-items-center justify-content-center rounded flex-shrink-0 me-2 bg-pastel-violet text-pastel-violet" style="width: 2rem; height: 2rem; font-size: 0.9rem;"><span class="icon" aria-hidden="true"><svg aria-hidden="true"><use href="/static/icons.8f1dcd28e216.svg#solid--book-heart"/></svg></span></span><span class="flex-grow-1" style="min-width: 0; line-height: 0.985;"><span class="d-flex align-items-center justify-content-between"><span>Books&nbsp;→</span></span><small class="text-white-50">Round out your knowledge and learn offline</small></span></a>
+
+                  
+<a class="dropdown-item d-flex align-items-center " href="/podcasts/rpp/" style="line-height: 110%;"><span class="d-inline-flex align-items-center justify-content-center rounded flex-shrink-0 me-2 bg-pastel-violet text-pastel-violet" style="width: 2rem; height: 2rem; font-size: 0.9rem;"><span class="icon" aria-hidden="true"><svg aria-hidden="true"><use href="/static/icons.8f1dcd28e216.svg#@podcast"/></svg></span></span><span class="flex-grow-1" style="min-width: 0; line-height: 0.985;"><span class="d-flex align-items-center justify-content-between"><span>Podcast&nbsp;→</span></span><small class="text-white-50">Hear what’s new in the world of Python</small></span></a>
+
+                </div>
+              </div>
+            </div>
+            
+              
+              <div class="d-none d-md-block">
+                
+<a class="dropdown-item d-flex align-items-center dropdown-item-cta " href="/account/join/?from=navbar_learn" style="line-height: 110%;"><span class="d-inline-flex align-items-center justify-content-center rounded flex-shrink-0 me-2 bg-pastel-yellow text-pastel-yellow" style="width: 2rem; height: 2rem; font-size: 0.9rem;"><span class="icon" aria-hidden="true"><svg aria-hidden="true"><use href="/static/icons.8f1dcd28e216.svg#solid--star"/></svg></span></span><span class="flex-grow-1" style="min-width: 0; line-height: 0.985;"><span class="d-flex align-items-center justify-content-between"><span>Unlock All Content and Become a Python Expert&nbsp;→</span></span><small class="text-white-50">Get unlimited access to all Real Python has to offer</small></span></a>
+
+              </div>
+              <div class="d-md-none">
+                
+<a class="dropdown-item d-flex align-items-center dropdown-item-cta " href="/account/join/?from=navbar_learn" style="line-height: 110%;"><span class="d-inline-flex align-items-center justify-content-center rounded flex-shrink-0 me-2 bg-pastel-yellow text-pastel-yellow" style="width: 2rem; height: 2rem; font-size: 0.9rem;"><span class="icon" aria-hidden="true"><svg aria-hidden="true"><use href="/static/icons.8f1dcd28e216.svg#solid--star"/></svg></span></span><span class="flex-grow-1" style="min-width: 0; line-height: 0.985;"><span class="d-flex align-items-center justify-content-between"><span>Unlock All Content&nbsp;→</span></span><small class="text-white-50">Become a Python Expert</small></span></a>
+
+              </div>
+            
+          </div>
+        </li>
+
+        <li class="nav-item dropdown">
+          <a class="nav-link rounded dropdown-toggle" href="#" id="navbarDropdownMore" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            More
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdownMore">
+            <a class="dropdown-item" href="/learner-stories/">Learner Stories</a>
+            <a class="dropdown-item" href="/newsletter/">Python Newsletter</a>
+            <a class="dropdown-item" href="https://www.pythonjobshq.com" target="_blank">Python Job Board</a>
+            <a class="dropdown-item" href="/team/">Meet the Team</a>
+            <a class="dropdown-item" href="/jobs/">Become a Contributor</a>
+          </div>
+        </li>
+
+      </ul> 
+
+      
+      <div class="d-block d-lg-none"> 
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link rounded" href="/search" title="Search"><span class="icon baseline" aria-hidden="true"><svg aria-hidden="true"><use href="/static/icons.8f1dcd28e216.svg#v4--search"/></svg></span> Search</a>
+          </li>
+        </ul>
+      </div>
+      
+      <div class="d-none d-lg-flex align-items-center me-2 flex-fill">
+        <form class="d-flex flex-wrap align-items-center w-100 position-relative" action="/search" method="get">
+          <a class="js-search-form-submit position-absolute" href="/search" title="Search" aria-hidden="true" tabindex="-1"><span class="icon baseline text-muted ps-2" aria-hidden="true"><svg aria-hidden="true"><use href="/static/icons.8f1dcd28e216.svg#v4--search"/></svg></span></a>
+          <input class="search-autocomplete search-field form-control form-control-md me-sm-1 me-lg-2 w-100" style="padding-left: 2rem;" maxlength=50 type="search" placeholder="Search" aria-label="Search" aria-keyshortcuts="/ Control+J Meta+J" name="q" autocomplete="off">
+          <span class="search-hotkey-indicator position-absolute px-2 border border-input text-input rounded small user-select-none" style="right: 1em;" title="Press / (forward slash) or Ctrl+J to open search" aria-hidden="true">/</span>
+          <input type="hidden" name="_from" value="nav">
+        </form>
+      </div>
+      
+
+      <ul class="navbar-nav ms-auto">
+        
+          <li class="nav-item d-flex flex-wrap align-items-center me-2 my-2 ms-3 ms-lg-0">
+            <a class="btn btn-primary px-5 px-lg-3" href="/account/join/">Join</a>
+          </li>
+        
+
+        
+          <li class="nav-item">
+            <a class="nav-link rounded mx-0 px-lg-2" href="/account/login/?intent=navbar&amp;next=%2Ffibonacci-sequence-python%2F">Sign&#8209;In</a>
+          </li>
+        
+      </ul>
+
+    
+    </div>
+
+  </div>
+
+  
+
+</nav>
+
+      
+    
+
+     
+
+    <main class="container main-content">
+      
+      
+      
+      
+
+      
+  <div class="row justify-content-center">
+
+    
+    <aside class="col-md-7 col-lg-4 order-2 d-none d-lg-block">
+      
+  
+
+
+
+
+
+
+  <div class="card mb-3 bg-secondary">
+  <form class="card-body" action="/optins/process/" method="post">
+    <div class="mb-3">
+      <p class="h5 text-muted text-center">— FREE Email Series —</p>
+      <p class="h3 text-center">🐍 Python Tricks 💌</p>
+      
+      <img loading="lazy" class="img-fluid rounded" src="https://files.realpython.com/media/pytrick-dict-merge.4201a0125a5e.png" width="738" height="490" srcset="/cdn-cgi/image/width=184,format=auto/https://files.realpython.com/media/pytrick-dict-merge.4201a0125a5e.png 184w, /cdn-cgi/image/width=246,format=auto/https://files.realpython.com/media/pytrick-dict-merge.4201a0125a5e.png 246w, /cdn-cgi/image/width=369,format=auto/https://files.realpython.com/media/pytrick-dict-merge.4201a0125a5e.png 369w, /cdn-cgi/image/width=738,format=auto/https://files.realpython.com/media/pytrick-dict-merge.4201a0125a5e.png 738w" sizes="(max-width: 576px) 100vw, 400px" alt="Dictionary merging in Python 3.5+">
+
+    </div>
+    <div class="mb-3">
+      <input type="hidden" name="csrfmiddlewaretoken" value="jWhx2gDyjRS8wshxaiAb0hcsBvFS6dFTxsq3QoXymhbKaRMrO9ul4qW39AYOBVPI">
+      <input type="hidden" name="slug" value="static-python-tricks-sidebar">
+<input type="hidden" name="version" value="555">
+<input type="hidden" name="source_path" value="/fibonacci-sequence-python/">
+
+      <input type="email" class="form-control form-control-md" name="email" placeholder="Email&hellip;" required>
+    </div>
+    <button type="submit" name="submit" class="btn btn-primary btn-md w-100">Get Python Tricks »</button>
+    <p class="mb-0 mt-2 text-muted text-center">🔒 No spam. Unsubscribe any time.</p>
+  </form>
+</div>
+
+
+
+
+  
+
+
+<div class="sidebar-module sidebar-module-inset border">
+  
+  
+    <a href="/tutorials/all/" class="badge bg-body-tertiary text-muted"><span class="icon baseline me-1" aria-hidden="true"><svg aria-hidden="true"><use href="/static/icons.8f1dcd28e216.svg#@category"/></svg></span>Browse Topics</a>
+
+  <a href="/learning-paths/" class="badge bg-body-tertiary text-muted"><span class="icon baseline me-1" aria-hidden="true"><svg aria-hidden="true"><use href="/static/icons.8f1dcd28e216.svg#solid--map-location-dot"/></svg></span>Guided Learning Paths</a>
+
+  <br>
+
+  <a href="/search?level=basics" class="badge bg-body-tertiary text-muted"><span class="icon baseline" aria-hidden="true"><svg aria-hidden="true"><use href="/static/icons.8f1dcd28e216.svg#@level"/></svg></span> Basics</a>
+
+  <a href="/search?level=intermediate" class="badge bg-body-tertiary text-muted"><span class="icon baseline" aria-hidden="true"><svg aria-hidden="true"><use href="/static/icons.8f1dcd28e216.svg#@level"/></svg></span><span class="icon baseline tight-left" aria-hidden="true"><svg aria-hidden="true"><use href="/static/icons.8f1dcd28e216.svg#@level"/></svg></span> Intermediate</a>
+
+  <a href="/search?level=advanced" class="badge bg-body-tertiary text-muted"><span class="icon baseline" aria-hidden="true"><svg aria-hidden="true"><use href="/static/icons.8f1dcd28e216.svg#@level"/></svg></span><span class="icon baseline tight-left" aria-hidden="true"><svg aria-hidden="true"><use href="/static/icons.8f1dcd28e216.svg#@level"/></svg></span><span class="icon baseline tight-left" aria-hidden="true"><svg aria-hidden="true"><use href="/static/icons.8f1dcd28e216.svg#@level"/></svg></span> Advanced</a>
+
+  <hr class="my-2">
+
+  
+    
+  
+    
+  
+    
+  
+    
+      
+<a href="/tutorials/ai/" class="badge bg-body-tertiary text-muted" data-previewable>ai</a>
+
+    
+  
+    
+      
+<a href="/tutorials/algorithms/" class="badge bg-body-tertiary text-muted" data-previewable>algorithms</a>
+
+    
+  
+    
+      
+<a href="/tutorials/api/" class="badge bg-body-tertiary text-muted" data-previewable>api</a>
+
+    
+  
+    
+      
+<a href="/tutorials/best-practices/" class="badge bg-body-tertiary text-muted" data-previewable>best-practices</a>
+
+    
+  
+    
+      
+<a href="/tutorials/career/" class="badge bg-body-tertiary text-muted" data-previewable>career</a>
+
+    
+  
+    
+      
+<a href="/tutorials/community/" class="badge bg-body-tertiary text-muted" data-previewable>community</a>
+
+    
+  
+    
+      
+<a href="/tutorials/databases/" class="badge bg-body-tertiary text-muted" data-previewable>databases</a>
+
+    
+  
+    
+      
+<a href="/tutorials/data-science/" class="badge bg-body-tertiary text-muted" data-previewable>data-science</a>
+
+    
+  
+    
+      
+<a href="/tutorials/data-structures/" class="badge bg-body-tertiary text-muted" data-previewable>data-structures</a>
+
+    
+  
+    
+      
+<a href="/tutorials/data-viz/" class="badge bg-body-tertiary text-muted" data-previewable>data-viz</a>
+
+    
+  
+    
+      
+<a href="/tutorials/devops/" class="badge bg-body-tertiary text-muted" data-previewable>devops</a>
+
+    
+  
+    
+      
+<a href="/tutorials/django/" class="badge bg-body-tertiary text-muted" data-previewable>django</a>
+
+    
+  
+    
+      
+<a href="/tutorials/docker/" class="badge bg-body-tertiary text-muted" data-previewable>docker</a>
+
+    
+  
+    
+      
+<a href="/tutorials/editors/" class="badge bg-body-tertiary text-muted" data-previewable>editors</a>
+
+    
+  
+    
+      
+<a href="/tutorials/flask/" class="badge bg-body-tertiary text-muted" data-previewable>flask</a>
+
+    
+  
+    
+      
+<a href="/tutorials/front-end/" class="badge bg-body-tertiary text-muted" data-previewable>front-end</a>
+
+    
+  
+    
+      
+<a href="/tutorials/gamedev/" class="badge bg-body-tertiary text-muted" data-previewable>gamedev</a>
+
+    
+  
+    
+      
+<a href="/tutorials/gui/" class="badge bg-body-tertiary text-muted" data-previewable>gui</a>
+
+    
+  
+    
+      
+<a href="/tutorials/machine-learning/" class="badge bg-body-tertiary text-muted" data-previewable>machine-learning</a>
+
+    
+  
+    
+      
+<a href="/tutorials/news/" class="badge bg-body-tertiary text-muted" data-previewable>news</a>
+
+    
+  
+    
+      
+<a href="/tutorials/numpy/" class="badge bg-body-tertiary text-muted" data-previewable>numpy</a>
+
+    
+  
+    
+      
+<a href="/tutorials/projects/" class="badge bg-body-tertiary text-muted" data-previewable>projects</a>
+
+    
+  
+    
+      
+<a href="/tutorials/python/" class="badge bg-body-tertiary text-muted" data-previewable>python</a>
+
+    
+  
+    
+      
+<a href="/tutorials/stdlib/" class="badge bg-body-tertiary text-muted" data-previewable>stdlib</a>
+
+    
+  
+    
+      
+<a href="/tutorials/testing/" class="badge bg-body-tertiary text-muted" data-previewable>testing</a>
+
+    
+  
+    
+      
+<a href="/tutorials/tools/" class="badge bg-body-tertiary text-muted" data-previewable>tools</a>
+
+    
+  
+    
+      
+<a href="/tutorials/web-dev/" class="badge bg-body-tertiary text-muted" data-previewable>web-dev</a>
+
+    
+  
+    
+      
+<a href="/tutorials/web-scraping/" class="badge bg-body-tertiary text-muted" data-previewable>web-scraping</a>
+  
+</div>
+
+
+
+  
+<div class="sidebar-module sidebar-module-inset p-0" style="overflow:hidden;">
+  
+<div style="display:block;position:relative;">
+  <div style="display:block;width:100%;padding-top:100%;"></div>
+  <div class="rpad" data-unit="1x1" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;"></div>
+</div>
+
+
+</div>
+
+
+
+  <div class="sidebar-sticky pb-3">
+    
+      
+
+
+<table-of-contents>
+  <div class="bg-body-tertiary sidebar-module sidebar-module-inset text-wrap-pretty">
+    <p class="h4 text-muted"><a class="link-unstyled" href="#toc">Table of Contents</a></p>
+    <div class="toc">
+<ul>
+<li><a href="#getting-started-with-the-fibonacci-sequence">Getting Started With the Fibonacci Sequence</a></li>
+<li><a href="#examining-the-recursion-behind-the-fibonacci-sequence">Examining the Recursion Behind the Fibonacci Sequence</a></li>
+<li><a href="#generating-the-fibonacci-sequence-recursively-in-python">Generating the Fibonacci Sequence Recursively in Python</a></li>
+<li><a href="#optimizing-the-recursive-algorithm-for-the-fibonacci-sequence">Optimizing the Recursive Algorithm for the Fibonacci Sequence</a><ul>
+<li><a href="#memoizing-the-recursive-algorithm">Memoizing the Recursive Algorithm</a></li>
+<li><a href="#exploring-an-iterative-algorithm">Exploring an Iterative Algorithm</a></li>
+</ul>
+</li>
+<li><a href="#generating-the-fibonacci-sequence-in-python">Generating the Fibonacci Sequence in Python</a><ul>
+<li><a href="#using-recursion-and-a-python-class">Using Recursion and a Python Class</a></li>
+<li><a href="#visualizing-the-memoized-fibonacci-sequence-algorithm">Visualizing the Memoized Fibonacci Sequence Algorithm</a></li>
+<li><a href="#using-iteration-and-a-python-function">Using Iteration and a Python Function</a></li>
+</ul>
+</li>
+<li><a href="#conclusion">Conclusion</a></li>
+</ul>
+</div>
+
+  </div>
+</table-of-contents>
+
+    
+
+    
+
+    <div class="sidebar-module sidebar-module-inset d-flex justify-content-center flex-wrap row-gap-1 col-gap-2 my-3 py-0">
+      
+
+
+<completion-status
+  class="btn-group mb-0"
+  article-slug="fibonacci-sequence-python"
+  
+  
+  
+  data-api-article-bookmark-url="/api/v1/articles/fibonacci-sequence-python/bookmark/"
+  data-api-article-completion-status-url="/api/v1/articles/fibonacci-sequence-python/completion_status/">
+  <button
+    data-target-complete-button
+    title="Click to mark as completed"
+    class="btn btn-secondary border-end"
+    style="border-top-right-radius: 0; border-bottom-right-radius: 0;"
+    disabled>Mark as Completed</button>
+  <button
+    data-target-bookmark-button
+    title="Add bookmark"
+    class="btn btn-secondary border-start"
+    disabled><span class="icon baseline" aria-hidden="true"><svg aria-hidden="true"><use href="/static/icons.8f1dcd28e216.svg#light--bookmark"/></svg></span></button>
+</completion-status>
+
+      <div class="w-100"></div> 
+      
+
+
+
+
+
+<feedback-buttons data-headline="Rate this article" style="display: contents">
+  <div class="btn-group mb-0">
+    <a class="btn btn-secondary border-end" style="border-top-right-radius: 0; border-bottom-right-radius: 0;" title="Liked it" role="button" aria-label="Liked it (thumbs up)" href="/feedback/survey/article/fibonacci-sequence-python/liked/?from=article-sidebar" target="_blank"><span class="icon" aria-hidden="true"><svg aria-hidden="true"><use href="/static/icons.8f1dcd28e216.svg#light--thumbs-up"/></svg></span></a> 
+    <a class="btn btn-secondary border-start" role="button" aria-label="Disliked it (thumbs down)" title="Disliked it" href="/feedback/survey/article/fibonacci-sequence-python/disliked/?from=article-sidebar" target="_blank"><span class="icon baseline" aria-hidden="true"><svg aria-hidden="true"><use href="/static/icons.8f1dcd28e216.svg#light--thumbs-down"/></svg></span></a>
+  </div>
+</feedback-buttons>
+
+      
+        
+
+
+
+
+
+
+
+
+
+<share-button
+  url="https://realpython.com/fibonacci-sequence-python/"
+  url-title="A Python Guide to the Fibonacci Sequence"
+  twitter-text="Interesting #Python article by @realpython:"
+  bluesky-text="Interesting #Python article by @realpython.com:"
+  email-subject="Python article for you"
+  email-body="Check out this Python article:%0A%0AA Python Guide to the Fibonacci Sequence"
+>
+  <button class="btn btn-secondary" type="button" title="Share" aria-label="Share"><span class="icon baseline me-1" aria-hidden="true"><svg aria-hidden="true"><use href="/static/icons.8f1dcd28e216.svg#@share-light"/></svg></span>Share</button>
+</share-button>
+
+
+      
+    </div>
+
+    
+      
+
+
+<div id="sidebar-courses" class="sidebar-module sidebar-module-inset border card p-0">
+  
+  
+  
+  <div class="p-2">
+    <p class="mb-0">
+      <span class="badge rounded-pill text-bg-success"><span class="icon baseline" aria-hidden="true"><svg aria-hidden="true"><use href="/static/icons.8f1dcd28e216.svg#v4--play-circle"/></svg></span> Recommended Course</span>
+    </p>
+  </div>
+
+  
+  
+  <a href="/courses/python-fibonacci-sequence/" class="d-block text-decoration-none" data-not-previewable>
+    <div class="position-relative">
+      
+      <img class="w-100 sidebar-courses__thumbnail" style="background: #ffc873;"
+           alt="A Python Guide to the Fibonacci Sequence"
+           src="https://files.realpython.com/media/Fibonacci-Sequence-in-Python_Watermarked.79104bd455b7.jpg"
+           width="1920"
+           height="1080"
+           srcset="/cdn-cgi/image/width=480,format=auto/https://files.realpython.com/media/Fibonacci-Sequence-in-Python_Watermarked.79104bd455b7.jpg 480w, /cdn-cgi/image/width=640,format=auto/https://files.realpython.com/media/Fibonacci-Sequence-in-Python_Watermarked.79104bd455b7.jpg 640w, /cdn-cgi/image/width=960,format=auto/https://files.realpython.com/media/Fibonacci-Sequence-in-Python_Watermarked.79104bd455b7.jpg 960w, /cdn-cgi/image/width=1920,format=auto/https://files.realpython.com/media/Fibonacci-Sequence-in-Python_Watermarked.79104bd455b7.jpg 1920w"
+           sizes="280px">
+      
+      <div class="position-absolute sidebar-courses__play-icon">
+        <span class="icon baseline scale2x" aria-hidden="true"><svg aria-hidden="true"><use href="/static/icons.8f1dcd28e216.svg#@play"/></svg></span>
+      </div>
+    </div>
+    
+    <div class="p-2">
+      <p class="text-success mb-0 fw-medium sidebar-courses__title">
+        Exploring the Fibonacci Sequence With Python
+      </p>
+      <p class="text-muted small mb-0">
+        23m · 11 lessons
+      </p>
+    </div>
+  </a>
+  
+
+  
+  
+</div>
+
+    
+
+    
+      <div class="sidebar-module sidebar-module-inset p-0" style="overflow:hidden;">
+        
+<div style="display:block;position:relative;">
+  <div style="display:block;width:100%;padding-top:25%;"></div>
+  <div class="rpad" data-unit="4x1" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;"></div>
+</div>
+
+
+      </div>
+    
+
+    
+  </div>
+
+
+    </aside>
+
+    <div class="col-md-11 col-lg-8 article with-headerlinks">
+      
+
+  
+    <figure class="ratio ratio-16x9 rounded overflow-hidden">
+      
+        <img fetchpriority="high" class="m-0 p-0" style="object-fit: contain; background: #ffc873;" alt="A Python Guide to the Fibonacci Sequence" width="1920" height="1080" src="https://files.realpython.com/media/Fibonacci-Sequence-in-Python_Watermarked.79104bd455b7.jpg" srcset="/cdn-cgi/image/width=480,format=auto/https://files.realpython.com/media/Fibonacci-Sequence-in-Python_Watermarked.79104bd455b7.jpg 480w, /cdn-cgi/image/width=640,format=auto/https://files.realpython.com/media/Fibonacci-Sequence-in-Python_Watermarked.79104bd455b7.jpg 640w, /cdn-cgi/image/width=960,format=auto/https://files.realpython.com/media/Fibonacci-Sequence-in-Python_Watermarked.79104bd455b7.jpg 960w, /cdn-cgi/image/width=1920,format=auto/https://files.realpython.com/media/Fibonacci-Sequence-in-Python_Watermarked.79104bd455b7.jpg 1920w" sizes="(min-width: 1200px) 690px, (min-width: 780px) calc(-5vw + 669px), (min-width: 580px) 510px, calc(100vw - 30px)">
+      
+    </figure>
+  
+
+  <h1>A Python Guide to the Fibonacci Sequence</h1>
+  <div class="mb-0 text-muted">
+    
+      <span>by <a class="text-muted" href="#author">Mandy Wong</a></span>
+    
+    
+      <span class="icon baseline ms-2"><svg role="img"><use href="/static/icons.8f1dcd28e216.svg#@date"/></svg><span class="visually-hidden">Updated</span></span> <time datetime="2021-09-08">Sep 08, 2021</time>
+    
+    
+      <span class="icon baseline ms-2"><svg role="img"><use href="/static/icons.8f1dcd28e216.svg#regular--book-open"/></svg><span class="visually-hidden">Reading time estimate</span></span> 19m
+    
+    
+      <span class="icon baseline ms-2 me-1" aria-hidden="true"><svg aria-hidden="true"><use href="/static/icons.8f1dcd28e216.svg#solid--comments"/></svg></span><a class="text-muted" href="#reader-comments"><span class="disqus-comment-count" data-disqus-identifier="https://realpython.com/fibonacci-sequence-python/"></span></a>
+    
+    
+
+    <span class="d-inline d-md-block"> 
+      <span class="icon baseline ms-2 ms-md-0" aria-hidden="true"><svg aria-hidden="true"><use href="/static/icons.8f1dcd28e216.svg#@category"/></svg></span>
+      
+        
+<a href="/tutorials/intermediate/" class="badge bg-body-tertiary text-muted" data-previewable>intermediate</a>
+
+      
+        
+<a href="/tutorials/algorithms/" class="badge bg-body-tertiary text-muted" data-previewable>algorithms</a>
+
+      
+    </span>
+
+    <div class="d-flex justify-content-between gap-2 my-3">
+      
+
+
+<completion-status
+  class="btn-group mb-0"
+  article-slug="fibonacci-sequence-python"
+  
+  
+  
+  data-api-article-bookmark-url="/api/v1/articles/fibonacci-sequence-python/bookmark/"
+  data-api-article-completion-status-url="/api/v1/articles/fibonacci-sequence-python/completion_status/">
+  <button
+    data-target-complete-button
+    title="Click to mark as completed"
+    class="btn btn-secondary border-end"
+    style="border-top-right-radius: 0; border-bottom-right-radius: 0;"
+    disabled>Mark as Completed</button>
+  <button
+    data-target-bookmark-button
+    title="Add bookmark"
+    class="btn btn-secondary border-start"
+    disabled><span class="icon baseline" aria-hidden="true"><svg aria-hidden="true"><use href="/static/icons.8f1dcd28e216.svg#light--bookmark"/></svg></span></button>
+</completion-status>
+
+      
+        
+
+
+
+
+
+
+
+
+
+<share-button
+  url="https://realpython.com/fibonacci-sequence-python/"
+  url-title="A Python Guide to the Fibonacci Sequence"
+  twitter-text="Interesting #Python article by @realpython:"
+  bluesky-text="Interesting #Python article by @realpython.com:"
+  email-subject="Python article for you"
+  email-body="Check out this Python article:%0A%0AA Python Guide to the Fibonacci Sequence"
+>
+  <button class="btn btn-secondary" type="button" title="Share" aria-label="Share"><span class="icon baseline me-1" aria-hidden="true"><svg aria-hidden="true"><use href="/static/icons.8f1dcd28e216.svg#@share-light"/></svg></span>Share</button>
+</share-button>
+
+
+      
+    </div>
+  </div>
+
+  
+
+  <div class="article-body" data-mentor-context="article">
+    
+      
+      <div class="bg-body-tertiary sidebar-module sidebar-module-inset" id="toc" data-toc-ask-full>
+        <p class="h3 mb-2 text-muted">Table of Contents</p>
+        <div class="toc">
+<ul>
+<li><a href="#getting-started-with-the-fibonacci-sequence">Getting Started With the Fibonacci Sequence</a></li>
+<li><a href="#examining-the-recursion-behind-the-fibonacci-sequence">Examining the Recursion Behind the Fibonacci Sequence</a></li>
+<li><a href="#generating-the-fibonacci-sequence-recursively-in-python">Generating the Fibonacci Sequence Recursively in Python</a></li>
+<li><a href="#optimizing-the-recursive-algorithm-for-the-fibonacci-sequence">Optimizing the Recursive Algorithm for the Fibonacci Sequence</a><ul>
+<li><a href="#memoizing-the-recursive-algorithm">Memoizing the Recursive Algorithm</a></li>
+<li><a href="#exploring-an-iterative-algorithm">Exploring an Iterative Algorithm</a></li>
+</ul>
+</li>
+<li><a href="#generating-the-fibonacci-sequence-in-python">Generating the Fibonacci Sequence in Python</a><ul>
+<li><a href="#using-recursion-and-a-python-class">Using Recursion and a Python Class</a></li>
+<li><a href="#visualizing-the-memoized-fibonacci-sequence-algorithm">Visualizing the Memoized Fibonacci Sequence Algorithm</a></li>
+<li><a href="#using-iteration-and-a-python-function">Using Iteration and a Python Function</a></li>
+</ul>
+</li>
+<li><a href="#conclusion">Conclusion</a></li>
+</ul>
+</div>
+
+      </div>
+    
+
+    
+    <div class="sidebar-module sidebar-module-inset p-0" style="overflow:hidden;">
+      
+
+<div style="display:block;position:relative;">
+  <div style="display:block;width:100%;padding-top:12.5%;"></div>
+  <div class="rpad rounded border" data-unit="8x1" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;"></div>
+</div>
+<a class="small text-muted" href="/account/join/" rel="nofollow"><span class="icon baseline me-1" aria-hidden="true"><svg aria-hidden="true"><use href="/static/icons.8f1dcd28e216.svg#solid--circle-info"/></svg></span>Remove ads</a>
+
+
+    </div>
+    
+
+    
+      
+
+
+<div class="sidebar-module sidebar-module-inset border card p-2 mb-3">
+  <p class="mb-2">
+    <span class="badge rounded-pill text-bg-success"><span class="icon baseline" aria-hidden="true"><svg aria-hidden="true"><use href="/static/icons.8f1dcd28e216.svg#v4--play-circle"/></svg></span> Recommended Course</span>
+  </p>
+
+  
+  <p class="mb-0">
+    <a href="/courses/python-fibonacci-sequence/" class="text-success fw-medium" data-previewable>Exploring the Fibonacci Sequence With Python</a>
+    <span class="text-muted small">(23m)</span>
+  </p>
+  
+
+  
+</div>
+
+    
+
+    <p>The <strong>Fibonacci sequence</strong> is a pretty famous sequence of integer numbers. The sequence comes up naturally in many problems and has a nice recursive definition. Learning how to generate it is an essential step in the pragmatic programmer&rsquo;s journey toward mastering <a href="https://realpython.com/python-recursion/">recursion</a>. In this tutorial, you&rsquo;ll focus on learning what the Fibonacci sequence is and how to generate it using Python.</p>
+<p><strong>In this tutorial, you&rsquo;ll learn how to:</strong></p>
+<ul>
+<li>Generate the Fibonacci sequence using a <strong>recursive algorithm</strong></li>
+<li>Optimize the recursive Fibonacci algorithm using <strong>memoization</strong></li>
+<li>Generate the Fibonacci sequence using an <strong>iterative algorithm</strong></li>
+</ul>
+<p>To get the most out of this tutorial, you should know the basics of <a href="https://realpython.com/sorting-algorithms-python/#measuring-efficiency-with-big-o-notation">Big O notation</a>, <a href="https://realpython.com/python3-object-oriented-programming/">object-oriented programming</a>, <a href="https://realpython.com/operator-function-overloading/#the-internals-of-operations-like-len-and">Python&rsquo;s special methods</a>, <a href="https://realpython.com/python-conditional-statements/">conditional statements</a>, <a href="https://realpython.com/defining-your-own-python-function/">functions</a>, and <a href="https://realpython.com/python-data-structures/">basic data structures</a> like <a href="https://realpython.com/python-lists-tuples/">lists</a>, <a href="https://realpython.com/python-deque/#building-efficient-queues-with-deque">queues</a>, and <a href="https://realpython.com/how-to-implement-python-stack/">stacks</a>. Having some familiarity with these concepts will greatly help you understand the new ones you&rsquo;ll be exploring in this tutorial.</p>
+<p>Let&rsquo;s dive right in!</p>
+<div class="alert alert-warning" role="alert">
+<p><strong markdown>Free Download:</strong> <a href="https://realpython.com/bonus/python-basics-sample-download/" class="alert-link" data-bs-toggle="modal" data-bs-target="#modal-python-basics-sample-download" markdown>Get a sample chapter from Python Basics: A Practical Introduction to Python 3</a> to see how you can go from beginner to intermediate in Python with a complete curriculum, up-to-date for Python 3.8.</p>
+</div>
+<section class="section2"><h2 id="getting-started-with-the-fibonacci-sequence">Getting Started With the Fibonacci Sequence<a class="headerlink" href="#getting-started-with-the-fibonacci-sequence" title="Permanent link"></a></h2>
+<p><a href="https://www.britannica.com/biography/Fibonacci">Leonardo Fibonacci</a> was an Italian mathematician who was able to quickly produce an answer to this question asked by Emperor Frederick II of Swabia: &ldquo;How many pairs of rabbits are obtained in a year, excluding cases of death, supposing that each couple gives birth to another couple every month and that the youngest couples are able to reproduce already at the second month of life?&rdquo;</p>
+<p>The answer was the following sequence:</p>
+<figure class=""><img loading="lazy" class="img-fluid mx-auto d-block dark-invert w-75" src="https://files.realpython.com/media/9645419cf728c44cf0bd28ab667f69aa.017fa332ab15.png" width="2724" height="109" srcset="/cdn-cgi/image/width=681,format=auto/https://files.realpython.com/media/9645419cf728c44cf0bd28ab667f69aa.017fa332ab15.png 681w, /cdn-cgi/image/width=908,format=auto/https://files.realpython.com/media/9645419cf728c44cf0bd28ab667f69aa.017fa332ab15.png 908w, /cdn-cgi/image/width=1362,format=auto/https://files.realpython.com/media/9645419cf728c44cf0bd28ab667f69aa.017fa332ab15.png 1362w, /cdn-cgi/image/width=2724,format=auto/https://files.realpython.com/media/9645419cf728c44cf0bd28ab667f69aa.017fa332ab15.png 2724w" sizes="(min-width: 1200px) 690px, (min-width: 780px) calc(-5vw + 669px), (min-width: 580px) 510px, calc(100vw - 30px)" alt="Fibonacci recurrence relation starting with 0" data-asset="3766"/></figure>
+
+<p>The pattern begins after the first two numbers, 0 and 1, where each number in the sequence is always the sum of the two numbers before it. Indian mathematicians had known about this sequence since the sixth century, and Fibonacci leveraged it to calculate the growth of rabbit populations.</p>
+<p><em>F</em>(<em>n</em>) is used to indicate the number of pairs of rabbits present in month <em>n</em>, so the sequence can be expressed like this:</p>
+<figure class=""><img loading="lazy" class="img-fluid mx-auto d-block dark-invert w-50" src="https://files.realpython.com/media/mwong-fibonacci-recurrence-relation.09c03cec1b7d.png" width="1146" height="332" srcset="/cdn-cgi/image/width=286,format=auto/https://files.realpython.com/media/mwong-fibonacci-recurrence-relation.09c03cec1b7d.png 286w, /cdn-cgi/image/width=382,format=auto/https://files.realpython.com/media/mwong-fibonacci-recurrence-relation.09c03cec1b7d.png 382w, /cdn-cgi/image/width=573,format=auto/https://files.realpython.com/media/mwong-fibonacci-recurrence-relation.09c03cec1b7d.png 573w, /cdn-cgi/image/width=1146,format=auto/https://files.realpython.com/media/mwong-fibonacci-recurrence-relation.09c03cec1b7d.png 1146w" sizes="(min-width: 1200px) 690px, (min-width: 780px) calc(-5vw + 669px), (min-width: 580px) 510px, calc(100vw - 30px)" alt="The Fibonacci sequence described as a recurrence relation. F(0) and F(1) are defined to be 0, and the nth Fibonacci number is the sum of F(n-1) and F(n-2)" data-asset="3721"/></figure>
+
+<p>In mathematical terminology, you&rsquo;d call this a <a href="https://en.wikipedia.org/wiki/Recurrence_relation">recurrence relation</a>, meaning that each term of the sequence (beyond 0 and 1) is a <a href="https://en.wikipedia.org/wiki/Function_(mathematics)">function</a> of the preceding terms.</p>
+<p>There&rsquo;s also a version of the sequence where the first two numbers are both 1, like so:</p>
+<figure class=""><img loading="lazy" class="img-fluid mx-auto d-block dark-invert w-75" src="https://files.realpython.com/media/403b57adc167e9addd094b3b2d3540bb.ba099fd0fdc9.png" width="2600" height="109" srcset="/cdn-cgi/image/width=650,format=auto/https://files.realpython.com/media/403b57adc167e9addd094b3b2d3540bb.ba099fd0fdc9.png 650w, /cdn-cgi/image/width=866,format=auto/https://files.realpython.com/media/403b57adc167e9addd094b3b2d3540bb.ba099fd0fdc9.png 866w, /cdn-cgi/image/width=1300,format=auto/https://files.realpython.com/media/403b57adc167e9addd094b3b2d3540bb.ba099fd0fdc9.png 1300w, /cdn-cgi/image/width=2600,format=auto/https://files.realpython.com/media/403b57adc167e9addd094b3b2d3540bb.ba099fd0fdc9.png 2600w" sizes="(min-width: 1200px) 690px, (min-width: 780px) calc(-5vw + 669px), (min-width: 580px) 510px, calc(100vw - 30px)" alt="Fibonacci sequence starting with 11" data-asset="3767"/></figure>
+
+<p>In this alternative version, <em>F</em>(0) is still implicitly 0, but you start from <em>F</em>(1) and <em>F</em>(2) instead. The algorithm remains the same because you&rsquo;re always summing the previous two numbers to get the next number in the sequence.</p>
+<p>For the purposes of this tutorial, you&rsquo;ll use the version of the sequence that starts with 0.</p>
+<div><div class="rounded border border-light" style="display:block;position:relative;"> <div style="display:block;width:100%;padding-top:12.5%;"></div> <div class="rpad rounded border" data-unit="8x1" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;"> </div></div><a class="small text-muted" href="/account/join/" rel="nofollow"> <span aria-hidden="true" class="icon baseline me-1"><svg aria-hidden="true"><use href="/static/icons.8f1dcd28e216.svg#solid--circle-info"></use></svg></span>Remove ads</a></div></section><section class="section2"><h2 id="examining-the-recursion-behind-the-fibonacci-sequence">Examining the Recursion Behind the Fibonacci Sequence<a class="headerlink" href="#examining-the-recursion-behind-the-fibonacci-sequence" title="Permanent link"></a></h2>
+<p>Generating the Fibonacci sequence is a classic recursive problem. <strong>Recursion</strong> is when a function refers to itself to break down the problem it&rsquo;s trying to solve. In every function call, the problem becomes smaller until it reaches a <strong>base case</strong>, after which it will then return the result to each intermediate caller until it <a href="https://realpython.com/python-return-statement/">returns</a> the final result back to the original caller.</p>
+<p>If you wanted to calculate the <em>F</em>(5) Fibonacci number, you&rsquo;d need to calculate its predecessors, <em>F</em>(4) and <em>F</em>(3), first. And in order to calculate <em>F</em>(4) and <em>F</em>(3), you would need to calculate their predecessors. The breakdown of <em>F</em>(5) into smaller subproblems would look like this:</p>
+<figure class=""><img loading="lazy" class="img-fluid mx-auto d-block dark-invert w-66" src="https://files.realpython.com/media/mwong-fib5.afb4734df50f.png" width="2069" height="687" srcset="/cdn-cgi/image/width=517,format=auto/https://files.realpython.com/media/mwong-fib5.afb4734df50f.png 517w, /cdn-cgi/image/width=689,format=auto/https://files.realpython.com/media/mwong-fib5.afb4734df50f.png 689w, /cdn-cgi/image/width=1034,format=auto/https://files.realpython.com/media/mwong-fib5.afb4734df50f.png 1034w, /cdn-cgi/image/width=2069,format=auto/https://files.realpython.com/media/mwong-fib5.afb4734df50f.png 2069w" sizes="(min-width: 1200px) 690px, (min-width: 780px) calc(-5vw + 669px), (min-width: 580px) 510px, calc(100vw - 30px)" alt="How to calculate the fifth Fibonacci number" data-asset="3720"/></figure>
+
+<p>Each time the Fibonacci function is called, it gets broken down into two smaller subproblems because that&rsquo;s how you defined the recurrence relation. When it reaches the base case of either <em>F</em>(0) or <em>F</em>(1), it can finally return a result back to its caller.</p>
+<p>In order to calculate the fifth number in the Fibonacci sequence, you solve smaller but identical problems until you reach the base cases, where you can start returning a result:</p>
+<figure class="js-lightbox"><a href="https://files.realpython.com/media/Screen_Shot_2021-06-04_at_3.24.02_PM.49155bd58b7d.png" target="_blank"><img loading="lazy" class="img-fluid mx-auto d-block w-75" src="https://files.realpython.com/media/Screen_Shot_2021-06-04_at_3.24.02_PM.49155bd58b7d.png" width="1448" height="646" srcset="/cdn-cgi/image/width=362,format=auto/https://files.realpython.com/media/Screen_Shot_2021-06-04_at_3.24.02_PM.49155bd58b7d.png 362w, /cdn-cgi/image/width=482,format=auto/https://files.realpython.com/media/Screen_Shot_2021-06-04_at_3.24.02_PM.49155bd58b7d.png 482w, /cdn-cgi/image/width=724,format=auto/https://files.realpython.com/media/Screen_Shot_2021-06-04_at_3.24.02_PM.49155bd58b7d.png 724w, /cdn-cgi/image/width=1448,format=auto/https://files.realpython.com/media/Screen_Shot_2021-06-04_at_3.24.02_PM.49155bd58b7d.png 1448w" sizes="(min-width: 1200px) 690px, (min-width: 780px) calc(-5vw + 669px), (min-width: 580px) 510px, calc(100vw - 30px)" alt="Recursive representation of Fibonacci Sequence" data-asset="3589"/></a></figure>
+
+<p>The colored subproblems on this diagram represent repetitive solutions to the same problem. If you go further up the tree, you&rsquo;ll find more of these repetitive solutions. This means that to generate a Fibonacci sequence recursively, you have to calculate many intermediate numbers over and over. This is one of the fundamental issues in the recursive approach to the Fibonacci sequence.</p>
+</section><section class="section2"><h2 id="generating-the-fibonacci-sequence-recursively-in-python">Generating the Fibonacci Sequence Recursively in Python<a class="headerlink" href="#generating-the-fibonacci-sequence-recursively-in-python" title="Permanent link"></a></h2>
+<p>The most common and minimal algorithm to generate the Fibonacci sequence requires you to code a recursive function that calls itself as many times as needed until it computes the desired Fibonacci number:</p>
+<code-block class="mb-3" data-syntax-language="pycon" data-is-repl="true">
+  <div class="codeblock__header codeblock--blue">
+    <span class="me-2 noselect"><span class="visually-hidden">Language: </span>Python</span>
+    
+    <div class="noselect">
+      
+        <span class="codeblock__output-toggle" title="Toggle prompts and output" aria-label="Toggle prompts and output" role="button" tabindex="0"><span class="icon baseline js-codeblock-output-on codeblock__header--icon-lower" aria-hidden="true"><svg aria-hidden="true"><use href="/static/icons.8f1dcd28e216.svg#regular--rectangle-terminal"/></svg></span></span>
+      
+    </div>
+  </div>
+  <div class="codeblock__contents">
+    <div class="highlight highlight--with-header"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span><span class="w"> </span><span class="nf">fibonacci_of</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">if</span> <span class="n">n</span> <span class="ow">in</span> <span class="p">{</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">}:</span>  <span class="c1"># Base case</span>
+<span class="gp">... </span>        <span class="k">return</span> <span class="n">n</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="n">fibonacci_of</span><span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="n">fibonacci_of</span><span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">2</span><span class="p">)</span>  <span class="c1"># Recursive case</span>
+<span class="gp">...</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="p">[</span><span class="n">fibonacci_of</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">15</span><span class="p">)]</span>
+<span class="go">[0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377]</span>
+</code></pre></div>
+    
+    <button class="codeblock__copy btn btn-outline-secondary border m-1 px-1 d-hover-only" title="Copy to clipboard" aria-label="Copy to clipboard"><span class="icon baseline" aria-hidden="true"><svg aria-hidden="true"><use href="/static/icons.8f1dcd28e216.svg#@copy"/></svg></span></button>
+    
+  </div>
+</code-block>
+<p>Inside <code>fibonacci_of()</code>, you first check the base case. You then return the sum of the values that results from calling the function with the two preceding values of <code>n</code>. The <a href="https://realpython.com/list-comprehension-python/">list comprehension</a> at the end of the example generates a Fibonacci sequence with the first fifteen numbers.</p>
+<p>This function quickly falls into the repetition issue you saw in the above section. The computation gets more and more expensive as <code>n</code> gets bigger. The required time grows exponentially because the function calculates many identical subproblems over and over again.</p>
+<div class="alert alert-primary" role="alert">
+<p><strong>Note:</strong> Do not try this function at home with a number greater than 50. Depending on your hardware, you might be waiting for a long time before seeing the result&mdash;if you make it to the end.</p>
+</div>
+<p>To calculate <em>F</em>(5), <code>fibonacci_of()</code> has to call itself fifteen times. To calculate <em>F</em>(<em>n</em>), the maximum depth of the call tree is <em>n</em>, and since each function call produces two additional function calls, the <a href="https://en.wikipedia.org/wiki/Time_complexity">time complexity</a> of this recursive function is <em>O</em>(2<sup><em>n</em></sup>).</p>
+<p>Most of those calls are redundant because you&rsquo;ve already calculated their results. <em>F</em>(3) appears twice, and <em>F</em>(2) appears three times. <em>F</em>(1) and <em>F</em>(0) are base cases, so it&rsquo;s fine to call them multiple times. You may want to avoid this wasteful repetition, which is the topic of the following sections.</p>
+</section><section class="section2"><h2 id="optimizing-the-recursive-algorithm-for-the-fibonacci-sequence">Optimizing the Recursive Algorithm for the Fibonacci Sequence<a class="headerlink" href="#optimizing-the-recursive-algorithm-for-the-fibonacci-sequence" title="Permanent link"></a></h2>
+<p>There are at least two techniques you can use to make the algorithm to generate the Fibonacci sequence more efficient&mdash;in other words, to make it take less time to compute. These techniques ensure that you don&rsquo;t keep computing the same values over and over again, which is what made the original algorithm so inefficient. They&rsquo;re called <a href="https://en.wikipedia.org/wiki/Memoization">memoization</a> and <a href="https://en.wikipedia.org/wiki/Iteration">iteration</a>.</p>
+<section class="section3"><h3 id="memoizing-the-recursive-algorithm">Memoizing the Recursive Algorithm<a class="headerlink" href="#memoizing-the-recursive-algorithm" title="Permanent link"></a></h3>
+<p>As you saw in the code above, the Fibonacci function calls itself several times with the same input. Instead of a new call every time, you can store the results of previous calls in something like a memory <a href="https://realpython.com/lru-cache-python/#caching-and-its-uses">cache</a>. You can use a Python <a href="https://realpython.com/python-lists-tuples/">list</a> to store the results of previous computations. This technique is called <strong>memoization.</strong></p>
+<p>Memoization speeds up the execution of expensive recursive functions by storing previously calculated results in a cache. This way, when the same input occurs again, the function just has to look up the corresponding result and return it without having to run the computation again. You can refer to these results as <strong>cached</strong> or <strong>memoized</strong>:</p>
+<figure class="js-lightbox"><a href="https://files.realpython.com/media/Screen_Shot_2021-06-03_at_10.24.56_PM.dde28642334d.png" target="_blank"><img loading="lazy" class="img-fluid mx-auto d-block w-75" src="https://files.realpython.com/media/Screen_Shot_2021-06-03_at_10.24.56_PM.dde28642334d.png" width="1482" height="694" srcset="/cdn-cgi/image/width=370,format=auto/https://files.realpython.com/media/Screen_Shot_2021-06-03_at_10.24.56_PM.dde28642334d.png 370w, /cdn-cgi/image/width=494,format=auto/https://files.realpython.com/media/Screen_Shot_2021-06-03_at_10.24.56_PM.dde28642334d.png 494w, /cdn-cgi/image/width=741,format=auto/https://files.realpython.com/media/Screen_Shot_2021-06-03_at_10.24.56_PM.dde28642334d.png 741w, /cdn-cgi/image/width=1482,format=auto/https://files.realpython.com/media/Screen_Shot_2021-06-03_at_10.24.56_PM.dde28642334d.png 1482w" sizes="(min-width: 1200px) 690px, (min-width: 780px) calc(-5vw + 669px), (min-width: 580px) 510px, calc(100vw - 30px)" alt="Fibonacci sequence using memoization" data-asset="3590"/></a></figure>
+
+<p>With memoization, you just have to traverse up the call tree of depth <em>n</em> once after returning from the base case, as you retrieve all the previously calculated values highlighted in yellow, <em>F</em>(2) and <em>F</em>(3), from the cache earlier.</p>
+<p>The orange path shows that no input to the Fibonacci function is called more than once. This significantly reduces the time complexity of the algorithm from exponential <em>O</em>(2<sup><em>n</em></sup>) to linear <em>O</em>(<em>n</em>).</p>
+<p>Even for the base cases, you can replace calling <em>F</em>(0) and <em>F</em>(1) with just retrieving the values directly from the cache at indices 0 and 1, so you end up calling the function just six times instead of fifteen!</p>
+<p>Here&rsquo;s a possible translation of this optimization into Python code:</p>
+<code-block class="mb-3" data-syntax-language="pycon" data-is-repl="true">
+  <div class="codeblock__header codeblock--blue">
+    <span class="me-2 noselect"><span class="visually-hidden">Language: </span>Python</span>
+    
+    <div class="noselect">
+      
+        <span class="codeblock__output-toggle" title="Toggle prompts and output" aria-label="Toggle prompts and output" role="button" tabindex="0"><span class="icon baseline js-codeblock-output-on codeblock__header--icon-lower" aria-hidden="true"><svg aria-hidden="true"><use href="/static/icons.8f1dcd28e216.svg#regular--rectangle-terminal"/></svg></span></span>
+      
+    </div>
+  </div>
+  <div class="codeblock__contents">
+    <div class="highlight highlight--with-header"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">cache</span> <span class="o">=</span> <span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">:</span> <span class="mi">1</span><span class="p">}</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span><span class="w"> </span><span class="nf">fibonacci_of</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">if</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">cache</span><span class="p">:</span>  <span class="c1"># Base case</span>
+<span class="gp">... </span>        <span class="k">return</span> <span class="n">cache</span><span class="p">[</span><span class="n">n</span><span class="p">]</span>
+<span class="gp">... </span>    <span class="c1"># Compute and cache the Fibonacci number</span>
+<span class="gp">... </span>    <span class="n">cache</span><span class="p">[</span><span class="n">n</span><span class="p">]</span> <span class="o">=</span> <span class="n">fibonacci_of</span><span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="n">fibonacci_of</span><span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">2</span><span class="p">)</span>  <span class="c1"># Recursive case</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="n">cache</span><span class="p">[</span><span class="n">n</span><span class="p">]</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="p">[</span><span class="n">fibonacci_of</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">15</span><span class="p">)]</span>
+<span class="go">[0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377]</span>
+</code></pre></div>
+    
+    <button class="codeblock__copy btn btn-outline-secondary border m-1 px-1 d-hover-only" title="Copy to clipboard" aria-label="Copy to clipboard"><span class="icon baseline" aria-hidden="true"><svg aria-hidden="true"><use href="/static/icons.8f1dcd28e216.svg#@copy"/></svg></span></button>
+    
+  </div>
+</code-block>
+<p>In this example, you use a Python <a href="https://realpython.com/python-dicts/">dictionary</a> to cache the computed Fibonacci numbers. Initially, <code>cache</code> contains the starting values of the Fibonacci sequence, 0 and 1. Inside the function, you first check if the Fibonacci number for the current input value of <code>n</code> is already in <code>cache</code>. If so, then you return the number at hand.</p>
+<p>If there is no Fibonacci number for the current value of <code>n</code>, then you compute it by calling <code>fibonacci_of()</code> recursively and updating <code>cache</code>. The final step is to return the requested Fibonacci number.</p>
+<div><div class="rounded border border-light" style="display:block;position:relative;"> <div style="display:block;width:100%;padding-top:12.5%;"></div> <div class="rpad rounded border" data-unit="8x1" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;"> </div></div><a class="small text-muted" href="/account/join/" rel="nofollow"> <span aria-hidden="true" class="icon baseline me-1"><svg aria-hidden="true"><use href="/static/icons.8f1dcd28e216.svg#solid--circle-info"></use></svg></span>Remove ads</a></div></section><section class="section3"><h3 id="exploring-an-iterative-algorithm">Exploring an Iterative Algorithm<a class="headerlink" href="#exploring-an-iterative-algorithm" title="Permanent link"></a></h3>
+<p>What if you don&rsquo;t even have to call the recursive Fibonacci function at all? You can actually use an iterative algorithm to compute the number at position <code>n</code> in the Fibonacci sequence.</p>
+<p>You know that the first two numbers in the sequence are 0 and 1 and that each subsequent number in the sequence is the sum of its previous two predecessors. So, you can just create a loop that adds the previous two numbers, <code>n - 1</code> and <code>n - 2</code>, together to find the number at position <code>n</code> in the sequence.</p>
+<p>The bolded purple numbers in the diagram below represent the new numbers that need to be calculated and added to <code>cache</code> in each iterative step:</p>
+<figure class="js-lightbox"><a href="https://files.realpython.com/media/FibonacciSequenceDiagram1.42fd93a7229f.png" target="_blank"><img loading="lazy" class="img-fluid mx-auto d-block w-75" src="https://files.realpython.com/media/FibonacciSequenceDiagram1.42fd93a7229f.png" width="1500" height="844" srcset="/cdn-cgi/image/width=375,format=auto/https://files.realpython.com/media/FibonacciSequenceDiagram1.42fd93a7229f.png 375w, /cdn-cgi/image/width=500,format=auto/https://files.realpython.com/media/FibonacciSequenceDiagram1.42fd93a7229f.png 500w, /cdn-cgi/image/width=750,format=auto/https://files.realpython.com/media/FibonacciSequenceDiagram1.42fd93a7229f.png 750w, /cdn-cgi/image/width=1500,format=auto/https://files.realpython.com/media/FibonacciSequenceDiagram1.42fd93a7229f.png 1500w" sizes="(min-width: 1200px) 690px, (min-width: 780px) calc(-5vw + 669px), (min-width: 580px) 510px, calc(100vw - 30px)" alt="Iterative representation of Fibonacci Sequence" data-asset="3591"/></a></figure>
+
+<p>To calculate the Fibonacci number at position <code>n</code>, you store the first two numbers of the sequence, 0 and 1, in <code>cache</code>. Then, calculate the next numbers consecutively until you can return <code>cache[n]</code>.</p>
+</section></section><section class="section2"><h2 id="generating-the-fibonacci-sequence-in-python">Generating the Fibonacci Sequence in Python<a class="headerlink" href="#generating-the-fibonacci-sequence-in-python" title="Permanent link"></a></h2>
+<p>Now that you know the basics of how to generate the Fibonacci sequence, it&rsquo;s time to go deeper and further explore the different ways to implement the underlying algorithm in Python. In the following sections, you&rsquo;ll explore how to implement different algorithms to generate the Fibonacci sequence using recursion, Python object-oriented programming, and also iteration.</p>
+<section class="section3"><h3 id="using-recursion-and-a-python-class">Using Recursion and a Python Class<a class="headerlink" href="#using-recursion-and-a-python-class" title="Permanent link"></a></h3>
+<p>Your first approach to generating the Fibonacci sequence will use a <a href="https://realpython.com/python-classes/">Python class</a> and recursion. An advantage of using the class over the memoized recursive function you saw before is that a class keeps state and behavior (<a href="https://en.wikipedia.org/wiki/Encapsulation_(computer_programming)">encapsulation</a>) together within the same object. In the function example, however, <code>cache</code> is a completely separate object, so you don&rsquo;t have control over it.</p>
+<p>Below is the code that implements your class-based solution:</p>
+<code-block class="mb-3" data-syntax-language="python" >
+  <div class="codeblock__header codeblock--blue">
+    <span class="me-2 noselect"><span class="visually-hidden">Language: </span>Python</span>
+    
+    <div class="noselect">
+      
+    </div>
+  </div>
+  <div class="codeblock__contents">
+    <div class="highlight highlight--with-header"><pre><span></span><code><span class="linenos"> 1</span><span class="c1"># fibonacci_class.py</span>
+<span class="linenos"> 2</span>
+<span class="linenos"> 3</span><span class="k">class</span><span class="w"> </span><span class="nc">Fibonacci</span><span class="p">:</span>
+<span class="linenos"> 4</span>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="linenos"> 5</span>        <span class="bp">self</span><span class="o">.</span><span class="n">cache</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+<span class="linenos"> 6</span>
+<span class="linenos"> 7</span>    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+<span class="linenos"> 8</span>        <span class="c1"># Validate the value of n</span>
+<span class="linenos"> 9</span>        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span> <span class="ow">and</span> <span class="n">n</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">):</span>
+<span class="linenos">10</span>            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Positive integer number expected, got &quot;</span><span class="si">{</span><span class="n">n</span><span class="si">}</span><span class="s1">&quot;&#39;</span><span class="p">)</span>
+<span class="linenos">11</span>
+<span class="linenos">12</span>        <span class="c1"># Check for computed Fibonacci numbers</span>
+<span class="linenos">13</span>        <span class="k">if</span> <span class="n">n</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cache</span><span class="p">):</span>
+<span class="linenos">14</span>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">cache</span><span class="p">[</span><span class="n">n</span><span class="p">]</span>
+<span class="linenos">15</span>        <span class="k">else</span><span class="p">:</span>
+<span class="linenos">16</span>            <span class="c1"># Compute and cache the requested Fibonacci number</span>
+<span class="linenos">17</span>            <span class="n">fib_number</span> <span class="o">=</span> <span class="bp">self</span><span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="bp">self</span><span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">2</span><span class="p">)</span>
+<span class="linenos">18</span>            <span class="bp">self</span><span class="o">.</span><span class="n">cache</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fib_number</span><span class="p">)</span>
+<span class="linenos">19</span>
+<span class="linenos">20</span>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">cache</span><span class="p">[</span><span class="n">n</span><span class="p">]</span>
+</code></pre></div>
+    
+    <button class="codeblock__copy btn btn-outline-secondary border m-1 px-1 d-hover-only" title="Copy to clipboard" aria-label="Copy to clipboard"><span class="icon baseline" aria-hidden="true"><svg aria-hidden="true"><use href="/static/icons.8f1dcd28e216.svg#@copy"/></svg></span></button>
+    
+  </div>
+</code-block>
+<p>Here&rsquo;s a breakdown of what&rsquo;s happening in the code:</p>
+<ul>
+<li>
+<p><strong>Line 3</strong> defines the <code>Fibonacci</code> class.</p>
+</li>
+<li>
+<p><strong>Line 4</strong> defines the class initializer, <code>.__init__()</code>. It&rsquo;s a <a href="https://realpython.com/python-classes/#special-methods-and-protocols">special method</a> that you can use to initialize your class instances. Special methods are sometimes referred to as <strong>dunder methods</strong>, short for <a href="https://realpython.com/python-double-underscore/#dunder-names-in-python">double underscore methods</a>.</p>
+</li>
+<li>
+<p><strong>Line 5</strong> creates the <code>.cache</code> instance attribute, which means that whenever you create a <code>Fibonacci</code> object, there will be a cache for it. This attribute initially contains the first numbers in the Fibonacci sequence.</p>
+</li>
+<li>
+<p><strong>Line 7</strong> defines another special method, <a href="https://realpython.com/python-callable-instances/"><code>.__call__()</code></a>. This method turns the instances of <code>Fibonacci</code> into callable objects.</p>
+</li>
+<li>
+<p><strong>Lines 9 and 10</strong> validate the value of <code>n</code> by using a conditional statement. If <code>n</code> is not a positive integer number, then the method raises a <code>ValueError</code>.</p>
+</li>
+<li>
+<p><strong>Line 13</strong> defines a conditional statement to check for those Fibonacci numbers that were already calculated and are available in <code>.cache</code>. If the number at index <code>n</code> is already in <code>.cache</code>, then line 14 returns it. Otherwise, line 17 computes the number, and line 18 appends it to <code>.cache</code> so you don&rsquo;t have to compute it again.</p>
+</li>
+<li>
+<p><strong>Line 20</strong> returns the requested Fibonacci number.</p>
+</li>
+</ul>
+<p>To try this code, go ahead and save it into <code>fibonacci_class.py</code>. Then run this code in your interactive shell:</p>
+<code-block class="mb-3" data-syntax-language="pycon" data-is-repl="true">
+  <div class="codeblock__header codeblock--blue">
+    <span class="me-2 noselect"><span class="visually-hidden">Language: </span>Python</span>
+    
+    <div class="noselect">
+      
+        <span class="codeblock__output-toggle" title="Toggle prompts and output" aria-label="Toggle prompts and output" role="button" tabindex="0"><span class="icon baseline js-codeblock-output-on codeblock__header--icon-lower" aria-hidden="true"><svg aria-hidden="true"><use href="/static/icons.8f1dcd28e216.svg#regular--rectangle-terminal"/></svg></span></span>
+      
+    </div>
+  </div>
+  <div class="codeblock__contents">
+    <div class="highlight highlight--with-header"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">fibonacci_class</span><span class="w"> </span><span class="kn">import</span> <span class="n">Fibonacci</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">fibonacci_of</span> <span class="o">=</span> <span class="n">Fibonacci</span><span class="p">()</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">fibonacci_of</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+<span class="go">5</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">fibonacci_of</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span>
+<span class="go">8</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">fibonacci_of</span><span class="p">(</span><span class="mi">7</span><span class="p">)</span>
+<span class="go">13</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="p">[</span><span class="n">fibonacci_of</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">15</span><span class="p">)]</span>
+<span class="go">[0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377]</span>
+</code></pre></div>
+    
+    <button class="codeblock__copy btn btn-outline-secondary border m-1 px-1 d-hover-only" title="Copy to clipboard" aria-label="Copy to clipboard"><span class="icon baseline" aria-hidden="true"><svg aria-hidden="true"><use href="/static/icons.8f1dcd28e216.svg#@copy"/></svg></span></button>
+    
+  </div>
+</code-block>
+<p>Here, you create and then call an instance of the <code>Fibonacci</code> class named <code>fibonacci_of</code>. The first call uses <code>5</code> as an argument and returns <code>5</code>, which is the sixth Fibonacci number because you&rsquo;re using zero-based indices.</p>
+<p>This implementation of the Fibonacci sequence algorithm is quite efficient. Once you have an instance of the class, the <code>.cache</code> attribute holds the already computed numbers from call to call.</p>
+</section><section class="section3"><h3 id="visualizing-the-memoized-fibonacci-sequence-algorithm">Visualizing the Memoized Fibonacci Sequence Algorithm<a class="headerlink" href="#visualizing-the-memoized-fibonacci-sequence-algorithm" title="Permanent link"></a></h3>
+<p>You can effectively understand how each call to a recursive Fibonacci function is handled using a <a href="https://en.wikipedia.org/wiki/Call_stack">call stack</a> representation. The way each call is pushed onto the stack and popped off reflects exactly how the program runs. It clearly demonstrates how calculating large numbers will take a long time if you don&rsquo;t optimize the algorithm.</p>
+<p>In a call stack, whenever a function returns a result, a <a href="https://en.wikipedia.org/wiki/Call_stack#STACK-FRAME">stack frame</a> representing the function call is popped off the stack. Whenever you call a function, you add a new stack frame to the top of the stack. In general, this operation has a <a href="https://en.wikipedia.org/wiki/Space_complexity">space complexity</a> of <em>O</em>(<em>n</em>) because there are no more than <em>n</em> stack frames on the call stack at a single time.</p>
+<div class="alert alert-primary" role="alert">
+<p><strong>Note:</strong> There&rsquo;s a beginner-friendly code editor called Thonny that allows you to visualize the call stack of a recursive function in a graphical way. You can check out <a href="https://realpython.com/python-thonny/">Thonny: The Beginner-Friendly Python Editor</a> to learn more.</p>
+</div>
+<p>To visualize the memoized recursive Fibonacci algorithm, you&rsquo;ll use a set of diagrams representing the call stack. The step number is indicated by the blue label below each call stack.</p>
+<p>Say you want to compute <em>F</em>(5). To do this, you push the first call to the function onto the call stack:</p>
+<figure class="js-lightbox"><a href="https://files.realpython.com/media/Screen_Shot_2021-06-02_at_2.04.45_PM.13bbb36aa87c.png" target="_blank"><img loading="lazy" class="img-fluid mx-auto d-block w-25" src="https://files.realpython.com/media/Screen_Shot_2021-06-02_at_2.04.45_PM.13bbb36aa87c.png" width="574" height="214" srcset="/cdn-cgi/image/width=143,format=auto/https://files.realpython.com/media/Screen_Shot_2021-06-02_at_2.04.45_PM.13bbb36aa87c.png 143w, /cdn-cgi/image/width=191,format=auto/https://files.realpython.com/media/Screen_Shot_2021-06-02_at_2.04.45_PM.13bbb36aa87c.png 191w, /cdn-cgi/image/width=287,format=auto/https://files.realpython.com/media/Screen_Shot_2021-06-02_at_2.04.45_PM.13bbb36aa87c.png 287w, /cdn-cgi/image/width=574,format=auto/https://files.realpython.com/media/Screen_Shot_2021-06-02_at_2.04.45_PM.13bbb36aa87c.png 574w" sizes="(min-width: 1200px) 690px, (min-width: 780px) calc(-5vw + 669px), (min-width: 580px) 510px, calc(100vw - 30px)" alt="First step in fib(5)" data-asset="3738"/></a></figure>
+
+<p>To compute <em>F</em>(5), you must compute <em>F</em>(4) as outlined by the Fibonacci recurrence relation, so you add that new function call to the stack:</p>
+<figure class="js-lightbox"><a href="https://files.realpython.com/media/Screen_Shot_2021-06-02_at_2.05.48_PM.86a9787743f1.png" target="_blank"><img loading="lazy" class="img-fluid mx-auto d-block w-25" src="https://files.realpython.com/media/Screen_Shot_2021-06-02_at_2.05.48_PM.86a9787743f1.png" width="606" height="374" srcset="/cdn-cgi/image/width=151,format=auto/https://files.realpython.com/media/Screen_Shot_2021-06-02_at_2.05.48_PM.86a9787743f1.png 151w, /cdn-cgi/image/width=202,format=auto/https://files.realpython.com/media/Screen_Shot_2021-06-02_at_2.05.48_PM.86a9787743f1.png 202w, /cdn-cgi/image/width=303,format=auto/https://files.realpython.com/media/Screen_Shot_2021-06-02_at_2.05.48_PM.86a9787743f1.png 303w, /cdn-cgi/image/width=606,format=auto/https://files.realpython.com/media/Screen_Shot_2021-06-02_at_2.05.48_PM.86a9787743f1.png 606w" sizes="(min-width: 1200px) 690px, (min-width: 780px) calc(-5vw + 669px), (min-width: 580px) 510px, calc(100vw - 30px)" alt="Second step in fib(5)" data-asset="3737"/></a></figure>
+
+<p>To compute <em>F</em>(4), you must compute <em>F</em>(3), so you add another function call to the stack:</p>
+<figure class="js-lightbox"><a href="https://files.realpython.com/media/Screen_Shot_2021-06-02_at_2.10.09_PM.57a1f4b9f165.png" target="_blank"><img loading="lazy" class="img-fluid mx-auto d-block w-33" src="https://files.realpython.com/media/Screen_Shot_2021-06-02_at_2.10.09_PM.57a1f4b9f165.png" width="850" height="524" srcset="/cdn-cgi/image/width=212,format=auto/https://files.realpython.com/media/Screen_Shot_2021-06-02_at_2.10.09_PM.57a1f4b9f165.png 212w, /cdn-cgi/image/width=283,format=auto/https://files.realpython.com/media/Screen_Shot_2021-06-02_at_2.10.09_PM.57a1f4b9f165.png 283w, /cdn-cgi/image/width=425,format=auto/https://files.realpython.com/media/Screen_Shot_2021-06-02_at_2.10.09_PM.57a1f4b9f165.png 425w, /cdn-cgi/image/width=850,format=auto/https://files.realpython.com/media/Screen_Shot_2021-06-02_at_2.10.09_PM.57a1f4b9f165.png 850w" sizes="(min-width: 1200px) 690px, (min-width: 780px) calc(-5vw + 669px), (min-width: 580px) 510px, calc(100vw - 30px)" alt="Third step in Fib(5)" data-asset="3742"/></a></figure>
+
+<p>To compute <em>F</em>(3), you must compute <em>F</em>(2), so you add yet another function call to the call stack:</p>
+<figure class="js-lightbox"><a href="https://files.realpython.com/media/Screen_Shot_2021-06-02_at_2.19.46_PM.a47c11ac6b34.png" target="_blank"><img loading="lazy" class="img-fluid mx-auto d-block w-33" src="https://files.realpython.com/media/Screen_Shot_2021-06-02_at_2.19.46_PM.a47c11ac6b34.png" width="806" height="668" srcset="/cdn-cgi/image/width=201,format=auto/https://files.realpython.com/media/Screen_Shot_2021-06-02_at_2.19.46_PM.a47c11ac6b34.png 201w, /cdn-cgi/image/width=268,format=auto/https://files.realpython.com/media/Screen_Shot_2021-06-02_at_2.19.46_PM.a47c11ac6b34.png 268w, /cdn-cgi/image/width=403,format=auto/https://files.realpython.com/media/Screen_Shot_2021-06-02_at_2.19.46_PM.a47c11ac6b34.png 403w, /cdn-cgi/image/width=806,format=auto/https://files.realpython.com/media/Screen_Shot_2021-06-02_at_2.19.46_PM.a47c11ac6b34.png 806w" sizes="(min-width: 1200px) 690px, (min-width: 780px) calc(-5vw + 669px), (min-width: 580px) 510px, calc(100vw - 30px)" alt="Fourth step in fib(5)" data-asset="3743"/></a></figure>
+
+<p>To compute <em>F</em>(2), you must compute <em>F</em>(1), so you add that to the stack. As <em>F</em>(1) is a base case, it returns immediately with 1, and you remove this call from the stack:</p>
+<figure class="js-lightbox"><a href="https://files.realpython.com/media/Screen_Shot_2021-06-02_at_2.25.30_PM.9e61e62d4770.png" target="_blank"><img loading="lazy" class="img-fluid mx-auto d-block w-33" src="https://files.realpython.com/media/Screen_Shot_2021-06-02_at_2.25.30_PM.9e61e62d4770.png" width="762" height="824" srcset="/cdn-cgi/image/width=190,format=auto/https://files.realpython.com/media/Screen_Shot_2021-06-02_at_2.25.30_PM.9e61e62d4770.png 190w, /cdn-cgi/image/width=254,format=auto/https://files.realpython.com/media/Screen_Shot_2021-06-02_at_2.25.30_PM.9e61e62d4770.png 254w, /cdn-cgi/image/width=381,format=auto/https://files.realpython.com/media/Screen_Shot_2021-06-02_at_2.25.30_PM.9e61e62d4770.png 381w, /cdn-cgi/image/width=762,format=auto/https://files.realpython.com/media/Screen_Shot_2021-06-02_at_2.25.30_PM.9e61e62d4770.png 762w" sizes="(min-width: 1200px) 690px, (min-width: 780px) calc(-5vw + 669px), (min-width: 580px) 510px, calc(100vw - 30px)" alt="Fifth step in fib(5)" data-asset="3744"/></a></figure>
+
+<p>Now you start to unwind the results recursively. <em>F</em>(1) returns the result back to its calling function, <em>F</em>(2). To compute <em>F</em>(2), you also need to compute <em>F</em>(0):</p>
+<figure class="js-lightbox"><a href="https://files.realpython.com/media/Screen_Shot_2021-06-02_at_2.30.08_PM.1b57f1018d51.png" target="_blank"><img loading="lazy" class="img-fluid mx-auto d-block w-33" src="https://files.realpython.com/media/Screen_Shot_2021-06-02_at_2.30.08_PM.1b57f1018d51.png" width="818" height="674" srcset="/cdn-cgi/image/width=204,format=auto/https://files.realpython.com/media/Screen_Shot_2021-06-02_at_2.30.08_PM.1b57f1018d51.png 204w, /cdn-cgi/image/width=272,format=auto/https://files.realpython.com/media/Screen_Shot_2021-06-02_at_2.30.08_PM.1b57f1018d51.png 272w, /cdn-cgi/image/width=409,format=auto/https://files.realpython.com/media/Screen_Shot_2021-06-02_at_2.30.08_PM.1b57f1018d51.png 409w, /cdn-cgi/image/width=818,format=auto/https://files.realpython.com/media/Screen_Shot_2021-06-02_at_2.30.08_PM.1b57f1018d51.png 818w" sizes="(min-width: 1200px) 690px, (min-width: 780px) calc(-5vw + 669px), (min-width: 580px) 510px, calc(100vw - 30px)" alt="Sixth step in fib(5)" data-asset="3745"/></a></figure>
+
+<p>You add <em>F</em>(0) to the stack. Since <em>F</em>(0) is a base case, it returns immediately, giving you 0. Now you can remove it from the call stack:</p>
+<figure class="js-lightbox"><a href="https://files.realpython.com/media/Screen_Shot_2021-06-02_at_2.38.36_PM.9b4338c5dfaa.png" target="_blank"><img loading="lazy" class="img-fluid mx-auto d-block w-33" src="https://files.realpython.com/media/Screen_Shot_2021-06-02_at_2.38.36_PM.9b4338c5dfaa.png" width="922" height="832" srcset="/cdn-cgi/image/width=230,format=auto/https://files.realpython.com/media/Screen_Shot_2021-06-02_at_2.38.36_PM.9b4338c5dfaa.png 230w, /cdn-cgi/image/width=307,format=auto/https://files.realpython.com/media/Screen_Shot_2021-06-02_at_2.38.36_PM.9b4338c5dfaa.png 307w, /cdn-cgi/image/width=461,format=auto/https://files.realpython.com/media/Screen_Shot_2021-06-02_at_2.38.36_PM.9b4338c5dfaa.png 461w, /cdn-cgi/image/width=922,format=auto/https://files.realpython.com/media/Screen_Shot_2021-06-02_at_2.38.36_PM.9b4338c5dfaa.png 922w" sizes="(min-width: 1200px) 690px, (min-width: 780px) calc(-5vw + 669px), (min-width: 580px) 510px, calc(100vw - 30px)" alt="Seventh step in fib(5)" data-asset="3746"/></a></figure>
+
+<p>This result of calling <em>F</em>(0) is returned to <em>F</em>(2). Now you have what you need to compute <em>F</em>(2) and remove it from the stack:</p>
+<figure class="js-lightbox"><a href="https://files.realpython.com/media/Screen_Shot_2021-06-02_at_2.45.06_PM.0672a386ee0b.png" target="_blank"><img loading="lazy" class="img-fluid mx-auto d-block w-33" src="https://files.realpython.com/media/Screen_Shot_2021-06-02_at_2.45.06_PM.0672a386ee0b.png" width="714" height="680" srcset="/cdn-cgi/image/width=178,format=auto/https://files.realpython.com/media/Screen_Shot_2021-06-02_at_2.45.06_PM.0672a386ee0b.png 178w, /cdn-cgi/image/width=238,format=auto/https://files.realpython.com/media/Screen_Shot_2021-06-02_at_2.45.06_PM.0672a386ee0b.png 238w, /cdn-cgi/image/width=357,format=auto/https://files.realpython.com/media/Screen_Shot_2021-06-02_at_2.45.06_PM.0672a386ee0b.png 357w, /cdn-cgi/image/width=714,format=auto/https://files.realpython.com/media/Screen_Shot_2021-06-02_at_2.45.06_PM.0672a386ee0b.png 714w" sizes="(min-width: 1200px) 690px, (min-width: 780px) calc(-5vw + 669px), (min-width: 580px) 510px, calc(100vw - 30px)" alt="Eighth step in fib(5)" data-asset="3747"/></a></figure>
+
+<p>The result of <em>F</em>(2) is returned to its caller, <em>F</em>(3). <em>F</em>(3) also needs the results of <em>F</em>(1) to complete its calculation, so you add it back to the stack:</p>
+<figure class="js-lightbox"><a href="https://files.realpython.com/media/Screen_Shot_2021-06-02_at_2.48.03_PM.0ab6a533d57f.png" target="_blank"><img loading="lazy" class="img-fluid mx-auto d-block w-33" src="https://files.realpython.com/media/Screen_Shot_2021-06-02_at_2.48.03_PM.0ab6a533d57f.png" width="664" height="516" srcset="/cdn-cgi/image/width=166,format=auto/https://files.realpython.com/media/Screen_Shot_2021-06-02_at_2.48.03_PM.0ab6a533d57f.png 166w, /cdn-cgi/image/width=221,format=auto/https://files.realpython.com/media/Screen_Shot_2021-06-02_at_2.48.03_PM.0ab6a533d57f.png 221w, /cdn-cgi/image/width=332,format=auto/https://files.realpython.com/media/Screen_Shot_2021-06-02_at_2.48.03_PM.0ab6a533d57f.png 332w, /cdn-cgi/image/width=664,format=auto/https://files.realpython.com/media/Screen_Shot_2021-06-02_at_2.48.03_PM.0ab6a533d57f.png 664w" sizes="(min-width: 1200px) 690px, (min-width: 780px) calc(-5vw + 669px), (min-width: 580px) 510px, calc(100vw - 30px)" alt="Ninth step in fib(5)" data-asset="3748"/></a></figure>
+
+<p><em>F</em>(1) is a base case and its value is available in the cache, so you can return the result immediately and remove <em>F</em>(1) from the stack:</p>
+<figure class="js-lightbox"><a href="https://files.realpython.com/media/Screen_Shot_2021-06-02_at_2.50.44_PM.cc9726fd664a.png" target="_blank"><img loading="lazy" class="img-fluid mx-auto d-block w-33" src="https://files.realpython.com/media/Screen_Shot_2021-06-02_at_2.50.44_PM.cc9726fd664a.png" width="746" height="668" srcset="/cdn-cgi/image/width=186,format=auto/https://files.realpython.com/media/Screen_Shot_2021-06-02_at_2.50.44_PM.cc9726fd664a.png 186w, /cdn-cgi/image/width=248,format=auto/https://files.realpython.com/media/Screen_Shot_2021-06-02_at_2.50.44_PM.cc9726fd664a.png 248w, /cdn-cgi/image/width=373,format=auto/https://files.realpython.com/media/Screen_Shot_2021-06-02_at_2.50.44_PM.cc9726fd664a.png 373w, /cdn-cgi/image/width=746,format=auto/https://files.realpython.com/media/Screen_Shot_2021-06-02_at_2.50.44_PM.cc9726fd664a.png 746w" sizes="(min-width: 1200px) 690px, (min-width: 780px) calc(-5vw + 669px), (min-width: 580px) 510px, calc(100vw - 30px)" alt="Tenth step in fib(5)" data-asset="3749"/></a></figure>
+
+<p>You can complete the calculation for <em>F</em>(3), which is 2:</p>
+<figure class="js-lightbox"><a href="https://files.realpython.com/media/Screen_Shot_2021-06-02_at_2.54.26_PM.fa576c07fb5f.png" target="_blank"><img loading="lazy" class="img-fluid mx-auto d-block w-33" src="https://files.realpython.com/media/Screen_Shot_2021-06-02_at_2.54.26_PM.fa576c07fb5f.png" width="594" height="526" srcset="/cdn-cgi/image/width=148,format=auto/https://files.realpython.com/media/Screen_Shot_2021-06-02_at_2.54.26_PM.fa576c07fb5f.png 148w, /cdn-cgi/image/width=198,format=auto/https://files.realpython.com/media/Screen_Shot_2021-06-02_at_2.54.26_PM.fa576c07fb5f.png 198w, /cdn-cgi/image/width=297,format=auto/https://files.realpython.com/media/Screen_Shot_2021-06-02_at_2.54.26_PM.fa576c07fb5f.png 297w, /cdn-cgi/image/width=594,format=auto/https://files.realpython.com/media/Screen_Shot_2021-06-02_at_2.54.26_PM.fa576c07fb5f.png 594w" sizes="(min-width: 1200px) 690px, (min-width: 780px) calc(-5vw + 669px), (min-width: 580px) 510px, calc(100vw - 30px)" alt="Eleventh step in fib(5)" data-asset="3750"/></a></figure>
+
+<p>You remove <em>F</em>(3) from the stack after completing its calculation and return the result to its caller, <em>F</em>(4). <em>F</em>(4) also needs the result of <em>F</em>(2) to compute its value:</p>
+<figure class="js-lightbox"><a href="https://files.realpython.com/media/Screen_Shot_2021-06-02_at_3.01.58_PM.60a00cb5bb52.png" target="_blank"><img loading="lazy" class="img-fluid mx-auto d-block w-33" src="https://files.realpython.com/media/Screen_Shot_2021-06-02_at_3.01.58_PM.60a00cb5bb52.png" width="668" height="368" srcset="/cdn-cgi/image/width=167,format=auto/https://files.realpython.com/media/Screen_Shot_2021-06-02_at_3.01.58_PM.60a00cb5bb52.png 167w, /cdn-cgi/image/width=222,format=auto/https://files.realpython.com/media/Screen_Shot_2021-06-02_at_3.01.58_PM.60a00cb5bb52.png 222w, /cdn-cgi/image/width=334,format=auto/https://files.realpython.com/media/Screen_Shot_2021-06-02_at_3.01.58_PM.60a00cb5bb52.png 334w, /cdn-cgi/image/width=668,format=auto/https://files.realpython.com/media/Screen_Shot_2021-06-02_at_3.01.58_PM.60a00cb5bb52.png 668w" sizes="(min-width: 1200px) 690px, (min-width: 780px) calc(-5vw + 669px), (min-width: 580px) 510px, calc(100vw - 30px)" alt="Twelfth step in fib(5)" data-asset="3751"/></a></figure>
+
+<p>You push the call to <em>F</em>(2) onto the stack. This is where the nifty cache comes in. You have calculated it before, so you can just retrieve the value from the cache, avoiding a recursive call to compute the result of <em>F</em>(2) again. The cache returns 1, and you remove <em>F</em>(2) from the stack:</p>
+<figure class="js-lightbox"><a href="https://files.realpython.com/media/Screen_Shot_2021-06-02_at_3.05.44_PM.c6de27a53703.png" target="_blank"><img loading="lazy" class="img-fluid mx-auto d-block w-33" src="https://files.realpython.com/media/Screen_Shot_2021-06-02_at_3.05.44_PM.c6de27a53703.png" width="654" height="524" srcset="/cdn-cgi/image/width=163,format=auto/https://files.realpython.com/media/Screen_Shot_2021-06-02_at_3.05.44_PM.c6de27a53703.png 163w, /cdn-cgi/image/width=218,format=auto/https://files.realpython.com/media/Screen_Shot_2021-06-02_at_3.05.44_PM.c6de27a53703.png 218w, /cdn-cgi/image/width=327,format=auto/https://files.realpython.com/media/Screen_Shot_2021-06-02_at_3.05.44_PM.c6de27a53703.png 327w, /cdn-cgi/image/width=654,format=auto/https://files.realpython.com/media/Screen_Shot_2021-06-02_at_3.05.44_PM.c6de27a53703.png 654w" sizes="(min-width: 1200px) 690px, (min-width: 780px) calc(-5vw + 669px), (min-width: 580px) 510px, calc(100vw - 30px)" alt="Thirteenth step in fib(5)" data-asset="3752"/></a></figure>
+
+<p><em>F</em>(2) is returned to its caller, and now <em>F</em>(4) has all it needs to compute its value, which is 3:</p>
+<figure class="js-lightbox"><a href="https://files.realpython.com/media/Screen_Shot_2021-06-02_at_3.11.23_PM.0dba15f3c530.png" target="_blank"><img loading="lazy" class="img-fluid mx-auto d-block w-33" src="https://files.realpython.com/media/Screen_Shot_2021-06-02_at_3.11.23_PM.0dba15f3c530.png" width="626" height="378" srcset="/cdn-cgi/image/width=156,format=auto/https://files.realpython.com/media/Screen_Shot_2021-06-02_at_3.11.23_PM.0dba15f3c530.png 156w, /cdn-cgi/image/width=208,format=auto/https://files.realpython.com/media/Screen_Shot_2021-06-02_at_3.11.23_PM.0dba15f3c530.png 208w, /cdn-cgi/image/width=313,format=auto/https://files.realpython.com/media/Screen_Shot_2021-06-02_at_3.11.23_PM.0dba15f3c530.png 313w, /cdn-cgi/image/width=626,format=auto/https://files.realpython.com/media/Screen_Shot_2021-06-02_at_3.11.23_PM.0dba15f3c530.png 626w" sizes="(min-width: 1200px) 690px, (min-width: 780px) calc(-5vw + 669px), (min-width: 580px) 510px, calc(100vw - 30px)" alt="Fourteenth step in fib(5)" data-asset="3753"/></a></figure>
+
+<p>Next, you remove <em>F</em>(4) from the stack and return its result to the final and original caller, <em>F</em>(5):</p>
+<figure class="js-lightbox"><a href="https://files.realpython.com/media/Screen_Shot_2021-06-02_at_3.15.49_PM.a784bc92bfd1.png" target="_blank"><img loading="lazy" class="img-fluid mx-auto d-block w-33" src="https://files.realpython.com/media/Screen_Shot_2021-06-02_at_3.15.49_PM.a784bc92bfd1.png" width="584" height="228" srcset="/cdn-cgi/image/width=146,format=auto/https://files.realpython.com/media/Screen_Shot_2021-06-02_at_3.15.49_PM.a784bc92bfd1.png 146w, /cdn-cgi/image/width=194,format=auto/https://files.realpython.com/media/Screen_Shot_2021-06-02_at_3.15.49_PM.a784bc92bfd1.png 194w, /cdn-cgi/image/width=292,format=auto/https://files.realpython.com/media/Screen_Shot_2021-06-02_at_3.15.49_PM.a784bc92bfd1.png 292w, /cdn-cgi/image/width=584,format=auto/https://files.realpython.com/media/Screen_Shot_2021-06-02_at_3.15.49_PM.a784bc92bfd1.png 584w" sizes="(min-width: 1200px) 690px, (min-width: 780px) calc(-5vw + 669px), (min-width: 580px) 510px, calc(100vw - 30px)" alt="Fifteenth step in fib(5)" data-asset="3754"/></a></figure>
+
+<p><em>F</em>(5) now has the result of <em>F</em>(4) and also the result of <em>F</em>(3). You push an <em>F</em>(3) call onto the stack, and the nifty cache comes into play again. You previously calculated <em>F</em>(3), so all you need to do is retrieve it from the cache. There&rsquo;s no recursive process to compute <em>F</em>(3). It returns 2, and you remove <em>F</em>(3) from the stack:</p>
+<figure class="js-lightbox"><a href="https://files.realpython.com/media/Screen_Shot_2021-06-02_at_3.18.56_PM.7961410b3e9a.png" target="_blank"><img loading="lazy" class="img-fluid mx-auto d-block w-33" src="https://files.realpython.com/media/Screen_Shot_2021-06-02_at_3.18.56_PM.7961410b3e9a.png" width="636" height="376" srcset="/cdn-cgi/image/width=159,format=auto/https://files.realpython.com/media/Screen_Shot_2021-06-02_at_3.18.56_PM.7961410b3e9a.png 159w, /cdn-cgi/image/width=212,format=auto/https://files.realpython.com/media/Screen_Shot_2021-06-02_at_3.18.56_PM.7961410b3e9a.png 212w, /cdn-cgi/image/width=318,format=auto/https://files.realpython.com/media/Screen_Shot_2021-06-02_at_3.18.56_PM.7961410b3e9a.png 318w, /cdn-cgi/image/width=636,format=auto/https://files.realpython.com/media/Screen_Shot_2021-06-02_at_3.18.56_PM.7961410b3e9a.png 636w" sizes="(min-width: 1200px) 690px, (min-width: 780px) calc(-5vw + 669px), (min-width: 580px) 510px, calc(100vw - 30px)" alt="Sixteenth step in fib(5)" data-asset="3755"/></a></figure>
+
+<p>Now <em>F</em>(5) has all the values it needs to calculate its own value. You get 5 by adding 3 and 2, and that&rsquo;s the final step before you pop the <em>F</em>(5) call off the stack. This action ends your sequence of recursive function calls:</p>
+<figure class="js-lightbox"><a href="https://files.realpython.com/media/Screen_Shot_2021-06-02_at_3.21.19_PM.2254f2a8a547.png" target="_blank"><img loading="lazy" class="img-fluid mx-auto d-block w-33" src="https://files.realpython.com/media/Screen_Shot_2021-06-02_at_3.21.19_PM.2254f2a8a547.png" width="534" height="222" srcset="/cdn-cgi/image/width=133,format=auto/https://files.realpython.com/media/Screen_Shot_2021-06-02_at_3.21.19_PM.2254f2a8a547.png 133w, /cdn-cgi/image/width=178,format=auto/https://files.realpython.com/media/Screen_Shot_2021-06-02_at_3.21.19_PM.2254f2a8a547.png 178w, /cdn-cgi/image/width=267,format=auto/https://files.realpython.com/media/Screen_Shot_2021-06-02_at_3.21.19_PM.2254f2a8a547.png 267w, /cdn-cgi/image/width=534,format=auto/https://files.realpython.com/media/Screen_Shot_2021-06-02_at_3.21.19_PM.2254f2a8a547.png 534w" sizes="(min-width: 1200px) 690px, (min-width: 780px) calc(-5vw + 669px), (min-width: 580px) 510px, calc(100vw - 30px)" alt="Seventeenth step in fib(5)" data-asset="3756"/></a></figure>
+
+<p>The call stack is empty now. You&rsquo;ve completed the final step to compute <em>F</em>(5):</p>
+<figure class="js-lightbox"><a href="https://files.realpython.com/media/Screen_Shot_2021-06-02_at_3.23.26_PM.e78bfc8430b9.png" target="_blank"><img loading="lazy" class="img-fluid mx-auto d-block w-33" src="https://files.realpython.com/media/Screen_Shot_2021-06-02_at_3.23.26_PM.e78bfc8430b9.png" width="442" height="94" srcset="/cdn-cgi/image/width=110,format=auto/https://files.realpython.com/media/Screen_Shot_2021-06-02_at_3.23.26_PM.e78bfc8430b9.png 110w, /cdn-cgi/image/width=147,format=auto/https://files.realpython.com/media/Screen_Shot_2021-06-02_at_3.23.26_PM.e78bfc8430b9.png 147w, /cdn-cgi/image/width=221,format=auto/https://files.realpython.com/media/Screen_Shot_2021-06-02_at_3.23.26_PM.e78bfc8430b9.png 221w, /cdn-cgi/image/width=442,format=auto/https://files.realpython.com/media/Screen_Shot_2021-06-02_at_3.23.26_PM.e78bfc8430b9.png 442w" sizes="(min-width: 1200px) 690px, (min-width: 780px) calc(-5vw + 669px), (min-width: 580px) 510px, calc(100vw - 30px)" alt="Eighteenth step in fib(5)" data-asset="3757"/></a></figure>
+
+<p>Representing recursive function calls using a call stack diagram helps you understand all the work that takes place behind the scenes. It also allows you to see how many resources a recursive function can take up.</p>
+<p>Putting all these diagrams together allows you to visualize how the whole process looks:</p>
+<figure class="js-lightbox"><a href="https://files.realpython.com/media/mwong-memoized-fibonacci-stack-wide.3b3902052665.png" target="_blank"><img loading="lazy" class="img-fluid mx-auto d-block " src="https://files.realpython.com/media/mwong-memoized-fibonacci-stack-wide.3b3902052665.png" width="4022" height="817" srcset="/cdn-cgi/image/width=1005,format=auto/https://files.realpython.com/media/mwong-memoized-fibonacci-stack-wide.3b3902052665.png 1005w, /cdn-cgi/image/width=1340,format=auto/https://files.realpython.com/media/mwong-memoized-fibonacci-stack-wide.3b3902052665.png 1340w, /cdn-cgi/image/width=2011,format=auto/https://files.realpython.com/media/mwong-memoized-fibonacci-stack-wide.3b3902052665.png 2011w, /cdn-cgi/image/width=4022,format=auto/https://files.realpython.com/media/mwong-memoized-fibonacci-stack-wide.3b3902052665.png 4022w" sizes="(min-width: 1200px) 690px, (min-width: 780px) calc(-5vw + 669px), (min-width: 580px) 510px, calc(100vw - 30px)" alt="Visualizing the Fibonacci Sequence with Memoization Using a Call Stack" data-asset="3719"/></a></figure>
+
+<p>You can click the image above to zoom in on individual steps. If you don&rsquo;t cache previously computed Fibonacci numbers, some of the stack stages in this diagram would be way taller, which means that they would take longer to return a result to their respective callers.</p>
+<div><div class="rounded border border-light" style="display:block;position:relative;"> <div style="display:block;width:100%;padding-top:12.5%;"></div> <div class="rpad rounded border" data-unit="8x1" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;"> </div></div><a class="small text-muted" href="/account/join/" rel="nofollow"> <span aria-hidden="true" class="icon baseline me-1"><svg aria-hidden="true"><use href="/static/icons.8f1dcd28e216.svg#solid--circle-info"></use></svg></span>Remove ads</a></div></section><section class="section3"><h3 id="using-iteration-and-a-python-function">Using Iteration and a Python Function<a class="headerlink" href="#using-iteration-and-a-python-function" title="Permanent link"></a></h3>
+<p>The example in the previous sections implements a recursive solution that uses memoization as an optimization strategy. In this section, you&rsquo;ll code a function that uses iteration. The code below implements an iterative version of your Fibonacci sequence algorithm:</p>
+<code-block class="mb-3" data-syntax-language="python" >
+  <div class="codeblock__header codeblock--blue">
+    <span class="me-2 noselect"><span class="visually-hidden">Language: </span>Python</span>
+    
+    <div class="noselect">
+      
+    </div>
+  </div>
+  <div class="codeblock__contents">
+    <div class="highlight highlight--with-header"><pre><span></span><code><span class="linenos"> 1</span><span class="c1"># fibonacci_func.py</span>
+<span class="linenos"> 2</span>
+<span class="linenos"> 3</span><span class="k">def</span><span class="w"> </span><span class="nf">fibonacci_of</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+<span class="linenos"> 4</span>    <span class="c1"># Validate the value of n</span>
+<span class="linenos"> 5</span>    <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span> <span class="ow">and</span> <span class="n">n</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">):</span>
+<span class="linenos"> 6</span>        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Positive integer number expected, got &quot;</span><span class="si">{</span><span class="n">n</span><span class="si">}</span><span class="s1">&quot;&#39;</span><span class="p">)</span>
+<span class="linenos"> 7</span>
+<span class="linenos"> 8</span>    <span class="c1"># Handle the base cases</span>
+<span class="linenos"> 9</span>    <span class="k">if</span> <span class="n">n</span> <span class="ow">in</span> <span class="p">{</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">}:</span>
+<span class="linenos">10</span>        <span class="k">return</span> <span class="n">n</span>
+<span class="linenos">11</span>
+<span class="linenos">12</span>    <span class="n">previous</span><span class="p">,</span> <span class="n">fib_number</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span>
+<span class="linenos">13</span>    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+<span class="linenos">14</span>        <span class="c1"># Compute the next Fibonacci number, remember the previous one</span>
+<span class="linenos">15</span>        <span class="n">previous</span><span class="p">,</span> <span class="n">fib_number</span> <span class="o">=</span> <span class="n">fib_number</span><span class="p">,</span> <span class="n">previous</span> <span class="o">+</span> <span class="n">fib_number</span>
+<span class="linenos">16</span>
+<span class="linenos">17</span>    <span class="k">return</span> <span class="n">fib_number</span>
+</code></pre></div>
+    
+    <button class="codeblock__copy btn btn-outline-secondary border m-1 px-1 d-hover-only" title="Copy to clipboard" aria-label="Copy to clipboard"><span class="icon baseline" aria-hidden="true"><svg aria-hidden="true"><use href="/static/icons.8f1dcd28e216.svg#@copy"/></svg></span></button>
+    
+  </div>
+</code-block>
+<p>Now, instead of using recursion in <code>fibonacci_of()</code>, you&rsquo;re using iteration. This implementation of the Fibonacci sequence algorithm runs in <em>O</em>(<em>n</em>) linear time. Here&rsquo;s a breakdown of the code:</p>
+<ul>
+<li>
+<p><strong>Line 3</strong> defines <code>fibonacci_of()</code>, which takes a positive integer, <code>n</code>, as an argument.</p>
+</li>
+<li>
+<p><strong>Lines 5 and 6</strong> perform the usual validation of <code>n</code>.</p>
+</li>
+<li>
+<p><strong>Lines 9 and 10</strong> handle the base cases where <code>n</code> is either 0 or 1.</p>
+</li>
+<li>
+<p><strong>Line 12</strong> defines two local variables, <code>previous</code> and <code>fib_number</code>, and initializes them with the first two numbers in the Fibonacci sequence.</p>
+</li>
+<li>
+<p><strong>Line 13</strong> starts a <a href="https://realpython.com/python-for-loop/"><code>for</code> loop</a> that iterates from <code>2</code> to <code>n + 1</code>. The loop uses an underscore (<code>_</code>) for the loop variable because it&rsquo;s a throwaway variable and you won&rsquo;t be using this value in the code.</p>
+</li>
+<li>
+<p><strong>Line 15</strong> computes the next Fibonacci number in the sequence and remembers the previous one.</p>
+</li>
+<li>
+<p><strong>Line 17</strong> returns the requested Fibonacci number.</p>
+</li>
+</ul>
+<p>To give this code a try, get back to your interactive session and run the following code:</p>
+<code-block class="mb-3" data-syntax-language="pycon" data-is-repl="true">
+  <div class="codeblock__header codeblock--blue">
+    <span class="me-2 noselect"><span class="visually-hidden">Language: </span>Python</span>
+    
+    <div class="noselect">
+      
+        <span class="codeblock__output-toggle" title="Toggle prompts and output" aria-label="Toggle prompts and output" role="button" tabindex="0"><span class="icon baseline js-codeblock-output-on codeblock__header--icon-lower" aria-hidden="true"><svg aria-hidden="true"><use href="/static/icons.8f1dcd28e216.svg#regular--rectangle-terminal"/></svg></span></span>
+      
+    </div>
+  </div>
+  <div class="codeblock__contents">
+    <div class="highlight highlight--with-header"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">fibonacci_func</span><span class="w"> </span><span class="kn">import</span> <span class="n">fibonacci_of</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">fibonacci_of</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+<span class="go">5</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">fibonacci_of</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span>
+<span class="go">8</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">fibonacci_of</span><span class="p">(</span><span class="mi">7</span><span class="p">)</span>
+<span class="go">13</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="p">[</span><span class="n">fibonacci_of</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">15</span><span class="p">)]</span>
+<span class="go">[0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377]</span>
+</code></pre></div>
+    
+    <button class="codeblock__copy btn btn-outline-secondary border m-1 px-1 d-hover-only" title="Copy to clipboard" aria-label="Copy to clipboard"><span class="icon baseline" aria-hidden="true"><svg aria-hidden="true"><use href="/static/icons.8f1dcd28e216.svg#@copy"/></svg></span></button>
+    
+  </div>
+</code-block>
+<p>This implementation of <code>fibonacci_of()</code> is quite minimal. It uses <strong>iterable unpacking</strong> to compute the Fibonacci numbers during the loops, which is quite efficient memory-wise. However, every time you call the function with a different value of <code>n</code>, it has to recompute the sequence over again. To fix this, you can use <a href="https://realpython.com/inner-functions-what-are-they-good-for/#retaining-state-in-a-closure">closures</a> and make your function remember the already computed values between calls. Go ahead and give it a try!</p>
+</section></section><section class="section2"><h2 id="conclusion">Conclusion<a class="headerlink" href="#conclusion" title="Permanent link"></a></h2>
+<p>The Fibonacci sequence can help you improve your understanding of recursion. In this tutorial, you&rsquo;ve learned what the <strong>Fibonacci sequence</strong> is. You&rsquo;ve also learned about some common algorithms to generate the sequence and how to translate them into Python code.</p>
+<p>The Fibonacci sequence can be an excellent springboard and entry point into the world of recursion, which is a fundamental skill to have as a programmer.</p>
+<p><strong>In this tutorial, you learned how to:</strong></p>
+<ul>
+<li>Generate the Fibonacci sequence using a <strong>recursive algorithm</strong></li>
+<li>Optimize your recursive Fibonacci algorithm using <strong>memoization</strong></li>
+<li>Generate the Fibonacci sequence using an <strong>iterative algorithm</strong></li>
+</ul>
+<p>You&rsquo;ve also visualized the memoized recursive algorithm to get a better understanding of how it works behind the scenes. To do that, you used a <strong>call stack</strong> diagram.</p>
+<p>Once you master the concepts in this tutorial, your Python programming skills will improve along with your recursive algorithmic thinking.</p>
+</section>
+
+    
+      
+      <div class="d-flex justify-content-center flex-wrap gap-2 my-3">
+        
+
+
+<completion-status
+  class="btn-group mb-0"
+  article-slug="fibonacci-sequence-python"
+  
+  
+  
+  data-api-article-bookmark-url="/api/v1/articles/fibonacci-sequence-python/bookmark/"
+  data-api-article-completion-status-url="/api/v1/articles/fibonacci-sequence-python/completion_status/">
+  <button
+    data-target-complete-button
+    title="Click to mark as completed"
+    class="btn btn-secondary border-end"
+    style="border-top-right-radius: 0; border-bottom-right-radius: 0;"
+    disabled>Mark as Completed</button>
+  <button
+    data-target-bookmark-button
+    title="Add bookmark"
+    class="btn btn-secondary border-start"
+    disabled><span class="icon baseline" aria-hidden="true"><svg aria-hidden="true"><use href="/static/icons.8f1dcd28e216.svg#light--bookmark"/></svg></span></button>
+</completion-status>
+
+        
+
+
+
+
+
+<feedback-buttons data-headline="Rate this article" style="display: contents">
+  <div class="btn-group mb-0">
+    <a class="btn btn-secondary border-end" style="border-top-right-radius: 0; border-bottom-right-radius: 0;" title="Liked it" role="button" aria-label="Liked it (thumbs up)" href="/feedback/survey/article/fibonacci-sequence-python/liked/?from=article-footer" target="_blank"><span class="icon" aria-hidden="true"><svg aria-hidden="true"><use href="/static/icons.8f1dcd28e216.svg#light--thumbs-up"/></svg></span></a> 
+    <a class="btn btn-secondary border-start" role="button" aria-label="Disliked it (thumbs down)" title="Disliked it" href="/feedback/survey/article/fibonacci-sequence-python/disliked/?from=article-footer" target="_blank"><span class="icon baseline" aria-hidden="true"><svg aria-hidden="true"><use href="/static/icons.8f1dcd28e216.svg#light--thumbs-down"/></svg></span></a>
+  </div>
+</feedback-buttons>
+
+        
+
+
+
+
+
+
+
+
+
+<share-button
+  url="https://realpython.com/fibonacci-sequence-python/"
+  url-title="A Python Guide to the Fibonacci Sequence"
+  twitter-text="Interesting #Python article by @realpython:"
+  bluesky-text="Interesting #Python article by @realpython.com:"
+  email-subject="Python article for you"
+  email-body="Check out this Python article:%0A%0AA Python Guide to the Fibonacci Sequence"
+>
+  <button class="btn btn-secondary" type="button" title="Share" aria-label="Share"><span class="icon baseline me-1" aria-hidden="true"><svg aria-hidden="true"><use href="/static/icons.8f1dcd28e216.svg#@share-light"/></svg></span>Share</button>
+</share-button>
+
+
+      </div>
+    
+
+    
+      
+
+
+<div class="sidebar-module sidebar-module-inset border card p-2 mb-3">
+  <p class="mb-2">
+    <span class="badge rounded-pill text-bg-success"><span class="icon baseline" aria-hidden="true"><svg aria-hidden="true"><use href="/static/icons.8f1dcd28e216.svg#v4--play-circle"/></svg></span> Recommended Course</span>
+  </p>
+
+  
+  <p class="mb-0">
+    <a href="/courses/python-fibonacci-sequence/" class="text-success fw-medium" data-previewable>Exploring the Fibonacci Sequence With Python</a>
+    <span class="text-muted small">(23m)</span>
+  </p>
+  
+
+  
+</div>
+
+    
+  </div>
+
+  
+    
+
+
+
+  <div class="card mt-4 mb-4 bg-secondary">
+  <p class="card-header h3 text-center bg-body-tertiary">🐍 Python Tricks 💌</p>
+  <div class="card-body">
+    <div class="container">
+      <div class="row">
+        <div class="col-12 col-sm-7">
+          <p>Get a short &amp; sweet <strong>Python Trick</strong> delivered to your inbox every couple of days. No spam ever. Unsubscribe any time. Curated by the Real Python team.</p>
+        </div>
+        <div class="col-12 col-sm-5">
+          <img loading="lazy" class="img-fluid rounded mb-3" src="https://files.realpython.com/media/pytrick-dict-merge.4201a0125a5e.png" width="738" height="490" srcset="/cdn-cgi/image/width=184,format=auto/https://files.realpython.com/media/pytrick-dict-merge.4201a0125a5e.png 184w, /cdn-cgi/image/width=246,format=auto/https://files.realpython.com/media/pytrick-dict-merge.4201a0125a5e.png 246w, /cdn-cgi/image/width=369,format=auto/https://files.realpython.com/media/pytrick-dict-merge.4201a0125a5e.png 369w, /cdn-cgi/image/width=738,format=auto/https://files.realpython.com/media/pytrick-dict-merge.4201a0125a5e.png 738w" sizes="(max-width: 576px) 100vw, 400px" alt="Dictionary merging in Python 3.5+">
+
+        </div>
+      </div>
+      <div class="row mb-3">
+        <form class="col-12" action="/optins/process/" method="post">
+          <input type="hidden" name="csrfmiddlewaretoken" value="jWhx2gDyjRS8wshxaiAb0hcsBvFS6dFTxsq3QoXymhbKaRMrO9ul4qW39AYOBVPI">
+          <input type="hidden" name="slug" value="static-python-tricks-footer">
+<input type="hidden" name="version" value="556">
+<input type="hidden" name="source_path" value="/fibonacci-sequence-python/">
+
+          <div class="mb-3">
+            <input name="email" type="email" class="form-control form-control-lg" placeholder="Email Address" required>
+          </div>
+          <button name="submit" type="submit" class="btn btn-primary w-100">Send Me Python Tricks »</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+  
+
+  
+
+
+
+<div class="card mt-3" id="author">
+  <p class="card-header h3">About <strong>Mandy Wong</strong></p>
+  <div class="card-body">
+    <div class="container p-0">
+      <div class="row">
+        <div class="col-12 col-md-3 align-self-center">
+          <a href="/team/mwong/" aria-hidden="true" tabindex="-1">
+            
+<author-avatar>
+  <img loading="lazy" src="/cdn-cgi/image/width=790,height=790,fit=crop,gravity=auto,format=auto/https://files.realpython.com/media/mwong-sq.62da4e647b4c.jpeg" srcset="/cdn-cgi/image/width=197,height=197,fit=crop,gravity=auto,format=auto/https://files.realpython.com/media/mwong-sq.62da4e647b4c.jpeg 197w, /cdn-cgi/image/width=263,height=263,fit=crop,gravity=auto,format=auto/https://files.realpython.com/media/mwong-sq.62da4e647b4c.jpeg 263w, /cdn-cgi/image/width=395,height=395,fit=crop,gravity=auto,format=auto/https://files.realpython.com/media/mwong-sq.62da4e647b4c.jpeg 395w, /cdn-cgi/image/width=790,height=790,fit=crop,gravity=auto,format=auto/https://files.realpython.com/media/mwong-sq.62da4e647b4c.jpeg 790w" sizes="(min-width: 580px) 154px, calc(33.08vw - 24px)" style="background: #bbc2de;" width="500" height="500" class="rounded-circle d-block d-md-none img-fluid w-33 mb-0 mx-auto" alt="Mandy Wong">
+</author-avatar>
+
+            
+<author-avatar>
+  <img loading="lazy" src="/cdn-cgi/image/width=790,height=790,fit=crop,gravity=auto,format=auto/https://files.realpython.com/media/mwong-sq.62da4e647b4c.jpeg" srcset="/cdn-cgi/image/width=197,height=197,fit=crop,gravity=auto,format=auto/https://files.realpython.com/media/mwong-sq.62da4e647b4c.jpeg 197w, /cdn-cgi/image/width=263,height=263,fit=crop,gravity=auto,format=auto/https://files.realpython.com/media/mwong-sq.62da4e647b4c.jpeg 263w, /cdn-cgi/image/width=395,height=395,fit=crop,gravity=auto,format=auto/https://files.realpython.com/media/mwong-sq.62da4e647b4c.jpeg 395w, /cdn-cgi/image/width=790,height=790,fit=crop,gravity=auto,format=auto/https://files.realpython.com/media/mwong-sq.62da4e647b4c.jpeg 790w" sizes="(min-width: 1200px) 140px, calc(-1.5vw + 137px)" style="background: #bbc2de;" width="500" height="500" class="rounded-circle d-none d-md-block img-fluid w-100 mb-0" alt="Mandy Wong">
+</author-avatar>
+
+          </a>
+        </div>
+        <div class="col mt-3">
+          <p>Mandy is a budding Pythonista who wants to share her love and knowledge of Python and software engineering with the world. She is also a TinyML + Data Engineer in training, a Muley, and an aspiring part-time top competitive golfer.</p>
+          <a href="/team/mwong/" class="card-link">» More about Mandy</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <hr class="my-0">
+  <div class="card-body pb-0">
+    <div class="container">
+      <div class="row">
+        <p><em>Each tutorial at Real Python is created by a team of developers so that it meets our high quality standards. The team members who worked on this tutorial are:</em></p>
+      </div>
+
+      
+        
+          <div class="row align-items-center w-100 mx-auto">
+        
+
+        <div class="col-4 col-sm-2 align-self-center">
+          
+            <a href="/team/asantos/" aria-hidden="true" tabindex="-1" data-previewable>
+<author-avatar>
+  <img loading="lazy" src="/cdn-cgi/image/width=500,height=500,fit=crop,gravity=auto,format=auto/https://files.realpython.com/media/Aldren_Santos_Real_Python.6b0861d8b841.png" srcset="/cdn-cgi/image/width=125,height=125,fit=crop,gravity=auto,format=auto/https://files.realpython.com/media/Aldren_Santos_Real_Python.6b0861d8b841.png 125w, /cdn-cgi/image/width=166,height=166,fit=crop,gravity=auto,format=auto/https://files.realpython.com/media/Aldren_Santos_Real_Python.6b0861d8b841.png 166w, /cdn-cgi/image/width=250,height=250,fit=crop,gravity=auto,format=auto/https://files.realpython.com/media/Aldren_Santos_Real_Python.6b0861d8b841.png 250w, /cdn-cgi/image/width=500,height=500,fit=crop,gravity=auto,format=auto/https://files.realpython.com/media/Aldren_Santos_Real_Python.6b0861d8b841.png 500w" sizes="(min-width: 1200px) 73px, (min-width: 780px) calc(-0.75vw + 69px), (min-width: 580px) 43px, calc(33.46vw - 64px)" style="background: #d2cec3;" width="500" height="500" class="rounded-circle img-fluid w-100" alt="Aldren Santos">
+</author-avatar>
+</a>
+          
+        </div>
+        <div class="col ps-0 d-none d-sm-block">
+          <a href="/team/asantos/" class="card-link small" data-previewable><p>Aldren</p></a>
+        </div>
+
+        
+
+        
+      
+        
+
+        <div class="col-4 col-sm-2 align-self-center">
+          
+            <a href="/team/damos/" aria-hidden="true" tabindex="-1" data-previewable>
+<author-avatar>
+  <img loading="lazy" src="/cdn-cgi/image/width=400,height=400,fit=crop,gravity=auto,format=auto/https://files.realpython.com/media/me-small.f5f49f1c48e1.jpg" srcset="/cdn-cgi/image/width=100,height=100,fit=crop,gravity=auto,format=auto/https://files.realpython.com/media/me-small.f5f49f1c48e1.jpg 100w, /cdn-cgi/image/width=133,height=133,fit=crop,gravity=auto,format=auto/https://files.realpython.com/media/me-small.f5f49f1c48e1.jpg 133w, /cdn-cgi/image/width=200,height=200,fit=crop,gravity=auto,format=auto/https://files.realpython.com/media/me-small.f5f49f1c48e1.jpg 200w, /cdn-cgi/image/width=400,height=400,fit=crop,gravity=auto,format=auto/https://files.realpython.com/media/me-small.f5f49f1c48e1.jpg 400w" sizes="(min-width: 1200px) 73px, (min-width: 780px) calc(-0.75vw + 69px), (min-width: 580px) 43px, calc(33.46vw - 64px)" style="background: #7c7e7d;" width="500" height="500" class="rounded-circle img-fluid w-100" alt="David Amos">
+</author-avatar>
+</a>
+          
+        </div>
+        <div class="col ps-0 d-none d-sm-block">
+          <a href="/team/damos/" class="card-link small" data-previewable><p>David</p></a>
+        </div>
+
+        
+
+        
+      
+        
+
+        <div class="col-4 col-sm-2 align-self-center">
+          
+            <a href="/team/gahjelle/" aria-hidden="true" tabindex="-1" data-previewable>
+<author-avatar>
+  <img loading="lazy" src="/cdn-cgi/image/width=800,height=800,fit=crop,gravity=auto,format=auto/https://files.realpython.com/media/gahjelle.470149ee709e.jpg" srcset="/cdn-cgi/image/width=200,height=200,fit=crop,gravity=auto,format=auto/https://files.realpython.com/media/gahjelle.470149ee709e.jpg 200w, /cdn-cgi/image/width=266,height=266,fit=crop,gravity=auto,format=auto/https://files.realpython.com/media/gahjelle.470149ee709e.jpg 266w, /cdn-cgi/image/width=400,height=400,fit=crop,gravity=auto,format=auto/https://files.realpython.com/media/gahjelle.470149ee709e.jpg 400w, /cdn-cgi/image/width=800,height=800,fit=crop,gravity=auto,format=auto/https://files.realpython.com/media/gahjelle.470149ee709e.jpg 800w" sizes="(min-width: 1200px) 73px, (min-width: 780px) calc(-0.75vw + 69px), (min-width: 580px) 43px, calc(33.46vw - 64px)" style="background: #080a09;" width="500" height="500" class="rounded-circle img-fluid w-100" alt="Geir Arne Hjelle">
+</author-avatar>
+</a>
+          
+        </div>
+        <div class="col ps-0 d-none d-sm-block">
+          <a href="/team/gahjelle/" class="card-link small" data-previewable><p>Geir Arne</p></a>
+        </div>
+
+        
+
+        
+          </div>
+        
+      
+        
+          <div class="row align-items-center w-100 mx-auto">
+        
+
+        <div class="col-4 col-sm-2 align-self-center">
+          
+            <a href="/team/jjablonski/" aria-hidden="true" tabindex="-1" data-previewable>
+<author-avatar>
+  <img loading="lazy" src="/cdn-cgi/image/width=800,height=800,fit=crop,gravity=auto,format=auto/https://files.realpython.com/media/jjablonksi-avatar.e37c4f83308e.jpg" srcset="/cdn-cgi/image/width=200,height=200,fit=crop,gravity=auto,format=auto/https://files.realpython.com/media/jjablonksi-avatar.e37c4f83308e.jpg 200w, /cdn-cgi/image/width=266,height=266,fit=crop,gravity=auto,format=auto/https://files.realpython.com/media/jjablonksi-avatar.e37c4f83308e.jpg 266w, /cdn-cgi/image/width=400,height=400,fit=crop,gravity=auto,format=auto/https://files.realpython.com/media/jjablonksi-avatar.e37c4f83308e.jpg 400w, /cdn-cgi/image/width=800,height=800,fit=crop,gravity=auto,format=auto/https://files.realpython.com/media/jjablonksi-avatar.e37c4f83308e.jpg 800w" sizes="(min-width: 1200px) 73px, (min-width: 780px) calc(-0.75vw + 69px), (min-width: 580px) 43px, calc(33.46vw - 64px)" style="background: #b8b9bb;" width="500" height="500" class="rounded-circle img-fluid w-100" alt="Joanna Jablonski">
+</author-avatar>
+</a>
+          
+        </div>
+        <div class="col ps-0 d-none d-sm-block">
+          <a href="/team/jjablonski/" class="card-link small" data-previewable><p>Joanna</p></a>
+        </div>
+
+        
+
+        
+      
+        
+
+        <div class="col-4 col-sm-2 align-self-center">
+          
+            <a href="/team/jschmitt/" aria-hidden="true" tabindex="-1" data-previewable>
+<author-avatar>
+  <img loading="lazy" src="/cdn-cgi/image/width=400,height=400,fit=crop,gravity=auto,format=auto/https://files.realpython.com/media/profile-small_js.2f4d0d8da1ca.jpg" srcset="/cdn-cgi/image/width=100,height=100,fit=crop,gravity=auto,format=auto/https://files.realpython.com/media/profile-small_js.2f4d0d8da1ca.jpg 100w, /cdn-cgi/image/width=133,height=133,fit=crop,gravity=auto,format=auto/https://files.realpython.com/media/profile-small_js.2f4d0d8da1ca.jpg 133w, /cdn-cgi/image/width=200,height=200,fit=crop,gravity=auto,format=auto/https://files.realpython.com/media/profile-small_js.2f4d0d8da1ca.jpg 200w, /cdn-cgi/image/width=400,height=400,fit=crop,gravity=auto,format=auto/https://files.realpython.com/media/profile-small_js.2f4d0d8da1ca.jpg 400w" sizes="(min-width: 1200px) 73px, (min-width: 780px) calc(-0.75vw + 69px), (min-width: 580px) 43px, calc(33.46vw - 64px)" style="background: #c0c0c0;" width="500" height="500" class="rounded-circle img-fluid w-100" alt="Jacob Schmitt">
+</author-avatar>
+</a>
+          
+        </div>
+        <div class="col ps-0 d-none d-sm-block">
+          <a href="/team/jschmitt/" class="card-link small" data-previewable><p>Jacob</p></a>
+        </div>
+
+        
+
+        
+      
+        
+
+        <div class="col-4 col-sm-2 align-self-center">
+          
+            <a href="/team/lpozoramos/" aria-hidden="true" tabindex="-1" data-previewable>
+<author-avatar>
+  <img loading="lazy" src="/cdn-cgi/image/width=862,height=862,fit=crop,gravity=auto,format=auto/https://files.realpython.com/media/Perfil_final1.9f896bc212f6.jpg" srcset="/cdn-cgi/image/width=215,height=215,fit=crop,gravity=auto,format=auto/https://files.realpython.com/media/Perfil_final1.9f896bc212f6.jpg 215w, /cdn-cgi/image/width=287,height=287,fit=crop,gravity=auto,format=auto/https://files.realpython.com/media/Perfil_final1.9f896bc212f6.jpg 287w, /cdn-cgi/image/width=431,height=431,fit=crop,gravity=auto,format=auto/https://files.realpython.com/media/Perfil_final1.9f896bc212f6.jpg 431w, /cdn-cgi/image/width=862,height=862,fit=crop,gravity=auto,format=auto/https://files.realpython.com/media/Perfil_final1.9f896bc212f6.jpg 862w" sizes="(min-width: 1200px) 73px, (min-width: 780px) calc(-0.75vw + 69px), (min-width: 580px) 43px, calc(33.46vw - 64px)" style="background: #534032;" width="500" height="500" class="rounded-circle img-fluid w-100" alt="Leodanis Pozo Ramos">
+</author-avatar>
+</a>
+          
+        </div>
+        <div class="col ps-0 d-none d-sm-block">
+          <a href="/team/lpozoramos/" class="card-link small" data-previewable><p>Leodanis</p></a>
+        </div>
+
+        
+
+        
+          </div>
+        
+      
+        
+          <div class="row align-items-center w-100 mx-auto">
+        
+
+        <div class="col-4 col-sm-2 align-self-center">
+          
+            <a href="/team/sparker/" aria-hidden="true" tabindex="-1" data-previewable>
+<author-avatar>
+  <img loading="lazy" src="/cdn-cgi/image/width=800,height=800,fit=crop,gravity=auto,format=auto/https://files.realpython.com/media/profpic_sp.a008488b6af0.jpeg" srcset="/cdn-cgi/image/width=200,height=200,fit=crop,gravity=auto,format=auto/https://files.realpython.com/media/profpic_sp.a008488b6af0.jpeg 200w, /cdn-cgi/image/width=266,height=266,fit=crop,gravity=auto,format=auto/https://files.realpython.com/media/profpic_sp.a008488b6af0.jpeg 266w, /cdn-cgi/image/width=400,height=400,fit=crop,gravity=auto,format=auto/https://files.realpython.com/media/profpic_sp.a008488b6af0.jpeg 400w, /cdn-cgi/image/width=800,height=800,fit=crop,gravity=auto,format=auto/https://files.realpython.com/media/profpic_sp.a008488b6af0.jpeg 800w" sizes="(min-width: 1200px) 73px, (min-width: 780px) calc(-0.75vw + 69px), (min-width: 580px) 43px, calc(33.46vw - 64px)" style="background: #c5b2a3;" width="500" height="500" class="rounded-circle img-fluid w-100" alt="Sadie Parker">
+</author-avatar>
+</a>
+          
+        </div>
+        <div class="col ps-0 d-none d-sm-block">
+          <a href="/team/sparker/" class="card-link small" data-previewable><p>Sadie</p></a>
+        </div>
+
+        
+          
+          
+            <div class="col-4 col-sm-2 align-self-center"></div>
+            <div class="col ps-0 d-none d-sm-block"></div>
+            <div class="col-4 col-sm-2 align-self-center"></div>
+            <div class="col ps-0 d-none d-sm-block"></div>
+          
+        
+
+        
+          </div>
+        
+      
+    </div>
+  </div>
+  
+
+</div>
+
+
+
+
+
+  
+    
+
+<div class="bg-body-tertiary rounded py-4 my-4 shadow shadow-sm mx-n2">
+  
+  <div class="col-12 text-center d-block d-md-none">
+    <p class="h2 mb-3">Master <u><span class="marker-highlight">Real-World Python Skills</span></u> With Unlimited Access to Real&nbsp;Python</p>
+    <p class="mb-1"><img loading="lazy" class="w-75" src="/static/videos/lesson-locked.f5105cfd26db.svg" width="510" height="260" alt="Locked learning resources"></p>
+    <p class="mx-auto w-75 mb-3 small"><strong>Join us and get access to thousands of tutorials, hands-on video courses, and a community of expert&nbsp;Pythonistas:</strong></p>
+    <p class="mb-0"><a href="/account/join/?utm_source=rp_article_footer&utm_content=fibonacci-sequence-python" class="btn btn-primary px-4 mb-0">Level Up Your Python Skills »</a></p>
+  </div>
+
+  
+  <div class="col-12 text-center d-none d-md-block">
+    <p class="h2 mb-2">Master <u><span class="marker-highlight">Real-World Python Skills</span></u><br>With Unlimited Access to Real&nbsp;Python</p>
+    <p class="mb-2"><img loading="lazy" class="w-50 mb-2" src="/static/videos/lesson-locked.f5105cfd26db.svg" width="510" height="260" alt="Locked learning resources"></p>
+    <p class="mx-auto w-50 mb-3"><strong>Join us and get access to thousands of tutorials, hands-on video courses, and a community of expert Pythonistas:</strong></p>
+    <p><a href="/account/join/?utm_source=rp_article_footer&utm_content=fibonacci-sequence-python" class="btn btn-primary px-4">Level Up Your Python Skills »</a></p>
+  </div>
+</div>
+
+  
+
+  
+  <div class="card mt-4" id="reader-comments">
+    <p class="card-header h3">What Do You Think?</p>
+    
+    <div class="text-center mt-3 mb-0 p-0">
+      <div class="mb-2">
+        <strong class="me-2">Rate this article:</strong>
+        
+
+
+
+
+
+<feedback-buttons data-headline="Rate this article" style="display: contents">
+  <div class="btn-group mb-0">
+    <a class="btn btn-secondary border-end" style="border-top-right-radius: 0; border-bottom-right-radius: 0;" title="Liked it" role="button" aria-label="Liked it (thumbs up)" href="/feedback/survey/article/fibonacci-sequence-python/liked/?from=article-comments" target="_blank"><span class="icon" aria-hidden="true"><svg aria-hidden="true"><use href="/static/icons.8f1dcd28e216.svg#light--thumbs-up"/></svg></span></a> 
+    <a class="btn btn-secondary border-start" role="button" aria-label="Disliked it (thumbs down)" title="Disliked it" href="/feedback/survey/article/fibonacci-sequence-python/disliked/?from=article-comments" target="_blank"><span class="icon baseline" aria-hidden="true"><svg aria-hidden="true"><use href="/static/icons.8f1dcd28e216.svg#light--thumbs-down"/></svg></span></a>
+  </div>
+</feedback-buttons>
+
+      </div>
+      
+
+
+
+<div class="d-flex justify-content-center flex-wrap gap-2 my-3">
+  
+  
+  <a target="_blank" rel="nofollow" href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Frealpython.com%2Ffibonacci-sequence-python%2F" class="btn btn-sm share-linkedin" aria-label="Share on LinkedIn"><span class="icon baseline me-1" aria-hidden="true"><svg aria-hidden="true"><use href="/static/icons.8f1dcd28e216.svg#brands--linkedin"/></svg></span>LinkedIn</a>
+  
+  
+  <a target="_blank" rel="nofollow" href="https://twitter.com/intent/tweet/?text=Interesting%20Python%20article%20on%20%40realpython%3A%20A%20Python%20Guide%20to%20the%20Fibonacci%20Sequence&url=https%3A%2F%2Frealpython.com%2Ffibonacci-sequence-python%2F" class="btn btn-sm share-x-twitter" aria-label="Share on X/Twitter"><span class="icon baseline me-1" aria-hidden="true"><svg aria-hidden="true"><use href="/static/icons.8f1dcd28e216.svg#brands--x-twitter"/></svg></span>Twitter</a>
+  
+  
+  <a target="_blank" rel="nofollow" href="https://bsky.app/intent/compose?text=Interesting%20Python%20article%20on%20%40realpython.com%3A%20A%20Python%20Guide%20to%20the%20Fibonacci%20Sequence%20https%3A%2F%2Frealpython.com%2Ffibonacci-sequence-python%2F" class="btn btn-sm share-bluesky" aria-label="Share on Bluesky"><span class="icon baseline me-1" aria-hidden="true"><svg aria-hidden="true"><use href="/static/icons.8f1dcd28e216.svg#brands--bluesky"/></svg></span>Bluesky</a>
+  
+  
+  <a target="_blank" rel="nofollow" href="https://facebook.com/sharer/sharer.php?u=https%3A%2F%2Frealpython.com%2Ffibonacci-sequence-python%2F" class="btn btn-sm share-facebook" aria-label="Share on Facebook"><span class="icon baseline me-1" aria-hidden="true"><svg aria-hidden="true"><use href="/static/icons.8f1dcd28e216.svg#brands--facebook"/></svg></span>Facebook</a>
+  
+  
+  <a target="_blank" rel="nofollow" href="mailto:?subject=Python%20article%20for%20you&body=A%20Python%20Guide%20to%20the%20Fibonacci%20Sequence%20on%20Real%20Python%0A%0Ahttps%3A%2F%2Frealpython.com%2Ffibonacci-sequence-python%2F%0A" class="btn btn-sm share-email" aria-label="Share via Email"><span class="icon baseline me-1" aria-hidden="true"><svg aria-hidden="true"><use href="/static/icons.8f1dcd28e216.svg#solid--envelope"/></svg></span>Email</a>
+  
+  
+</div>
+
+    </div>
+    
+    <div class="card-body pt-0 text-wrap-pretty">
+      <p>What’s your #1 takeaway or favorite thing you learned? How are you going to put your newfound skills to use? Leave a comment below and let us know.</p>
+
+      <div class="alert alert-dark">
+        <p class="mb-0"><strong>Commenting Tips:</strong> The most useful comments are those written with the goal of learning from or helping out other students. <a href="https://realpython.com/python-beginner-tips/#tip-9-ask-good-questions" target="_blank">Get tips for asking good questions</a> and <a href="https://support.realpython.com" target="_blank">get answers to common questions in our support portal</a>.<hr>Looking for a real-time conversation? Visit the <a href="/community/" target="_blank">Real Python Community Chat</a> or join the next <a href="/office-hours/" target="_blank">&ldquo;Office&nbsp;Hours&rdquo; Live Q&A Session</a>. Happy Pythoning!</p>
+
+      </div>
+
+      <div class="mb-4" id="disqus_thread">
+      
+      </div>
+      
+    </div>
+  </div>
+
+  <div class="card mt-4 mb-4">
+    <p class="card-header h3">Keep Learning</p>
+    
+
+
+
+<keep-learning-ask></keep-learning-ask>
+
+    <div class="card-body">
+
+      <p class="mb-0">Related Topics:
+      
+        
+<a href="/tutorials/intermediate/" class="badge bg-body-tertiary text-muted" data-previewable>intermediate</a>
+
+      
+        
+<a href="/tutorials/algorithms/" class="badge bg-body-tertiary text-muted" data-previewable>algorithms</a>
+
+      
+      </p>
+
+      
+
+      
+        <p class="mt-3 mb-0">Related Courses:</p>
+        <ul class="mb-0">
+          
+            <li>
+              <a href="/courses/python-fibonacci-sequence/?utm_source=realpython&amp;utm_medium=web&amp;utm_campaign=related-course&amp;utm_content=fibonacci-sequence-python" data-previewable>Exploring the Fibonacci Sequence With Python</a>
+            </li>
+          
+        </ul>
+      
+
+      
+
+    </div>
+  </div>
+
+  
+    
+
+<div class="modal fade" tabindex="-1" role="dialog" id="rprw">
+  <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+    <div class="modal-content">
+
+      <div class="modal-header border-0">
+        <div class="col-12 col-lg-9 mx-auto modal-title text-center my-2">
+          <h2 class="my-0">Keep reading Real&nbsp;Python by creating a free account or signing&nbsp;in:</h2>
+        </div>
+      </div>
+
+      
+      <div class="modal-body bg-body-tertiary">
+        <div class="col-12 text-center">
+
+          <div class="col-12 col-lg-8 mx-auto mb-2 mt-3">
+            <a href="/account/signup/?intent=continue_reading&utm_source=rp&utm_medium=web&utm_campaign=rwn&utm_content=v1&next=%2Ffibonacci-sequence-python%2F"><img loading="lazy" class="w-100" src="/static/videos/lesson-locked.f5105cfd26db.svg"  width="510" height="260" alt="Keep reading"></a>
+          </div>
+
+          <p><a href="/account/signup/?intent=continue_reading&utm_source=rp&utm_medium=web&utm_campaign=rwn&utm_content=v1&next=%2Ffibonacci-sequence-python%2F" class="btn btn-primary px-5">Continue »</a></p>
+
+        </div>
+      </div>
+      
+
+      <div class="modal-footer border-0">
+        <p class="text-center text-muted mt-2 mb-1">Already have an account? <a href="/account/login/?intent=continue_reading&next=/fibonacci-sequence-python/">Sign-In</a></p>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+    <script src="/static/frontend/reader/rw.b9e6d539a3e4.js" async></script>
+  
+
+
+    </div>
+
+  </div>
+
+      
+    </main>
+
+    
+    
+
+    
+    
+    
+    
+      
+        
+      
+    
+
+    
+    
+      
+        
+          <div class="modal fade" id="modal-python-basics-sample-download" tabindex="-1" aria-labelledby="modal-python-basics-sample-download-title" aria-describedby="modal-python-basics-sample-download-desc">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+
+      <div class="modal-header bg-body-tertiary pt-3 pb-2">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-12">
+              <div class="progress" style="height: .5rem;" aria-hidden="true">
+                <div class="progress-bar progress-bar-striped progress-bar-animated w-75" role="progressbar"></div>
+              </div>
+            </div>
+            <div class="col-12">
+              <p id="modal-python-basics-sample-download-desc" class="text-muted text-center mb-0 mt-2">Almost there! Complete this form and click the button below to gain instant&nbsp;access:</p>
+            </div>
+          </div>
+        </div>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <div class="modal-body m-4">
+        <div class="container-fluid">
+          <div class="row align-items-center text-center">
+            <div class="col-12 col-lg-4 mb-4 mb-lg-0">
+              
+              
+                <img loading="lazy" class="img-fluid rounded" src="https://files.realpython.com/media/python-basics-3d-transparent-square.4fe8f4be40f7.png" width="1000" height="1000" srcset="/cdn-cgi/image/width=250,format=auto/https://files.realpython.com/media/python-basics-3d-transparent-square.4fe8f4be40f7.png 250w, /cdn-cgi/image/width=333,format=auto/https://files.realpython.com/media/python-basics-3d-transparent-square.4fe8f4be40f7.png 333w, /cdn-cgi/image/width=500,format=auto/https://files.realpython.com/media/python-basics-3d-transparent-square.4fe8f4be40f7.png 500w, /cdn-cgi/image/width=1000,format=auto/https://files.realpython.com/media/python-basics-3d-transparent-square.4fe8f4be40f7.png 1000w" sizes="(min-width: 1000px) 207px, (min-width: 580px) 382px, calc(100vw - 134px)" alt="Python Basics: A Practical Introduction to Python 3">
+              
+            </div>
+            <div class="col">
+              <p id="modal-python-basics-sample-download-title" class="text-center h3 mb-4">&quot;Python Basics: A Practical Introduction to Python 3&quot; – Free Sample Chapter (PDF)</p>
+
+              <form class="col-12" action="/optins/process/" method="post">
+                <input type="hidden" name="csrfmiddlewaretoken" value="jWhx2gDyjRS8wshxaiAb0hcsBvFS6dFTxsq3QoXymhbKaRMrO9ul4qW39AYOBVPI">
+                <input type="hidden" name="slug" value="python-basics-sample-download">
+                <input type="hidden" name="version" value="98">
+                <input type="hidden" name="source_path" value="/fibonacci-sequence-python/"> 
+                <div class="mb-3">
+                  <input type="email" name="email" class="form-control" placeholder="Email Address" required autofocus>
+                </div>
+                <button name="submit" type="submit" class="btn btn-primary w-100 text-wrap">Send My Sample Chapter »</button>
+                <p class="mb-0 mt-2 text-muted text-center"><small>🔒 No spam. We take your privacy seriously.</small></p>
+              </form>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+        
+      
+    
+
+    
+      
+        
+
+<footer class="footer pb-4">
+  <div class="mx-5">
+
+    <div class="d-flex flex-wrap justify-content-lg-center mx-n4">
+
+      <div class="mx-4 mt-5">
+        <h5>Learn Python</h5>
+        <ul class="list-unstyled mb-0">
+          <li><a href="/start-here/">Start Here</a></li>
+          <li><a href="/search">Learning Resources</a></li>
+          <li><a href="/mentor/">Code Mentor</a></li>
+          <li><a href="/ref/">Python Reference</a></li>
+          <li><a href="/cheatsheets/python/">Python Cheat Sheet</a></li>
+          <li><a href="https://support.realpython.com/">Support Center</a></li>
+        </ul>
+      </div>
+
+      <div class="mx-4 mt-5">
+        <h5>Courses &amp; Paths</h5>
+        <ul class="list-unstyled mb-0">
+          <li><a href="/learning-paths/">Learning Paths</a></li>
+          <li><a href="/quizzes/">Quizzes &amp; Exercises</a></li>
+          <li><a href="/tutorials/all/">Browse Topics</a></li>
+          <li><a href="/live/">Live Courses</a></li>
+          <li><a href="/books/">Books</a></li>
+        </ul>
+      </div>
+
+      <div class="mx-4 mt-5">
+        <h5>Community</h5>
+        <ul class="list-unstyled mb-0">
+          <li><a href="/podcasts/rpp/">Podcast</a></li>
+          <li><a href="/newsletter/">Newsletter</a></li>
+          <li><a href="/community/">Community Chat</a></li>
+          <li><a href="/office-hours/">Office Hours</a></li>
+          <li><a href="/learner-stories/">Learner Stories</a></li>
+        </ul>
+      </div>
+
+      <div class="mx-4 mt-5">
+        <h5>Membership</h5>
+        <ul class="list-unstyled mb-0">
+          
+            <li><a href="/account/join/">Plans &amp; Pricing</a></li>
+          
+          <li><a href="/account/join-team/">Team Plans</a></li>
+          <li><a href="/account/join-team/inquiry/">For Business</a></li>
+          <li><a href="/account/join-team/education-inquiry/">For Schools</a></li>
+          <li><a href="/learner-stories/">Reviews</a></li>
+        </ul>
+      </div>
+
+      <div class="mx-4 mt-5">
+        <h5>Company</h5>
+        <ul class="list-unstyled mb-0">
+          <li><a href="/about/">About Us</a></li>
+          <li><a href="/team/">Team</a></li>
+          <li><a href="/mission/">Mission &amp; Values</a></li>
+          <li><a href="/editorial-guidelines/">Editorial Guidelines</a></li>
+          <li><a href="/sponsorships/">Sponsorships</a></li>
+          <li><a href="https://realpython.workable.com">Careers</a></li>
+          <li><a href="/media-kit/">Press Kit</a></li>
+          <li><a href="/merch">Merch</a></li>
+        </ul>
+      </div>
+
+    </div>
+
+    <div class="d-flex flex-column flex-lg-row justify-content-center align-items-center mt-5 ">
+
+      <div class="d-flex justify-content-center mx-4 text-muted flex-nowrap">
+        <a class="highlight-icon-hover-dark px-2 ms-n2" title="YouTube" href="https://www.youtube.com/realpython"><span class="icon baseline" aria-hidden="true"><svg aria-hidden="true"><use href="/static/icons.8f1dcd28e216.svg#brands--youtube"/></svg></span></a>
+        <a class="highlight-icon-hover-dark px-2" title="X/Twitter" href="https://x.com/realpython"><span class="icon baseline" aria-hidden="true"><svg aria-hidden="true"><use href="/static/icons.8f1dcd28e216.svg#brands--x-twitter"/></svg></span></a>
+        <a class="highlight-icon-hover-dark px-2" title="LinkedIn" href="https://www.linkedin.com/company/realpython-com"><span class="icon baseline" aria-hidden="true"><svg aria-hidden="true"><use href="/static/icons.8f1dcd28e216.svg#brands--linkedin"/></svg></span></a>
+        <a class="highlight-icon-hover-dark px-2" title="Facebook" href="https://www.facebook.com/LearnRealPython"><span class="icon baseline" aria-hidden="true"><svg aria-hidden="true"><use href="/static/icons.8f1dcd28e216.svg#brands--facebook"/></svg></span></a>
+        <a class="highlight-icon-hover-dark px-2 me-n2" title="GitHub" href="https://github.com/realpython/"><span class="icon baseline" aria-hidden="true"><svg aria-hidden="true"><use href="/static/icons.8f1dcd28e216.svg#brands--github"/></svg></span></a>
+      </div>
+
+      <div class="mx-4 small text-muted text-center text-wrap-balance">
+        <a href="/privacy-policy/">Privacy Policy</a>&nbsp;⋅
+        <a href="/terms/">Terms of Use</a>&nbsp;⋅
+        
+        <a href="/security/">Security</a>&nbsp;⋅
+        
+        <a href="/contact/">Contact</a>
+      </div>
+
+      <div class="mx-4 small text-muted user-select-none text-center">
+        <span><span class="icon baseline text-color-red" aria-hidden="true"><svg aria-hidden="true"><use href="/static/icons.8f1dcd28e216.svg#solid--heart"/></svg></span> Happy Pythoning!</span>
+      </div>
+
+    </div>
+
+    <div class="d-flex justify-content-center small mt-4">
+      <div class="text-muted text-center text-wrap-balance" style="line-height: 1.25;">
+        <small>
+          © 2012–2026 DevCademy Media Inc. DBA Real&nbsp;Python. All rights reserved.<br>
+          REALPYTHON™ is a trademark of DevCademy&nbsp;Media&nbsp;Inc.
+        </small>
+        <a href="/" class="d-flex justify-content-center mt-3 mx-auto w-50">
+          <img loading="lazy" src="/static/real-python-logo-primary.973743b6d39d.svg" class="img-fluid flex-grow-1" width="120" height="47" alt="Real Python - Online Python Training (logo)">
+        </a>
+      </div>
+    </div>
+
+  </div>
+</footer>
+
+      
+    
+
+    
+
+    
+    <script>
+      (function() {
+        var isAndroid = navigator.userAgent.toLowerCase().indexOf("android") > -1;
+        if (!isAndroid) {
+          return;
+        }
+
+        var styles = `
+        @font-face {
+          font-family: 'DejaVu Sans Mono';
+          font-weight: normal;
+          font-style: normal;
+          font-display: swap;
+          src: url('/static/mfonts/dejavu-sans-mono.33f00225f915.woff2') format('woff2'),
+               url('/static/mfonts/dejavu-sans-mono.0da77d3739f3.woff') format('woff'),
+               url('/static/mfonts/dejavu-sans-mono.c2356fc49835.ttf') format('truetype');
+        }
+        code, kbd, pre, samp {
+          font-family: 'DejaVu Sans Mono', monospace;
+        }
+        `
+
+        var styleSheet = document.createElement("style")
+        styleSheet.type = "text/css"
+        styleSheet.innerText = styles
+        document.head.appendChild(styleSheet)
+      })();
+    </script>
+
+    
+    
+    <script src="/static/jquery.min.2c872dbe60f4.js"></script>
+    <script src="/static/bootstrap.bundle.min.74e76e30f988.js"></script>
+
+    
+    
+
+
+    <script>
+    (function() {
+      document.querySelectorAll(".js-search-form-submit").forEach(function(el) {
+        el.addEventListener("click", function(e) {
+          e.preventDefault();
+          e.currentTarget.parentElement.submit();
+        })
+      });
+    })();
+    </script>
+    <script src="/static/frontend/reader/lightbox.762bfdc5c9e6.js" async></script>
+    <script src="/static/frontend/reader/platforms-ui.033234db69be.js" async></script>
+    
+
+    <script src="/static/frontend/previews/popover.8cb992c61cc4.js" async></script>
+    
+    <script src="/static/frontend/components/dropdown-exit-pin.1245634913c3.js" async></script>
+
+    
+      
+
+
+
+
+
+
+<exit-prompt data-displayed-url="/optins/displayed/">
+  <template>
+    <div class="card bg-secondary">
+  <div class="card-header h3 text-center bg-body-tertiary">
+    Free Bonus: <strong>Python Cheat Sheet</strong>
+    <button type="button" class="float-end border-0 bg-transparent text-muted" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+  </div>
+  <div class="card-body">
+    <p class="mb-0">Get a <strong>Python Cheat Sheet (PDF)</strong> and learn the basics of Python, like working with data types, dictionaries, lists, and Python functions:</p>
+    <img loading="lazy" class="img-fluid mb-3 w-100 px-3" src="https://files.realpython.com/media/cheat_sheets_stacked.34027e654084.png" width="1920" height="1080" srcset="/cdn-cgi/image/width=480,format=auto/https://files.realpython.com/media/cheat_sheets_stacked.34027e654084.png 480w, /cdn-cgi/image/width=640,format=auto/https://files.realpython.com/media/cheat_sheets_stacked.34027e654084.png 640w, /cdn-cgi/image/width=960,format=auto/https://files.realpython.com/media/cheat_sheets_stacked.34027e654084.png 960w, /cdn-cgi/image/width=1920,format=auto/https://files.realpython.com/media/cheat_sheets_stacked.34027e654084.png 1920w" sizes="(max-width: 576px) 100vw, 400px" alt="Real Python Cheat Sheet showing all three pages stacked on top of each other">
+
+    <div class="row">
+      <form class="col-12" action="/optins/process/" method="post">
+        <input type="hidden" name="slug" value="static-cheat-sheet">
+<input type="hidden" name="version" value="554">
+<input type="hidden" name="source_path" value="/fibonacci-sequence-python/">
+
+        <div class="mb-3">
+          <input name="email" type="email" class="form-control form-control-lg" placeholder="Email Address" autocomplete="email" required autofocus>
+        </div>
+        <button name="submit" type="submit" class="btn btn-primary btn-lg w-100">Send My Python Cheat Sheet »</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+  </template>
+</exit-prompt>
+
+
+    
+
+    
+
+
+
+    
+
+
+
+
+    <script src="/static/frontend/components/exit-prompt.0ee1f76101df.js" defer></script>
+<script src="/static/frontend/components/code-block.35b6bd097cc4.js" defer></script>
+<script src="/static/frontend/blog/components/table-of-contents.f4fdda702490.js" defer></script>
+<script src="/static/frontend/blog/components/completion-status.db193ff3a76a.js" defer></script>
+<script src="/static/frontend/vendor/htmx.4dbcbc32f337.js" defer></script>
+<script src="/static/frontend/components/feedback-buttons.943a5debd813.js" defer></script>
+<script src="/static/frontend/components/share-button.49541b03f393.js" defer></script>
+<script src="/static/frontend/mentor/components/keep-learning-ask.fabd854d4b2c.js" defer></script>
+
+
+
+    
+
+    
+
+    
+    
+
+    
+    
+
+<script>window.rp_prop_id = '58946116052';</script>
+<script src="https://srv.realpython.net/tag.js" async></script>
+
+
+
+<script id="js-context" type="application/json">{"is_completed": false, "is_bookmarked": false, "api_article_bookmark_url": "/api/v1/articles/fibonacci-sequence-python/bookmark/", "api_article_completion_status_url": "/api/v1/articles/fibonacci-sequence-python/completion_status/"}</script>
+
+
+
+
+
+
+  
+    <script id="dsq-count-scr" src="https://realpython.disqus.com/count.js" async></script>
+    <script>
+      var disqus_config = function () {
+        this.page.url = 'https://realpython.com/fibonacci-sequence-python/';
+        this.page.identifier = 'https://realpython.com/fibonacci-sequence-python/';
+        this.callbacks.onReady = [function() {
+          if (window.onDisqusReady) {
+            window.onDisqusReady();
+          }
+        }];
+      };
+      var disqus_script_url = 'https://realpython.disqus.com/embed.js';
+    </script>
+    <script src="/static/frontend/reader/lazy-disqus.5ad268ba8d90.js" defer></script>
+  
+
+
+  
+  
+  
+  
+  
+  
+  <script>
+    window.OneSignalDeferred = window.OneSignalDeferred || [];
+    OneSignalDeferred.push(function(OneSignal) {
+      OneSignal.init({
+        appId: "c0081e20-a523-42bb-b0ac-04c5a9e8bf40",
+        safari_web_id: "web.onesignal.auto.337e82fd-eeda-48f8-8fe5-d2f6dec774c2",
+        notifyButton: {
+          enable: true,
+          position: "bottom-left",
+          showCredit: false,
+          text: {
+            "tip.state.unsubscribed": "Receive a notification when we post a new tutorial",
+            "tip.state.subscribed": "You're subscribed to new tutorial notifications",
+            'tip.state.blocked': "You've blocked notifications",
+            'message.prenotify': 'Click to subscribe to notifications',
+            "message.action.subscribed": "Great, we'll let you know when the next tutorial comes out!",
+            'message.action.resubscribed': "You're subscribed to notifications",
+            'message.action.unsubscribed': "You won't receive notifications again",
+            'dialog.main.title': 'Manage Site Notifications',
+            'dialog.main.button.subscribe': 'SUBSCRIBE',
+            'dialog.main.button.unsubscribe': 'UNSUBSCRIBE',
+            'dialog.blocked.title': 'Unblock Notifications',
+            'dialog.blocked.message': "Follow these instructions to allow notifications:"
+          },
+          
+        },
+      });
+    });
+    setTimeout(()=>{const n=document.createElement("script");n.src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js";n.async=!0;document.head.appendChild(n)}, 3000);
+  </script>
+  
+
+  
+    <script type="application/ld+json">{
+  "@context": "http://schema.org",
+  "@type": "Article",
+  "headline": "A Python Guide to the Fibonacci Sequence",
+  "image": {
+    "@type": "ImageObject",
+    "url": "https://files.realpython.com/media/Fibonacci-Sequence-in-Python_Watermarked.79104bd455b7.jpg",
+    "width": 1920,
+    "height": 1080
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://realpython.com/fibonacci-sequence-python/",
+    "lastReviewed": "2026-03-18",
+    "author": {
+      "@type": "Person",
+      "name": "Mandy Wong",
+      "image": "https://realpython.com/cdn-cgi/image/width=790,height=790,fit=crop,gravity=auto,format=auto/https://files.realpython.com/media/mwong-sq.62da4e647b4c.jpeg",
+      "url": "https://realpython.com/team/mwong/",
+      "affiliation": {
+        "@type": "Organization",
+        "@id": "https://realpython.com/#organization",
+        "name": "Real Python",
+        "url": "https://realpython.com",
+        "logo": "https://realpython.com/static/real-python-logo-square-512.157ae6bf64ed.png"
+      }
+    },
+    "reviewedBy": [
+      {
+        "@type": "Person",
+        "name": "Aldren Santos",
+        "image": "https://realpython.com/cdn-cgi/image/width=500,height=500,fit=crop,gravity=auto,format=auto/https://files.realpython.com/media/Aldren_Santos_Real_Python.6b0861d8b841.png",
+        "url": "https://realpython.com/team/asantos/",
+        "affiliation": {
+          "@type": "Organization",
+          "@id": "https://realpython.com/#organization",
+          "name": "Real Python",
+          "url": "https://realpython.com",
+          "logo": "https://realpython.com/static/real-python-logo-square-512.157ae6bf64ed.png"
+        }
+      },
+      {
+        "@type": "Person",
+        "name": "David Amos",
+        "image": "https://realpython.com/cdn-cgi/image/width=400,height=400,fit=crop,gravity=auto,format=auto/https://files.realpython.com/media/me-small.f5f49f1c48e1.jpg",
+        "url": "https://realpython.com/team/damos/",
+        "affiliation": {
+          "@type": "Organization",
+          "@id": "https://realpython.com/#organization",
+          "name": "Real Python",
+          "url": "https://realpython.com",
+          "logo": "https://realpython.com/static/real-python-logo-square-512.157ae6bf64ed.png"
+        }
+      },
+      {
+        "@type": "Person",
+        "name": "Geir Arne Hjelle",
+        "image": "https://realpython.com/cdn-cgi/image/width=800,height=800,fit=crop,gravity=auto,format=auto/https://files.realpython.com/media/gahjelle.470149ee709e.jpg",
+        "url": "https://realpython.com/team/gahjelle/",
+        "affiliation": {
+          "@type": "Organization",
+          "@id": "https://realpython.com/#organization",
+          "name": "Real Python",
+          "url": "https://realpython.com",
+          "logo": "https://realpython.com/static/real-python-logo-square-512.157ae6bf64ed.png"
+        }
+      },
+      {
+        "@type": "Person",
+        "name": "Joanna Jablonski",
+        "image": "https://realpython.com/cdn-cgi/image/width=800,height=800,fit=crop,gravity=auto,format=auto/https://files.realpython.com/media/jjablonksi-avatar.e37c4f83308e.jpg",
+        "url": "https://realpython.com/team/jjablonski/",
+        "affiliation": {
+          "@type": "Organization",
+          "@id": "https://realpython.com/#organization",
+          "name": "Real Python",
+          "url": "https://realpython.com",
+          "logo": "https://realpython.com/static/real-python-logo-square-512.157ae6bf64ed.png"
+        }
+      },
+      {
+        "@type": "Person",
+        "name": "Jacob Schmitt",
+        "image": "https://realpython.com/cdn-cgi/image/width=400,height=400,fit=crop,gravity=auto,format=auto/https://files.realpython.com/media/profile-small_js.2f4d0d8da1ca.jpg",
+        "url": "https://realpython.com/team/jschmitt/",
+        "affiliation": {
+          "@type": "Organization",
+          "@id": "https://realpython.com/#organization",
+          "name": "Real Python",
+          "url": "https://realpython.com",
+          "logo": "https://realpython.com/static/real-python-logo-square-512.157ae6bf64ed.png"
+        }
+      },
+      {
+        "@type": "Person",
+        "name": "Leodanis Pozo Ramos",
+        "image": "https://realpython.com/cdn-cgi/image/width=862,height=862,fit=crop,gravity=auto,format=auto/https://files.realpython.com/media/Perfil_final1.9f896bc212f6.jpg",
+        "url": "https://realpython.com/team/lpozoramos/",
+        "affiliation": {
+          "@type": "Organization",
+          "@id": "https://realpython.com/#organization",
+          "name": "Real Python",
+          "url": "https://realpython.com",
+          "logo": "https://realpython.com/static/real-python-logo-square-512.157ae6bf64ed.png"
+        }
+      },
+      {
+        "@type": "Person",
+        "name": "Sadie Parker",
+        "image": "https://realpython.com/cdn-cgi/image/width=800,height=800,fit=crop,gravity=auto,format=auto/https://files.realpython.com/media/profpic_sp.a008488b6af0.jpeg",
+        "url": "https://realpython.com/team/sparker/",
+        "affiliation": {
+          "@type": "Organization",
+          "@id": "https://realpython.com/#organization",
+          "name": "Real Python",
+          "url": "https://realpython.com",
+          "logo": "https://realpython.com/static/real-python-logo-square-512.157ae6bf64ed.png"
+        }
+      }
+    ]
+  },
+  "datePublished": "2021-09-08T14:00:00+00:00",
+  "dateModified": "2026-03-18T10:50:00.691693+00:00",
+  "publisher": {
+    "@type": "Organization",
+    "@id": "https://realpython.com/#organization",
+    "name": "Real Python",
+    "url": "https://realpython.com",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://realpython.com/static/real-python-logo-square-512.157ae6bf64ed.png",
+      "width": 512,
+      "height": 512
+    },
+    "description": "Real Python is a leading provider of online Python education and one of the largest language-specific online communities for software developers. It publishes high-quality learning resources, such as tutorials, books, and courses to an audience of millions of developers, data scientists, and machine learning engineers each month.",
+    "slogan": "Become a Python Expert",
+    "email": "info@realpython.com",
+    "sameAs": [
+      "https://github.com/realpython",
+      "https://www.youtube.com/realpython",
+      "https://twitter.com/realpython",
+      "https://x.com/realpython",
+      "https://www.linkedin.com/company/realpython-com/",
+      "https://www.facebook.com/learnrealpython",
+      "https://www.instagram.com/realpython",
+      "https://www.tiktok.com/@realpython.com"
+    ]
+  },
+  "author": {
+    "@type": "Person",
+    "name": "Mandy Wong",
+    "image": "https://realpython.com/cdn-cgi/image/width=790,height=790,fit=crop,gravity=auto,format=auto/https://files.realpython.com/media/mwong-sq.62da4e647b4c.jpeg",
+    "url": "https://realpython.com/team/mwong/",
+    "affiliation": {
+      "@type": "Organization",
+      "@id": "https://realpython.com/#organization",
+      "name": "Real Python",
+      "url": "https://realpython.com",
+      "logo": "https://realpython.com/static/real-python-logo-square-512.157ae6bf64ed.png"
+    }
+  },
+  "description": "In this step-by-step tutorial, you'll explore the Fibonacci sequence in Python, which serves as an invaluable springboard into the world of recursion, and learn how to optimize recursive algorithms in the process."
+}</script>
+  
+
+
+    <script src="/static/frontend/optins/optins.0cf5d30a675e.js" async></script>
+    <script src="/static/frontend/search/autocomplete.856c99935fdd.js" async></script>
+
+    
+
+    
+
+    
+
+    
+<script>
+  !function(f,b,e,v,n,t,s)
+  {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+  n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+  if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+  n.queue=[];t=b.createElement(e);t.async=!0;
+  t.src=v;s=b.getElementsByTagName(e)[0];
+  setTimeout(function(){s.parentNode.insertBefore(t,s)}, 3000);}(window, document,'script',
+  'https://connect.facebook.net/en_US/fbevents.js');
+  fbq('init', '2220911568135371');
+  fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none" alt=""
+  src="https://www.facebook.com/tr?id=2220911568135371&ev=PageView&noscript=1"
+/></noscript>
+
+
+    
+
+    
+
+    
+
+
+  
+  
+  <div id="g_id_onload"
+    data-client_id="912944204353-gv43om9f7qmj4eprm0esc45r12etunvp.apps.googleusercontent.com"
+    data-login_uri="https://realpython.com/account/google/login/token/?next=/fibonacci-sequence-python/"
+    data-itp_support="false">
+  </div>
+  
+  <script src="//accounts.google.com/gsi/client" async></script>
+
+
+  <script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a3f84b8769e11796',t:'MTc5MDE1MzM1NQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>

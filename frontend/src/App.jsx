@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import rehypeHighlight from "rehype-highlight";
@@ -32,13 +32,70 @@ function sanitizeMarkdown(text) {
     .join("\n");
 }
 
+// =========================
+// LOCAL PERSISTENCE
+// =========================
+//
+// Everything the user can see in the sidebar/chat is kept in
+// localStorage so a page refresh (or closing and reopening the tab)
+// doesn't lose it. `history` is a list of chats; each chat holds its
+// `messages` and its finished `runs` (the task + generated output
+// panels). `activeChatId` (which chat is open) is persisted too.
+//
+// Only runs that reached the "final" stage are saved. A run that was
+// still streaming when the page refreshed can't be resumed, so it is
+// dropped (the user's message stays and can be resubmitted).
+//
+// Backend restart detection: the backend exposes GET /api/session which
+// returns a boot_id that changes every time the server process starts.
+// The boot_id seen last is stored under BOOT_ID_KEY. On page load, if the
+// backend's boot_id differs from the stored one, all saved data is wiped
+// and the app starts fresh. A plain page refresh keeps the same boot_id,
+// so data survives.
+
+const HISTORY_KEY = "multiLlmChatHistory";
+const ACTIVE_CHAT_KEY = "multiLlmActiveChatId";
+const BOOT_ID_KEY = "multiLlmBootId";
+
+function loadHistory() {
+  try {
+    const raw = localStorage.getItem(HISTORY_KEY);
+    const parsed = raw ? JSON.parse(raw) : [];
+    return Array.isArray(parsed) ? parsed : [];
+  } catch (error) {
+    console.error("Failed to load saved chat history:", error);
+    return [];
+  }
+}
+
+function loadActiveChatId() {
+  try {
+    const raw = localStorage.getItem(ACTIVE_CHAT_KEY);
+    return raw ? JSON.parse(raw) : null;
+  } catch (error) {
+    console.error("Failed to load saved active chat id:", error);
+    return null;
+  }
+}
+
 
 
 function App() {
+  // Both history and the active chat are initialized straight from
+  // localStorage (via lazy useState initializers) so the very first
+  // render after a refresh already shows the right chat instead of
+  // flashing an empty state first.
+  const [history, setHistory] = useState(loadHistory);
+  const [activeChatId, setActiveChatId] = useState(loadActiveChatId);
+  const [messages, setMessages] = useState(() => {
+    const savedActiveId = loadActiveChatId();
+    if (!savedActiveId) return [];
+    const savedHistory = loadHistory();
+    const activeChat = savedHistory.find((chat) => chat.id === savedActiveId);
+    return activeChat?.messages || [];
+  });
+
   const [query, setQuery] = useState("");
-  const [messages, setMessages] = useState([]);
-  const [history, setHistory] = useState([]);
-  const [activeChatId, setActiveChatId] = useState(null);
 
   const [processing, setProcessing] = useState(false);
   const [mediatorLoading, setMediatorLoading] = useState(false);
@@ -49,7 +106,18 @@ function App() {
 
   // Each entry is a self-contained processing panel for one query.
   // Once a run is pushed here it stays put; a new query pushes a new run.
-  const [runs, setRuns] = useState([]);
+  // Finished runs are restored from the active chat's saved `runs`.
+  const [runs, setRuns] = useState(() => {
+    const savedActiveId = loadActiveChatId();
+    if (!savedActiveId) return [];
+    const savedHistory = loadHistory();
+    const activeChat = savedHistory.find((chat) => chat.id === savedActiveId);
+    return activeChat?.runs || [];
+  });
+
+  // False until the backend boot_id check has finished, so we never
+  // flash stale data that is about to be wiped.
+  const [sessionChecked, setSessionChecked] = useState(false);
 
   const updateRun = (runId, updates) => {
     setRuns((prevRuns) =>
@@ -58,6 +126,92 @@ function App() {
       )
     );
   };
+
+  // =========================
+  // PERSISTENCE EFFECTS
+  // =========================
+
+  // Compare the backend's boot_id with the one we saved. Different (or
+  // none saved) means the backend was restarted -> start fresh. If the
+  // backend is unreachable we keep whatever is saved.
+  useEffect(() => {
+    let cancelled = false;
+
+    const checkSession = async () => {
+      try {
+        const res = await fetch("http://127.0.0.1:8000/api/session");
+        if (!res.ok) {
+          throw new Error(`Session check failed: ${res.status}`);
+        }
+        const { boot_id } = await res.json();
+        if (cancelled) return;
+
+        const storedBootId = localStorage.getItem(BOOT_ID_KEY);
+        if (storedBootId !== boot_id) {
+          localStorage.removeItem(HISTORY_KEY);
+          localStorage.removeItem(ACTIVE_CHAT_KEY);
+          localStorage.setItem(BOOT_ID_KEY, boot_id);
+
+          setHistory([]);
+          setActiveChatId(null);
+          setMessages([]);
+          setRuns([]);
+        }
+      } catch (error) {
+        console.error("Session check failed:", error);
+      } finally {
+        if (!cancelled) setSessionChecked(true);
+      }
+    };
+
+    checkSession();
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  // Whenever the active chat's messages or runs change, keep that
+  // chat's entry inside `history` in sync, so switching away and
+  // coming back through the sidebar shows the full conversation
+  // including each task's generated output.
+  useEffect(() => {
+    if (!activeChatId) return;
+
+    // Only finished runs are saved; a half-streamed run can't be resumed.
+    const finishedRuns = runs.filter((run) => run.stage === "final");
+
+    setHistory((prevHistory) =>
+      prevHistory.map((chat) =>
+        chat.id === activeChatId
+          ? { ...chat, messages, runs: finishedRuns }
+          : chat
+      )
+    );
+  }, [messages, runs, activeChatId]);
+
+  // Persist history to localStorage every time it changes.
+  useEffect(() => {
+    try {
+      localStorage.setItem(HISTORY_KEY, JSON.stringify(history));
+    } catch (error) {
+      console.error("Failed to save chat history:", error);
+    }
+  }, [history]);
+
+  // Persist which chat is active every time it changes, so a refresh
+  // reopens the same conversation instead of landing on a blank page.
+  useEffect(() => {
+    try {
+      if (activeChatId) {
+        localStorage.setItem(ACTIVE_CHAT_KEY, JSON.stringify(activeChatId));
+      } else {
+        localStorage.removeItem(ACTIVE_CHAT_KEY);
+      }
+    } catch (error) {
+      console.error("Failed to save active chat id:", error);
+    }
+  }, [activeChatId]);
 
   // =========================
   // SEND QUERY
@@ -100,6 +254,7 @@ const handleSubmit = async () => {
             userQuery.slice(0, 30) +
             (userQuery.length > 30 ? "..." : ""),
           messages: [userMessage],
+          runs: [],
         },
       ];
     }
@@ -517,6 +672,12 @@ const handleContinue = async (runId) => {
   // =========================
   // NEW CHAT
   // =========================
+  //
+  // Clears the visible page for a fresh conversation. The chat that
+  // was just active is NOT lost: its messages and finished runs are
+  // already kept in sync inside `history` by the effect above, so it
+  // stays exactly as it was and is reachable again from the sidebar
+  // via openConversation.
 
   const handleNewChat = () => {
 
@@ -542,10 +703,10 @@ const handleContinue = async (runId) => {
   const openConversation = (chat) => {
     setActiveChatId(chat.id);
     setMessages(chat.messages || []);
+    setRuns(chat.runs || []);
     setAwaitingApproval(false);
     setProcessing(false);
     setRejected(false);
-    setRuns([]);
   };
 
 
@@ -584,6 +745,10 @@ const handleContinue = async (runId) => {
   };
 
 
+  // Wait for the backend boot_id check so stale data never flashes.
+  if (!sessionChecked) return null;
+
+
   return (
     <div className="app">
 
@@ -602,6 +767,7 @@ const handleContinue = async (runId) => {
         <button
           className="new-chat-button"
           onClick={handleNewChat}
+          disabled={processing || awaitingApproval}
         >
           + New Chat
         </button>
@@ -630,6 +796,7 @@ const handleContinue = async (runId) => {
                   activeChatId === chat.id ? "active" : ""
                 }`}
                 onClick={() => openConversation(chat)}
+                disabled={processing || awaitingApproval}
               >
                 {chat.title}
               </button>
@@ -1497,7 +1664,17 @@ const handleContinue = async (runId) => {
 
                       <div className="final-response-list">
 
-                        {run.results.map((result) => (
+                        {run.results.map((result) => {
+
+                          // Fall back to the mediator's task text if
+                          // the result object doesn't carry `task`.
+                          const taskText =
+                            result.task ||
+                            run.generatedTasks.find(
+                              (t) => t.task_id === result.task_id
+                            )?.task;
+
+                          return (
 
                           <div
                             className="final-response-item"
@@ -1506,7 +1683,18 @@ const handleContinue = async (runId) => {
 
                             <p className="final-response-task-label">
                               Task {result.task_id}
+                              {result.type && (
+                                <span className="final-response-task-type">
+                                  {" "}· {result.type}
+                                </span>
+                              )}
                             </p>
+
+                            {taskText && (
+                              <p className="final-response-task-text">
+                                {taskText}
+                              </p>
+                            )}
 
                             <div className="final-response-output">
                               <ReactMarkdown
@@ -1527,7 +1715,8 @@ const handleContinue = async (runId) => {
 
                           </div>
 
-                        ))}
+                          );
+                        })}
 
                       </div>
 

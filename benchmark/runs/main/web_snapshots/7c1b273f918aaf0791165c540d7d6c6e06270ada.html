@@ -1,0 +1,2472 @@
+<!doctype html><html lang="en"><head>
+    <meta charset="utf-8">
+    <title>RAG hallucination: What is it and how to avoid it</title>
+    <link rel="icon" href="https://www.k2view.com/hubfs/favicon-48x48.png" sizes="48x48" type="image/png">
+    <link rel="icon" href="https://www.k2view.com/hubfs/k2view-1.png">
+    
+    <script src="https://www.k2view.com/hs/hsstatic/jquery-libs/static-1.4/jquery/jquery-1.11.2.js"></script>
+    <meta name="description" content="Although regular RAG grounds LLMs with unstructured data from internal sources, hallucinations still occur. Add structured data to the mix to reduce them. ">
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+      
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    
+    <meta property="og:description" content="Although regular RAG grounds LLMs with unstructured data from internal sources, hallucinations still occur. Add structured data to the mix to reduce them. ">
+    <meta property="og:title" content="RAG hallucination: What is it and how to avoid it">
+    <meta name="twitter:description" content="Although regular RAG grounds LLMs with unstructured data from internal sources, hallucinations still occur. Add structured data to the mix to reduce them. ">
+    <meta name="twitter:title" content="RAG hallucination: What is it and how to avoid it">
+
+    
+
+    
+
+    <style>
+a.cta_button{-moz-box-sizing:content-box !important;-webkit-box-sizing:content-box !important;box-sizing:content-box !important;vertical-align:middle}.hs-breadcrumb-menu{list-style-type:none;margin:0px 0px 0px 0px;padding:0px 0px 0px 0px}.hs-breadcrumb-menu-item{float:left;padding:10px 0px 10px 10px}.hs-breadcrumb-menu-divider:before{content:'›';padding-left:10px}.hs-featured-image-link{border:0}.hs-featured-image{float:right;margin:0 0 20px 20px;max-width:50%}@media (max-width: 568px){.hs-featured-image{float:none;margin:0;width:100%;max-width:100%}}.hs-screen-reader-text{clip:rect(1px, 1px, 1px, 1px);height:1px;overflow:hidden;position:absolute !important;width:1px}
+</style>
+
+
+<style>
+  .cbbs--wrap .cta--blog--sidebar h3{
+    ;
+  }
+</style>  
+
+<link rel="stylesheet" href="https://www.k2view.com/hubfs/hub_generated/template_assets/1/173599697274/1790148411573/template_slick.min.css">
+<link rel="stylesheet" href="https://www.k2view.com/hubfs/hub_generated/template_assets/1/89258128011/1790148418702/template_main.min.css">
+<link rel="stylesheet" href="https://www.k2view.com/hubfs/hub_generated/template_assets/1/95581387139/1790148413356/template_custom.min.css">
+<link rel="stylesheet" href="https://www.k2view.com/hubfs/hub_generated/template_assets/1/89257486221/1790148418512/template_theme-overrides.min.css">
+<link rel="stylesheet" href="https://www.k2view.com/hubfs/hub_generated/template_assets/1/173572222857/1790148420190/template_modules.min.css">
+<link rel="stylesheet" href="https://www.k2view.com/hubfs/hub_generated/template_assets/1/180024951653/1790148418489/template_swiper-bundle.min.css">
+<link rel="stylesheet" href="https://www.k2view.com/hubfs/hub_generated/template_assets/1/180388692367/1790148413465/template_Buttons.min.css">
+<link rel="stylesheet" href="https://www.k2view.com/hubfs/hub_generated/template_assets/1/189292389726/1790148413330/template_blogv3.min.css">
+<link rel="stylesheet" href="https://www.k2view.com/hubfs/hub_generated/module_assets/1/214952701730/1782217441659/module_Custom_Preferences.min.css">
+<link rel="stylesheet" href="https://www.k2view.com/hubfs/hub_generated/template_assets/1/123244090977/1790148412356/template_fontawesome-new.min.css">
+<link rel="preload" as="style" href="https://48752163.fs1.hubspotusercontent-na1.net/hubfs/48752163/raw_assets/media-default-modules/master/845/js_client_assets/assets/TrackPlayAnalytics-DDKdhRbk.css">
+
+<link rel="preload" as="style" href="https://48752163.fs1.hubspotusercontent-na1.net/hubfs/48752163/raw_assets/media-default-modules/master/845/js_client_assets/assets/Tooltip-BfwIxqAN.css">
+
+<link rel="stylesheet" href="https://www.k2view.com/hubfs/hub_generated/module_assets/1/192457792356/1786373771233/module_Header_Global_v1.min.css">
+<link rel="stylesheet" href="https://www.k2view.com/hubfs/hub_generated/module_assets/1/189842534579/1776263093834/module_SignIn_PopUp.min.css">
+
+<style>
+/*   .signin--popup--sec {
+    
+  } */
+  .signin--popup--sec:before {
+      background-color:rgba(98, 98, 98, 0.9);
+  }
+</style>
+
+<link rel="stylesheet" href="https://www.k2view.com/hubfs/hub_generated/module_assets/1/192300232050/1756835258053/module_CTA_Banner_-_Blog_Sidebar_V1.min.css">
+<link rel="stylesheet" href="https://www.k2view.com/hubfs/hub_generated/module_assets/1/193591284376/1754284628815/module_Blog_CTA_Banner_and_Text.min.css">
+
+<style>
+  
+</style>
+
+<link rel="stylesheet" href="https://www.k2view.com/hubfs/hub_generated/module_assets/1/100411011135/1789031558914/module_k2view_-_Rich_Text.min.css">
+<link rel="stylesheet" href="https://www.k2view.com/hubfs/hub_generated/module_assets/1/129014312249/1770030277977/module_Blog_CTA_Banner.min.css">
+<link rel="stylesheet" href="https://www.k2view.com/hubfs/hub_generated/module_assets/1/210566713425/1788444475834/module_K-Global_Footer_2026.min.css"><style>
+  @font-face {
+    font-family: "Roboto";
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+    src: url("/_hcms/googlefonts/Roboto/700.woff2") format("woff2"), url("/_hcms/googlefonts/Roboto/700.woff") format("woff");
+  }
+  @font-face {
+    font-family: "Roboto";
+    font-weight: 300;
+    font-style: normal;
+    font-display: swap;
+    src: url("/_hcms/googlefonts/Roboto/300.woff2") format("woff2"), url("/_hcms/googlefonts/Roboto/300.woff") format("woff");
+  }
+  @font-face {
+    font-family: "Roboto";
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+    src: url("/_hcms/googlefonts/Roboto/500.woff2") format("woff2"), url("/_hcms/googlefonts/Roboto/500.woff") format("woff");
+  }
+  @font-face {
+    font-family: "Roboto";
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+    src: url("/_hcms/googlefonts/Roboto/regular.woff2") format("woff2"), url("/_hcms/googlefonts/Roboto/regular.woff") format("woff");
+  }
+  @font-face {
+    font-family: "Nunito";
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+    src: url("/_hcms/googlefonts/Nunito/regular.woff2") format("woff2"), url("/_hcms/googlefonts/Nunito/regular.woff") format("woff");
+  }
+  @font-face {
+    font-family: "Nunito";
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+    src: url("/_hcms/googlefonts/Nunito/700.woff2") format("woff2"), url("/_hcms/googlefonts/Nunito/700.woff") format("woff");
+  }
+  @font-face {
+    font-family: "Poppins";
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+    src: url("/_hcms/googlefonts/Poppins/500.woff2") format("woff2"), url("/_hcms/googlefonts/Poppins/500.woff") format("woff");
+  }
+  @font-face {
+    font-family: "Poppins";
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+    src: url("/_hcms/googlefonts/Poppins/regular.woff2") format("woff2"), url("/_hcms/googlefonts/Poppins/regular.woff") format("woff");
+  }
+  @font-face {
+    font-family: "Poppins";
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+    src: url("/_hcms/googlefonts/Poppins/700.woff2") format("woff2"), url("/_hcms/googlefonts/Poppins/700.woff") format("woff");
+  }
+</style>
+
+    <script type="application/ld+json">
+{
+  "mainEntityOfPage" : {
+    "@type" : "WebPage",
+    "@id" : "https://www.k2view.com/blog/rag-hallucination/"
+  },
+  "author" : {
+    "name" : "Iris Zarecki",
+    "url" : "https://www.k2view.com/blog/author/iris-zarecki-product-marketing-manager",
+    "@type" : "Person"
+  },
+  "headline" : "RAG hallucination: What is it and how to avoid it",
+  "datePublished" : "2024-04-10T08:10:44.000Z",
+  "dateModified" : "2026-04-29T15:05:05.047Z",
+  "publisher" : {
+    "name" : "K2View",
+    "logo" : {
+      "url" : "https://www.k2view.com/hubfs/k2view-logo-1.svg",
+      "@type" : "ImageObject"
+    },
+    "@type" : "Organization"
+  },
+  "@context" : "https://schema.org",
+  "@type" : "BlogPosting",
+  "image" : [ "https://www.k2view.com/hubfs/rag%20hallucination.jpg" ]
+}
+</script>
+
+
+
+    
+<!--  Added by GoogleAnalytics integration -->
+<script data-cookieconsent="ignore">
+var _hsp = window._hsp = window._hsp || [];
+_hsp.push(['addPrivacyConsentListener', function(consent) { if (consent.allowed || (consent.categories && consent.categories.analytics)) {
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+  ga('create','UA-47306040-1','auto');
+  ga('send','pageview');
+}}]);
+</script>
+
+<!-- /Added by GoogleAnalytics integration -->
+
+<!--  Added by GoogleAnalytics4 integration -->
+<script data-cookieconsent="ignore">
+var _hsp = window._hsp = window._hsp || [];
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+
+var useGoogleConsentModeV2 = true;
+var waitForUpdateMillis = 1000;
+
+
+if (!window._hsGoogleConsentRunOnce) {
+  window._hsGoogleConsentRunOnce = true;
+
+  gtag('consent', 'default', {
+    'ad_storage': 'denied',
+    'analytics_storage': 'denied',
+    'ad_user_data': 'denied',
+    'ad_personalization': 'denied',
+    'wait_for_update': waitForUpdateMillis
+  });
+
+  if (useGoogleConsentModeV2) {
+    _hsp.push(['useGoogleConsentModeV2'])
+  } else {
+    _hsp.push(['addPrivacyConsentListener', function(consent){
+      var hasAnalyticsConsent = consent && (consent.allowed || (consent.categories && consent.categories.analytics));
+      var hasAdsConsent = consent && (consent.allowed || (consent.categories && consent.categories.advertisement));
+
+      gtag('consent', 'update', {
+        'ad_storage': hasAdsConsent ? 'granted' : 'denied',
+        'analytics_storage': hasAnalyticsConsent ? 'granted' : 'denied',
+        'ad_user_data': hasAdsConsent ? 'granted' : 'denied',
+        'ad_personalization': hasAdsConsent ? 'granted' : 'denied'
+      });
+    }]);
+  }
+}
+
+gtag('js', new Date());
+gtag('set', 'developer_id.dZTQ1Zm', true);
+gtag('config', 'G-JH5MPR6MKD');
+</script>
+<script data-cookieconsent="ignore" async src="https://www.googletagmanager.com/gtag/js?id=G-JH5MPR6MKD"></script>
+
+<!-- /Added by GoogleAnalytics4 integration -->
+
+<!--  Added by GoogleTagManager integration -->
+<script data-cookieconsent="ignore">
+var _hsp = window._hsp = window._hsp || [];
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+
+var useGoogleConsentModeV2 = true;
+var waitForUpdateMillis = 1000;
+
+if (useGoogleConsentModeV2) {
+
+  gtag('set','developer_id.dZTQ1Zm',true);
+
+  gtag('consent', 'default', {
+  'ad_storage': 'denied',
+  'analytics_storage': 'denied',
+  'ad_user_data': 'denied',
+  'ad_personalization': 'denied',
+  'wait_for_update': waitForUpdateMillis
+  });
+}
+
+var hsLoadGtm = function loadGtm() {
+    if(window._hsGtmLoadOnce) {
+      return;
+    }
+
+    if (useGoogleConsentModeV2) {
+      _hsp.push(['useGoogleConsentModeV2'])
+    }
+
+    (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-PMGPXWH');
+
+    window._hsGtmLoadOnce = true;
+};
+
+_hsp.push(['addPrivacyConsentListener', function(consent){
+  if(consent.allowed || (consent.categories && consent.categories.analytics)){
+    hsLoadGtm();
+  }
+}]);
+
+</script>
+
+<!-- /Added by GoogleTagManager integration -->
+
+
+
+<link rel="amphtml" href="https://www.k2view.com/blog/rag-hallucination/?hs_amp=true">
+
+<meta property="og:image" content="https://www.k2view.com/hubfs/rag%20hallucination.jpg">
+<meta property="og:image:width" content="600">
+<meta property="og:image:height" content="300">
+<meta property="og:image:alt" content="RAG Hallucination">
+<meta name="twitter:image" content="https://www.k2view.com/hubfs/rag%20hallucination.jpg">
+<meta name="twitter:image:alt" content="RAG Hallucination">
+
+<meta property="og:url" content="https://www.k2view.com/blog/rag-hallucination/">
+<meta name="twitter:card" content="summary_large_image">
+
+<link rel="canonical" href="https://www.k2view.com/blog/rag-hallucination/">
+
+<meta property="og:type" content="article">
+<link rel="alternate" type="application/rss+xml" href="https://www.k2view.com/blog/rss.xml">
+<meta name="twitter:domain" content="www.k2view.com">
+<script src="//platform.linkedin.com/in.js" type="text/javascript">
+    lang: en_US
+</script>
+
+<meta http-equiv="content-language" content="en">
+
+
+
+
+
+   
+    
+    
+    
+      
+    
+  <meta name="generator" content="HubSpot"></head>
+  <body>
+<!--  Added by GoogleTagManager integration -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PMGPXWH" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+
+<!-- /Added by GoogleTagManager integration -->
+
+    
+    <div class="body-wrapper   hs-content-id-164007905097 hs-blog-post hs-blog-id-10275213556">
+      
+      
+        <div id="hs_cos_wrapper_module_175214101343136" class="hs_cos_wrapper hs_cos_wrapper_widget hs_cos_wrapper_type_module" style="" data-hs-cos-general-type="widget" data-hs-cos-type="module"><div style="" class="header-topstrip-container has-topstrip">
+<div class="header-container-wrapper ">
+  
+  <div class="header-top-row">
+    <div class="header-top-wrap">
+      <div class="header-top-row-content">
+        
+        <div class="header-top-text"><p><span><span style="font-size: 16px;"> 🎉&nbsp;K2view named a <strong>Visionary</strong> in Gartner’s latest Magic Quadrant for Data Integration</span></span></p></div>
+        <div class="header-top-cta">
+          <span id="hs_cos_wrapper_module_175214101343136_" class="hs_cos_wrapper hs_cos_wrapper_widget hs_cos_wrapper_type_cta" style="" data-hs-cos-general-type="widget" data-hs-cos-type="cta"><!--HubSpot Call-to-Action Code --><span class="hs-cta-wrapper" id="hs-cta-wrapper-f06858ef-51b7-4bf9-a58e-6ffcd4a0e16e"><span class="hs-cta-node hs-cta-f06858ef-51b7-4bf9-a58e-6ffcd4a0e16e" id="hs-cta-f06858ef-51b7-4bf9-a58e-6ffcd4a0e16e"><!--[if lte IE 8]><div id="hs-cta-ie-element"></div><![endif]--><a href="https://cta-redirect.hubspot.com/cta/redirect/5983023/f06858ef-51b7-4bf9-a58e-6ffcd4a0e16e"><img class="hs-cta-img" id="hs-cta-img-f06858ef-51b7-4bf9-a58e-6ffcd4a0e16e" style="border-width:0px;" src="https://no-cache.hubspot.com/cta/default/5983023/f06858ef-51b7-4bf9-a58e-6ffcd4a0e16e.png" alt="Read More"></a></span><script charset="utf-8" src="/hs/cta/cta/current.js"></script><script type="text/javascript"> hbspt.cta._relativeUrls=true;hbspt.cta.load(5983023, 'f06858ef-51b7-4bf9-a58e-6ffcd4a0e16e', {"useNewLoader":"true","region":"na1"}); </script></span><!-- end HubSpot Call-to-Action Code --></span>
+        </div>
+        
+      </div>
+      <span class="close--top--strip"></span>
+    </div>
+  </div>
+  
+  
+   <div class="header-section">
+      <div class="header-wrapper">
+         <div class="main-header">
+            <div class="main-header-logo">
+               <div class="main-header-logo-dark">
+                  
+                  <span id="hs_cos_wrapper_module_175214101343136_" class="hs_cos_wrapper hs_cos_wrapper_widget hs_cos_wrapper_type_logo" style="" data-hs-cos-general-type="widget" data-hs-cos-type="logo"><a href="//www.k2view.com" id="hs-link-module_175214101343136_" style="border-width:0px;border:0px;"><img src="https://www.k2view.com/hubfs/k2view-logo-1.svg" class="hs-image-widget " height="210" style="height: auto;width:641px;border-width:0px;border:0px;" width="641" alt="" title="" loading="lazy"></a></span>
+               </div>
+               <div class="main-header-logo-light">
+                
+                <span id="hs_cos_wrapper_module_175214101343136_" class="hs_cos_wrapper hs_cos_wrapper_widget hs_cos_wrapper_type_logo" style="" data-hs-cos-general-type="widget" data-hs-cos-type="logo"><a href="//www.k2view.com" id="hs-link-module_175214101343136_" style="border-width:0px;border:0px;"><img src="https://www.k2view.com/hubfs/logo-light.svg" class="hs-image-widget " height="275" style="height: auto;width:1061px;border-width:0px;border:0px;" width="1061" alt="logo-light" title="logo-light" loading="lazy"></a></span>
+               </div>
+            </div>
+            
+            <div class="main-header-navigation">
+               <ul>
+                  <li class="platform has-submenu">
+                     <span>Platform</span>
+                     <div class="sub-menu-wrapper">
+                        <div class="sub-menu-sec">
+                           <div id="overview" class="sub-menu">
+                              <h3>Overview</h3>
+                              <span id="hs_cos_wrapper_module_175214101343136_" class="hs_cos_wrapper hs_cos_wrapper_widget hs_cos_wrapper_type_simple_menu" style="" data-hs-cos-general-type="widget" data-hs-cos-type="simple_menu"><div id="hs_menu_wrapper_module_175214101343136_" class="hs-menu-wrapper active-branch flyouts hs-menu-flow-horizontal" role="navigation" data-sitemap-name="" data-menu-id="" aria-label="Navigation Menu">
+ <ul role="menu">
+  <li class="hs-menu-item hs-menu-depth-1" role="none"><a href="https://www.k2view.com/platform/data-product-platform/" role="menuitem" target="_self">Data Product Platform</a></li>
+  <li class="hs-menu-item hs-menu-depth-1" role="none"><a href="https://www.k2view.com/platform/ai-context-platform" role="menuitem" target="_self">AI Context Platform</a></li>
+  <li class="hs-menu-item hs-menu-depth-1" role="none"><a href="https://www.k2view.com/platform/micro-database/" role="menuitem" target="_self">Micro-Database Technology</a></li>
+  <li class="hs-menu-item hs-menu-depth-1" role="none"><a href="https://www.k2view.com/data-product-platform-demo/" role="menuitem" target="_self">Demo Video</a></li>
+ </ul>
+</div></span>
+                           </div>
+                           <div id="capabilities" class="sub-menu">
+                              <h3>Capabilities</h3>
+                              <span id="hs_cos_wrapper_module_175214101343136_" class="hs_cos_wrapper hs_cos_wrapper_widget hs_cos_wrapper_type_simple_menu" style="" data-hs-cos-general-type="widget" data-hs-cos-type="simple_menu"><div id="hs_menu_wrapper_module_175214101343136_" class="hs-menu-wrapper active-branch flyouts hs-menu-flow-horizontal" role="navigation" data-sitemap-name="" data-menu-id="" aria-label="Navigation Menu">
+ <ul role="menu">
+  <li class="hs-menu-item hs-menu-depth-1" role="none"><a href="https://www.k2view.com/platform/data-integration-tools/" role="menuitem" target="_self">Data Integration</a></li>
+  <li class="hs-menu-item hs-menu-depth-1" role="none"><a href="https://www.k2view.com/platform/data-virtualization-tools" role="menuitem" target="_self">Data Virtualization</a></li>
+  <li class="hs-menu-item hs-menu-depth-1" role="none"><a href="https://www.k2view.com/platform/data-as-a-service-automation/" role="menuitem" target="_self">Data-as-a-Service Automation</a></li>
+  <li class="hs-menu-item hs-menu-depth-1" role="none"><a href="https://www.k2view.com/platform/data-governance-tools/" role="menuitem" target="_self">Data Governance</a></li>
+  <li class="hs-menu-item hs-menu-depth-1" role="none"><a href="https://www.k2view.com/platform/data-catalog/" role="menuitem" target="_self">Data Catalog</a></li>
+  <li class="hs-menu-item hs-menu-depth-1" role="none"><a href="https://www.k2view.com/platform/data-orchestration-tools/" role="menuitem" target="_self">Data Orchestration</a></li>
+ </ul>
+</div></span>
+                           </div>
+                           <div id="architecture" class="sub-menu">
+                              <h3>Architecture</h3>
+                              <span id="hs_cos_wrapper_module_175214101343136_" class="hs_cos_wrapper hs_cos_wrapper_widget hs_cos_wrapper_type_simple_menu" style="" data-hs-cos-general-type="widget" data-hs-cos-type="simple_menu"><div id="hs_menu_wrapper_module_175214101343136_" class="hs-menu-wrapper active-branch flyouts hs-menu-flow-horizontal" role="navigation" data-sitemap-name="" data-menu-id="" aria-label="Navigation Menu">
+ <ul role="menu">
+  <li class="hs-menu-item hs-menu-depth-1" role="none"><a href="https://www.k2view.com/platform/data-fabric-architecture/" role="menuitem" target="_self">Data Fabric</a></li>
+  <li class="hs-menu-item hs-menu-depth-1" role="none"><a href="https://www.k2view.com/platform/data-mesh-architecture/" role="menuitem" target="_self">Data Mesh</a></li>
+  <li class="hs-menu-item hs-menu-depth-1" role="none"><a href="https://www.k2view.com/platform/data-hub-architecture/" role="menuitem" target="_self">Data Hub</a></li>
+ </ul>
+</div></span>
+                           </div>
+                           <div id="blog-post" class="sub-menu-blog" style="background:rgba(241, 247, 255, 1.0)">
+                              
+                              
+                              <a href="https://www.k2view.com/data-product-platform-demo/?utm_campaign=K2view&amp;utm_source=top-nav-bar">
+                              <div class="sub-menu-blog-img">
+                                 
+                                 
+                                 
+                                 
+                                 
+                                 
+                                 <img src="https://www.k2view.com/hs-fs/hubfs/watch_demo_video.webp?width=450&amp;height=375&amp;name=watch_demo_video.webp" alt="watch_demo_video" loading="lazy" width="450" height="375" style="max-width: 100%; height: auto;" srcset="https://www.k2view.com/hs-fs/hubfs/watch_demo_video.webp?width=225&amp;height=188&amp;name=watch_demo_video.webp 225w, https://www.k2view.com/hs-fs/hubfs/watch_demo_video.webp?width=450&amp;height=375&amp;name=watch_demo_video.webp 450w, https://www.k2view.com/hs-fs/hubfs/watch_demo_video.webp?width=675&amp;height=563&amp;name=watch_demo_video.webp 675w, https://www.k2view.com/hs-fs/hubfs/watch_demo_video.webp?width=900&amp;height=750&amp;name=watch_demo_video.webp 900w, https://www.k2view.com/hs-fs/hubfs/watch_demo_video.webp?width=1125&amp;height=938&amp;name=watch_demo_video.webp 1125w, https://www.k2view.com/hs-fs/hubfs/watch_demo_video.webp?width=1350&amp;height=1125&amp;name=watch_demo_video.webp 1350w" sizes="(max-width: 450px) 100vw, 450px">
+                                 
+                              </div>
+                                
+                              </a>
+                           </div>
+                        </div>
+                     </div>
+                  </li>
+                  <li class="solutions has-submenu">
+                     <span>Solutions</span>
+                     <div class="sub-menu-wrapper">
+                        <div class="sub-menu-sec">
+                           <div id="by-initiative-submenu" class="sub-menu">
+                              <h3>Data Protection &amp; Provisioning</h3>
+                              <span id="hs_cos_wrapper_module_175214101343136_" class="hs_cos_wrapper hs_cos_wrapper_widget hs_cos_wrapper_type_simple_menu" style="" data-hs-cos-general-type="widget" data-hs-cos-type="simple_menu"><div id="hs_menu_wrapper_module_175214101343136_" class="hs-menu-wrapper active-branch flyouts hs-menu-flow-horizontal" role="navigation" data-sitemap-name="" data-menu-id="" aria-label="Navigation Menu">
+ <ul role="menu">
+  <li class="hs-menu-item hs-menu-depth-1" role="none"><a href="https://www.k2view.com/solutions/synthetic-data-generation-tools/" role="menuitem" target="_self">Synthetic Data Generation</a></li>
+  <li class="hs-menu-item hs-menu-depth-1" role="none"><a href="https://www.k2view.com/solutions/test-data-management-software/" role="menuitem" target="_self">Test Data Management</a></li>
+  <li class="hs-menu-item hs-menu-depth-1" role="none"><a href="https://www.k2view.com/solutions/data-masking-tools/" role="menuitem" target="_self">Data Masking</a></li>
+  <li class="hs-menu-item hs-menu-depth-1" role="none"><a href="https://www.k2view.com/solution/data-tokenization-tools/" role="menuitem" target="_self">Data Tokenization</a></li>
+ </ul>
+</div></span>
+                           </div>
+                           <div id="by-industry-submenu" class="sub-menu">
+                              <h3>AI Context Management</h3>
+                              <span id="hs_cos_wrapper_module_175214101343136_" class="hs_cos_wrapper hs_cos_wrapper_widget hs_cos_wrapper_type_simple_menu" style="" data-hs-cos-general-type="widget" data-hs-cos-type="simple_menu"><div id="hs_menu_wrapper_module_175214101343136_" class="hs-menu-wrapper active-branch flyouts hs-menu-flow-horizontal" role="navigation" data-sitemap-name="" data-menu-id="" aria-label="Navigation Menu">
+ <ul role="menu">
+  <li class="hs-menu-item hs-menu-depth-1" role="none"><a href="https://www.k2view.com/solutions/ai-ready-data-products" role="menuitem" target="_self">AI-Ready Data Products</a></li>
+  <li class="hs-menu-item hs-menu-depth-1" role="none"><a href="https://www.k2view.com/solutions/ai-context-delivery" role="menuitem" target="_self">AI Context Delivery</a></li>
+  <li class="hs-menu-item hs-menu-depth-1" role="none"><a href="https://www.k2view.com/solutions/ai-evaluation-and-observability-platform" role="menuitem" target="_self">AI Evaluation and Observability</a></li>
+  <li class="hs-menu-item hs-menu-depth-1" role="none"><a href="https://www.k2view.com/solutions/mcp-integration/" role="menuitem" target="_self">MCP Data Integration</a></li>
+  <li class="hs-menu-item hs-menu-depth-1" role="none"><a href="https://www.k2view.com/solutions/rag-tools/" role="menuitem" target="_self">Retrieval-Augmented Generation (RAG)</a></li>
+ </ul>
+</div></span>
+                           </div>
+                           <div id="by-dataIntegration-submenu" class="sub-menu">
+                              <h3>Data Integration</h3>
+                              <span id="hs_cos_wrapper_module_175214101343136_" class="hs_cos_wrapper hs_cos_wrapper_widget hs_cos_wrapper_type_simple_menu" style="" data-hs-cos-general-type="widget" data-hs-cos-type="simple_menu"><div id="hs_menu_wrapper_module_175214101343136_" class="hs-menu-wrapper active-branch flyouts hs-menu-flow-horizontal" role="navigation" data-sitemap-name="" data-menu-id="" aria-label="Navigation Menu">
+ <ul role="menu">
+  <li class="hs-menu-item hs-menu-depth-1" role="none"><a href="https://www.k2view.com/solutions/customer-360-platform" role="menuitem" target="_self">Customer Data Integration </a></li>
+  <li class="hs-menu-item hs-menu-depth-1" role="none"><a href="https://www.k2view.com/solutions/data-pipeline-tools/" role="menuitem" target="_self">Data Pipelining</a></li>
+  <li class="hs-menu-item hs-menu-depth-1" role="none"><a href="https://www.k2view.com/platform/ipaas-platform/" role="menuitem" target="_self">Cloud Data Integration (iPaaS)</a></li>
+  <li class="hs-menu-item hs-menu-depth-1" role="none"><a href="https://www.k2view.com/solutions/data-migration-tools/" role="menuitem" target="_self">Data Migration</a></li>
+ </ul>
+</div></span>
+                           </div>
+                           <div id="blog-post" class="sub-menu-blog" style="background:rgba(49, 119, 253, 1.0)">
+                              
+                              
+                              <a href="https://www.k2view.com/product-experience?utm_campaign=K2view&amp;utm_source=top-nav-bar">
+                              <div class="sub-menu-blog-img">
+                                 
+                                 
+                                 
+                                 
+                                 
+                                 
+                                 <img src="https://www.k2view.com/hs-fs/hubfs/Take_product_tour.webp?width=450&amp;height=375&amp;name=Take_product_tour.webp" alt="Take_product_tour" loading="lazy" width="450" height="375" style="max-width: 100%; height: auto;" srcset="https://www.k2view.com/hs-fs/hubfs/Take_product_tour.webp?width=225&amp;height=188&amp;name=Take_product_tour.webp 225w, https://www.k2view.com/hs-fs/hubfs/Take_product_tour.webp?width=450&amp;height=375&amp;name=Take_product_tour.webp 450w, https://www.k2view.com/hs-fs/hubfs/Take_product_tour.webp?width=675&amp;height=563&amp;name=Take_product_tour.webp 675w, https://www.k2view.com/hs-fs/hubfs/Take_product_tour.webp?width=900&amp;height=750&amp;name=Take_product_tour.webp 900w, https://www.k2view.com/hs-fs/hubfs/Take_product_tour.webp?width=1125&amp;height=938&amp;name=Take_product_tour.webp 1125w, https://www.k2view.com/hs-fs/hubfs/Take_product_tour.webp?width=1350&amp;height=1125&amp;name=Take_product_tour.webp 1350w" sizes="(max-width: 450px) 100vw, 450px">
+                                 
+                              </div>
+                                
+                              </a>
+                           </div>
+                        </div>
+                     </div>
+                  </li>
+                  <!--<li class="customers">
+                     
+                  </li>--> 
+                  <li class="company has-submenu">
+                     <span>Company</span>
+                     <div class="sub-menu-wrapper">
+                        <div class="sub-menu-sec">
+                           <div id="about-us-submenu" class="sub-menu">
+                              <h3>Company</h3>
+                              <span id="hs_cos_wrapper_module_175214101343136_" class="hs_cos_wrapper hs_cos_wrapper_widget hs_cos_wrapper_type_simple_menu" style="" data-hs-cos-general-type="widget" data-hs-cos-type="simple_menu"><div id="hs_menu_wrapper_module_175214101343136_" class="hs-menu-wrapper active-branch flyouts hs-menu-flow-horizontal" role="navigation" data-sitemap-name="" data-menu-id="" aria-label="Navigation Menu">
+ <ul role="menu">
+  <li class="hs-menu-item hs-menu-depth-1" role="none"><a href="https://www.k2view.com/company/" role="menuitem" target="_self">Who we are</a></li>
+  <li class="hs-menu-item hs-menu-depth-1" role="none"><a href="https://www.k2view.com/news-blog" role="menuitem" target="_self">News</a></li>
+  <li class="hs-menu-item hs-menu-depth-1" role="none"><a href="https://www.k2view.com/customers/" role="menuitem" target="_self">Customers</a></li>
+  <li class="hs-menu-item hs-menu-depth-1" role="none"><a href="https://www.k2view.com/partners/" role="menuitem" target="_self">Partners</a></li>
+ </ul>
+</div></span>
+                           </div>
+                           <div id="reach-out-submenu" class="sub-menu">
+                              <h3>Reach Out</h3>
+                              <span id="hs_cos_wrapper_module_175214101343136_" class="hs_cos_wrapper hs_cos_wrapper_widget hs_cos_wrapper_type_simple_menu" style="" data-hs-cos-general-type="widget" data-hs-cos-type="simple_menu"><div id="hs_menu_wrapper_module_175214101343136_" class="hs-menu-wrapper active-branch flyouts hs-menu-flow-horizontal" role="navigation" data-sitemap-name="" data-menu-id="" aria-label="Navigation Menu">
+ <ul role="menu">
+  <li class="hs-menu-item hs-menu-depth-1" role="none"><a href="https://www.k2view.com/contact" role="menuitem" target="_self">Contact Us</a></li>
+  <li class="hs-menu-item hs-menu-depth-1" role="none"><a href="https://support.k2view.com/" role="menuitem" target="_blank" rel="noopener">Support</a></li>
+  <li class="hs-menu-item hs-menu-depth-1" role="none"><a href="https://www.k2view.com/careers/" role="menuitem" target="_self">Careers</a></li>
+ </ul>
+</div></span>
+                           </div>
+                           <div class="news-updates" style="background:rgba(241, 247, 255, 1.0);">
+                              <h3>News Updates</h3>
+                              <span id="hs_cos_wrapper_module_175214101343136_" class="hs_cos_wrapper hs_cos_wrapper_widget hs_cos_wrapper_type_menu" style="" data-hs-cos-general-type="widget" data-hs-cos-type="menu"><div id="hs_menu_wrapper_module_175214101343136_" class="hs-menu-wrapper active-branch flyouts hs-menu-flow-horizontal" role="navigation" data-sitemap-name="default" data-menu-id="79450819719" aria-label="Navigation Menu">
+ <ul role="menu">
+  <li class="hs-menu-item hs-menu-depth-1" role="none"><a href="https://www.k2view.com/news-blog/k2view-named-a-visionary-in-the-2025-gartner-magic-quadrant" role="menuitem">K2view Recognized as Visionary for Third Consecutive Year in 2025 Gartner® Magic Quadrant™ for Data Integration Tools</a></li>
+  <li class="hs-menu-item hs-menu-depth-1" role="none"><a href="https://www.k2view.com/news-blog/k2view-secures-15m-to-fuel-the-next-generation-of-agentic-ai-powered-by-ai-ready-data" role="menuitem">K2view secures $15M to fuel the next generation of Agentic AI, powered by AI-ready data</a></li>
+  <li class="hs-menu-item hs-menu-depth-1" role="none"><a href="https://www.k2view.com/news-blog/rocket-software-and-k2view-partner-to-accelerate-mainframe-modernization-with-governed-ai-ready-test-data-for-testing-analytics-and-ai" role="menuitem">Rocket Software and K2view partner to accelerate mainframe modernization</a></li>
+ </ul>
+</div></span>
+                           </div>
+                        </div>
+                     </div>
+                  </li>
+                  <li class="resources has-submenu">
+                     <span>Resources</span>
+                     <div class="sub-menu-wrapper">
+                        <div class="sub-menu-sec">
+                           <div id="resources-submenu" class="sub-menu">
+                              <h3>Resources</h3>
+                              <span id="hs_cos_wrapper_module_175214101343136_" class="hs_cos_wrapper hs_cos_wrapper_widget hs_cos_wrapper_type_simple_menu" style="" data-hs-cos-general-type="widget" data-hs-cos-type="simple_menu"><div id="hs_menu_wrapper_module_175214101343136_" class="hs-menu-wrapper active-branch flyouts hs-menu-flow-horizontal" role="navigation" data-sitemap-name="" data-menu-id="" aria-label="Navigation Menu">
+ <ul role="menu">
+  <li class="hs-menu-item hs-menu-depth-1" role="none"><a href="https://www.k2view.com/blog" role="menuitem" target="_self">Blog</a></li>
+  <li class="hs-menu-item hs-menu-depth-1" role="none"><a href="https://www.k2view.com/resources/ebooks" role="menuitem" target="_self">eBooks</a></li>
+  <li class="hs-menu-item hs-menu-depth-1" role="none"><a href="https://www.k2view.com/resources/whitepapers" role="menuitem" target="_self">Whitepapers</a></li>
+  <li class="hs-menu-item hs-menu-depth-1" role="none"><a href="https://www.k2view.com/resources/videos" role="menuitem" target="_self">Videos</a></li>
+ </ul>
+</div></span>
+                           </div>
+                           <div id="education-training-submenu" class="sub-menu">
+                              <h3>Education &amp; Training</h3>
+                              <span id="hs_cos_wrapper_module_175214101343136_" class="hs_cos_wrapper hs_cos_wrapper_widget hs_cos_wrapper_type_simple_menu" style="" data-hs-cos-general-type="widget" data-hs-cos-type="simple_menu"><div id="hs_menu_wrapper_module_175214101343136_" class="hs-menu-wrapper active-branch flyouts hs-menu-flow-horizontal" role="navigation" data-sitemap-name="" data-menu-id="" aria-label="Navigation Menu">
+ <ul role="menu">
+  <li class="hs-menu-item hs-menu-depth-1" role="none"><a href="https://academy.k2view.com/" role="menuitem" target="_self">Academy</a></li>
+  <li class="hs-menu-item hs-menu-depth-1" role="none"><a href="https://support.k2view.com/knowledge-base.html" role="menuitem" target="_blank" rel="noopener">Knowledge Base</a></li>
+  <li class="hs-menu-item hs-menu-depth-1" role="none"><a href="https://support.k2view.com/community.html" role="menuitem" target="_self">Community</a></li>
+ </ul>
+</div></span>
+                           </div>
+                          <div style="background:url(https://www.k2view.com/hubfs/Gartner-Sep-05-2026-10-25-27-0501-AM.webp);" class="start-tour-resources">
+                             
+                              
+                              <a href="https://www.k2view.com/blog/gartner-magic-quadrant-for-data-integration-tools-2025">
+                                <h3>K2view is a Visionary in the 2025 Gartner MQ 🎉</h3>
+                                <span class="start_tour_link">Read more</span>
+                              </a>
+                           </div>
+                        </div>
+                     </div>
+                  </li>
+                  <li class="customers sign-in">
+                     
+                     <span id="hs_cos_wrapper_module_175214101343136_" class="hs_cos_wrapper hs_cos_wrapper_widget hs_cos_wrapper_type_cta" style="" data-hs-cos-general-type="widget" data-hs-cos-type="cta"><!--HubSpot Call-to-Action Code --><span class="hs-cta-wrapper" id="hs-cta-wrapper-5e81ec3b-9436-4745-8150-39c959bc0746"><span class="hs-cta-node hs-cta-5e81ec3b-9436-4745-8150-39c959bc0746" id="hs-cta-5e81ec3b-9436-4745-8150-39c959bc0746"><!--[if lte IE 8]><div id="hs-cta-ie-element"></div><![endif]--><a href="https://cta-redirect.hubspot.com/cta/redirect/5983023/5e81ec3b-9436-4745-8150-39c959bc0746"><img class="hs-cta-img" id="hs-cta-img-5e81ec3b-9436-4745-8150-39c959bc0746" style="border-width:0px;" src="https://no-cache.hubspot.com/cta/default/5983023/5e81ec3b-9436-4745-8150-39c959bc0746.png" alt="Contact Us"></a></span><script charset="utf-8" src="/hs/cta/cta/current.js"></script><script type="text/javascript"> hbspt.cta._relativeUrls=true;hbspt.cta.load(5983023, '5e81ec3b-9436-4745-8150-39c959bc0746', {"useNewLoader":"true","region":"na1"}); </script></span><!-- end HubSpot Call-to-Action Code --></span>
+                     
+                  </li>
+               </ul>
+            </div> 
+            <div class="main-header-btn-section">             
+               <div class="main-header-btn-wrap">
+                 
+                 
+                    <div class="main-header-btn-item header--cta--1 "><span id="hs_cos_wrapper_module_175214101343136_" class="hs_cos_wrapper hs_cos_wrapper_widget hs_cos_wrapper_type_cta" style="" data-hs-cos-general-type="widget" data-hs-cos-type="cta"><!--HubSpot Call-to-Action Code --><span class="hs-cta-wrapper" id="hs-cta-wrapper-d77e28f9-6ca3-4e02-a52d-b9a69c308e1f"><span class="hs-cta-node hs-cta-d77e28f9-6ca3-4e02-a52d-b9a69c308e1f" id="hs-cta-d77e28f9-6ca3-4e02-a52d-b9a69c308e1f"><!--[if lte IE 8]><div id="hs-cta-ie-element"></div><![endif]--><a href="https://cta-redirect.hubspot.com/cta/redirect/5983023/d77e28f9-6ca3-4e02-a52d-b9a69c308e1f"><img class="hs-cta-img" id="hs-cta-img-d77e28f9-6ca3-4e02-a52d-b9a69c308e1f" style="border-width:0px;" src="https://no-cache.hubspot.com/cta/default/5983023/d77e28f9-6ca3-4e02-a52d-b9a69c308e1f.png" alt="Take a Quick Tour"></a></span><script charset="utf-8" src="/hs/cta/cta/current.js"></script><script type="text/javascript"> hbspt.cta._relativeUrls=true;hbspt.cta.load(5983023, 'd77e28f9-6ca3-4e02-a52d-b9a69c308e1f', {"useNewLoader":"true","region":"na1"}); </script></span><!-- end HubSpot Call-to-Action Code --></span></div>
+                 
+                    <div class="main-header-btn-item header--cta--2 "><span id="hs_cos_wrapper_module_175214101343136_" class="hs_cos_wrapper hs_cos_wrapper_widget hs_cos_wrapper_type_cta" style="" data-hs-cos-general-type="widget" data-hs-cos-type="cta"><!--HubSpot Call-to-Action Code --><span class="hs-cta-wrapper" id="hs-cta-wrapper-900dd571-ff54-44e9-af77-0ed420b3c35f"><span class="hs-cta-node hs-cta-900dd571-ff54-44e9-af77-0ed420b3c35f" id="hs-cta-900dd571-ff54-44e9-af77-0ed420b3c35f"><!--[if lte IE 8]><div id="hs-cta-ie-element"></div><![endif]--><a href="https://cta-redirect.hubspot.com/cta/redirect/5983023/900dd571-ff54-44e9-af77-0ed420b3c35f"><img class="hs-cta-img" id="hs-cta-img-900dd571-ff54-44e9-af77-0ed420b3c35f" style="border-width:0px;" src="https://no-cache.hubspot.com/cta/default/5983023/900dd571-ff54-44e9-af77-0ed420b3c35f.png" alt="Book a Demo"></a></span><script charset="utf-8" src="/hs/cta/cta/current.js"></script><script type="text/javascript"> hbspt.cta._relativeUrls=true;hbspt.cta.load(5983023, '900dd571-ff54-44e9-af77-0ed420b3c35f', {"useNewLoader":"true","region":"na1"}); </script></span><!-- end HubSpot Call-to-Action Code --></span></div>
+                 
+                 
+               </div>
+            </div>
+            
+         </div>
+      </div>
+   </div>
+  
+   <div class="mobile-header-section">
+      <div class="m-header-wrapper">
+         <div class="m-header-main-row">
+            <div class="m-header-left">
+               <div class="m-logo-sec"> 
+                  
+                  <span id="hs_cos_wrapper_module_175214101343136_" class="hs_cos_wrapper hs_cos_wrapper_widget hs_cos_wrapper_type_logo" style="" data-hs-cos-general-type="widget" data-hs-cos-type="logo"><a href="//www.k2view.com" id="hs-link-module_175214101343136_" style="border-width:0px;border:0px;"><img src="https://www.k2view.com/hubfs/k2view-logo-1.svg" class="hs-image-widget " height="210" style="height: auto;width:641px;border-width:0px;border:0px;" width="641" alt="" title="" loading=""></a></span>
+               </div>
+              
+               <div class="main-header-btn-section">
+                  <div class="main-header-btn-wrap">
+                 
+                    <div class="mobile-header-CTABTN "><span id="hs_cos_wrapper_module_175214101343136_" class="hs_cos_wrapper hs_cos_wrapper_widget hs_cos_wrapper_type_cta" style="" data-hs-cos-general-type="widget" data-hs-cos-type="cta"><!--HubSpot Call-to-Action Code --><span class="hs-cta-wrapper" id="hs-cta-wrapper-900dd571-ff54-44e9-af77-0ed420b3c35f"><span class="hs-cta-node hs-cta-900dd571-ff54-44e9-af77-0ed420b3c35f" id="hs-cta-900dd571-ff54-44e9-af77-0ed420b3c35f"><!--[if lte IE 8]><div id="hs-cta-ie-element"></div><![endif]--><a href="https://cta-redirect.hubspot.com/cta/redirect/5983023/900dd571-ff54-44e9-af77-0ed420b3c35f"><img class="hs-cta-img" id="hs-cta-img-900dd571-ff54-44e9-af77-0ed420b3c35f" style="border-width:0px;" src="https://no-cache.hubspot.com/cta/default/5983023/900dd571-ff54-44e9-af77-0ed420b3c35f.png" alt="Book a Demo"></a></span><script charset="utf-8" src="/hs/cta/cta/current.js"></script><script type="text/javascript"> hbspt.cta._relativeUrls=true;hbspt.cta.load(5983023, '900dd571-ff54-44e9-af77-0ed420b3c35f', {"useNewLoader":"true","region":"na1"}); </script></span><!-- end HubSpot Call-to-Action Code --></span></div>
+                 
+               </div>
+               </div>
+            </div>            
+            <div class="mobile-menu-toggle">
+               <span class=""></span>
+            </div>
+            
+         </div>
+         
+         <div class="mobile-menu-collapse">
+            <div class="mobile-menu-collapse-inner">
+               <div class="m-main-menu">
+                  <ul>
+                     <li><span class="menulevelone" data-menu="platform">Platform</span></li>
+                     <li><span class="menulevelone" data-menu="solutions">Solutions</span></li>
+                     <li><span class="menulevelone" data-menu="company">Company</span></li>
+                     <li><span class="menulevelone" data-menu="resources">Resources</span></li>
+                  </ul>
+               </div>
+               <div class="m-submenu">
+                  <div id="platform" class="m-submenu-wrap">
+                     <div class="back-to-main-outer">
+                        <span class="back-to-main">Platform</span>
+                     </div>
+                     <div class="m-parent-item">
+                        <div class="submain-toggle">
+                           <span>Overview</span>
+                        </div>
+                        <div class="m-submain-collapse">
+                           <span id="hs_cos_wrapper_module_175214101343136_" class="hs_cos_wrapper hs_cos_wrapper_widget hs_cos_wrapper_type_simple_menu" style="" data-hs-cos-general-type="widget" data-hs-cos-type="simple_menu"><div id="hs_menu_wrapper_module_175214101343136_" class="hs-menu-wrapper active-branch flyouts hs-menu-flow-horizontal" role="navigation" data-sitemap-name="" data-menu-id="" aria-label="Navigation Menu">
+ <ul role="menu">
+  <li class="hs-menu-item hs-menu-depth-1" role="none"><a href="https://www.k2view.com/platform/data-product-platform/" role="menuitem" target="_self">Data Product Platform</a></li>
+  <li class="hs-menu-item hs-menu-depth-1" role="none"><a href="https://www.k2view.com/platform/ai-context-platform" role="menuitem" target="_self">AI Context Platform</a></li>
+  <li class="hs-menu-item hs-menu-depth-1" role="none"><a href="https://www.k2view.com/platform/micro-database/" role="menuitem" target="_self">Micro-Database Technology</a></li>
+  <li class="hs-menu-item hs-menu-depth-1" role="none"><a href="https://www.k2view.com/data-product-platform-demo/" role="menuitem" target="_self">Demo Video</a></li>
+ </ul>
+</div></span>
+                        </div>
+                     </div>
+                     <div class="m-parent-item">
+                        <div class="submain-toggle">
+                           <span>Capabilities</span>
+                        </div>
+                        <div class="m-submain-collapse">
+                           <span id="hs_cos_wrapper_module_175214101343136_" class="hs_cos_wrapper hs_cos_wrapper_widget hs_cos_wrapper_type_simple_menu" style="" data-hs-cos-general-type="widget" data-hs-cos-type="simple_menu"><div id="hs_menu_wrapper_module_175214101343136_" class="hs-menu-wrapper active-branch flyouts hs-menu-flow-horizontal" role="navigation" data-sitemap-name="" data-menu-id="" aria-label="Navigation Menu">
+ <ul role="menu">
+  <li class="hs-menu-item hs-menu-depth-1" role="none"><a href="https://www.k2view.com/platform/data-integration-tools/" role="menuitem" target="_self">Data Integration</a></li>
+  <li class="hs-menu-item hs-menu-depth-1" role="none"><a href="https://www.k2view.com/platform/data-virtualization-tools" role="menuitem" target="_self">Data Virtualization</a></li>
+  <li class="hs-menu-item hs-menu-depth-1" role="none"><a href="https://www.k2view.com/platform/data-as-a-service-automation/" role="menuitem" target="_self">Data-as-a-Service Automation</a></li>
+  <li class="hs-menu-item hs-menu-depth-1" role="none"><a href="https://www.k2view.com/platform/data-governance-tools/" role="menuitem" target="_self">Data Governance</a></li>
+  <li class="hs-menu-item hs-menu-depth-1" role="none"><a href="https://www.k2view.com/platform/data-catalog/" role="menuitem" target="_self">Data Catalog</a></li>
+  <li class="hs-menu-item hs-menu-depth-1" role="none"><a href="https://www.k2view.com/platform/data-orchestration-tools/" role="menuitem" target="_self">Data Orchestration</a></li>
+ </ul>
+</div></span>
+                        </div>
+                     </div>
+                     <div class="m-parent-item">
+                        <div class="submain-toggle">
+                           <span>Architecture</span>
+                        </div>
+                        <div class="m-submain-collapse">
+                           <span id="hs_cos_wrapper_module_175214101343136_" class="hs_cos_wrapper hs_cos_wrapper_widget hs_cos_wrapper_type_simple_menu" style="" data-hs-cos-general-type="widget" data-hs-cos-type="simple_menu"><div id="hs_menu_wrapper_module_175214101343136_" class="hs-menu-wrapper active-branch flyouts hs-menu-flow-horizontal" role="navigation" data-sitemap-name="" data-menu-id="" aria-label="Navigation Menu">
+ <ul role="menu">
+  <li class="hs-menu-item hs-menu-depth-1" role="none"><a href="https://www.k2view.com/platform/data-fabric-architecture/" role="menuitem" target="_self">Data Fabric</a></li>
+  <li class="hs-menu-item hs-menu-depth-1" role="none"><a href="https://www.k2view.com/platform/data-mesh-architecture/" role="menuitem" target="_self">Data Mesh</a></li>
+  <li class="hs-menu-item hs-menu-depth-1" role="none"><a href="https://www.k2view.com/platform/data-hub-architecture/" role="menuitem" target="_self">Data Hub</a></li>
+ </ul>
+</div></span>
+                        </div>
+                     </div>
+                  </div>
+                  <div id="solutions" class="m-submenu-wrap">
+                     <div class="back-to-main-outer">
+                        <span class="back-to-main">Solutions</span>
+                     </div>
+                     <div class="m-parent-item">
+                        <div class="submain-toggle">
+                           <span>Data Protection &amp; Provisioning</span>
+                        </div>
+                        <div class="m-submain-collapse">
+                           <span id="hs_cos_wrapper_module_175214101343136_" class="hs_cos_wrapper hs_cos_wrapper_widget hs_cos_wrapper_type_simple_menu" style="" data-hs-cos-general-type="widget" data-hs-cos-type="simple_menu"><div id="hs_menu_wrapper_module_175214101343136_" class="hs-menu-wrapper active-branch flyouts hs-menu-flow-horizontal" role="navigation" data-sitemap-name="" data-menu-id="" aria-label="Navigation Menu">
+ <ul role="menu">
+  <li class="hs-menu-item hs-menu-depth-1" role="none"><a href="https://www.k2view.com/solutions/synthetic-data-generation-tools/" role="menuitem" target="_self">Synthetic Data Generation</a></li>
+  <li class="hs-menu-item hs-menu-depth-1" role="none"><a href="https://www.k2view.com/solutions/test-data-management-software/" role="menuitem" target="_self">Test Data Management</a></li>
+  <li class="hs-menu-item hs-menu-depth-1" role="none"><a href="https://www.k2view.com/solutions/data-masking-tools/" role="menuitem" target="_self">Data Masking</a></li>
+  <li class="hs-menu-item hs-menu-depth-1" role="none"><a href="https://www.k2view.com/solution/data-tokenization-tools/" role="menuitem" target="_self">Data Tokenization</a></li>
+ </ul>
+</div></span>
+                        </div>
+                     </div>
+                     <div class="m-parent-item">
+                        <div class="submain-toggle">
+                           <span>AI Context Management</span>
+                        </div>
+                        <div class="m-submain-collapse">
+                           <span id="hs_cos_wrapper_module_175214101343136_" class="hs_cos_wrapper hs_cos_wrapper_widget hs_cos_wrapper_type_simple_menu" style="" data-hs-cos-general-type="widget" data-hs-cos-type="simple_menu"><div id="hs_menu_wrapper_module_175214101343136_" class="hs-menu-wrapper active-branch flyouts hs-menu-flow-horizontal" role="navigation" data-sitemap-name="" data-menu-id="" aria-label="Navigation Menu">
+ <ul role="menu">
+  <li class="hs-menu-item hs-menu-depth-1" role="none"><a href="https://www.k2view.com/solutions/ai-ready-data-products" role="menuitem" target="_self">AI-Ready Data Products</a></li>
+  <li class="hs-menu-item hs-menu-depth-1" role="none"><a href="https://www.k2view.com/solutions/ai-context-delivery" role="menuitem" target="_self">AI Context Delivery</a></li>
+  <li class="hs-menu-item hs-menu-depth-1" role="none"><a href="https://www.k2view.com/solutions/ai-evaluation-and-observability-platform" role="menuitem" target="_self">AI Evaluation and Observability</a></li>
+  <li class="hs-menu-item hs-menu-depth-1" role="none"><a href="https://www.k2view.com/solutions/mcp-integration/" role="menuitem" target="_self">MCP Data Integration</a></li>
+  <li class="hs-menu-item hs-menu-depth-1" role="none"><a href="https://www.k2view.com/solutions/rag-tools/" role="menuitem" target="_self">Retrieval-Augmented Generation (RAG)</a></li>
+ </ul>
+</div></span>
+                        </div>
+                     </div>
+                    <div class="m-parent-item">
+                        <div class="submain-toggle">
+                           <span>Data Integration</span>
+                        </div>
+                        <div class="m-submain-collapse">
+                           <span id="hs_cos_wrapper_module_175214101343136_" class="hs_cos_wrapper hs_cos_wrapper_widget hs_cos_wrapper_type_simple_menu" style="" data-hs-cos-general-type="widget" data-hs-cos-type="simple_menu"><div id="hs_menu_wrapper_module_175214101343136_" class="hs-menu-wrapper active-branch flyouts hs-menu-flow-horizontal" role="navigation" data-sitemap-name="" data-menu-id="" aria-label="Navigation Menu">
+ <ul role="menu">
+  <li class="hs-menu-item hs-menu-depth-1" role="none"><a href="https://www.k2view.com/solutions/customer-360-platform" role="menuitem" target="_self">Customer Data Integration </a></li>
+  <li class="hs-menu-item hs-menu-depth-1" role="none"><a href="https://www.k2view.com/solutions/data-pipeline-tools/" role="menuitem" target="_self">Data Pipelining</a></li>
+  <li class="hs-menu-item hs-menu-depth-1" role="none"><a href="https://www.k2view.com/platform/ipaas-platform/" role="menuitem" target="_self">Cloud Data Integration (iPaaS)</a></li>
+  <li class="hs-menu-item hs-menu-depth-1" role="none"><a href="https://www.k2view.com/solutions/data-migration-tools/" role="menuitem" target="_self">Data Migration</a></li>
+ </ul>
+</div></span>
+                        </div>
+                     </div>
+                  </div>
+                  <div id="company" class="m-submenu-wrap">
+                     <div class="back-to-main-outer">
+                        <span class="back-to-main">Company</span>
+                     </div>
+                     <div class="m-parent-item">
+                        <div class="submain-toggle">
+                           <span>Company</span>
+                        </div>
+                        <div class="m-submain-collapse">
+                           <span id="hs_cos_wrapper_module_175214101343136_" class="hs_cos_wrapper hs_cos_wrapper_widget hs_cos_wrapper_type_simple_menu" style="" data-hs-cos-general-type="widget" data-hs-cos-type="simple_menu"><div id="hs_menu_wrapper_module_175214101343136_" class="hs-menu-wrapper active-branch flyouts hs-menu-flow-horizontal" role="navigation" data-sitemap-name="" data-menu-id="" aria-label="Navigation Menu">
+ <ul role="menu">
+  <li class="hs-menu-item hs-menu-depth-1" role="none"><a href="https://www.k2view.com/company/" role="menuitem" target="_self">Who we are</a></li>
+  <li class="hs-menu-item hs-menu-depth-1" role="none"><a href="https://www.k2view.com/news-blog" role="menuitem" target="_self">News</a></li>
+  <li class="hs-menu-item hs-menu-depth-1" role="none"><a href="https://www.k2view.com/customers/" role="menuitem" target="_self">Customers</a></li>
+  <li class="hs-menu-item hs-menu-depth-1" role="none"><a href="https://www.k2view.com/partners/" role="menuitem" target="_self">Partners</a></li>
+ </ul>
+</div></span>
+                        </div>
+                     </div>
+                     <div class="m-parent-item">
+                        <div class="submain-toggle">
+                           <span>Reach Out</span>
+                        </div>
+                        <div class="m-submain-collapse">
+                           <span id="hs_cos_wrapper_module_175214101343136_" class="hs_cos_wrapper hs_cos_wrapper_widget hs_cos_wrapper_type_simple_menu" style="" data-hs-cos-general-type="widget" data-hs-cos-type="simple_menu"><div id="hs_menu_wrapper_module_175214101343136_" class="hs-menu-wrapper active-branch flyouts hs-menu-flow-horizontal" role="navigation" data-sitemap-name="" data-menu-id="" aria-label="Navigation Menu">
+ <ul role="menu">
+  <li class="hs-menu-item hs-menu-depth-1" role="none"><a href="https://www.k2view.com/contact" role="menuitem" target="_self">Contact Us</a></li>
+  <li class="hs-menu-item hs-menu-depth-1" role="none"><a href="https://support.k2view.com/" role="menuitem" target="_blank" rel="noopener">Support</a></li>
+  <li class="hs-menu-item hs-menu-depth-1" role="none"><a href="https://www.k2view.com/careers/" role="menuitem" target="_self">Careers</a></li>
+ </ul>
+</div></span>
+                        </div>
+                     </div>
+                     <div class="m-parent-item m-news-menu">
+                        <span id="hs_cos_wrapper_module_175214101343136_" class="hs_cos_wrapper hs_cos_wrapper_widget hs_cos_wrapper_type_menu" style="" data-hs-cos-general-type="widget" data-hs-cos-type="menu"><div id="hs_menu_wrapper_module_175214101343136_" class="hs-menu-wrapper active-branch flyouts hs-menu-flow-horizontal" role="navigation" data-sitemap-name="default" data-menu-id="79450819719" aria-label="Navigation Menu">
+ <ul role="menu">
+  <li class="hs-menu-item hs-menu-depth-1" role="none"><a href="https://www.k2view.com/news-blog/k2view-named-a-visionary-in-the-2025-gartner-magic-quadrant" role="menuitem">K2view Recognized as Visionary for Third Consecutive Year in 2025 Gartner® Magic Quadrant™ for Data Integration Tools</a></li>
+  <li class="hs-menu-item hs-menu-depth-1" role="none"><a href="https://www.k2view.com/news-blog/k2view-secures-15m-to-fuel-the-next-generation-of-agentic-ai-powered-by-ai-ready-data" role="menuitem">K2view secures $15M to fuel the next generation of Agentic AI, powered by AI-ready data</a></li>
+  <li class="hs-menu-item hs-menu-depth-1" role="none"><a href="https://www.k2view.com/news-blog/rocket-software-and-k2view-partner-to-accelerate-mainframe-modernization-with-governed-ai-ready-test-data-for-testing-analytics-and-ai" role="menuitem">Rocket Software and K2view partner to accelerate mainframe modernization</a></li>
+ </ul>
+</div></span>
+                        <div class="all-news-updates-wrap">
+                           <a class="sub-menu-btn-arrow" href="https://www.k2view.com/news/">All News Updates</a>
+                        </div>
+                     </div>
+                  </div>
+                  <div id="resources" class="m-submenu-wrap">
+                     <div class="back-to-main-outer">
+                        <span class="back-to-main">Resources</span>
+                     </div>
+                     <div class="m-parent-item">
+                        <div class="submain-toggle">
+                           <span>Resources</span>
+                        </div>
+                        <div class="m-submain-collapse">
+                           <span id="hs_cos_wrapper_module_175214101343136_" class="hs_cos_wrapper hs_cos_wrapper_widget hs_cos_wrapper_type_simple_menu" style="" data-hs-cos-general-type="widget" data-hs-cos-type="simple_menu"><div id="hs_menu_wrapper_module_175214101343136_" class="hs-menu-wrapper active-branch flyouts hs-menu-flow-horizontal" role="navigation" data-sitemap-name="" data-menu-id="" aria-label="Navigation Menu">
+ <ul role="menu">
+  <li class="hs-menu-item hs-menu-depth-1" role="none"><a href="https://www.k2view.com/blog" role="menuitem" target="_self">Blog</a></li>
+  <li class="hs-menu-item hs-menu-depth-1" role="none"><a href="https://www.k2view.com/resources/ebooks" role="menuitem" target="_self">eBooks</a></li>
+  <li class="hs-menu-item hs-menu-depth-1" role="none"><a href="https://www.k2view.com/resources/whitepapers" role="menuitem" target="_self">Whitepapers</a></li>
+  <li class="hs-menu-item hs-menu-depth-1" role="none"><a href="https://www.k2view.com/resources/videos" role="menuitem" target="_self">Videos</a></li>
+ </ul>
+</div></span>
+                        </div>
+                     </div>
+                     <div class="m-parent-item">
+                        <div class="submain-toggle">
+                           <span>Education &amp; Training</span>
+                        </div>
+                        <div class="m-submain-collapse">
+                           <span id="hs_cos_wrapper_module_175214101343136_" class="hs_cos_wrapper hs_cos_wrapper_widget hs_cos_wrapper_type_simple_menu" style="" data-hs-cos-general-type="widget" data-hs-cos-type="simple_menu"><div id="hs_menu_wrapper_module_175214101343136_" class="hs-menu-wrapper active-branch flyouts hs-menu-flow-horizontal" role="navigation" data-sitemap-name="" data-menu-id="" aria-label="Navigation Menu">
+ <ul role="menu">
+  <li class="hs-menu-item hs-menu-depth-1" role="none"><a href="https://academy.k2view.com/" role="menuitem" target="_self">Academy</a></li>
+  <li class="hs-menu-item hs-menu-depth-1" role="none"><a href="https://support.k2view.com/knowledge-base.html" role="menuitem" target="_blank" rel="noopener">Knowledge Base</a></li>
+  <li class="hs-menu-item hs-menu-depth-1" role="none"><a href="https://support.k2view.com/community.html" role="menuitem" target="_self">Community</a></li>
+ </ul>
+</div></span>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+          
+      </div>
+   </div>
+</div>
+</div> 
+<script>
+   
+     $('.hs-menu-item a:contains("K2View Releases Market’s First Operational Data Fabric")').addClass('new');
+      
+</script></div>
+       
+      
+
+      
+
+      <main id="main-content" class="body-container-wrapper">
+        
+      
+          
+             
+          
+       
+<div id="hs_cos_wrapper_module_17472251020564" class="hs_cos_wrapper hs_cos_wrapper_widget hs_cos_wrapper_type_module" style="" data-hs-cos-general-type="widget" data-hs-cos-type="module">
+  
+    <div class="signin--popup--sec">
+      <div class="signin--popup--wrap">    
+        <div class="signin--popup--content">      
+          <div class="signin--popup--text">
+            <h2>See Agentic AI in Action</h2>
+            <p>Go behind the scenes and see how we ground AI agents with enterprise data</p>
+          </div>
+          <div class="signin--popup--img">
+            
+              
+              
+               
+              <img src="https://www.k2view.com/hs-fs/hubfs/chat.png?width=412&amp;height=269&amp;name=chat.png" alt="chat" loading="" width="412" height="269" srcset="https://www.k2view.com/hs-fs/hubfs/chat.png?width=206&amp;height=135&amp;name=chat.png 206w, https://www.k2view.com/hs-fs/hubfs/chat.png?width=412&amp;height=269&amp;name=chat.png 412w, https://www.k2view.com/hs-fs/hubfs/chat.png?width=618&amp;height=404&amp;name=chat.png 618w, https://www.k2view.com/hs-fs/hubfs/chat.png?width=824&amp;height=538&amp;name=chat.png 824w, https://www.k2view.com/hs-fs/hubfs/chat.png?width=1030&amp;height=673&amp;name=chat.png 1030w, https://www.k2view.com/hs-fs/hubfs/chat.png?width=1236&amp;height=807&amp;name=chat.png 1236w" sizes="(max-width: 412px) 100vw, 412px">
+            
+          </div>
+        </div>
+        <div class="signin--popup--form">
+          <span class="signin--popup--close">
+            <img src="https://www.k2view.com/hubfs/close-3.svg">
+          </span>
+           <h2>Start your live product tour</h2>
+            
+            <script charset="utf-8" type="text/javascript" src="//js.hsforms.net/forms/v2.js?pre=1"></script>
+              <script>
+                hbspt.forms.create({
+                  region: "na1",
+                  portalId: "5983023",
+                  formId: "b924abd0-5292-4213-ac47-ab5dd132dd82",
+                  onFormReady: function($form) {
+                    $('input[type="email"]').blur(function(e) {
+                    e.preventDefault();        
+                    const blockedDomains = ["mail.adsuite.pro"];
+                    const email = $('input.hs-input[name="email"]').val();
+                    const domain = email.split("@")[1];
+                    if (blockedDomains.includes(domain)) {
+                        e.preventDefault();
+                        $('input.hs-input[name="email"]').val('');
+                        setTimeout(function () {
+                          $('input.hs-input[name="email"]').parents('.hs-form-field').find('label.hs-error-msg').append("<span> Please enter a different email address. This form does not accept addresses from </span><b>"+domain+"</b>");
+                        }, 500);  
+                     }    
+                    });
+                  },
+                  onFormSubmit: function($form) {
+                     $('.signin--popup--form h2, .signin--popup--close').css('opacity','0');
+                      window.location.replace("https://www.k2view.com/k2view-genai-demo#T_RAG");
+                  }
+                });
+              </script>
+        </div>
+</div> 
+    </div>
+  
+
+
+
+
+</div>
+<div class="body-container--blog-post blog--post--banner">
+   <div class="blog--post--sec">
+      <div class="blog--post--banner--left">
+         <div class="blog--pb--logo">            
+            <a href="https://www.k2view.com/blog/" class="">K2View <span>Blog</span></a>
+         </div>
+         <div class="post-date">April 29, 2026</div>
+         <div class="blog-heading">
+            <h1>RAG hallucination: What is it and how to avoid it</h1>
+         </div>
+         <div class="blog--pb--author-image">
+           <div class="blog--pb--author-img">
+              
+              <img alt="Iris Zarecki" src="https://www.k2view.com/hubfs/Iris%20headshot.jpg">
+                            
+           </div>
+           <div class="author-detail">
+              <h3><a class="author-link" href="https://www.k2view.com/blog/author/iris-zarecki-product-marketing-manager">Iris Zarecki,</a><span>Product Marketing Director</span></h3>             
+           </div>
+         </div>
+      </div>
+      <div class="blog--post--banner--right">
+         
+         <div class="featured_image">
+            <img src="https://www.k2view.com/hubfs/rag%20hallucination.jpg" alt="RAG Hallucination">
+         </div>
+         
+      </div>
+   </div>
+</div>
+<div class="body-container body-container--blog-post">
+  
+<div class="blog--post--sec">
+  <div class="bp--sidebar">
+    <div class="bp--sidebar-inner">    
+<!--       <div class="pps-sidebar-nav">
+       <h3>
+         <span class="extented-nav">In this article</span>
+       </h3>
+        <h4></h4>
+       <ul id="table-of-contents" style="display: block;"></ul>
+      </div>  -->
+      <div class="moreTopic-sidebar-nav">
+      <h3><span>More on this topic</span><hr></h3>    
+       
+        <ul>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+          
+        
+  
+         
+        <li data-tag="RAG"><a href="https://www.k2view.com/blog/what-is-grounding-and-hallucinations-in-ai/">What is grounding and hallucinations in AI?</a></li>              
+        
+
+  
+         
+        <li data-tag="RAG"><a href="https://www.k2view.com/blog/grounding-ai/">Grounding AI reduces hallucinations and increases response accuracy</a></li>              
+        
+
+  
+         
+        <li data-tag="RAG"><a href="https://www.k2view.com/blog/generative-ai-hallucinations/">Generative AI hallucinations: When GenAI is more artificial than intelligent</a></li>              
+        
+
+
+        </ul> 
+                
+      </div>
+      
+      <div class="cbbs--wrap">          
+          
+          
+            <div id="hs_cos_wrapper_module_17518974869878" class="hs_cos_wrapper hs_cos_wrapper_widget hs_cos_wrapper_type_module" style="" data-hs-cos-general-type="widget" data-hs-cos-type="module"><div class="blog--post--sb--banner">
+  <div class="blog--post--sb--banner--img">
+  
+    
+    
+      
+    
+     
+    <img src="https://www.k2view.com/hs-fs/hubfs/K2view%20GenAI%20product%20tour%20RHS-Jul-08-2025-11-52-20-6912-AM.png?width=470&amp;height=512&amp;name=K2view%20GenAI%20product%20tour%20RHS-Jul-08-2025-11-52-20-6912-AM.png" alt="K2view GenAI product tour RHS-Jul-08-2025-11-52-20-6912-AM" loading="lazy" width="470" height="512" style="max-width: 100%; height: auto;" srcset="https://www.k2view.com/hs-fs/hubfs/K2view%20GenAI%20product%20tour%20RHS-Jul-08-2025-11-52-20-6912-AM.png?width=235&amp;height=256&amp;name=K2view%20GenAI%20product%20tour%20RHS-Jul-08-2025-11-52-20-6912-AM.png 235w, https://www.k2view.com/hs-fs/hubfs/K2view%20GenAI%20product%20tour%20RHS-Jul-08-2025-11-52-20-6912-AM.png?width=470&amp;height=512&amp;name=K2view%20GenAI%20product%20tour%20RHS-Jul-08-2025-11-52-20-6912-AM.png 470w, https://www.k2view.com/hs-fs/hubfs/K2view%20GenAI%20product%20tour%20RHS-Jul-08-2025-11-52-20-6912-AM.png?width=705&amp;height=768&amp;name=K2view%20GenAI%20product%20tour%20RHS-Jul-08-2025-11-52-20-6912-AM.png 705w, https://www.k2view.com/hs-fs/hubfs/K2view%20GenAI%20product%20tour%20RHS-Jul-08-2025-11-52-20-6912-AM.png?width=940&amp;height=1024&amp;name=K2view%20GenAI%20product%20tour%20RHS-Jul-08-2025-11-52-20-6912-AM.png 940w, https://www.k2view.com/hs-fs/hubfs/K2view%20GenAI%20product%20tour%20RHS-Jul-08-2025-11-52-20-6912-AM.png?width=1175&amp;height=1280&amp;name=K2view%20GenAI%20product%20tour%20RHS-Jul-08-2025-11-52-20-6912-AM.png 1175w, https://www.k2view.com/hs-fs/hubfs/K2view%20GenAI%20product%20tour%20RHS-Jul-08-2025-11-52-20-6912-AM.png?width=1410&amp;height=1536&amp;name=K2view%20GenAI%20product%20tour%20RHS-Jul-08-2025-11-52-20-6912-AM.png 1410w" sizes="(max-width: 470px) 100vw, 470px">
+  
+    <div class="blog--post--sb--banner--cta">
+      <span id="hs_cos_wrapper_module_17518974869878_" class="hs_cos_wrapper hs_cos_wrapper_widget hs_cos_wrapper_type_cta" style="" data-hs-cos-general-type="widget" data-hs-cos-type="cta"><!--HubSpot Call-to-Action Code --><span class="hs-cta-wrapper" id="hs-cta-wrapper-fc1b2be8-1f77-4b95-b367-4b231d732e9c"><span class="hs-cta-node hs-cta-fc1b2be8-1f77-4b95-b367-4b231d732e9c" id="hs-cta-fc1b2be8-1f77-4b95-b367-4b231d732e9c"><!--[if lte IE 8]><div id="hs-cta-ie-element"></div><![endif]--><a href="https://cta-redirect.hubspot.com/cta/redirect/5983023/fc1b2be8-1f77-4b95-b367-4b231d732e9c"><img class="hs-cta-img" id="hs-cta-img-fc1b2be8-1f77-4b95-b367-4b231d732e9c" style="border-width:0px;" src="https://no-cache.hubspot.com/cta/default/5983023/fc1b2be8-1f77-4b95-b367-4b231d732e9c.png" alt="Take the product tour"></a></span><script charset="utf-8" src="/hs/cta/cta/current.js"></script><script type="text/javascript"> hbspt.cta._relativeUrls=true;hbspt.cta.load(5983023, 'fc1b2be8-1f77-4b95-b367-4b231d732e9c', {"useNewLoader":"true","region":"na1"}); </script></span><!-- end HubSpot Call-to-Action Code --></span>
+    </div> 
+  </div> 
+</div></div>
+           
+                    
+        </div>
+        <div class="blog-social-section">
+             <a href="http://www.facebook.com/share.php?u=https://www.k2view.com/blog/rag-hallucination/" target="_blank"><i class="fab fa-facebook-f"></i></a>
+             <a href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https://www.k2view.com/blog/rag-hallucination/" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+             <a href="https://twitter.com/intent/tweet?url=https://www.k2view.com/blog/rag-hallucination/" target="_blank">
+             <!--<i class="fa-brands fa-x-twitter"></i> -->
+             <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 512 512" width="14">
+                      <!--!Font Awesome Free 6.7.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+                <path fill="#ffffff" d="M389.2 48h70.6L305.6 224.2 487 464H345L233.7 318.6 106.5 464H35.8L200.7 275.5 26.8 48H172.4L272.9 180.9 389.2 48zM364.4 421.8h39.1L151.1 88h-42L364.4 421.8z" />
+                </svg>
+             </a>
+         </div>
+        <div class="about-author-sec row-fluid">
+            <div class="narration--player">
+               <div id="hs_cos_wrapper_blog_post_audio" class="hs_cos_wrapper hs_cos_wrapper_widget hs_cos_wrapper_type_module" style="" data-hs-cos-general-type="widget" data-hs-cos-type="module"><link rel="stylesheet" href="https://48752163.fs1.hubspotusercontent-na1.net/hubfs/48752163/raw_assets/media-default-modules/master/845/js_client_assets/assets/TrackPlayAnalytics-DDKdhRbk.css">
+<link rel="stylesheet" href="https://48752163.fs1.hubspotusercontent-na1.net/hubfs/48752163/raw_assets/media-default-modules/master/845/js_client_assets/assets/Tooltip-BfwIxqAN.css">
+<!--$--><div data-hs-island="true" id="island-e46db1n820386R0"><!--$--><div><div class="hs-audio-player _hs-audio-player_1nxo7_1" role="group" tabindex="0" aria-label="Play blog post audio: RAG hallucination: What is it and how to avoid it" data-status="initial" data-testid="audio-player" style="display:flex;align-items:center;height:60px;--primary:#f5f8fa;--secondary:#33475b;--tertiary:#cbd6e2;--primary-alt:#eff2f4;--tertiary-translucent:#cbd6e250"><div class="_play-pause-skip_1nxo7_117 hs-audio-player__controls"><div class="_control-button_1nxo7_36 _play-pause-button_1nxo7_122 hs-audio-player__play-pause-button" role="button" tabindex="-1" aria-label="Play" data-testid="play-pause-button"><span class="_loading-spinner_1nxo7_147 hs-audio-player__loading-spinner" aria-label="Loading" aria-busy="true"><span class="hs-audio-player__loading-icon"><svg width="40" height="40" viewbox="0 0 40 40" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M0 20C0 31.0457 8.95431 40 20 40C31.0457 40 40 31.0457 40 20C40 8.9543 31.0457 0 20 0C8.95431 0 0 8.9543 0 20ZM36.4 20C36.4 29.0575 29.0575 36.4 20 36.4C10.9425 36.4 3.6 29.0575 3.6 20C3.6 10.9425 10.9425 3.6 20 3.6C29.0575 3.6 36.4 10.9425 36.4 20Z" fill="url(#paint0_angular_1434_396)"></path><circle cx="20" cy="20" r="18" fill="none" stroke="#00a4bd" stroke-width="3"></circle><defs><radialgradient id="paint0_angular_1434_396" cx="0" cy="0" r="1" gradientunits="userSpaceOnUse" gradienttransform="translate(20 20) rotate(90) scale(20)"><stop stop-color="#00A4BD"></stop><stop offset="0.489583" stop-color="#7FD1DE"></stop><stop offset="1" stop-color="#7FD1DE"></stop></radialgradient></defs></svg></span></span></div></div><div class="_initial-title_1nxo7_40 hs-audio-player__title" style="overflow:hidden;white-space:nowrap;text-overflow:ellipsis">RAG hallucination: What is it and how to avoid it</div><div class="_ai-generated-icon_1nxo7_47 hs-audio-player__ai-icon" role="img" aria-label="AI-generated audio" tabindex="0"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 -6 32 34"><path d="M17.01.6l2.75 5.03c1.18 2.16 2.96 3.94 5.12 5.12l5.03 2.75c.8.44.8 1.58 0 2.01l-5.02 2.75c-2.16 1.18-3.94 2.96-5.12 5.12l-2.75 5.02c-.44.8-1.58.8-2.01 0l-2.75-5.03c-1.18-2.16-2.96-3.94-5.12-5.12L2.11 15.5c-.8-.44-.8-1.58 0-2.01l5.03-2.75c2.16-1.18 3.94-2.96 5.12-5.12L14.99.6c.44-.8 1.58-.8 2.01 0z"></path></svg></div><div class="_duration_1nxo7_62 hs-audio-player__duration">7<!-- -->:<!-- -->55</div></div><audio preload="none" src="https://www.k2view.com/hubfs/AI-Generated%20Media/Post%20Narration%20Audio/164007905097-TTS-1715066259990.mp3"></audio></div><!--/$--></div><!--/$-->
+    <script type="text/javascript">
+      window.__hsEnvConfig = {"hsDeployed":true,"hsEnv":"prod","hsJSRGates":["CMS:JSRenderer:GetServerSideProps","CMS:JSRenderer:EnvAllowlistRenderTime","CMS:JSRenderer:EnvAllowlist"],"hublet":"na1","portalID":5983023};
+      window.__hsServerPageUrl = "https:\u002F\u002Fwww.k2view.com\u002Fblog\u002Frag-hallucination\u002F";
+      window.__hsBasePath = "\u002Fblog\u002Frag-hallucination\u002F";
+    </script>
+      
+  <script type="text/javascript">
+    var newIslands = [{"clientOnly":false,"hydrateOn":"load","id":"island-e46db1n820386R0","moduleId":"components\u002Fislands\u002FBlogAudioModule.tsx?client-entry","moduleName":"BlogAudioModule","priority":0,"props":{"dataQueryResult":{},"duration":475.56,"experimentalHublData":null,"fieldValues":{"translations":{"aiGeneratedTooltip":"AI-generated audio","elapsedTime":"Elapsed time","emptyPlaceholder":"Generate a narration for this blog post.","error":"An error occurred, please refresh the page and try again.","loading":"Loading","mute":"Mute","pause":"Pause","play":"Play","playAudio":"Play blog post audio","playbackRate":"Playback speed","seekBar":"Seek bar","seekBarSlider":"Adjust position","skipBackward":"Skip backward 15 seconds","skipForward":"Skip forward 15 seconds","slowDownPlayback":"Slow down playback","speedUpPlayback":"Speed up playback","unmute":"Unmute","volume":"Volume","volumeControls":"Volume controls"}},"file":{"archived":false,"cdn_purge_embargo_time":null,"cloud_key":"hubfs\u002F5983023\u002FAI-Generated%20Media\u002FPost%20Narration%20Audio\u002F164007905097-TTS-1715066259990.mp3","cloud_key_hash":"7a0ae5942dd0322185d8c7a8db23a20e","composite_access":1,"created":1715066261177,"created_by":null,"default_hosting_url":"https:\u002F\u002F5983023.fs1.hubspotusercontent-na1.net\u002Fhubfs\u002F5983023\u002FAI-Generated%20Media\u002FPost%20Narration%20Audio\u002F164007905097-TTS-1715066259990.mp3","deleted_at":0,"deleted_by":null,"encoding":null,"expires_at":null,"extended_metadata":{"duration":475560,"language_code":"en","media_data":{"bitrate":160000,"duration":475560,"format_long_name":"MP2\u002F3 (MPEG audio layer 2\u002F3)","format_name":"mp3","streams":[{"avg_frame_rate":"0:1","bitrate":160000,"channels":1,"codec":{"long_name":"MP3 (MPEG audio layer 3)","name":"mp3","time_base":null,"type":"AUDIO"},"duration":475560,"frame_rate":"0:1","height":0,"rotation":0,"sample_rate":24000,"start_time":0,"time_base":"1:14112000","width":0}]}},"extension":"mp3","file_hash":"d7a5aecd0c1ecbd55186d7c414499d00","folder_id":164598353960,"friendly_url":"https:\u002F\u002Fwww.k2view.com\u002Fhubfs\u002FAI-Generated%20Media\u002FPost%20Narration%20Audio\u002F164007905097-TTS-1715066259990.mp3","height":null,"hidden":false,"id":166615464349,"is_indexable":false,"meta":{"ai_generated":false,"allows_anonymous_access":true,"duration":475560,"indexable":false,"language_code":"en","sensitive":false,"video_data":{"bitrate":160000,"duration":475560,"format_long_name":"MP2\u002F3 (MPEG audio layer 2\u002F3)","format_name":"mp3","hosting_infos":null,"source_bitrate":null,"source_cloud_key":null,"source_size":null,"source_version":null,"streams":[{"avg_frame_rate":"0:1","bitrate":160000,"channels":1,"codec_long_name":"MP3 (MPEG audio layer 3)","codec_name":"mp3","codec_time_base":null,"codec_type":"AUDIO","display_aspect_ratio":null,"dispositions":[],"duration":475560,"frame_rate":"0:1","height":0,"profile":null,"rotation":0,"sample_aspect_ratio":null,"sample_rate":24000,"start_time":0,"tags":{},"time_base":"1:14112000","width":0}]}},"name":"164007905097-TTS-1715066259990","owners":[],"portal_id":5983023,"replaceable":true,"s3_url":"https:\u002F\u002Fcdn1.hubspotusercontent-na1.net\u002Fhubfs\u002F5983023\u002FAI-Generated%20Media\u002FPost%20Narration%20Audio\u002F164007905097-TTS-1715066259990.mp3","size":9511200,"source_group":1,"teams":[],"title":"164007905097-TTS-1715066259990","type":"AUDIO","updated":1738784564150,"url":"https:\u002F\u002Fwww.k2view.com\u002Fhubfs\u002FAI-Generated%20Media\u002FPost%20Narration%20Audio\u002F164007905097-TTS-1715066259990.mp3","width":null},"fileId":166615464349,"fileUrl":"https:\u002F\u002Fwww.k2view.com\u002Fhubfs\u002FAI-Generated%20Media\u002FPost%20Narration%20Audio\u002F164007905097-TTS-1715066259990.mp3","hublData":{"file":{"archived":false,"cdn_purge_embargo_time":null,"cloud_key":"hubfs\u002F5983023\u002FAI-Generated%20Media\u002FPost%20Narration%20Audio\u002F164007905097-TTS-1715066259990.mp3","cloud_key_hash":"7a0ae5942dd0322185d8c7a8db23a20e","composite_access":1,"created":1715066261177,"created_by":null,"default_hosting_url":"https:\u002F\u002F5983023.fs1.hubspotusercontent-na1.net\u002Fhubfs\u002F5983023\u002FAI-Generated%20Media\u002FPost%20Narration%20Audio\u002F164007905097-TTS-1715066259990.mp3","deleted_at":0,"deleted_by":null,"encoding":null,"expires_at":null,"extended_metadata":{"duration":475560,"language_code":"en","media_data":{"bitrate":160000,"duration":475560,"format_long_name":"MP2\u002F3 (MPEG audio layer 2\u002F3)","format_name":"mp3","streams":[{"avg_frame_rate":"0:1","bitrate":160000,"channels":1,"codec":{"long_name":"MP3 (MPEG audio layer 3)","name":"mp3","time_base":null,"type":"AUDIO"},"duration":475560,"frame_rate":"0:1","height":0,"rotation":0,"sample_rate":24000,"start_time":0,"time_base":"1:14112000","width":0}]}},"extension":"mp3","file_hash":"d7a5aecd0c1ecbd55186d7c414499d00","folder_id":164598353960,"friendly_url":"https:\u002F\u002Fwww.k2view.com\u002Fhubfs\u002FAI-Generated%20Media\u002FPost%20Narration%20Audio\u002F164007905097-TTS-1715066259990.mp3","height":null,"hidden":false,"id":166615464349,"is_indexable":false,"meta":{"ai_generated":false,"allows_anonymous_access":true,"duration":475560,"indexable":false,"language_code":"en","sensitive":false,"video_data":{"bitrate":160000,"duration":475560,"format_long_name":"MP2\u002F3 (MPEG audio layer 2\u002F3)","format_name":"mp3","hosting_infos":null,"source_bitrate":null,"source_cloud_key":null,"source_size":null,"source_version":null,"streams":[{"avg_frame_rate":"0:1","bitrate":160000,"channels":1,"codec_long_name":"MP3 (MPEG audio layer 3)","codec_name":"mp3","codec_time_base":null,"codec_type":"AUDIO","display_aspect_ratio":null,"dispositions":[],"duration":475560,"frame_rate":"0:1","height":0,"profile":null,"rotation":0,"sample_aspect_ratio":null,"sample_rate":24000,"start_time":0,"tags":{},"time_base":"1:14112000","width":0}]}},"name":"164007905097-TTS-1715066259990","owners":[],"portal_id":5983023,"replaceable":true,"s3_url":"https:\u002F\u002Fcdn1.hubspotusercontent-na1.net\u002Fhubfs\u002F5983023\u002FAI-Generated%20Media\u002FPost%20Narration%20Audio\u002F164007905097-TTS-1715066259990.mp3","size":9511200,"source_group":1,"teams":[],"title":"164007905097-TTS-1715066259990","type":"AUDIO","updated":1738784564150,"url":"https:\u002F\u002Fwww.k2view.com\u002Fhubfs\u002FAI-Generated%20Media\u002FPost%20Narration%20Audio\u002F164007905097-TTS-1715066259990.mp3","width":null},"file_id":166615464349,"file_url":"https:\u002F\u002Fwww.k2view.com\u002Fhubfs\u002FAI-Generated%20Media\u002FPost%20Narration%20Audio\u002F164007905097-TTS-1715066259990.mp3","title":"RAG hallucination: What is it and how to avoid it"},"hublParameters":{"field_types":{"translations":"group"},"module_id":149209234245,"overrideable":false,"path":"@hubspot\u002Fblog_audio","smart_objects":[],"smart_type":"NOT_SMART","wrap_field_tag":"div"},"moduleName":"blog_post_audio","path":"@hubspot\u002Fblog_audio","supplementalFieldValues":{"translations":{"aiGeneratedTooltip":{},"elapsedTime":{},"emptyPlaceholder":{},"error":{},"loading":{},"mute":{},"pause":{},"play":{},"playAudio":{},"playbackRate":{},"seekBar":{},"seekBarSlider":{},"skipBackward":{},"skipForward":{},"slowDownPlayback":{},"speedUpPlayback":{},"unmute":{},"volume":{},"volumeControls":{}}},"title":"RAG hallucination: What is it and how to avoid it","translations":{"aiGeneratedTooltip":"AI-generated audio","elapsedTime":"Elapsed time","emptyPlaceholder":"Generate a narration for this blog post.","error":"An error occurred, please refresh the page and try again.","loading":"Loading","mute":"Mute","pause":"Pause","play":"Play","playAudio":"Play blog post audio","playbackRate":"Playback speed","seekBar":"Seek bar","seekBarSlider":"Adjust position","skipBackward":"Skip backward 15 seconds","skipForward":"Skip forward 15 seconds","slowDownPlayback":"Slow down playback","speedUpPlayback":"Speed up playback","unmute":"Unmute","volume":"Volume","volumeControls":"Volume controls"}},"supplementalFieldValues":{"translations":{"aiGeneratedTooltip":{},"elapsedTime":{},"emptyPlaceholder":{},"error":{},"loading":{},"mute":{},"pause":{},"play":{},"playAudio":{},"playbackRate":{},"seekBar":{},"seekBarSlider":{},"skipBackward":{},"skipForward":{},"slowDownPlayback":{},"speedUpPlayback":{},"unmute":{},"volume":{},"volumeControls":{}}},"url":"https:\u002F\u002F48752163.fs1.hubspotusercontent-na1.net\u002Fhubfs\u002F48752163\u002Fraw_assets\u002Fmedia-default-modules\u002Fmaster\u002F845\u002Fjs_client_assets\u002Fassets\u002FBlogAudioModule-BRaKjMcB.js"}];
+    if (Array.isArray(window.__islands)) {
+      window.__islands.push(...newIslands);
+    } else {
+      window.__islands = newIslands;
+    }
+  </script>
+  <link rel="modulepreload" crossorigin href="https://static.hsappstatic.net/cms-js-static/ex/js/react/v18/react-combined.mjs">
+  <script type="module" crossorigin>
+    import { initConfigSingletonFromJSON, setupIslandHydration } from "https://static.hsappstatic.net/cms-js-static/ex/js/island-runtime/v1/island-runtime.mjs"
+    initConfigSingletonFromJSON(window.__hsEnvConfig)
+    setupIslandHydration();
+  </script>
+      </div>
+            </div>
+        </div>   
+  </div>
+  </div>  
+  <div class="blog--post">
+    <div class="kv-blog-details-wrapper">
+    <div class="kv-blog-details">
+        <div class="kv-section-inner">
+          <div class="section post-body">
+            <div class="post--body--Introduction">
+              <span id="hs_cos_wrapper_introduction_column" class="hs_cos_wrapper hs_cos_wrapper_widget hs_cos_wrapper_type_rich_text" style="" data-hs-cos-general-type="widget" data-hs-cos-type="rich_text"></span>
+            </div>
+            <div class="In--this--article">
+              <div class="In--this--article--inner">
+                <h3><span>Table of contents</span><hr></h3>
+                <ul id="table-of-contents" class="In--this--article--list" style="display: block;"></ul>
+              </div>
+            </div>
+            <div style="float:left;width:100%;">
+            <span id="hs_cos_wrapper_post_body" class="hs_cos_wrapper hs_cos_wrapper_meta_field hs_cos_wrapper_type_rich_text" style="" data-hs-cos-general-type="meta_field" data-hs-cos-type="rich_text"><strong>Although regular RAG grounds LLMs with unstructured data from internal sources, hallucinations still occur. Add structured data to the mix to reduce them.&nbsp;</strong><br>
+<p bis_size="{&quot;x&quot;:455,&quot;y&quot;:1054,&quot;w&quot;:900,&quot;h&quot;:47,&quot;abs_x&quot;:527,&quot;abs_y&quot;:1175}"><br><!--more--></p>
+<a id="What-is-Retrieval-Augmented-Generation" data-hs-anchor="true" style="background-image: url('https://static.hsappstatic.net/tinymce-themes/static-1.40376/images/hsanchor.svg');" bis_label="style" bis_size="{&quot;x&quot;:455,&quot;y&quot;:1116,&quot;w&quot;:900,&quot;h&quot;:21,&quot;abs_x&quot;:527,&quot;abs_y&quot;:1237}" class="active"></a>
+<h2 style="font-size: 30px;">What is Retrieval-Augmented Generation (RAG)?&nbsp;</h2>
+<p bis_size="{&quot;x&quot;:455,&quot;y&quot;:1208,&quot;w&quot;:900,&quot;h&quot;:135,&quot;abs_x&quot;:527,&quot;abs_y&quot;:1329}">A Large Language Model (LLM) is a machine learning model that can generate text, translate languages, answer questions, and much more. The problem is it doesn’t always tell the truth. The reason? An LLM relies solely on the&nbsp;information it’s trained on – and retraining it is time-consuming and expensive. Because its training data is based on stale, static, and publicly available information, an LLM may provide out-of-date, false, or generic responses as opposed to timely, true, and focused answers.</p>
+<p bis_size="{&quot;x&quot;:455,&quot;y&quot;:1356,&quot;w&quot;:900,&quot;h&quot;:54,&quot;abs_x&quot;:527,&quot;abs_y&quot;:1477}"><a href="/what-is-retrieval-augmented-generation/" rel="noopener" bis_size="{&quot;x&quot;:455,&quot;y&quot;:1358,&quot;w&quot;:254,&quot;h&quot;:22,&quot;abs_x&quot;:527,&quot;abs_y&quot;:1479}">Retrieval-Augmented Generation</a> (RAG) is Generative AI (GenAI) framework designed to infuse an LLM with trusted&nbsp;<a href="/solutions/ai-ready-data/" rel="noopener">AI-ready data</a>, fresh from a company’s own sources, to have it generate more accurate and relevant responses.</p>
+<p bis_size="{&quot;x&quot;:455,&quot;y&quot;:1423,&quot;w&quot;:900,&quot;h&quot;:189,&quot;abs_x&quot;:527,&quot;abs_y&quot;:1544}">How does RAG work? When a user asks a question, RAG retrieves information specifically relevant to that query from up-to-date internal sources, then combines that information with the user's query. RAG creates an enhanced prompt which is fed to the LLM, allowing the model to generate a response based on both its inherent external knowledge combined with up-to-date internal data. By allowing the LLM to ground its answer in real internal data, <a href="/blog/active-retrieval-augmented-generation/" rel="noopener" bis_size="{&quot;x&quot;:455,&quot;y&quot;:1533,&quot;w&quot;:296,&quot;h&quot;:22,&quot;abs_x&quot;:527,&quot;abs_y&quot;:1654}">active retrieval-augmented generation</a> improves accuracy and reduces hallucinations. That’s the theory, in any case. In reality, RAG is also prone to <a href="/what-are-ai-hallucinations/" bis_size="{&quot;x&quot;:738,&quot;y&quot;:1560,&quot;w&quot;:120,&quot;h&quot;:22,&quot;abs_x&quot;:810,&quot;abs_y&quot;:1681}" rel="noopener">AI hallucinations</a>&nbsp;since, until now, it only relies on your unstructured, general data.</p>
+<blockquote bis_size="{&quot;x&quot;:455,&quot;y&quot;:1665,&quot;w&quot;:900,&quot;h&quot;:27,&quot;abs_x&quot;:527,&quot;abs_y&quot;:1786}">
+<p bis_size="{&quot;x&quot;:480,&quot;y&quot;:1665,&quot;w&quot;:875,&quot;h&quot;:27,&quot;abs_x&quot;:552,&quot;abs_y&quot;:1786}"><span style="font-weight: bold;" bis_size="{&quot;x&quot;:480,&quot;y&quot;:1667,&quot;w&quot;:254,&quot;h&quot;:22,&quot;abs_x&quot;:552,&quot;abs_y&quot;:1788}">Get the condensed version of the </span><a href="/gartner-rag-report-dl" rel="noopener" style="font-weight: bold;" bis_size="{&quot;x&quot;:734,&quot;y&quot;:1667,&quot;w&quot;:153,&quot;h&quot;:22,&quot;abs_x&quot;:806,&quot;abs_y&quot;:1788}">Gartner RAG report</a><span style="font-weight: bold;" bis_size="{&quot;x&quot;:888,&quot;y&quot;:1667,&quot;w&quot;:158,&quot;h&quot;:22,&quot;abs_x&quot;:960,&quot;abs_y&quot;:1788}"> courtesy of K2view</span>.&nbsp;</p>
+</blockquote>
+<a id="How-do-AI-and-RAG-hallucinations-differ" data-hs-anchor="true" style="background-image: url('https://static.hsappstatic.net/tinymce-themes/static-1.40376/images/hsanchor.svg');" bis_label="style" bis_size="{&quot;x&quot;:455,&quot;y&quot;:1734,&quot;w&quot;:900,&quot;h&quot;:21,&quot;abs_x&quot;:527,&quot;abs_y&quot;:1855}" class="active"></a>
+<h2 style="font-size: 30px;">How do AI and RAG hallucinations differ?&nbsp;</h2>
+<p bis_size="{&quot;x&quot;:455,&quot;y&quot;:1826,&quot;w&quot;:900,&quot;h&quot;:108,&quot;abs_x&quot;:527,&quot;abs_y&quot;:1947}">An AI hallucination refers to an output that significantly deviates from factual grounding. These deviations manifest themselves as being incorrect, nonsensical, or inconsistent. Hallucinations occur as a result of the inherent limitations of LLM training data, as described above, or when the model fails to correlate the intent or context of the query to the data required to generate a meaningful response. &nbsp;</p>
+<p bis_size="{&quot;x&quot;:455,&quot;y&quot;:1947,&quot;w&quot;:900,&quot;h&quot;:54,&quot;abs_x&quot;:527,&quot;abs_y&quot;:2068}">Although RAG was designed to help reduce AI hallucinations, in its conventional form (augmenting an LLM with internal unstructured data only), a RAG hallucination can still occur. &nbsp;</p>
+<p bis_size="{&quot;x&quot;:455,&quot;y&quot;:2014,&quot;w&quot;:900,&quot;h&quot;:54,&quot;abs_x&quot;:527,&quot;abs_y&quot;:2135}">For example, a cellular subscriber may receive an incorrect answer about their average monthly bill from the operator’s <a href="/blog/rag-chatbot/" rel="noopener" bis_size="{&quot;x&quot;:537,&quot;y&quot;:2043,&quot;w&quot;:99,&quot;h&quot;:22,&quot;abs_x&quot;:609,&quot;abs_y&quot;:2164}">RAG chatbot</a> – because the company data may have included bills or charges that weren’t theirs.</p>
+<p bis_size="{&quot;x&quot;:455,&quot;y&quot;:2081,&quot;w&quot;:900,&quot;h&quot;:54,&quot;abs_x&quot;:527,&quot;abs_y&quot;:2202}">Or an airline’s customer service bot may <a href="/blog/human-in-the-loop/" rel="noopener" bis_size="{&quot;x&quot;:772,&quot;y&quot;:2083,&quot;w&quot;:412,&quot;h&quot;:22,&quot;abs_x&quot;:844,&quot;abs_y&quot;:2204}">provide travelers with misleading airfare information</a> because the augmented data did not include any policy docs on refunding overpayments.</p>
+<a id="How-to-reduce-AI-hallucinations" data-hs-anchor="true" style="background-image: url('https://static.hsappstatic.net/tinymce-themes/static-1.40376/images/hsanchor.svg');" bis_label="style" bis_size="{&quot;x&quot;:455,&quot;y&quot;:2150,&quot;w&quot;:900,&quot;h&quot;:21,&quot;abs_x&quot;:527,&quot;abs_y&quot;:2271}" class="active"></a>
+<h2 style="font-size: 30px;">How to reduce AI hallucinations&nbsp;</h2>
+<p bis_size="{&quot;x&quot;:455,&quot;y&quot;:2242,&quot;w&quot;:900,&quot;h&quot;:54,&quot;abs_x&quot;:527,&quot;abs_y&quot;:2363}">AI researchers are exploring several key approaches to combating hallucinations, working towards a future where AI is better grounded in reality. The key approaches include:&nbsp;</p>
+<ol>
+<li>
+<p style="font-weight: bold;" bis_size="{&quot;x&quot;:495,&quot;y&quot;:2309,&quot;w&quot;:860,&quot;h&quot;:27,&quot;abs_x&quot;:567,&quot;abs_y&quot;:2430}">Grounding <strong>generative AI</strong> apps with higher quality public data&nbsp;</p>
+<p bis_size="{&quot;x&quot;:495,&quot;y&quot;:2336,&quot;w&quot;:860,&quot;h&quot;:81,&quot;abs_x&quot;:567,&quot;abs_y&quot;:2457}">The bedrock of GenAI's performance is the publicly available data it's trained on. Researchers prioritize high-quality, diverse, and factual information. Techniques like data cleansing and bias filtering ensure that LLMs are trained on more reliable sources. &nbsp;</p>
+</li>
+<li>
+<p style="font-weight: bold;" bis_size="{&quot;x&quot;:495,&quot;y&quot;:2422,&quot;w&quot;:860,&quot;h&quot;:27,&quot;abs_x&quot;:567,&quot;abs_y&quot;:2543}">Fine-tuning with fact-checking&nbsp;</p>
+<p bis_size="{&quot;x&quot;:495,&quot;y&quot;:2449,&quot;w&quot;:860,&quot;h&quot;:108,&quot;abs_x&quot;:567,&quot;abs_y&quot;:2570}">Fact-checking mechanisms act as a critical second layer to <a href="/blog/retrieval-augmented-generation-vs-fine-tuning/" rel="noopener" bis_size="{&quot;x&quot;:963,&quot;y&quot;:2451,&quot;w&quot;:83,&quot;h&quot;:22,&quot;abs_x&quot;:1035,&quot;abs_y&quot;:2572}">fine-tuning</a>. As AI generates text, these mechanisms compare it against real-world knowledge bases like scientific publications or verified news articles. Inconsistencies get flagged, prompting the LLM to refine its output based on more factual grounding.&nbsp;</p>
+</li>
+<li>
+<p style="font-weight: bold;" bis_size="{&quot;x&quot;:495,&quot;y&quot;:2562,&quot;w&quot;:860,&quot;h&quot;:27,&quot;abs_x&quot;:567,&quot;abs_y&quot;:2683}">Teaching better reasoning&nbsp;</p>
+<p bis_size="{&quot;x&quot;:495,&quot;y&quot;:2589,&quot;w&quot;:860,&quot;h&quot;:54,&quot;abs_x&quot;:567,&quot;abs_y&quot;:2710}">Researchers are constantly improving how AI reasons and understands the world. By incorporating logic and common-sense reasoning techniques, generative AI can better judge the plausibility of its creations.</p>
+</li>
+<li>
+<p style="font-weight: bold;" bis_size="{&quot;x&quot;:495,&quot;y&quot;:2648,&quot;w&quot;:860,&quot;h&quot;:27,&quot;abs_x&quot;:567,&quot;abs_y&quot;:2769}">Citing sources&nbsp;</p>
+<p bis_size="{&quot;x&quot;:495,&quot;y&quot;:2675,&quot;w&quot;:860,&quot;h&quot;:81,&quot;abs_x&quot;:567,&quot;abs_y&quot;:2796}">Understanding how generative AI arrives at an answer is crucial. Techniques are being developed to show users the sources it used to generate its response. This transparency allows users to assess the trustworthiness of the information and identify potential biases.&nbsp;</p>
+</li>
+<li>
+<p style="font-weight: bold;" bis_size="{&quot;x&quot;:495,&quot;y&quot;:2761,&quot;w&quot;:860,&quot;h&quot;:27,&quot;abs_x&quot;:567,&quot;abs_y&quot;:2882}">Using RAG to augment LLMs with private organizational data&nbsp;</p>
+<p bis_size="{&quot;x&quot;:495,&quot;y&quot;:2788,&quot;w&quot;:860,&quot;h&quot;:81,&quot;abs_x&quot;:567,&quot;abs_y&quot;:2909}"><a href="/blog/rag-ai/" rel="noopener" bis_size="{&quot;x&quot;:495,&quot;y&quot;:2790,&quot;w&quot;:55,&quot;h&quot;:22,&quot;abs_x&quot;:567,&quot;abs_y&quot;:2911}">RAG AI</a> combats AI hallucinations by providing factual grounding. RAG searches an organization’s private data sources for relevant information to supplement the LLM's public knowledge – allowing it to anchor its responses in actual data, reducing the risk of fabricated or whimsical outputs.&nbsp;</p>
+</li>
+</ol>
+<p><span style="line-height: 115%;">Reducing AI hallucinations is top of mind for data teams. Our recent survey on the <i>State of Enterprise Data Readiness</i> <em>for GenAI </em>shows that enterprises are making meaningful progress toward production GenAI, with 45% planning to deploy or expand use cases in 2026. However, the findings make clear that data challenges still dominate, from guardrails and readiness to data quality, fragmented systems, and security and privacy concerns.</span></p>
+<p><span style="line-height: 115%;"><!--HubSpot Call-to-Action Code --><span class="hs-cta-wrapper" id="hs-cta-wrapper-c57037f7-f517-4d1b-93a9-0542a025ed8f"><span class="hs-cta-node hs-cta-c57037f7-f517-4d1b-93a9-0542a025ed8f" id="hs-cta-c57037f7-f517-4d1b-93a9-0542a025ed8f"><!--[if lte IE 8]><div id="hs-cta-ie-element"></div><![endif]--><a href="https://cta-redirect.hubspot.com/cta/redirect/5983023/c57037f7-f517-4d1b-93a9-0542a025ed8f"><img class="hs-cta-img" id="hs-cta-img-c57037f7-f517-4d1b-93a9-0542a025ed8f" style="border-width:0px;" height="187" width="888" src="https://no-cache.hubspot.com/cta/default/5983023/c57037f7-f517-4d1b-93a9-0542a025ed8f.png" alt="Click me"></a></span><script charset="utf-8" src="/hs/cta/cta/current.js"></script><script type="text/javascript"> hbspt.cta._relativeUrls=true;hbspt.cta.load(5983023, 'c57037f7-f517-4d1b-93a9-0542a025ed8f', {"useNewLoader":"true","region":"na1"}); </script></span><!-- end HubSpot Call-to-Action Code --> </span>&nbsp;</p>
+<a id="How-to-reduce-RAG-hallucinations" data-hs-anchor="true" style="background-image: url('https://static.hsappstatic.net/tinymce-themes/static-1.40376/images/hsanchor.svg');" bis_label="style" bis_size="{&quot;x&quot;:455,&quot;y&quot;:2886,&quot;w&quot;:900,&quot;h&quot;:21,&quot;abs_x&quot;:527,&quot;abs_y&quot;:3007}" class="active"></a>
+<h2 style="font-size: 30px;">How to reduce RAG hallucinations&nbsp;</h2>
+<p bis_size="{&quot;x&quot;:455,&quot;y&quot;:2978,&quot;w&quot;:900,&quot;h&quot;:81,&quot;abs_x&quot;:527,&quot;abs_y&quot;:3099}"><br>As explained, RAG is not a silver bullet and cannot completely eliminate AI hallucinations. Retrieval-augmented generation is limited by its:&nbsp;</p>
+<ul>
+<li>
+<p bis_size="{&quot;x&quot;:485,&quot;y&quot;:3072,&quot;w&quot;:870,&quot;h&quot;:27,&quot;abs_x&quot;:557,&quot;abs_y&quot;:3193}"><strong>Data quality&nbsp;</strong></p>
+<p bis_size="{&quot;x&quot;:485,&quot;y&quot;:3099,&quot;w&quot;:870,&quot;h&quot;:54,&quot;abs_x&quot;:557,&quot;abs_y&quot;:3220}">RAG relies on the quality and accuracy of the internal knowledge bases it searches. Biases or errors in these sources can still influence the LLM's response. &nbsp;</p>
+</li>
+<li>
+<p bis_size="{&quot;x&quot;:485,&quot;y&quot;:3158,&quot;w&quot;:870,&quot;h&quot;:27,&quot;abs_x&quot;:557,&quot;abs_y&quot;:3279}"><strong>Contextual awareness&nbsp;</strong></p>
+<p bis_size="{&quot;x&quot;:485,&quot;y&quot;:3185,&quot;w&quot;:870,&quot;h&quot;:54,&quot;abs_x&quot;:557,&quot;abs_y&quot;:3306}">While RAG provides factual <a href="/blog/llm-grounding/" rel="noopener" bis_size="{&quot;x&quot;:702,&quot;y&quot;:3187,&quot;w&quot;:118,&quot;h&quot;:22,&quot;abs_x&quot;:774,&quot;abs_y&quot;:3308}">LLM grounding</a>, it might not fully grasp the nuances of the prompt or user intent. This can lead to the LLM incorporating irrelevant information or missing key points.&nbsp;</p>
+</li>
+<li>
+<p bis_size="{&quot;x&quot;:485,&quot;y&quot;:3244,&quot;w&quot;:870,&quot;h&quot;:27,&quot;abs_x&quot;:557,&quot;abs_y&quot;:3365}"><strong>Internal reasoning and creativity&nbsp;</strong></p>
+<p bis_size="{&quot;x&quot;:485,&quot;y&quot;:3271,&quot;w&quot;:870,&quot;h&quot;:81,&quot;abs_x&quot;:557,&quot;abs_y&quot;:3392}">RAG focuses on factual grounding but doesn't directly address the GenAI's internal reasoning processes. The <a href="/blog/rag-llm/" rel="noopener" bis_size="{&quot;x&quot;:485,&quot;y&quot;:3300,&quot;w&quot;:73,&quot;h&quot;:22,&quot;abs_x&quot;:557,&quot;abs_y&quot;:3421}">RAG LLM</a> might still struggle with logic or common-sense reasoning, leading to nonsensical outputs despite factually accurate information.&nbsp;</p>
+</li>
+</ul>
+<p bis_size="{&quot;x&quot;:455,&quot;y&quot;:3367,&quot;w&quot;:900,&quot;h&quot;:54,&quot;abs_x&quot;:527,&quot;abs_y&quot;:3488}">Despite these challenges, RAG is still a significant step forward. By providing a factual foundation based on an organization’s AI-ready data, it significantly reduces hallucinations. Additionally, research is ongoing to improve RAG by:&nbsp;</p>
+<ul>
+<li>
+<p style="font-weight: bold;" bis_size="{&quot;x&quot;:485,&quot;y&quot;:3434,&quot;w&quot;:870,&quot;h&quot;:27,&quot;abs_x&quot;:557,&quot;abs_y&quot;:3555}">Enhanced information filtering&nbsp;</p>
+<p bis_size="{&quot;x&quot;:485,&quot;y&quot;:3461,&quot;w&quot;:870,&quot;h&quot;:27,&quot;abs_x&quot;:557,&quot;abs_y&quot;:3582}">Techniques are being developed to assess the credibility of retrieved information before presenting it to the AI.</p>
+</li>
+<li>
+<p style="font-weight: bold;" bis_size="{&quot;x&quot;:485,&quot;y&quot;:3493,&quot;w&quot;:870,&quot;h&quot;:27,&quot;abs_x&quot;:557,&quot;abs_y&quot;:3614}">Improved context awareness&nbsp;</p>
+<p bis_size="{&quot;x&quot;:485,&quot;y&quot;:3520,&quot;w&quot;:870,&quot;h&quot;:54,&quot;abs_x&quot;:557,&quot;abs_y&quot;:3641}">Advancements in Natural Language Processing (NLP) will help generative AI apps better understand the user's intent and the broader context of the prompt.&nbsp;</p>
+</li>
+<li>
+<p style="font-weight: bold;" bis_size="{&quot;x&quot;:485,&quot;y&quot;:3579,&quot;w&quot;:870,&quot;h&quot;:27,&quot;abs_x&quot;:557,&quot;abs_y&quot;:3700}">Integrated reasoning models&nbsp;</p>
+<p bis_size="{&quot;x&quot;:485,&quot;y&quot;:3606,&quot;w&quot;:870,&quot;h&quot;:54,&quot;abs_x&quot;:557,&quot;abs_y&quot;:3727}">Researchers are exploring ways to incorporate logic and common-sense reasoning into <a href="/blog/rag-genai/" rel="noopener" bis_size="{&quot;x&quot;:1172,&quot;y&quot;:3608,&quot;w&quot;:86,&quot;h&quot;:22,&quot;abs_x&quot;:1244,&quot;abs_y&quot;:3729}">RAG GenAI</a>, further reducing the risk of nonsensical outputs.&nbsp;</p>
+</li>
+</ul>
+<p bis_size="{&quot;x&quot;:455,&quot;y&quot;:3675,&quot;w&quot;:900,&quot;h&quot;:81,&quot;abs_x&quot;:527,&quot;abs_y&quot;:3796}">That said, an exciting new approach called GenAI Data Fusion, infuses LLMs with structured data from enterprise systems like CRM and DBMS. Described further in the next section, it promises to turn reduce RAG hallucinations by grounding RAG chatbots with trusted enterprise data.<br><br></p>
+<p bis_size="{&quot;x&quot;:455,&quot;y&quot;:3675,&quot;w&quot;:900,&quot;h&quot;:81,&quot;abs_x&quot;:527,&quot;abs_y&quot;:3796}"><a href="https://www.k2view.com/k2view-genai-demo" rel="noopener"><img loading="lazy" src="https://www.k2view.com/hs-fs/hubfs/K2view%20GenAI%20product%20tour-Jul-08-2025-11-52-57-0776-AM.png?width=900&amp;height=157&amp;name=K2view%20GenAI%20product%20tour-Jul-08-2025-11-52-57-0776-AM.png" width="900" height="157" alt="K2view GenAI product tour-Jul-08-2025-11-52-57-0776-AM" style="height: auto; max-width: 100%; width: 900px; margin-left: auto; margin-right: auto; display: block;" srcset="https://www.k2view.com/hs-fs/hubfs/K2view%20GenAI%20product%20tour-Jul-08-2025-11-52-57-0776-AM.png?width=450&amp;height=79&amp;name=K2view%20GenAI%20product%20tour-Jul-08-2025-11-52-57-0776-AM.png 450w, https://www.k2view.com/hs-fs/hubfs/K2view%20GenAI%20product%20tour-Jul-08-2025-11-52-57-0776-AM.png?width=900&amp;height=157&amp;name=K2view%20GenAI%20product%20tour-Jul-08-2025-11-52-57-0776-AM.png 900w, https://www.k2view.com/hs-fs/hubfs/K2view%20GenAI%20product%20tour-Jul-08-2025-11-52-57-0776-AM.png?width=1350&amp;height=236&amp;name=K2view%20GenAI%20product%20tour-Jul-08-2025-11-52-57-0776-AM.png 1350w, https://www.k2view.com/hs-fs/hubfs/K2view%20GenAI%20product%20tour-Jul-08-2025-11-52-57-0776-AM.png?width=1800&amp;height=314&amp;name=K2view%20GenAI%20product%20tour-Jul-08-2025-11-52-57-0776-AM.png 1800w, https://www.k2view.com/hs-fs/hubfs/K2view%20GenAI%20product%20tour-Jul-08-2025-11-52-57-0776-AM.png?width=2250&amp;height=393&amp;name=K2view%20GenAI%20product%20tour-Jul-08-2025-11-52-57-0776-AM.png 2250w, https://www.k2view.com/hs-fs/hubfs/K2view%20GenAI%20product%20tour-Jul-08-2025-11-52-57-0776-AM.png?width=2700&amp;height=471&amp;name=K2view%20GenAI%20product%20tour-Jul-08-2025-11-52-57-0776-AM.png 2700w" sizes="(max-width: 900px) 100vw, 900px"></a></p>
+<a class="active" id="How-K2view-makes-RAG-hallucination-free" data-hs-anchor="true"></a>
+<h2 style="font-size: 30px;">How K2view makes RAG hallucination-free&nbsp;</h2>
+<p bis_size="{&quot;x&quot;:455,&quot;y&quot;:3863,&quot;w&quot;:900,&quot;h&quot;:54,&quot;abs_x&quot;:527,&quot;abs_y&quot;:3984}">One of the most effective ways to combat GenAI and RAG hallucinations is by using the most advanced <a href="/solutions/rag-tool/" rel="noopener" bis_size="{&quot;x&quot;:1269,&quot;y&quot;:3865,&quot;w&quot;:69,&quot;h&quot;:22,&quot;abs_x&quot;:1341,&quot;abs_y&quot;:3986}">RAG tool</a>, one that retrieves/augments both structured AND unstructured data from a company’s own private data sources.</p>
+<p bis_size="{&quot;x&quot;:455,&quot;y&quot;:3930,&quot;w&quot;:900,&quot;h&quot;:54,&quot;abs_x&quot;:527,&quot;abs_y&quot;:4051}">This approach, called GenAI Data Fusion, accesses the structured data of a single business entity – customer, vendor, or order – from enterprise systems based on the concept of <a href="/what-is-a-data-product/" rel="noopener" bis_size="{&quot;x&quot;:989,&quot;y&quot;:3959,&quot;w&quot;:109,&quot;h&quot;:22,&quot;abs_x&quot;:1061,&quot;abs_y&quot;:4080}">data products</a>. &nbsp;</p>
+<p bis_size="{&quot;x&quot;:455,&quot;y&quot;:3997,&quot;w&quot;:900,&quot;h&quot;:135,&quot;abs_x&quot;:527,&quot;abs_y&quot;:4118}">A <a href="/blog/data-as-a-product/" rel="noopener" bis_size="{&quot;x&quot;:471,&quot;y&quot;:3999,&quot;w&quot;:139,&quot;h&quot;:22,&quot;abs_x&quot;:543,&quot;abs_y&quot;:4120}">data-as-a-product</a> approach enables GenAI data fusion to access dynamic data from multiple enterprise systems, not just static documents from knowledge bases. This means LLMs can leverage RAG to integrate up-to-date customer 360 or product 360 data from all relevant data sources, turning that data and context into relevant prompts. These prompts are automatically fed into the LLM along with the user’s query, enabling the LLM to generate a more accurate and personalized response.</p>
+<p bis_size="{&quot;x&quot;:455,&quot;y&quot;:4145,&quot;w&quot;:900,&quot;h&quot;:81,&quot;abs_x&quot;:527,&quot;abs_y&quot;:4266}">K2View’s <a href="/platform/data-product-platform/" rel="noopener" bis_size="{&quot;x&quot;:530,&quot;y&quot;:4147,&quot;w&quot;:172,&quot;h&quot;:22,&quot;abs_x&quot;:602,&quot;abs_y&quot;:4268}">data product platform</a> lets RAG access data products via streaming, messaging, CDC, or API – in any variation – to unify data from many different source systems. A data product approach can be applied to various RAG use cases to:&nbsp;</p>
+<ul>
+<li>
+<p bis_size="{&quot;x&quot;:485,&quot;y&quot;:4239,&quot;w&quot;:870,&quot;h&quot;:27,&quot;abs_x&quot;:557,&quot;abs_y&quot;:4360}"><span style="font-weight: bold;" bis_size="{&quot;x&quot;:485,&quot;y&quot;:4241,&quot;w&quot;:56,&quot;h&quot;:22,&quot;abs_x&quot;:557,&quot;abs_y&quot;:4362}">Handle</span> problems quicker.&nbsp;</p>
+</li>
+<li>
+<p bis_size="{&quot;x&quot;:485,&quot;y&quot;:4271,&quot;w&quot;:870,&quot;h&quot;:27,&quot;abs_x&quot;:557,&quot;abs_y&quot;:4392}"><span style="font-weight: bold;" bis_size="{&quot;x&quot;:485,&quot;y&quot;:4273,&quot;w&quot;:86,&quot;h&quot;:22,&quot;abs_x&quot;:557,&quot;abs_y&quot;:4394}">Implement</span> hyper-personalized marketing campaigns.&nbsp;</p>
+</li>
+<li>
+<p bis_size="{&quot;x&quot;:485,&quot;y&quot;:4303,&quot;w&quot;:870,&quot;h&quot;:27,&quot;abs_x&quot;:557,&quot;abs_y&quot;:4424}"><span style="font-weight: bold;" bis_size="{&quot;x&quot;:485,&quot;y&quot;:4305,&quot;w&quot;:94,&quot;h&quot;:22,&quot;abs_x&quot;:557,&quot;abs_y&quot;:4426}">Personalize</span> cross-/up-sell recommendations.&nbsp;</p>
+</li>
+<li>
+<p bis_size="{&quot;x&quot;:485,&quot;y&quot;:4335,&quot;w&quot;:870,&quot;h&quot;:27,&quot;abs_x&quot;:557,&quot;abs_y&quot;:4456}"><span style="font-weight: bold;" bis_size="{&quot;x&quot;:485,&quot;y&quot;:4337,&quot;w&quot;:52,&quot;h&quot;:22,&quot;abs_x&quot;:557,&quot;abs_y&quot;:4458}">Detect</span> fraud by tracking suspicious activity in user accounts.</p>
+</li>
+</ul>
+<blockquote bis_size="{&quot;x&quot;:455,&quot;y&quot;:4417,&quot;w&quot;:900,&quot;h&quot;:27,&quot;abs_x&quot;:527,&quot;abs_y&quot;:4538}">
+<p bis_size="{&quot;x&quot;:480,&quot;y&quot;:4417,&quot;w&quot;:875,&quot;h&quot;:27,&quot;abs_x&quot;:552,&quot;abs_y&quot;:4538}">&nbsp;<span style="font-weight: bold;" bis_size="{&quot;x&quot;:484,&quot;y&quot;:4419,&quot;w&quot;:263,&quot;h&quot;:22,&quot;abs_x&quot;:556,&quot;abs_y&quot;:4540}">Meet the world’s most advanced </span><a href="/solutions/rag-tool/" rel="noopener" style="font-weight: bold;" bis_size="{&quot;x&quot;:748,&quot;y&quot;:4419,&quot;w&quot;:70,&quot;h&quot;:22,&quot;abs_x&quot;:820,&quot;abs_y&quot;:4540}">RAG tool</a><span style="font-weight: bold;" bis_size="{&quot;x&quot;:819,&quot;y&quot;:4419,&quot;w&quot;:255,&quot;h&quot;:22,&quot;abs_x&quot;:891,&quot;abs_y&quot;:4540}"> – GenAI Data Fusion by K2view</span>.&nbsp;</p>
+</blockquote></span>
+            </div>
+            <div id="hs_cos_wrapper_module_17538783215006" class="hs_cos_wrapper hs_cos_wrapper_widget hs_cos_wrapper_type_module" style="" data-hs-cos-general-type="widget" data-hs-cos-type="module"><div class="blog--cta--banner--sec  module_17538783215006">
+  
+</div>
+
+</div>
+            <div id="hs_cos_wrapper_module_17569787351153" class="hs_cos_wrapper hs_cos_wrapper_widget hs_cos_wrapper_type_module" style="" data-hs-cos-general-type="widget" data-hs-cos-type="module"><div id="" class="k2view-rich-text module_17569787351153 ">
+  <div class="k2view-rich-text-wrap">
+    
+  </div>
+</div>
+<style>
+  .module_17569787351153.k2view-rich-text{
+    justify-content: center;
+  }
+
+  .module_17569787351153.k2view-rich-text ul li,
+  .module_17569787351153.k2view-rich-text ol li{
+    padding-left:25px;
+    padding-bottom:10px;
+    font-family: ; 
+    ; 
+    color: ; 
+    font-size: px;
+    line-height:1.4;
+  }
+  .module_17569787351153.k2view-rich-text ul li:before {
+    top: 8px;
+    left: 0px;
+    width: 8px;
+    height: 8px;
+    
+    background:#2e2e2e;
+    background-size: 8px;
+    
+    border-radius: 100%;  
+    
+  } 
+  
+  .module_17569787351153.k2view-rich-text ol li:before{
+    color:#2e2e2e;
+    font-family: ; 
+    ; 
+    color: ; 
+    font-size: px;
+  }
+  
+  .module_17569787351153 .k2view-rich-text-wrap{
+    max-width:px;
+  }
+  .module_17569787351153 .k2view-rich-text-wrap p{
+    font-family: ; 
+    ; 
+    color: ; 
+    font-size: px;
+    ;
+    line-height:1.4;
+  }
+  .module_17569787351153 .k2view-rich-text-wrap{
+    font-family: ; 
+    color: ; 
+    font-size: px;
+    ;
+    line-height:1.4;
+  }
+  .module_17569787351153{
+    ;
+  }
+  
+  .module_17569787351153.k2view-rich-text blockquote {
+      border-left: 5px solid #1483f3;
+;
+      font-family: ; 
+      ; 
+      color: ; 
+      font-size: px;
+      line-height:;
+  }
+  
+  @media(max-width:768px){
+    .module_17569787351153 .k2view-rich-text-wrap p{
+      font-family: ; 
+      ; 
+      color: ; 
+      font-size: px;
+      ;
+      line-height:1.4;
+    }
+    .module_17569787351153 .k2view-rich-text-wrap{
+      font-family: ; 
+      ; 
+      color: ; 
+      font-size: px;
+      ;
+      line-height:1.4;
+    }
+    
+    .module_17569787351153.k2view-rich-text blockquote {
+       font-family: ; 
+      ; 
+      color: ; 
+      font-size: px;
+      line-height:1.4;
+      border-left: 5px solid #1483f3;
+
+    }
+    
+    .module_17569787351153.k2view-rich-text ul li{
+      padding-left:25px;
+      padding-bottom:10px;
+      font-family: ; 
+      ; 
+      color: ; 
+      font-size: px;
+      line-height:1.4;
+    }
+    .module_17569787351153.k2view-rich-text ol li{
+      padding-left:px;
+      padding-bottom:px;
+      font-family: ; 
+      ; 
+      color: ; 
+      font-size: px;
+      line-height:;
+    }
+    .module_17569787351153.k2view-rich-text ul li:before {
+      top: 8px;
+      left: 0px;
+      width: 8px;
+      height: 8px;
+      
+      background:#2e2e2e;
+      background-size: 8px;
+      
+      border-radius: 100%;  
+      
+    } 
+
+    .module_17569787351153.k2view-rich-text ol li:before{
+      color:;
+      font-family: ; 
+      ; 
+      color: ; 
+      font-size: px;
+    } 
+  }
+   
+</style>
+
+<script>
+$(document).ready(function(){
+  $('.module_17569787351153').parents('.dnd-column').css('align-self','');
+});  
+</script></div>
+          </div>
+        </div>  
+    </div>
+    <div id="hs_cos_wrapper_module_16915688838338" class="hs_cos_wrapper hs_cos_wrapper_widget hs_cos_wrapper_type_module" style="" data-hs-cos-general-type="widget" data-hs-cos-type="module"><div class="blog--cta--banner module_16915688838338  hide "> 
+  <div class="blog--cta--wrapper">    
+    <div class="blog--cta--row">
+      <div class="blog--cta--wrap">
+        <h2>Achieve better business outcomeswith the K2view Data Product Platform</h2>
+        
+        
+        <div class="blog--cta--sec">
+          <span id="hs_cos_wrapper_module_16915688838338_" class="hs_cos_wrapper hs_cos_wrapper_widget hs_cos_wrapper_type_cta" style="" data-hs-cos-general-type="widget" data-hs-cos-type="cta"><!--HubSpot Call-to-Action Code --><span class="hs-cta-wrapper" id="hs-cta-wrapper-347c22b9-477d-46f8-ae4b-47266dbfbce6"><span class="hs-cta-node hs-cta-347c22b9-477d-46f8-ae4b-47266dbfbce6" id="hs-cta-347c22b9-477d-46f8-ae4b-47266dbfbce6"><!--[if lte IE 8]><div id="hs-cta-ie-element"></div><![endif]--><a href="https://cta-redirect.hubspot.com/cta/redirect/5983023/347c22b9-477d-46f8-ae4b-47266dbfbce6"><img class="hs-cta-img" id="hs-cta-img-347c22b9-477d-46f8-ae4b-47266dbfbce6" style="border-width:0px;" src="https://no-cache.hubspot.com/cta/default/5983023/347c22b9-477d-46f8-ae4b-47266dbfbce6.png" alt="Solution Overview"></a></span><script charset="utf-8" src="/hs/cta/cta/current.js"></script><script type="text/javascript"> hbspt.cta._relativeUrls=true;hbspt.cta.load(5983023, '347c22b9-477d-46f8-ae4b-47266dbfbce6', {"useNewLoader":"true","region":"na1"}); </script></span><!-- end HubSpot Call-to-Action Code --></span>
+          
+          <svg id="b7ee3685-d02d-45d0-b2a8-0f4deade1cba" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" width="12.18" height="10.06" viewbox="0 0 12.18 10.06">
+            <path d="M.88,5.87H9.3L6.54,8.63a.85.85,0,0,0,0,1.19.86.86,0,0,0,1.16,0L10.24,7.3l1.67-1.67a.84.84,0,0,0,0-1.19L7.73.25a.84.84,0,0,0-1.19,0,.83.83,0,0,0,0,1.18l0,.05L9.31,4.2H.83a.84.84,0,1,0,0,1.68Z" transform="translate(0.02 0.02)" style=""></path>
+          </svg>
+          
+        </div>
+        
+      </div>
+    </div>     
+  </div>
+</div>
+<style>
+  .module_16915688838338 .blog--cta--wrapper{
+    max-width:900px; 
+  }
+  .module_16915688838338 .blog--cta--row{
+    padding-top: 60px;
+padding-right: 20px;
+padding-bottom: 65px;
+padding-left: 20px;
+margin-bottom: 80px;
+; 
+    background:linear-gradient(to bottom, rgba(244, 248, 254, 1), rgba(244, 248, 254, 1));
+  }
+  .module_16915688838338 .blog--cta--wrap{
+      max-width:650px;   
+  }
+  .module_16915688838338 .blog--cta--wrap h2{
+    font-family: Roboto; 
+    font-family: Roboto, sans-serif; font-style: normal; font-weight: 500; text-decoration: none; 
+    color: ; 
+    font-size: 30px;
+    text-align: CENTER
+;
+    margin-bottom: 20px;
+
+  }
+  .module_16915688838338 .blog--cta--text,
+  .module_16915688838338 .blog--cta--text p{
+   font-family: Roboto; 
+    font-family: Roboto, sans-serif; font-style: normal; font-weight: 300; text-decoration: none; 
+    color: ; 
+    font-size: 19px; 
+    text-align: CENTER
+;
+    margin-bottom: 30px;
+;
+  }
+  
+  .module_16915688838338 .blog--cta--sec {
+    display: flex;
+    justify-content: center;
+    align-items: center; 
+  }  
+  
+  .module_16915688838338 .blog--cta--sec a.cta_button {
+    background:linear-gradient(to right, rgba(20, 131, 243, 1), rgba(146, 61, 240, 1)); 
+    padding-top: 14px;
+padding-right: 50px;
+padding-bottom: 14px;
+padding-left: 40px;
+;
+    font-family: Nunito; 
+    font-family: Nunito, sans-serif; font-style: normal; font-weight: normal; text-decoration: none; 
+    color: #FFFFFF; 
+    font-size: 18px;
+    text-align:center;
+    border-radius:52px;
+    border:px solid rgba(#null, 0.0); 
+    -webkit-transition: all 0.3s linear;
+    -moz-transition: all 0.3s linear;
+    -ms-transition: all 0.3s linear;
+    -o-transition: all 0.3s linear;
+    transition: all 0.3s linear;
+  }
+  
+  .module_16915688838338 .blog--cta--sec a.cta_button:hover {
+    background:linear-gradient(to right, rgba(20, 131, 243, 1), rgba(20, 131, 243, 1));
+    font-family: Nunito; 
+    font-family: Nunito, sans-serif; font-style: normal; font-weight: normal; text-decoration: none; 
+    color: #FFFFFF; 
+    font-size: 18px;
+    border-color:rgba(#null, 0.0);
+    -webkit-transition: all 0.3s linear;
+    -moz-transition: all 0.3s linear;
+    -ms-transition: all 0.3s linear;
+    -o-transition: all 0.3s linear;
+    transition: all 0.3s linear;  
+  }
+  
+  
+    .module_16915688838338 .blog--cta--sec .hs_cos_wrapper_type_cta + svg {
+        fill: rgba(255, 255, 255, 1.0);
+        display: inline-block;
+        transform: translateX(-40px);
+          -webkit-transition: all 0.3s linear;
+    -moz-transition: all 0.3s linear;
+    -ms-transition: all 0.3s linear;
+    -o-transition: all 0.3s linear;
+    transition: all 0.3s linear;  
+    }
+    .module_16915688838338 .blog--cta--sec .hs_cos_wrapper_type_cta:hover + svg {
+        transform: translateX(-35px);
+          -webkit-transition: all 0.3s linear;
+    -moz-transition: all 0.3s linear;
+    -ms-transition: all 0.3s linear;
+    -o-transition: all 0.3s linear;
+    transition: all 0.3s linear;  
+    }
+    .module_16915688838338 .blog--cta--sec .hs_cos_wrapper_type_cta + svg path {
+          fill: rgba(255, 255, 255, 1.0);
+      }
+  
+
+@media(max-width:768px){
+  .blog--cta--wrap h2{
+   font-family: ; 
+   ; 
+   color: ; 
+   font-size: ;
+  } 
+  .blog--cta--text p{
+   font-family: ; 
+    ; 
+    color: ; 
+    font-size: ; 
+  }
+}
+</style></div>
+  </div>
+    
+      
+
+  
+
+  
+       
+<div style="display:none">
+    
+</div> 
+    
+
+    
+          
+    
+        
+        
+        
+        
+        
+        
+        
+            
+    
+        <span id="hs_cos_wrapper_" class="hs_cos_wrapper hs_cos_wrapper_widget hs_cos_wrapper_type_related_blog_posts" style="" data-hs-cos-general-type="widget" data-hs-cos-type="related_blog_posts">
+  
+        
+    
+      <section class="blog-related-posts default ">
+        <div class="content-wrapper">
+          <h2>Related articles for you</h2>
+          <div class="blog-related-posts__list">
+    
+            <div data-tag="RAG" data-date="2025-04-10" class="blog-item" style="">
+              
+              <div class="blog-details">
+                 <div class="blog-details-wrap">
+                   <h2 class="blog-heading">
+                      <a href="https://www.k2view.com/blog/what-is-grounding-and-hallucinations-in-ai/"> What is grounding and hallucinations in AI?</a>
+                   </h2>
+                   <div data-date="2025-04-10" data-year="2025" class="blog-date"><a href="https://www.k2view.com/blog/what-is-grounding-and-hallucinations-in-ai/">May 1, 2024</a></div>
+                 </div>  
+                <div class="text_cta">
+                   <span id="hubspot-topic_data" data-date="2026" class="">
+                   <a class="cta_button" href="https://www.k2view.com/blog/what-is-grounding-and-hallucinations-in-ai/">Read more</a>
+                   </span>
+                </div>
+              </div>
+           </div>
+      
+  
+
+  
+        
+    
+            <div data-tag="RAG" data-date="2025-04-10" class="blog-item" style="">
+              
+              <div class="blog-details">
+                 <div class="blog-details-wrap">
+                   <h2 class="blog-heading">
+                      <a href="https://www.k2view.com/blog/grounding-ai/"> Grounding AI reduces hallucinations and increases response accuracy</a>
+                   </h2>
+                   <div data-date="2025-04-10" data-year="2025" class="blog-date"><a href="https://www.k2view.com/blog/grounding-ai/">July 9, 2024</a></div>
+                 </div>  
+                <div class="text_cta">
+                   <span id="hubspot-topic_data" data-date="2026" class="">
+                   <a class="cta_button" href="https://www.k2view.com/blog/grounding-ai/">Read more</a>
+                   </span>
+                </div>
+              </div>
+           </div>
+      
+  
+
+  
+        
+    
+            <div data-tag="RAG" data-date="2025-04-10" class="blog-item" style="">
+              
+              <div class="blog-details">
+                 <div class="blog-details-wrap">
+                   <h2 class="blog-heading">
+                      <a href="https://www.k2view.com/blog/generative-ai-hallucinations/"> Generative AI hallucinations: When GenAI is more artificial than intelligent</a>
+                   </h2>
+                   <div data-date="2025-04-10" data-year="2025" class="blog-date"><a href="https://www.k2view.com/blog/generative-ai-hallucinations/">June 10, 2024</a></div>
+                 </div>  
+                <div class="text_cta">
+                   <span id="hubspot-topic_data" data-date="2026" class="">
+                   <a class="cta_button" href="https://www.k2view.com/blog/generative-ai-hallucinations/">Read more</a>
+                   </span>
+                </div>
+              </div>
+           </div>
+      
+          </div>
+
+        </div>
+      </section>
+    
+  
+
+</span> 
+    
+        
+    
+      <div class="cbbs--wrap cbbs--wrap--mobile">          
+          
+          
+            <div id="hs_cos_wrapper_module_17518974869878" class="hs_cos_wrapper hs_cos_wrapper_widget hs_cos_wrapper_type_module" style="" data-hs-cos-general-type="widget" data-hs-cos-type="module"><div class="blog--post--sb--banner">
+  <div class="blog--post--sb--banner--img">
+  
+    
+    
+      
+    
+     
+    <img src="https://www.k2view.com/hs-fs/hubfs/K2view%20GenAI%20product%20tour%20RHS-Jul-08-2025-11-52-20-6912-AM.png?width=470&amp;height=512&amp;name=K2view%20GenAI%20product%20tour%20RHS-Jul-08-2025-11-52-20-6912-AM.png" alt="K2view GenAI product tour RHS-Jul-08-2025-11-52-20-6912-AM" loading="lazy" width="470" height="512" style="max-width: 100%; height: auto;" srcset="https://www.k2view.com/hs-fs/hubfs/K2view%20GenAI%20product%20tour%20RHS-Jul-08-2025-11-52-20-6912-AM.png?width=235&amp;height=256&amp;name=K2view%20GenAI%20product%20tour%20RHS-Jul-08-2025-11-52-20-6912-AM.png 235w, https://www.k2view.com/hs-fs/hubfs/K2view%20GenAI%20product%20tour%20RHS-Jul-08-2025-11-52-20-6912-AM.png?width=470&amp;height=512&amp;name=K2view%20GenAI%20product%20tour%20RHS-Jul-08-2025-11-52-20-6912-AM.png 470w, https://www.k2view.com/hs-fs/hubfs/K2view%20GenAI%20product%20tour%20RHS-Jul-08-2025-11-52-20-6912-AM.png?width=705&amp;height=768&amp;name=K2view%20GenAI%20product%20tour%20RHS-Jul-08-2025-11-52-20-6912-AM.png 705w, https://www.k2view.com/hs-fs/hubfs/K2view%20GenAI%20product%20tour%20RHS-Jul-08-2025-11-52-20-6912-AM.png?width=940&amp;height=1024&amp;name=K2view%20GenAI%20product%20tour%20RHS-Jul-08-2025-11-52-20-6912-AM.png 940w, https://www.k2view.com/hs-fs/hubfs/K2view%20GenAI%20product%20tour%20RHS-Jul-08-2025-11-52-20-6912-AM.png?width=1175&amp;height=1280&amp;name=K2view%20GenAI%20product%20tour%20RHS-Jul-08-2025-11-52-20-6912-AM.png 1175w, https://www.k2view.com/hs-fs/hubfs/K2view%20GenAI%20product%20tour%20RHS-Jul-08-2025-11-52-20-6912-AM.png?width=1410&amp;height=1536&amp;name=K2view%20GenAI%20product%20tour%20RHS-Jul-08-2025-11-52-20-6912-AM.png 1410w" sizes="(max-width: 470px) 100vw, 470px">
+  
+    <div class="blog--post--sb--banner--cta">
+      <span id="hs_cos_wrapper_module_17518974869878_" class="hs_cos_wrapper hs_cos_wrapper_widget hs_cos_wrapper_type_cta" style="" data-hs-cos-general-type="widget" data-hs-cos-type="cta"><!--HubSpot Call-to-Action Code --><span class="hs-cta-wrapper" id="hs-cta-wrapper-fc1b2be8-1f77-4b95-b367-4b231d732e9c"><span class="hs-cta-node hs-cta-fc1b2be8-1f77-4b95-b367-4b231d732e9c" id="hs-cta-fc1b2be8-1f77-4b95-b367-4b231d732e9c"><!--[if lte IE 8]><div id="hs-cta-ie-element"></div><![endif]--><a href="https://cta-redirect.hubspot.com/cta/redirect/5983023/fc1b2be8-1f77-4b95-b367-4b231d732e9c"><img class="hs-cta-img" id="hs-cta-img-fc1b2be8-1f77-4b95-b367-4b231d732e9c" style="border-width:0px;" src="https://no-cache.hubspot.com/cta/default/5983023/fc1b2be8-1f77-4b95-b367-4b231d732e9c.png" alt="Take the product tour"></a></span><script charset="utf-8" src="/hs/cta/cta/current.js"></script><script type="text/javascript"> hbspt.cta._relativeUrls=true;hbspt.cta.load(5983023, 'fc1b2be8-1f77-4b95-b367-4b231d732e9c', {"useNewLoader":"true","region":"na1"}); </script></span><!-- end HubSpot Call-to-Action Code --></span>
+    </div> 
+  </div> 
+</div></div>
+           
+                    
+       </div>
+    
+  </div>
+</div>  
+</div>
+
+
+<script>
+$(document).ready(function(){
+$( ".post-body p:contains('Table of Contents'), .post-body h3:contains('Table of Contents'), .post-body h2:contains('Table of Contents')" ).addClass( "table-of-contents" );
+$( ".post-body p:contains('Table of Contents'), .post-body h3:contains('Table of Contents'), .post-body h2:contains('Table of Contents')" ).next("hr").remove();
+$( ".post-body p:contains('Table of Contents'), .post-body h3:contains('Table of Contents'), .post-body h2:contains('Table of Contents')" ).next("p").addClass( "table-of-contents-list" );  
+  $('a[data-hs-anchor="true"]').each(function(index, obj) {
+      var secLink = $(this).attr('id');
+      var textLink = $(this).next('h2').text();
+      index += 1;
+    
+      if(index < 10){
+        $('#table-of-contents').append('<li><span class="toc-nav" data-href="#' + secLink + '"> <span class="extented-nav">' + textLink + '</span></span></li>');
+        //$('#table-of-contents-mobile').append('<li><span class="toc-nav" data-href="#' + secLink + '"> <span>0'+ index + '</span>' + textLink + '</span></li>');
+      }else{
+        $('#table-of-contents').append('<li><span class="toc-nav" data-href="#' + secLink + '"> <span class="extented-nav">' + textLink + '</span></span></li>'); 
+        //$('#table-of-contents-mobile').append('<li><aspan class="toc-nav" data-href="#' + secLink + '"> <span>'+ index + '</span>' + textLink + '</span></li>');
+      }
+      //console.log(secLink);
+  });
+  
+  // In this article Toggle
+  $('.pps-sidebar-nav h4').click(function(){
+     $(this).next('ul').slideToggle(); 
+     $(this).toggleClass('open');
+  });
+  
+  // In article TOC links
+  $('.In--this--article--list span.toc-nav').on('click', function() {    
+    var target = $(this).attr('data-href');
+
+    $('html, body').animate({
+      'scrollTop': $(target).offset().top-100
+    });
+  }); 
+
+  if (!$('.post-body a[data-hs-anchor="true"]').length) {
+    $('.In--this--article').hide();
+  }
+  
+});
+$(window).load(function(){
+
+    var sections = $('.post-body a[data-hs-anchor="true"]')
+  , nav = $('#table-of-contents');
+
+  $(window).on('scroll', function () {
+      var cur_pos = $(this).scrollTop();
+
+      $('.post-body a[data-hs-anchor="true"]').each(function() {
+        var top = $(this).offset().top - 60
+
+        if (cur_pos >= top) {
+          nav.find('a').removeClass('active');
+          sections.removeClass('active');
+
+          $(this).addClass('active');
+          nav.find('a[href="#'+$(this).attr('id')+'"]').addClass('active');
+        }
+      });
+  });
+
+if(!$('.post-body a[data-hs-anchor="true"]').length){
+  //console.log('exist');
+  $('#table-of-contents').prev('h3').hide();
+}
+  
+  
+$.fn.isOnScreen = function () {
+
+    if (!this.length) {
+        return false;
+    }
+
+    var win = $(window);
+
+    var viewport = {
+        top: win.scrollTop(),
+        left: win.scrollLeft()
+    };
+
+    viewport.right = viewport.left + win.width();
+    viewport.bottom = viewport.top + win.height();
+
+    var bounds = this.offset();
+
+    if (!bounds) {
+        return false;
+    }
+
+    bounds.right = bounds.left + this.outerWidth();
+    bounds.bottom = bounds.top + this.outerHeight();
+
+    return !(
+        viewport.right < bounds.left ||
+        viewport.left > bounds.right ||
+        viewport.bottom < bounds.top ||
+        viewport.top > bounds.bottom
+    );
+};  
+  
+  $(window).scroll(function() {
+
+        if ($('.g--footer--white').isOnScreen()) {
+              $('.pps-sidebar-nav').addClass('footer-reached');
+              $('.bp--sidebar').addClass('footer-reached');
+              $('.bp--sidebar--right').addClass('footer-reached');
+          } else {
+              $('.pps-sidebar-nav').removeClass('footer-reached');
+              $('.bp--sidebar').removeClass('footer-reached');
+              $('.bp--sidebar--right').removeClass('footer-reached');
+          }
+
+
+      var sticky = $('.bp--sidebar, .bp--sidebar--right'),
+          bannerTop = $('.blog--post--banner').offset().top,
+          bannerH = $('.blog--post--banner').height(),
+          banner = bannerTop + bannerH,
+          scroll = $(window).scrollTop();
+  
+          if (scroll >= banner){ 
+              sticky.addClass('active');
+            }else {
+            sticky.removeClass('active');
+            }
+   
+    
+  });
+  
+    //SELECT OPTIONS AND HIDE OPTION AFTER SELECTION
+  $(".drop-down .options a").click(function() {
+      var text = $(this).html();
+      $(".drop-down .selected a").html(text);
+      $(".drop-down .options ul").hide();
+    console.log('2');
+  });
+
+  //TOGGLING NESTED ul
+  $(".drop-down .selected a").click(function() {
+      $(".drop-down .options ul").toggle();
+  });
+  
+}); 
+$(document).bind('click', function(e) {
+    var $clicked = $(e.target);
+    if (! $clicked.parents().hasClass("drop-down"))
+        $(".drop-down .options ul").hide();
+});   
+$(window).load(function(){
+  navlist = [];
+  $("#table-of-contents a").each(function(i) {
+      var thisLink = $(this);
+      var thisId = thisLink.attr('href');
+      var thisTarget = $(thisId);
+      navlist.push({
+          'anchor': thisLink,
+          'id': thisId,
+          'target': thisTarget
+      });
+      thisLink.on('click', function(e) {
+          e.preventDefault();
+          $('html, body').animate({
+              scrollTop: thisTarget.offset().top - 60
+          }, 200);
+      });
+  });
+  $(window).on('scroll resize', function(e) {
+      $.each(navlist, function(e, elem) {
+          var placement = elem.target[0].getBoundingClientRect();
+          if( placement.top<window.innerHeight && placement.bottom>0 ) {
+              history.pushState({}, '', elem.id);
+             // console.log('Hash: ' + elem.id);
+              return false; /* Exit $.each loop */
+          };
+      });
+  });
+});  
+  
+</script>
+<style>
+  .In--this--article ul.In--this--article--list li a {
+      color: #1483f3;
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 1.4;
+  }
+  .In--this--article ul.In--this--article--list li {
+      padding: 6px 0;
+  }
+  .has-topstrip .header-top-row {
+      display: flex !important;
+  }
+</style>
+
+      </main>
+    
+      
+      <div id="hs_cos_wrapper_module_17757347905105" class="hs_cos_wrapper hs_cos_wrapper_widget hs_cos_wrapper_type_module" style="" data-hs-cos-general-type="widget" data-hs-cos-type="module"><div class="global--footer26">
+  <div class="global--footer26--wrap">
+     <div class="gfooter26--left">
+       <div class="gfooter26--logo">
+        
+        <span id="hs_cos_wrapper_module_17757347905105_" class="hs_cos_wrapper hs_cos_wrapper_widget hs_cos_wrapper_type_logo" style="" data-hs-cos-general-type="widget" data-hs-cos-type="logo"><a href="//www.k2view.com" id="hs-link-module_17757347905105_" style="border-width:0px;border:0px;"><img src="https://www.k2view.com/hs-fs/hubfs/logo%20all%20white@150x-8-3.png?width=250&amp;height=68&amp;name=logo%20all%20white@150x-8-3.png" class="hs-image-widget " height="68" style="height: auto;width:250px;border-width:0px;border:0px;" width="250" alt="logo all white" title="logo all white" loading="" srcset="https://www.k2view.com/hs-fs/hubfs/logo%20all%20white@150x-8-3.png?width=125&amp;height=34&amp;name=logo%20all%20white@150x-8-3.png 125w, https://www.k2view.com/hs-fs/hubfs/logo%20all%20white@150x-8-3.png?width=250&amp;height=68&amp;name=logo%20all%20white@150x-8-3.png 250w, https://www.k2view.com/hs-fs/hubfs/logo%20all%20white@150x-8-3.png?width=375&amp;height=102&amp;name=logo%20all%20white@150x-8-3.png 375w, https://www.k2view.com/hs-fs/hubfs/logo%20all%20white@150x-8-3.png?width=500&amp;height=136&amp;name=logo%20all%20white@150x-8-3.png 500w, https://www.k2view.com/hs-fs/hubfs/logo%20all%20white@150x-8-3.png?width=625&amp;height=170&amp;name=logo%20all%20white@150x-8-3.png 625w, https://www.k2view.com/hs-fs/hubfs/logo%20all%20white@150x-8-3.png?width=750&amp;height=204&amp;name=logo%20all%20white@150x-8-3.png 750w" sizes="(max-width: 250px) 100vw, 250px"></a></span>
+         <span class="gfooter26--logoText">Deliver governed business data and context to test, run, and continually improve your most critical systems.</span>
+       </div>
+       <div class="gfooter26--getStarted">
+          <h3>Get Started</h3>
+          <span id="hs_cos_wrapper_module_17757347905105_" class="hs_cos_wrapper hs_cos_wrapper_widget hs_cos_wrapper_type_menu" style="" data-hs-cos-general-type="widget" data-hs-cos-type="menu"><div id="hs_menu_wrapper_module_17757347905105_" class="hs-menu-wrapper active-branch no-flyouts hs-menu-flow-horizontal" role="navigation" data-sitemap-name="default" data-menu-id="210577214876" aria-label="Navigation Menu">
+ <ul role="menu">
+  <li class="hs-menu-item hs-menu-depth-1" role="none"><a href="https://www.k2view.com/pt-sign-up" role="menuitem">Start a Product Tour</a></li>
+  <li class="hs-menu-item hs-menu-depth-1" role="none"><a href="https://www.k2view.com/data-product-platform-demo/" role="menuitem">Watch Demo Video</a></li>
+  <li class="hs-menu-item hs-menu-depth-1" role="none"><a href="https://www.k2view.com/request-demo/" role="menuitem">Book a Demo</a></li>
+  <li class="hs-menu-item hs-menu-depth-1" role="none"><a href="https://www.k2view.com/contact" role="menuitem">Contact Us</a></li>
+ </ul>
+</div></span>
+       </div>
+       <div class="gfooter26--socialLinks">
+          <ul>
+            
+            <li class="slink--1">
+              
+              
+              <a href="https://www.linkedin.com/company/k2view/" target="_blank" rel="noopener">
+                <span id="hs_cos_wrapper_module_17757347905105_" class="hs_cos_wrapper hs_cos_wrapper_widget hs_cos_wrapper_type_icon" style="" data-hs-cos-general-type="widget" data-hs-cos-type="icon"><svg version="1.0" xmlns="http://www.w3.org/2000/svg" viewbox="0 0 448 512" aria-hidden="true"><g id="LinkedIn1_layer"><path d="M416 32H31.9C14.3 32 0 46.5 0 64.3v383.4C0 465.5 14.3 480 31.9 480H416c17.6 0 32-14.5 32-32.3V64.3c0-17.8-14.4-32.3-32-32.3zM135.4 416H69V202.2h66.5V416zm-33.2-243c-21.3 0-38.5-17.3-38.5-38.5S80.9 96 102.2 96c21.2 0 38.5 17.3 38.5 38.5 0 21.3-17.2 38.5-38.5 38.5zm282.1 243h-66.4V312c0-24.8-.5-56.7-34.5-56.7-34.6 0-39.9 27-39.9 54.9V416h-66.4V202.2h63.7v29.2h.9c8.9-16.8 30.6-34.5 62.9-34.5 67.2 0 79.7 44.3 79.7 101.9V416z" /></g></svg></span>
+              </a>
+              </li>
+              
+            <li class="slink--2">
+              
+              
+              <a href="https://www.youtube.com/user/K2View" target="_blank" rel="noopener">
+                <span id="hs_cos_wrapper_module_17757347905105_" class="hs_cos_wrapper hs_cos_wrapper_widget hs_cos_wrapper_type_icon" style="" data-hs-cos-general-type="widget" data-hs-cos-type="icon"><svg version="1.0" xmlns="http://www.w3.org/2000/svg" viewbox="0 0 576 512" aria-hidden="true"><g id="YouTube2_layer"><path d="M549.655 124.083c-6.281-23.65-24.787-42.276-48.284-48.597C458.781 64 288 64 288 64S117.22 64 74.629 75.486c-23.497 6.322-42.003 24.947-48.284 48.597-11.412 42.867-11.412 132.305-11.412 132.305s0 89.438 11.412 132.305c6.281 23.65 24.787 41.5 48.284 47.821C117.22 448 288 448 288 448s170.78 0 213.371-11.486c23.497-6.321 42.003-24.171 48.284-47.821 11.412-42.867 11.412-132.305 11.412-132.305s0-89.438-11.412-132.305zm-317.51 213.508V175.185l142.739 81.205-142.739 81.201z" /></g></svg></span>
+              </a>
+              </li>
+                         
+         </ul>
+       </div>
+     </div>
+     <div class="gfooter26--right">
+       
+        <div class="gfooter26--menu platformSolutionsMenu">
+          <h3>PLATFORM &amp; SOLUTIONS</h3>
+          <span id="hs_cos_wrapper_module_17757347905105_" class="hs_cos_wrapper hs_cos_wrapper_widget hs_cos_wrapper_type_menu" style="" data-hs-cos-general-type="widget" data-hs-cos-type="menu"><div id="hs_menu_wrapper_module_17757347905105_" class="hs-menu-wrapper active-branch no-flyouts hs-menu-flow-horizontal" role="navigation" data-sitemap-name="default" data-menu-id="210577214881" aria-label="Navigation Menu">
+ <ul role="menu">
+  <li class="hs-menu-item hs-menu-depth-1 hs-item-has-children" role="none"><a href="javascript:;" aria-haspopup="true" aria-expanded="false" role="menuitem">Data Product Platform</a>
+   <ul role="menu" class="hs-menu-children-wrapper">
+    <li class="hs-menu-item hs-menu-depth-2" role="none"><a href="https://www.k2view.com/platform/data-product-platform/" role="menuitem">Overview</a></li>
+    <li class="hs-menu-item hs-menu-depth-2" role="none"><a href="https://www.k2view.com/platform/ai-context-platform" role="menuitem">AI Context Platform</a></li>
+    <li class="hs-menu-item hs-menu-depth-2" role="none"><a href="https://www.k2view.com/platform/micro-database/" role="menuitem">Micro-Database Technology</a></li>
+    <li class="hs-menu-item hs-menu-depth-2" role="none"><a href="javascript:;" role="menuitem">Data Protection &amp; Provisioning</a></li>
+    <li class="hs-menu-item hs-menu-depth-2" role="none"><a href="https://www.k2view.com/solutions/synthetic-data-generation-tools/" role="menuitem">Synthetic Data Generation</a></li>
+    <li class="hs-menu-item hs-menu-depth-2" role="none"><a href="https://www.k2view.com/solutions/test-data-management-tools/" role="menuitem">Test Data Management</a></li>
+    <li class="hs-menu-item hs-menu-depth-2" role="none"><a href="https://www.k2view.com/solutions/data-masking-tools/" role="menuitem">Data Masking</a></li>
+    <li class="hs-menu-item hs-menu-depth-2" role="none"><a href="https://www.k2view.com/solution/data-tokenization-tools/" role="menuitem">Data Tokenization</a></li>
+    <li class="hs-menu-item hs-menu-depth-2" role="none"><a href="https://www.k2view.com/solutions/workday-data-compliance/" role="menuitem">Workday Data Compliance</a></li>
+   </ul></li>
+  <li class="hs-menu-item hs-menu-depth-1 hs-item-has-children" role="none"><a href="javascript:;" aria-haspopup="true" aria-expanded="false" role="menuitem">AI Context Management</a>
+   <ul role="menu" class="hs-menu-children-wrapper">
+    <li class="hs-menu-item hs-menu-depth-2" role="none"><a href="https://www.k2view.com/solutions/ai-ready-data-products" role="menuitem">AI-Ready Data Products</a></li>
+    <li class="hs-menu-item hs-menu-depth-2" role="none"><a href="https://www.k2view.com/solutions/ai-context-delivery" role="menuitem">AI Context Delivery</a></li>
+    <li class="hs-menu-item hs-menu-depth-2" role="none"><a href="https://www.k2view.com/solutions/ai-evaluation-and-observability-platform" role="menuitem">AI Evaluation and Observability</a></li>
+    <li class="hs-menu-item hs-menu-depth-2" role="none"><a href="https://www.k2view.com/solutions/mcp-integration/" role="menuitem">MCP Data Integration</a></li>
+    <li class="hs-menu-item hs-menu-depth-2" role="none"><a href="https://www.k2view.com/solutions/rag-tools/" role="menuitem">Enterprise Data RAG</a></li>
+    <li class="hs-menu-item hs-menu-depth-2" role="none"><a href="https://www.k2view.com/data-architecture-for-agentic-ai" role="menuitem">Data Architecture for Agentic AI</a></li>
+    <li class="hs-menu-item hs-menu-depth-2" role="none"><a href="javascript:;" role="menuitem">Data Integration</a></li>
+    <li class="hs-menu-item hs-menu-depth-2" role="none"><a href="https://www.k2view.com/solutions/customer-360-platform" role="menuitem">Customer Data Integration</a></li>
+    <li class="hs-menu-item hs-menu-depth-2" role="none"><a href="https://www.k2view.com/solutions/data-migration-tools/" role="menuitem">Data Migration</a></li>
+    <li class="hs-menu-item hs-menu-depth-2" role="none"><a href="https://www.k2view.com/solutions/data-pipeline-tools/" role="menuitem">Data Pipelining</a></li>
+    <li class="hs-menu-item hs-menu-depth-2" role="none"><a href="https://www.k2view.com/solutions/mdm-tools/" role="menuitem">Multi-Domain MDM</a></li>
+   </ul></li>
+ </ul>
+</div></span>
+        </div>
+        <div class="gfooter26--menu companyMenu">
+          <h3>COMPANY</h3>
+          <span id="hs_cos_wrapper_module_17757347905105_" class="hs_cos_wrapper hs_cos_wrapper_widget hs_cos_wrapper_type_menu" style="" data-hs-cos-general-type="widget" data-hs-cos-type="menu"><div id="hs_menu_wrapper_module_17757347905105_" class="hs-menu-wrapper active-branch no-flyouts hs-menu-flow-horizontal" role="navigation" data-sitemap-name="default" data-menu-id="210577405350" aria-label="Navigation Menu">
+ <ul role="menu">
+  <li class="hs-menu-item hs-menu-depth-1 hs-item-has-children" role="none"><a href="javascript:;" aria-haspopup="true" aria-expanded="false" role="menuitem">Company</a>
+   <ul role="menu" class="hs-menu-children-wrapper">
+    <li class="hs-menu-item hs-menu-depth-2" role="none"><a href="https://www.k2view.com/company/" role="menuitem">About</a></li>
+    <li class="hs-menu-item hs-menu-depth-2" role="none"><a href="https://www.k2view.com/blog" role="menuitem">Blog</a></li>
+    <li class="hs-menu-item hs-menu-depth-2" role="none"><a href="https://www.k2view.com/customers/" role="menuitem">Customers</a></li>
+    <li class="hs-menu-item hs-menu-depth-2" role="none"><a href="https://www.k2view.com/partners/" role="menuitem">Partners</a></li>
+    <li class="hs-menu-item hs-menu-depth-2" role="none"><a href="https://www.k2view.com/careers/" role="menuitem">Careers</a></li>
+    <li class="hs-menu-item hs-menu-depth-2" role="none"><a href="https://www.k2view.com/news-blog" role="menuitem">News</a></li>
+    <li class="hs-menu-item hs-menu-depth-2" role="none"><a href="https://support.k2view.com/?_gl=1*1i99bzf*_gcl_au*MTMzMDY3NTEwNC4xNzc1NDYzMjA4*_ga*MTM3Njk2MTA0MC4xNzY3NjAzMjQw*_ga_JH5MPR6MKD*czE3NzU1NTcxMDYkbzUxJGcxJHQxNzc1NTU3NDEzJGozMCRsMCRoMTA0MDExMDM3Ng.." role="menuitem" target="_blank" rel="noopener">Support</a></li>
+    <li class="hs-menu-item hs-menu-depth-2" role="none"><a href="https://support.k2view.com/knowledge-base.html?_gl=1*1i99bzf*_gcl_au*MTMzMDY3NTEwNC4xNzc1NDYzMjA4*_ga*MTM3Njk2MTA0MC4xNzY3NjAzMjQw*_ga_JH5MPR6MKD*czE3NzU1NTcxMDYkbzUxJGcxJHQxNzc1NTU3NDEzJGozMCRsMCRoMTA0MDExMDM3Ng.." role="menuitem" target="_blank" rel="noopener">Knowledge Base</a></li>
+    <li class="hs-menu-item hs-menu-depth-2" role="none"><a href="https://www.k2view.com/security/" role="menuitem">Security</a></li>
+   </ul></li>
+  <li class="hs-menu-item hs-menu-depth-1 hs-item-has-children" role="none"><a href="javascript:;" aria-haspopup="true" aria-expanded="false" role="menuitem">Resources</a>
+   <ul role="menu" class="hs-menu-children-wrapper">
+    <li class="hs-menu-item hs-menu-depth-2" role="none"><a href="https://www.k2view.com/what-is-test-data-management/" role="menuitem">Test Data Management eBook</a></li>
+    <li class="hs-menu-item hs-menu-depth-2" role="none"><a href="https://www.k2view.com/what-is-data-masking/" role="menuitem">Data Masking Guide</a></li>
+    <li class="hs-menu-item hs-menu-depth-2" role="none"><a href="https://www.k2view.com/what-is-synthetic-data-generation/" role="menuitem">Synthetic Data Generation eBook</a></li>
+    <li class="hs-menu-item hs-menu-depth-2" role="none"><a href="https://www.k2view.com/what-is-retrieval-augmented-generation" role="menuitem">Retrieval-Augmented Generation Guide</a></li>
+    <li class="hs-menu-item hs-menu-depth-2" role="none"><a href="https://www.k2view.com/what-are-data-agents/" role="menuitem">Data Agents Guide</a></li>
+    <li class="hs-menu-item hs-menu-depth-2" role="none"><a href="https://www.k2view.com/what-is-mcp-ai/" role="menuitem">MCP AI Overview</a></li>
+    <li class="hs-menu-item hs-menu-depth-2" role="none"><a href="https://www.k2view.com/what-is-a-data-product/" role="menuitem">Data Products Guide</a></li>
+    <li class="hs-menu-item hs-menu-depth-2" role="none"><a href="https://www.k2view.com/what-is-data-fabric/" role="menuitem">Data Fabric Guide</a></li>
+    <li class="hs-menu-item hs-menu-depth-2" role="none"><a href="https://www.k2view.com/what-is-data-mesh/" role="menuitem">Data Mesh Guide</a></li>
+    <li class="hs-menu-item hs-menu-depth-2" role="none"><a href="https://www.k2view.com/what-is-data-virtualization/" role="menuitem">Data Virtualization Guide</a></li>
+   </ul></li>
+ </ul>
+</div></span>
+        </div>
+       
+     </div>
+  </div>
+</div>
+<div class="global--downFooter26">
+  <div class="global--downFooter26--wrap">
+    <div class="global--downFooter26--left">
+      <span class="global--downFooter26--copyright">© COPYRIGHT 2026 K2VIEW</span>
+      <span id="hs_cos_wrapper_module_17757347905105_" class="hs_cos_wrapper hs_cos_wrapper_widget hs_cos_wrapper_type_menu" style="" data-hs-cos-general-type="widget" data-hs-cos-type="menu"><div id="hs_menu_wrapper_module_17757347905105_" class="hs-menu-wrapper active-branch no-flyouts hs-menu-flow-horizontal" role="navigation" data-sitemap-name="default" data-menu-id="121833236841" aria-label="Navigation Menu">
+ <ul role="menu">
+  <li class="hs-menu-item hs-menu-depth-1" role="none"><a href="https://www.k2view.com/privacy-policy" role="menuitem">Privacy Policy</a></li>
+  <li class="hs-menu-item hs-menu-depth-1" role="none"><a href="https://www.k2view.com/security/" role="menuitem">Security</a></li>
+  <li class="hs-menu-item hs-menu-depth-1" role="none"><a href="https://www.k2view.com/terms-of-use" role="menuitem">Terms Of Use</a></li>
+  <li class="hs-menu-item hs-menu-depth-1" role="none"><a href="https://www.k2view.com/cookie-policy/" role="menuitem">Cookie Policy</a></li>
+ </ul>
+</div></span>
+      <span id="custom-pref-button">Your Privacy Choices</span>
+    </div>
+    <div class="global--downFooter26--right">
+      <ul>
+        
+          
+          
+          <li><a href="https://www.k2view.com/security/">
+            
+              
+              
+                
+              
+               
+              <img src="https://www.k2view.com/hs-fs/hubfs/group-839745.webp?width=27&amp;height=27&amp;name=group-839745.webp" alt="group-839745" loading="lazy" width="27" height="27" style="max-width: 100%; height: auto;" srcset="https://www.k2view.com/hs-fs/hubfs/group-839745.webp?width=14&amp;height=14&amp;name=group-839745.webp 14w, https://www.k2view.com/hs-fs/hubfs/group-839745.webp?width=27&amp;height=27&amp;name=group-839745.webp 27w, https://www.k2view.com/hs-fs/hubfs/group-839745.webp?width=41&amp;height=41&amp;name=group-839745.webp 41w, https://www.k2view.com/hs-fs/hubfs/group-839745.webp?width=54&amp;height=54&amp;name=group-839745.webp 54w, https://www.k2view.com/hs-fs/hubfs/group-839745.webp?width=68&amp;height=68&amp;name=group-839745.webp 68w, https://www.k2view.com/hs-fs/hubfs/group-839745.webp?width=81&amp;height=81&amp;name=group-839745.webp 81w" sizes="(max-width: 27px) 100vw, 27px">
+            
+          </a></li>
+        
+          
+          
+          <li><a href="https://www.k2view.com/security/">
+            
+              
+              
+               
+              <img src="https://www.k2view.com/hs-fs/hubfs/image-669.webp?width=27&amp;height=27&amp;name=image-669.webp" alt="image-669" loading="" width="27" height="27" srcset="https://www.k2view.com/hs-fs/hubfs/image-669.webp?width=14&amp;height=14&amp;name=image-669.webp 14w, https://www.k2view.com/hs-fs/hubfs/image-669.webp?width=27&amp;height=27&amp;name=image-669.webp 27w, https://www.k2view.com/hs-fs/hubfs/image-669.webp?width=41&amp;height=41&amp;name=image-669.webp 41w, https://www.k2view.com/hs-fs/hubfs/image-669.webp?width=54&amp;height=54&amp;name=image-669.webp 54w, https://www.k2view.com/hs-fs/hubfs/image-669.webp?width=68&amp;height=68&amp;name=image-669.webp 68w, https://www.k2view.com/hs-fs/hubfs/image-669.webp?width=81&amp;height=81&amp;name=image-669.webp 81w" sizes="(max-width: 27px) 100vw, 27px">
+            
+          </a></li>
+        
+          
+          
+          <li><a href="https://www.k2view.com/security/">
+            
+              
+              
+               
+              <img src="https://www.k2view.com/hs-fs/hubfs/image-670.webp?width=27&amp;height=27&amp;name=image-670.webp" alt="image-670" loading="" width="27" height="27" srcset="https://www.k2view.com/hs-fs/hubfs/image-670.webp?width=14&amp;height=14&amp;name=image-670.webp 14w, https://www.k2view.com/hs-fs/hubfs/image-670.webp?width=27&amp;height=27&amp;name=image-670.webp 27w, https://www.k2view.com/hs-fs/hubfs/image-670.webp?width=41&amp;height=41&amp;name=image-670.webp 41w, https://www.k2view.com/hs-fs/hubfs/image-670.webp?width=54&amp;height=54&amp;name=image-670.webp 54w, https://www.k2view.com/hs-fs/hubfs/image-670.webp?width=68&amp;height=68&amp;name=image-670.webp 68w, https://www.k2view.com/hs-fs/hubfs/image-670.webp?width=81&amp;height=81&amp;name=image-670.webp 81w" sizes="(max-width: 27px) 100vw, 27px">
+            
+          </a></li>
+        
+          
+          
+          <li><a href="https://www.k2view.com/security/">
+            
+              
+              
+               
+              <img src="https://www.k2view.com/hs-fs/hubfs/group-839747.webp?width=26&amp;height=28&amp;name=group-839747.webp" alt="group-839747" loading="" width="26" height="28" srcset="https://www.k2view.com/hs-fs/hubfs/group-839747.webp?width=13&amp;height=14&amp;name=group-839747.webp 13w, https://www.k2view.com/hs-fs/hubfs/group-839747.webp?width=26&amp;height=28&amp;name=group-839747.webp 26w, https://www.k2view.com/hs-fs/hubfs/group-839747.webp?width=39&amp;height=42&amp;name=group-839747.webp 39w, https://www.k2view.com/hs-fs/hubfs/group-839747.webp?width=52&amp;height=56&amp;name=group-839747.webp 52w, https://www.k2view.com/hs-fs/hubfs/group-839747.webp?width=65&amp;height=70&amp;name=group-839747.webp 65w, https://www.k2view.com/hs-fs/hubfs/group-839747.webp?width=78&amp;height=84&amp;name=group-839747.webp 78w" sizes="(max-width: 26px) 100vw, 26px">
+            
+          </a></li>
+        
+      </ul>
+    </div>
+  </div>
+</div></div>
+      
+      <div id="hs_cos_wrapper_module_178221580460912" class="hs_cos_wrapper hs_cos_wrapper_widget hs_cos_wrapper_type_module" style="" data-hs-cos-general-type="widget" data-hs-cos-type="module"><div id="hs-cp-modal" data-nosnippet="true">
+    <div id="hs-cp-modal-content" role="alertdialog" aria-modal="true" aria-labelledby="hs-cp-modal-introduction" aria-describedby="hs-cp-modal-introduction-description" tabindex="-1">
+        <div id="hs-cp-modal-header">
+            <div id="hs-cp-modal-header-container">
+                <button id="hs-cp-modal-close-button" class="hs-cp-close-button" tabindex="0" aria-label="Close modal">
+                    <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" viewbox="0 0 32 32">
+                        <path fill="currentColor" d="M4.3,27.7c0.2,0.2,0.6,0.5,1,0.5c0.4,0,0.8-0.2,1-0.5l9.6-9.5l9.6,9.5c0.2,0.2,0.6,0.5,1,0.5 c0.8,0,1.5-0.6,1.5-1.5c0-0.4-0.2-0.8-0.5-1L18.2,16l9.5-9.5c0.2-0.2,0.4-0.6,0.4-1c0-0.8-0.6-1.5-1.5-1.5c-0.4,0-0.7,0.2-1,0.4l0,0 L16,13.8L6.5,4.3C6.2,4,5.8,3.8,5.4,3.8c-0.8,0-1.5,0.6-1.5,1.5c0,0.5,0.2,0.8,0.5,1.1l0,0l9.5,9.5l-9.5,9.6c-0.2,0.2-0.5,0.6-0.5,1 S4.1,27.4,4.3,27.7L4.3,27.7z"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <div id="hs-cp-modal-body">
+            <div id="hs-cp-modal-body-container">
+                <div id="hs-cp-modal-introduction"><span>Manage cookies</span></div>
+                <div id="hs-cp-modal-introduction-description">
+                            <p>We use cookies to enhance your experience and to analyze site traffic as described in our <a href="https://www.k2view.com/cookie-policy/" title="Cookie Policy" target="_blank" rel="noopener">Cookie Policy</a>. By accepting,
+                                you consent to our use of cookies.</p>
+                </div>
+                <div id="hs-cp-categories-container">
+                    <div class="hs-cp-category-row">
+                        <div class="hs-cp-category-row-header">
+                            <button id="hs-cp-category-necessary" class="hs-cp-category-label" aria-expanded="false" aria-controls="hs-cp-category-description-necessary" tabindex="0">
+                                <svg version="1.1" id="plus-icon-svg" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" viewbox="0 0 32 32" class="description-accordion-arrow ">
+                                    <path fill="currentColor" d="M22.6,15.3c-0.1-0.1-0.1-0.2-0.2-0.2l0,0l-0.1-0.2l0,0l0,0l0,0L12.1,4.2c-0.2-0.2-0.6-0.5-1.1-0.5 c-0.9,0-1.5,0.7-1.5,1.5c0,0.4,0.2,0.7,0.4,1l0,0l9.3,9.7l-9.3,9.7c-0.3,0.3-0.6,0.7-0.6,1.1c0,0.9,0.7,1.5,1.5,1.5 c0.5,0,1-0.2,1.2-0.6l0,0l10.2-10.7l0,0l0,0l0,0l0.2-0.2c0.1-0.1,0.1-0.2,0.2-0.2l0,0c0-0.1,0.1-0.2,0.1-0.2l0,0 c0-0.1,0.1-0.2,0.1-0.3l0,0c0-0.1,0-0.2-0.1-0.3l0,0v-0.1C22.6,15.5,22.6,15.4,22.6,15.3L22.6,15.3L22.6,15.3z"></path>
+                                </svg><span>Necessary Cookies</span></button><span class="hs-cp-always-active-label" aria-label="Always active">Always active</span></div>
+                        <div class="hs-cp-category-description " id="hs-cp-category-description-necessary">
+                                <p>These cookies are essential for the site and services to function properly and cannot be disabled.</p>
+                        </div>
+                    </div>
+                    <div class="hs-cp-category-row">
+                        <div class="hs-cp-category-row-header">
+                            <button id="hs-cp-category-analytics" class="hs-cp-category-label" aria-expanded="false" aria-controls="hs-cp-category-description-analytics" tabindex="0">
+                                <svg version="1.1" id="plus-icon-svg" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" viewbox="0 0 32 32" class="description-accordion-arrow ">
+                                    <path fill="currentColor" d="M22.6,15.3c-0.1-0.1-0.1-0.2-0.2-0.2l0,0l-0.1-0.2l0,0l0,0l0,0L12.1,4.2c-0.2-0.2-0.6-0.5-1.1-0.5 c-0.9,0-1.5,0.7-1.5,1.5c0,0.4,0.2,0.7,0.4,1l0,0l9.3,9.7l-9.3,9.7c-0.3,0.3-0.6,0.7-0.6,1.1c0,0.9,0.7,1.5,1.5,1.5 c0.5,0,1-0.2,1.2-0.6l0,0l10.2-10.7l0,0l0,0l0,0l0.2-0.2c0.1-0.1,0.1-0.2,0.2-0.2l0,0c0-0.1,0.1-0.2,0.1-0.2l0,0 c0-0.1,0.1-0.2,0.1-0.3l0,0c0-0.1,0-0.2-0.1-0.3l0,0v-0.1C22.6,15.5,22.6,15.4,22.6,15.3L22.6,15.3L22.6,15.3z"></path>
+                                </svg><span>Performance Cookies</span></button>
+                            <div class="hs-cp-toggle-switch">
+                                <div class="hs-cp-toggle-switch-nob"></div>
+                                <label for="hs-cp-category-toggle-analytics"><span class="hs-cp-hidden" id="hs-cp-category-toggle-analytics-help-text">Performance Cookies allowed</span></label>
+                                <input id="hs-cp-category-toggle-analytics" class="hs-cp-toggle-switch-input" type="checkbox" aria-pressed="false" tabindex="0" aria-describedby="hs-cp-category-toggle-analytics-help-text" data-test-id="hs-cp-category-toggle-analytics">
+                            </div>
+                        </div>
+                        <div class="hs-cp-category-description " id="hs-cp-category-description-analytics">
+                                <p>These cookies help us understand and improve the use and performance of our services and how visitors interact with the various areas and features on our site.</p>
+                        </div>
+                    </div>
+                    <div class="hs-cp-category-row">
+                        <div class="hs-cp-category-row-header">
+                            <button id="hs-cp-category-advertisement" class="hs-cp-category-label" aria-expanded="false" aria-controls="hs-cp-category-description-advertisement" tabindex="0">
+                                <svg version="1.1" id="plus-icon-svg" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" viewbox="0 0 32 32" class="description-accordion-arrow ">
+                                    <path fill="currentColor" d="M22.6,15.3c-0.1-0.1-0.1-0.2-0.2-0.2l0,0l-0.1-0.2l0,0l0,0l0,0L12.1,4.2c-0.2-0.2-0.6-0.5-1.1-0.5 c-0.9,0-1.5,0.7-1.5,1.5c0,0.4,0.2,0.7,0.4,1l0,0l9.3,9.7l-9.3,9.7c-0.3,0.3-0.6,0.7-0.6,1.1c0,0.9,0.7,1.5,1.5,1.5 c0.5,0,1-0.2,1.2-0.6l0,0l10.2-10.7l0,0l0,0l0,0l0.2-0.2c0.1-0.1,0.1-0.2,0.2-0.2l0,0c0-0.1,0.1-0.2,0.1-0.2l0,0 c0-0.1,0.1-0.2,0.1-0.3l0,0c0-0.1,0-0.2-0.1-0.3l0,0v-0.1C22.6,15.5,22.6,15.4,22.6,15.3L22.6,15.3L22.6,15.3z"></path>
+                                </svg><span>Targeting Cookies</span></button>
+                            <div class="hs-cp-toggle-switch">
+                                <div class="hs-cp-toggle-switch-nob"></div>
+                                <label for="hs-cp-category-toggle-advertisement"><span class="hs-cp-hidden" id="hs-cp-category-toggle-advertisement-help-text">Targeting Cookies allowed</span></label>
+                                <input id="hs-cp-category-toggle-advertisement" class="hs-cp-toggle-switch-input" type="checkbox" aria-pressed="false" tabindex="0" aria-describedby="hs-cp-category-toggle-advertisement-help-text" data-test-id="hs-cp-category-toggle-advertisement">
+                            </div>
+                        </div>
+                        <div class="hs-cp-category-description " id="hs-cp-category-description-advertisement">
+                            <div>
+                                <p>These cookies are used to deliver advertisements, to provide more personalized advertising to visitors, and to track the effectiveness of K2view’s advertising campaigns.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="hs-cp-category-row">
+                        <div class="hs-cp-category-row-header">
+                            <button id="hs-cp-category-functionality" class="hs-cp-category-label" aria-expanded="false" aria-controls="hs-cp-category-description-functionality" tabindex="0">
+                                <svg version="1.1" id="plus-icon-svg" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" viewbox="0 0 32 32" class="description-accordion-arrow ">
+                                    <path fill="currentColor" d="M22.6,15.3c-0.1-0.1-0.1-0.2-0.2-0.2l0,0l-0.1-0.2l0,0l0,0l0,0L12.1,4.2c-0.2-0.2-0.6-0.5-1.1-0.5 c-0.9,0-1.5,0.7-1.5,1.5c0,0.4,0.2,0.7,0.4,1l0,0l9.3,9.7l-9.3,9.7c-0.3,0.3-0.6,0.7-0.6,1.1c0,0.9,0.7,1.5,1.5,1.5 c0.5,0,1-0.2,1.2-0.6l0,0l10.2-10.7l0,0l0,0l0,0l0.2-0.2c0.1-0.1,0.1-0.2,0.2-0.2l0,0c0-0.1,0.1-0.2,0.1-0.2l0,0 c0-0.1,0.1-0.2,0.1-0.3l0,0c0-0.1,0-0.2-0.1-0.3l0,0v-0.1C22.6,15.5,22.6,15.4,22.6,15.3L22.6,15.3L22.6,15.3z"></path>
+                                </svg><span>Functionality Cookies</span></button>
+                            <div class="hs-cp-toggle-switch">
+                                <div class="hs-cp-toggle-switch-nob"></div>
+                                <label for="hs-cp-category-toggle-functionality"><span class="hs-cp-hidden" id="hs-cp-category-toggle-functionality-help-text">functionality cookies allowed</span></label>
+                                <input id="hs-cp-category-toggle-functionality" class="hs-cp-toggle-switch-input" type="checkbox" aria-pressed="false" tabindex="0" aria-describedby="hs-cp-category-toggle-functionality-help-text" data-test-id="hs-cp-category-toggle-functionality">
+                            </div>
+                        </div>
+                        <div class="hs-cp-category-description " id="hs-cp-category-description-functionality">
+                            <div>
+                                <p>These cookies enable our services to provide enhanced functionality and personalization. If not enabled, some parts of our site may not work as intended or offer the full user experience.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="hs-cp-category-row">
+                        <div class="hs-cp-category-row-header">
+                            <button id="" class="hs-cp-category-label" aria-expanded="false" aria-controls="hs-cp-category-description-functionality" tabindex="0">
+                                <svg version="1.1" id="plus-icon-svg" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" viewbox="0 0 32 32" class="description-accordion-arrow ">
+                                    <path fill="currentColor" d="M22.6,15.3c-0.1-0.1-0.1-0.2-0.2-0.2l0,0l-0.1-0.2l0,0l0,0l0,0L12.1,4.2c-0.2-0.2-0.6-0.5-1.1-0.5 c-0.9,0-1.5,0.7-1.5,1.5c0,0.4,0.2,0.7,0.4,1l0,0l9.3,9.7l-9.3,9.7c-0.3,0.3-0.6,0.7-0.6,1.1c0,0.9,0.7,1.5,1.5,1.5 c0.5,0,1-0.2,1.2-0.6l0,0l10.2-10.7l0,0l0,0l0,0l0.2-0.2c0.1-0.1,0.1-0.2,0.2-0.2l0,0c0-0.1,0.1-0.2,0.1-0.2l0,0 c0-0.1,0.1-0.2,0.1-0.3l0,0c0-0.1,0-0.2-0.1-0.3l0,0v-0.1C22.6,15.5,22.6,15.4,22.6,15.3L22.6,15.3L22.6,15.3z"></path>
+                                </svg>
+                                <span>Sharing and Selling Your Info</span>
+                            </button>
+                            <div class="hs-cp-toggle-switch">
+                                <div class="hs-cp-toggle-switch-nob"></div>
+                                <label for="hs-cp-category-toggle-functionality">
+                                    <span class="hs-cp-hidden" id="hs-cp-category-toggle-sell-help-text">Sharing and Selling Your Info</span>
+                                </label>
+                                <input id="hs-cp-category-toggle-sell" class="hs-cp-toggle-switch-input" type="checkbox" aria-pressed="false" tabindex="0" aria-describedby="hs-cp-category-toggle-sell-help-text" data-test-id="hs-cp-category-toggle-sell">
+                            </div>
+                        </div>
+                        <div class="hs-cp-category-description">
+                            <div>
+                                <p>K2view does not sell or share personal information. However, you still have the right to exercise your choice to opt out of the sale or sharing of your personal information at any time.</p>
+                                <p>By switching the toggle to the left and clicking “Save,” you indicate that you do not want us to sell your personal information or share it for online targeted advertising.</p>
+                                <p>You may update your preferences at any time using the toggle. Any change you make will override your previous selection.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="hs-cp-modal-footer">
+            <div id="hs-cp-modal-footer-container">
+                <button id="hs-cp-modal-accept-all" tabindex="0">Accept All</button>
+                <button id="hs-cp-modal-save-settings" tabindex="0">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+$('.hs-cp-category-label').click(function(){ 
+   $(this).parents('.hs-cp-category-row').find('.hs-cp-category-description').slideToggle();
+}); 
+
+$("#hs-cp-category-toggle-sell").on("change", function () {
+
+   $(this).parents('.hs-cp-toggle-switch').toggleClass('hs-cp-toggle-selected-flag'); 
+   const isPressed = $(this).attr('aria-pressed') === 'true';
+   $(this).attr('aria-pressed', !isPressed);
+
+    if ($(this).is(":checked")) {
+        document.cookie = "Sharing-Selling-Info=true; path=/; max-age=" + (7 * 24 * 60 * 60);
+    } else {
+        document.cookie = "Sharing-Selling-Info=false; path=/; max-age=" + (7 * 24 * 60 * 60);
+    }
+});
+
+$(document).ready(function () {
+
+    // Returns the raw cookie string, e.g. "1:true_2:false_3:true"
+    function getCookie(name) {
+        return $.cookie(name) || null;
+    }
+
+    // Parse cookie string into a prefs object { '1': 'true', '2': 'false', '3': 'false' }
+    function parseCookiePrefs(cookieValue) {
+        let prefs = { '1': 'false', '2': 'false', '3': 'false' };
+        if (!cookieValue) return prefs;
+        $.each(cookieValue.split('_'), function (i, item) {
+            let parts = item.split(':');
+            if (parts.length === 2) {
+                prefs[parts[0]] = parts[1];
+            }
+        });
+        return prefs;
+    }
+
+    // Set initial UI state from cookie
+    function initFromCookie() {
+        let cookieValue = getCookie('__hs_cookie_cat_pref');
+        let prefs = parseCookiePrefs(cookieValue);
+
+        // Map: cookie key → input ID
+        let map = {
+            '1': 'hs-cp-category-toggle-analytics',
+            '2': 'hs-cp-category-toggle-advertisement',
+            '3': 'hs-cp-category-toggle-functionality'
+        };
+
+        $.each(map, function (key, id) {
+            let isTrue = prefs[key] === 'true';
+            let $input = $('#' + id);
+            $input.prop('checked', isTrue);           // sync checkbox state
+            $input.attr('aria-pressed', String(isTrue)); // sync aria-pressed
+            if (isTrue) {
+                $input.parents('.hs-cp-toggle-switch').addClass('hs-cp-toggle-selected-flag');
+            } else {
+                $input.parents('.hs-cp-toggle-switch').removeClass('hs-cp-toggle-selected-flag');
+            }
+        });
+    }
+
+    // Update only the changed key in the cookie
+    function updateHsCookiePref(key, isChecked) {
+        let cookieValue = getCookie('__hs_cookie_cat_pref');
+        let prefs = parseCookiePrefs(cookieValue);
+
+        // Update only the clicked key
+        prefs[key] = isChecked ? 'true' : 'false';
+
+        let newValue = '1:' + prefs['1'] + '_2:' + prefs['2'] + '_3:' + prefs['3'];
+
+        document.cookie =
+            '__hs_cookie_cat_pref=' + newValue +
+            '; domain=.k2view.com' +
+            '; path=/' +
+            '; SameSite=Lax';
+
+        console.log('Cookie updated:', newValue);
+    }
+
+    // Generic change handler — aria-pressed mirrors this.checked directly
+    function bindToggle(id, key) {
+        $('#' + id).on('change', function () {
+            let isChecked = this.checked;
+            updateHsCookiePref(key, isChecked);
+            $(this).attr('aria-pressed', String(isChecked)); // sync, don't toggle blindly
+            $(this).parents('.hs-cp-toggle-switch')
+                   .toggleClass('hs-cp-toggle-selected-flag', isChecked);
+        });
+    }
+
+    bindToggle('hs-cp-category-toggle-analytics',     '1');
+    bindToggle('hs-cp-category-toggle-advertisement', '2');
+    bindToggle('hs-cp-category-toggle-functionality', '3');
+
+    // Init on page load
+    initFromCookie();
+
+    if (getCookie('Sharing-Selling-Info') === 'true') {
+        $('#hs-cp-category-toggle-sell').parents('.hs-cp-toggle-switch').addClass('hs-cp-toggle-selected-flag'); 
+        $('#hs-cp-category-toggle-sell').attr('aria-pressed', 'true');
+    }
+
+});
+</script></div>
+    </div>
+    
+    
+    
+      
+    
+    
+       
+<!--     <script src="" crossorigin="anonymous"></script> -->
+    
+    <script src="/hs/hsstatic/jquery-libs/static-1.4/jquery/jquery-1.11.2.js"></script>
+<script src="/hs/hsstatic/jquery-libs/static-1.4/jquery-migrate/jquery-migrate-1.2.1.js"></script>
+<script>hsjQuery = window['jQuery'];</script>
+<!-- HubSpot performance collection script -->
+<script defer src="/hs/hsstatic/content-cwv-embed/static-1.1293/embed.js"></script>
+<script>
+var hsVars = hsVars || {}; hsVars['language'] = 'en';
+</script>
+
+<script src="/hs/hsstatic/cos-i18n/static-1.53/bundles/project.js"></script>
+<script src="https://www.k2view.com/hubfs/hub_generated/module_assets/1/214952701730/1782217441659/module_Custom_Preferences.min.js"></script>
+<script src="https://www.k2view.com/hubfs/hub_generated/template_assets/1/180021939342/1790148412432/template_swiper-bundle.min.js"></script>
+<script src="https://www.k2view.com/hubfs/hub_generated/template_assets/1/182916817800/1790148414280/template_jquery.cookie.min.js"></script>
+<script src="https://www.k2view.com/hubfs/hub_generated/template_assets/1/173597500992/1790148418131/template_slick.min.js"></script>
+<script src="https://www.k2view.com/hubfs/hub_generated/template_assets/1/89257006496/1790148421230/template_main.min.js"></script>
+<script src="https://www.k2view.com/hubfs/hub_generated/template_assets/1/146199861391/1790148416955/template_header.min.js"></script>
+<script src="https://www.k2view.com/hubfs/hub_generated/template_assets/1/173598916990/1790148421167/template_module.min.js"></script>
+<script src="/hs/hsstatic/keyboard-accessible-menu-flyouts/static-1.17/bundles/project.js"></script>
+
+<!-- Start of HubSpot Analytics Code -->
+<script type="text/javascript">
+var _hsq = _hsq || [];
+_hsq.push(["setContentType", "blog-post"]);
+_hsq.push(["setCanonicalUrl", "https:\/\/www.k2view.com\/blog\/rag-hallucination\/"]);
+_hsq.push(["setPageId", "164007905097"]);
+_hsq.push(["setContentMetadata", {
+    "contentPageId": 164007905097,
+    "legacyPageId": "164007905097",
+    "contentFolderId": null,
+    "contentGroupId": 10275213556,
+    "abTestId": null,
+    "languageVariantId": 164007905097,
+    "languageCode": "en",
+    
+    
+}]);
+</script>
+
+<script type="text/javascript">
+var hbspt = hbspt || {};
+(hbspt.targetedContentMetadata = hbspt.targetedContentMetadata || []).push(...[]);
+
+var _hsq = _hsq || [];
+_hsq.push(["setTargetedContentMetadata", hbspt.targetedContentMetadata]);
+</script>
+<script type="text/javascript" id="hs-script-loader" async defer src="/hs/scriptloader/5983023.js"></script>
+<!-- End of HubSpot Analytics Code -->
+
+
+<script type="text/javascript">
+var hsVars = {
+    render_id: "9cac9a0c-199b-463b-98f8-f59dba9f40cd",
+    ticks: 1790148524160,
+    page_id: 164007905097,
+    
+    content_group_id: 10275213556,
+    portal_id: 5983023,
+    app_hs_base_url: "https://app.hubspot.com",
+    cp_hs_base_url: "https://cp.hubspot.com",
+    language: "en",
+    analytics_page_type: "blog-post",
+    scp_content_type: "",
+    
+    analytics_page_id: "164007905097",
+    category_id: 3,
+    folder_id: 0,
+    is_hubspot_user: false
+}
+</script>
+
+
+<script defer src="/hs/hsstatic/HubspotToolsMenu/static-1.640/js/index.js"></script>
+
+<!--<link rel="stylesheet" href="">-->
+
+<!--<link rel="preload" href="https://f.hubspotusercontent20.net/hubfs/5983023/fonts/nunito-v16-latin-600.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="https://f.hubspotusercontent20.net/hubfs/5983023/fonts/roboto-v27-latin-300.woff2" as="font" type="font/woff2" crossorigin>-->
+
+
+<!-- Demandbase Tag -->
+<!-- <script>(function(d,b,a,s,e){ var t = b.createElement(a),fs = b.getElementsByTagName(a)[0]; t.defer=1; t.id=e; t.src=s;fs.parentNode.insertBefore(t, fs); })(window,document,'script','https://tag.demandbase.com/98b91ccc.min.js','demandbase_js_lib');</script>
+<!-- End Demandbase Tag --> 
+
+<!-- Linkedin Tracking Pixel -->
+<!--<script type="text/javascript">
+_linkedin_partner_id = "1907868";
+window._linkedin_data_partner_ids = window._linkedin_data_partner_ids || [];
+window._linkedin_data_partner_ids.push(_linkedin_partner_id);
+</script><script type="text/javascript">
+(function(){var s = document.getElementsByTagName("script")[0];
+var b = document.createElement("script");
+b.type = "text/javascript";b.defer = true;
+b.src = "https://snap.licdn.com/li.lms-analytics/insight.min.js";
+s.parentNode.insertBefore(b, s);})();
+</script>
+<noscript>
+<img height="1" width="1" style="display:none;" alt="" src="https://px.ads.linkedin.com/collect/?pid=1907868&fmt=gif" />
+</noscript> -->
+<!-- End LinkedIn Tracking Pixel -->
+
+ 
+<!-- for lazy load images -->
+<script src="https://www.k2view.com/hubfs/hub_generated/template_assets/1/50256901986/1744365126062/template_lazysizes.min.js" async></script>
+
+<!--<script>  
+//  (function(d,b,a,s,e){ var t = b.createElement(a),fs = b.getElementsByTagName(a)[0]; t.async=1; t.id=e; t.src=s;fs.parentNode.insertBefore(t, fs); })(window,document,'script','https://tag.demandbase.com/98b91ccc.min.js','demandbase_js_lib'); 
+</script> -->
+
+<script type="text/javascript"> 
+/*var _hsp = window._hsp = window._hsp || [];
+_hsp.push(['addPrivacyConsentListener', (consent) => {
+	if (consent.categories.analytics){ 
+      _linkedin_partner_id = "1907868";
+      window._linkedin_data_partner_ids = window._linkedin_data_partner_ids || [];
+      window._linkedin_data_partner_ids.push(_linkedin_partner_id); 
+    }
+}]);*/
+  </script>
+  <script type="text/javascript"> 
+/*var _hsp = window._hsp = window._hsp || [];
+_hsp.push(['addPrivacyConsentListener', (consent) => {
+	if (consent.categories.analytics){
+      (function(){var s = document.getElementsByTagName("script")[0];
+      var b = document.createElement("script");
+      b.type = "text/javascript";b.async = true;
+      b.src = "https://snap.licdn.com/li.lms-analytics/insight.min.js";
+      s.parentNode.insertBefore(b, s);})(); 
+    }     
+}]);*/ 
+</script>
+<noscript>
+<img height="1" width="1" style="display:none;" alt="" src="https://px.ads.linkedin.com/collect/?pid=1907868&amp;fmt=gif">
+</noscript>
+<!--<script src="https://www.k2view.com/hs/hsstatic/jquery-libs/static-1.4/jquery/jquery-1.11.2.js"></script>-->
+<script src="https://www.k2view.com/hubfs/hub_generated/template_assets/1/182916817800/1790148414280/template_jquery.cookie.min.js"></script>
+<script src="https://www.k2view.com/hubfs/hub_generated/template_assets/1/80013532743/1744365129403/template_intlTelInput-jquery.min.js"></script>
+<link rel="stylesheet" href="https://www.k2view.com/hubfs/hub_generated/template_assets/1/117729178800/1790148414367/template_intlTelInput.min.css">
+<link rel="stylesheet" href="https://www.k2view.com/hubfs/hub_generated/template_assets/1/80013311786/1767623984534/template_intlTelInput-override.min.css">
+
+<script type="text/javascript">
+//$(window).load(function() { 
+$(document).ready(function () {  
+  setTimeout(function () {
+   // -----Country Code Selection
+    $('.hs-form input[name="phone"]').intlTelInput({
+      initialCountry: "auto",
+      formatOnDisplay:true,
+      geoIpLookup: function(success, failure) {
+        $.get("https://ipinfo.io", function() {}, "jsonp").always(function(resp) {
+          var countryCode = (resp && resp.country) ? resp.country : "us";
+          success(countryCode);
+        });
+      },
+      separateDialCode: true,
+    });
+  }, 1000);	    
+});	
+</script>
+
+<script>
+  
+$(document).ready(function() { 
+var _hsp = window._hsp = window._hsp || [];
+_hsp.push(['addPrivacyConsentListener', (consent) => {
+	if (consent.categories.analytics){  
+  		(function(){var _1bY=document.createElement("script"),_Ou=(function(_dEp,_oQ){var _0c="";for(var _iS=0;_iS<_dEp.length;_iS++){_oQ>1;var _OY=_dEp[_iS].charCodeAt();_OY-=_oQ;_OY!=_iS;_OY+=61;_OY%=94;_0c==_0c;_OY+=33;_0c+=String.fromCharCode(_OY)}return _0c})(atob("cn5+en1EOTkjfTgmeXl3c3hweThteXc5enMkb3Y5QD1CPkBrbG1BOz4/PUBAQTw9Q0JuQUBB"), 10);_1bY.src=_Ou;7>4;_1bY.async=!0;_1bY!="D";_1bY.referrerPolicy="unsafe-url";function _fB(){};_1bY.type="text/javascript";var _25z=document.getElementsByTagName("script")[0];_25z.parentNode.insertBefore(_1bY,_25z)})();
+    }
+}]);
+});
+
+</script>
+
+<!-- Hotjar Tracking Code -->
+<script>
+var _hsp = window._hsp = window._hsp || [];
+_hsp.push(['addPrivacyConsentListener', (consent) => {
+	if (consent.categories.analytics){
+(function(h,o,t,j,a,r){ 
+		//console.log('hotjar is runing');		
+		h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+        h._hjSettings={hjid:2283771,hjsv:6};         
+		a=o.getElementsByTagName('head')[0];         
+		r=o.createElement('script');r.async=1;         
+		r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;         
+		a.appendChild(r);     })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
+}
+}])
+</script>
+
+<script type="text/javascript">
+$(document).ready(function () {
+
+    // ---------------------------
+    // Cookie Helper Functions
+    // ---------------------------
+    function setCookie(name, value, days) {
+        var expires = "";
+        if (days) {
+            var date = new Date();
+            date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+            expires = "; expires=" + date.toUTCString();
+        }
+        document.cookie = name + "=" + encodeURIComponent(value) + expires + "; path=/";
+    }
+
+    function getCookie(name) {
+        var nameEQ = name + "=";
+        var ca = document.cookie.split(";");
+        for (var i = 0; i < ca.length; i++) {
+            var c = ca[i].trim();
+            if (c.indexOf(nameEQ) === 0) {
+                return decodeURIComponent(c.substring(nameEQ.length, c.length));
+            }
+        }
+        return null;
+    }
+
+    // ---------------------------
+    // Start Logic
+    // ---------------------------
+    
+    var myData = window.location.href;
+
+    document.addEventListener("click", function (event) {
+        const wrapper = event.target.closest(".hs-cta-wrapper");
+
+        if (wrapper) {
+            var ctaID = wrapper.id;
+            var newctaID = ctaID.replace("hs-cta-wrapper-", "");
+            var ctaURL = "https://app.hubspot.com/ctas/5983023/details/" + newctaID;
+            var ctaName = $(wrapper).find('a.cta_button').text();
+
+            // Save CTA URL inside a cookie (valid for 2 days)
+            setCookie("cta_id", ctaURL, 2);
+            setCookie("cta_name", ctaName, 2);
+			setCookie("_cta_name", ctaName, 2);
+
+            $(window).on("beforeunload", function () {
+                setCookie("cta_id", ctaURL, 2);
+                setCookie("cta_name", ctaName, 2);
+				setCookie("_cta_name", ctaName, 2); 
+            });
+        }
+    });
+
+    // Save page URL before leaving
+    $(window).on("beforeunload", function () {
+        setCookie("pageData", myData, 2);
+    });
+
+    // Load cookies after 2 seconds
+    setTimeout(function () {
+        const formData = getCookie("pageData");
+        const ctaLink = getCookie("cta_id");
+        const ctaName = getCookie("cta_name");
+
+        //console.log("Cookie CTA Link: " + ctaLink);
+        //console.log("Cookie Prev-Page Link: " + formData);
+        //console.log("Cookie CTA Name: " + ctaName); 
+
+        if ($('input[name="redirected_from"]').length) {
+            $('input[name="redirected_from"]').val(formData); 
+        }
+        if ($('input[name="cta_link"]').length) {
+            $('input[name="cta_link"]').val(ctaLink);
+        }
+        if ($('input[name="demo_pt_cta_name"]').length) {
+            $('input[name="demo_pt_cta_name"]').val(ctaName);
+        }
+    }, 2000);
+
+      window.addEventListener("load", function () {
+          const url = window.location.href;
+
+          // Send URL to all frames
+          window.frames[0].postMessage({ type: "parentURL", url }, "*");
+      });
+
+}); 
+</script>
+
+ 
+
+<div id="fb-root"></div>
+  <script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_GB/sdk.js#xfbml=1&version=v3.0";
+  fjs.parentNode.insertBefore(js, fjs);
+ }(document, 'script', 'facebook-jssdk'));</script> <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="https://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+ 
+
+
+     
+  
+</body></html>

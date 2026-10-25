@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="docsearch:name" content="pynotes" />
+    <meta name="docsearch:package_type" content="" />
+    <meta name="docsearch:release" content="" />
+    <meta name="docsearch:version" content="" />
+    
+    <title>Python Recursion &mdash; pynotes  documentation</title>
+    
+    <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/webfonts.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/fontawesome.css" />
+    
+    <!-- linktags -->
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="top" title="pynotes  documentation" href="#" />
+    <link rel="up" title="Python Function" href="FunctionIndex.html" />
+    <link rel="next" title="Partial Functions in Python" href="PartialFunction.html" />
+    <link rel="prev" title="Python *args and **kwargs" href="variableArguments.html" />
+    <!-- /linktags -->
+    <!-- extrahead --><!-- /extrahead -->
+    <script src="../_static/js/modernizr.min.js"></script>
+    <style>
+        .material-scrolltop,
+        .material-search {
+            background: #ffdd57;
+            border-radius: 50%;
+            border: none;
+            display: block;
+            height: 40px;
+            outline: 0;
+            overflow: hidden;
+            padding: 3px 8px;
+            right: 2%;
+            width: 40px;
+            position: fixed;
+            z-index: 1;
+        }
+
+        button:hover {
+            background-color: #fad028;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, .5);
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        button:focus {
+            outline: none;
+        }
+
+        .material-scrolltop {
+            bottom: 145px;
+        }
+
+        .material-search {
+            bottom: 90px;
+        }
+
+        /*html {
+            scroll-behavior: smooth;
+        }*/
+    </style>
+
+<!-- RTD Extra Head -->
+
+<!-- 
+Always link to the latest version, as canonical.
+http://docs.readthedocs.org/en/latest/canonical.html
+-->
+<link rel="canonical" href="https://pynote.readthedocs.io/en/latest/FunctionInPy/Recursion.html" />
+
+
+
+<script type="text/javascript" src="../_static/readthedocs-data.js"></script>
+
+<!-- Add page-specific data, which must exist in the page js, not global -->
+<script type="text/javascript">
+READTHEDOCS_DATA['page'] = "FunctionInPy/Recursion"
+READTHEDOCS_DATA['source_suffix'] = ".rst"
+</script>
+
+
+
+<!-- end RTD <extrahead> -->
+<script async type="text/javascript" src="/_/static/javascript/readthedocs-addons.js"></script><meta name="readthedocs-project-slug" content="pynote" /><meta name="readthedocs-version-slug" content="latest" /><meta name="readthedocs-resolver-filename" content="/FunctionInPy/Recursion.html" /><meta name="readthedocs-http-status" content="200" /></head>
+
+<body>
+
+    <div class="page">
+
+        <div class="page-header">
+            <div class="page-header-inner">
+                <!-- pageheader -->
+                    <img src="../_static/img/logo.png" width="100%"
+                         height="auto" 
+                        alt="python Logo" 
+                        title="pynotes"  class="logo-image" />
+                <!-- /pageheader -->
+            </div>
+        </div>
+
+        
+
+        <div class="page-main">
+            <div class="page-main-inner">
+                <div class="page-main-navigation">
+                    <nav>
+                        <input type="checkbox" id="toggleToc" class="toc-checkbox">
+                        <div class="toc-header"><div class="toc-title">
+                                <a class="toc-title-project" href="../index.html">pynotes</a></div><div class="toc-actions">
+                                <label for="toggleToc" class="toc-toggle">
+                                    Menu
+                                </label>
+                            </div>
+                        </div>
+                        <div class="toc-collapse">
+                            <div class="toc" role="navigation" aria-label="main navigation">
+                                <!-- menu -->
+                                <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../Basics/Basicsindex.html">Python Basics</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../Basics/PythonIntro.html">Python Introduction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Basics/PyBasics.html">Python Programming Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Basics/LexicalAnalysis.html">Lexical Analysis Python</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Basics/Keywords.html">Keywords</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Basics/PythonOperators.html">Python Operators</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../DataTypes/DataTypesIndex.html">Python Data Types</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../DataTypes/BasicDataTypes.html">Python Data Types</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../DataTypes/PyString.html">Python Strings</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../DataTypes/StringFormating.html">String Formatting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../DataTypes/List.html">Python Lists</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../DataTypes/Touples.html">Python Tuple</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../DataTypes/Set.html">Python Sets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../DataTypes/Stack_Queue.html">Stacks and Queues in Python</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../DataTypes/Dictionary.html">Python Dictionary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../DataTypes/TypeConversion.html">Type Conversion</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../FlowControl/FlowControlIndex.html">Python Flow Control</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../FlowControl/pyIfElse.html">Python ifâ¦else</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../FlowControl/Pyloop.html">loops in python</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="FunctionIndex.html">Python Function</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="FnBasics.html">Python - Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="inbuitFunctions.html">Built-in Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="variableArguments.html">Python *args and **kwargs</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Python Recursion</a></li>
+<li class="toctree-l2"><a class="reference internal" href="PartialFunction.html">Partial Functions in Python</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Module.html">Modules in Python</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Package.html">Python Package</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../FileHandling/FileHandlingIndex.html">Python FileHandling</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../FileHandling/FileHandlingBasics.html">Python - Files I/O</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../FileHandling/FileObjectsMethods.html">File Objects in Python</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../ObjectOrientedProgramming/OopsIndex.html">Python Object Oriented Programming</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../ObjectOrientedProgramming/Static_Instance_ClassMethods.html">Class and Instance Attributes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ObjectOrientedProgramming/Class_Basics.html">Python Object Oriented Programming</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ObjectOrientedProgramming/Property_Decorators.html">Python &#64;property</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ObjectOrientedProgramming/SelfInPython.html">Self in Python</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ObjectOrientedProgramming/Inheritance.html">Inheritance in Python</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../ExceptionsHandling/ExceptionsHandlingIndex.html">Python Exceptions Handling</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../ExceptionsHandling/ExceptionsBasics.html">Python Exceptions: An Introduction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ExceptionsHandling/TypesOfErrors.html">Types of program errors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ExceptionsHandling/BuiltInErrors.html">Built-in Exceptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ExceptionsHandling/RaiseKeyword.html">raise keyword with example in Python</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ExceptionsHandling/CustomExceptions.html">Custom Exceptions in Python</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../Matplotlib/MatplotlibIndex.html">Data Visualization Using Python Matplotlib</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../Matplotlib/MatplotlibBasic.html">Python Introduction to Matplotlib</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Matplotlib/line.html">Matplotlib - line chart</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Matplotlib/bar.html">Matplotlib - Bar Plot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Matplotlib/pie.html">Matplotlib - pie chart</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../NumPy/numpyIndex.html">Python Numpy Basics</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../NumPy/numpyBasics.html">Python NumPy Tutorial</a></li>
+</ul>
+</li>
+</ul>
+
+                                <p class="caption"><span class="caption-text">PAGE CONTENTS</span></p>
+                                <ul>
+<li><a class="reference internal" href="#">Python Recursion</a><ul>
+<li><a class="reference internal" href="#what-is-recursion">What is recursion?</a></li>
+<li><a class="reference internal" href="#python-recursive-function">Python Recursive Function</a><ul>
+<li><a class="reference internal" href="#example-of-a-recursive-function">Example of a recursive function</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#advantages-of-recursion">Advantages of Recursion</a></li>
+<li><a class="reference internal" href="#disadvantages-of-recursion">Disadvantages of Recursion</a></li>
+</ul>
+</li>
+</ul>
+<!-- /menu -->
+                            </div>
+                        </div>
+                        <!-- searchbox.html --><div id="searchbox" class="toc-search" role="search">
+    <form id="search-form" action="../search.html" autocomplete="off" method="get">
+        <input class="form-control" type="text" name="q" placeholder="Search Topic" aria-label="Search this project"
+            id="searchinput" />
+        <input type="hidden" name="check_keywords" value="yes" />
+        <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+                        <!-- /searchbox.html -->
+                    </nav>
+                </div>
+                <div class="page-main-content">
+                    <div class="rst-content">
+                        <!-- pager-hidden.html -->
+                        
+        <a class="no-focus" accesskey="p" href="variableArguments.html" tabindex="-1"></a>
+        <a class="no-focus" accesskey="n" href="PartialFunction.html" tabindex="-1"></a>
+                        <!-- /pager-hidden.html -->
+                        <!-- breadcrumbs.html -->
+                        <div class="breadcrumb-bar" role="navigation" aria-label="breadcrumbs navigation">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="../index.html">Home</a></li>
+        <li class="breadcrumb-item"><a href="FunctionIndex.html">Python Function</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Python Recursion</li>
+    </ol>
+    <!-- <div class="breadcrumb-additions">
+        <a class="btn btn-sm btn-primary"
+            href="https://github.com/unused, deprecated/edit/unused, deprecated/Documentation/Localization.unused, deprecated/FunctionInPy/Recursion.rst"
+            target="_blank">
+            <span class="btn-icon"><span class="fab fa-github"></span></span>
+            <span class="btn-text">Edit on GitHub</span>
+        </a>
+    </div> -->
+</div>
+                        <!-- /breadcrumbs.html -->
+                        <style>
+    #pagination-top {
+        margin-bottom: -1rem;
+    }
+
+    .page-link {
+        padding: 0.30rem 0.50rem;
+        color: white;
+        background-color: #ff8700;
+        border: 1px solid white;
+    }
+</style>
+<nav aria-label="Page navigation example">
+    <ul id="pagination-top" class="pagination justify-content-end">
+        <li class="page-item">
+            <a id="page-link-prev" class="page-link" href="variableArguments.html" title="Accesskey Alt(+Shift)+p">
+                Previous
+            </a>
+        </li>
+        <li class="page-item">
+            <a id="page-link-next" class="page-link" href="PartialFunction.html" title="Accesskey Alt(+Shift)+n">
+                Next
+            </a>
+        </li>
+        
+    </ul>
+</nav>
+
+                        <div role="main" class="document" itemscope="itemscope" itemtype="">
+                            <div itemprop="articleBody">
+                                <!-- body -->
+    <div class="section" id="python-recursion">
+<h1>Python Recursion</h1>
+<div class="section" id="what-is-recursion">
+<h2>What is recursion?</h2>
+<p>Recursion is the process of defining something in terms of itself.</p>
+<p>A physical world example would be to place two parallel mirrors facing each other. Any object in between them would be reflected recursively.</p>
+</div>
+<div class="section" id="python-recursive-function">
+<h2>Python Recursive Function</h2>
+<p>In Python, we know that a function can call other functions. It is even possible for the function to call itself. These types of construct are termed as recursive functions.</p>
+<p>The following image shows the working of a recursive function called recurse.
+Python Recursive Function</p>
+<div class="figure align-center" id="id1">
+<a class="reference internal image-reference" href="../_images/recursion-function1.png"><img alt="../_images/recursion-function1.png" src="../_images/recursion-function1.png" style="width: 50%;" /></a>
+<p class="caption"><span class="caption-text">Recursive Function in Python</span></p>
+</div>
+<p>Following is an example of a recursive function to find the factorial of an integer.</p>
+<p>Factorial of a number is the product of all the integers from 1 to that number. For example, the factorial of 6 (denoted as 6!) is 1*2*3*4*5*6 = 720.</p>
+<div class="section" id="example-of-a-recursive-function">
+<h3>Example of a recursive function</h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">factorial</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;This is a recursive function</span>
+<span class="sd">    to find the factorial of an integer&quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">x</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mi">1</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">x</span> <span class="o">*</span> <span class="n">factorial</span><span class="p">(</span><span class="n">x</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+
+
+<span class="n">num</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;The factorial of&quot;</span><span class="p">,</span> <span class="n">num</span><span class="p">,</span> <span class="s2">&quot;is&quot;</span><span class="p">,</span> <span class="n">factorial</span><span class="p">(</span><span class="n">num</span><span class="p">))</span>
+</pre></div>
+</div>
+<div class="outputs docutils container">
+<div class="line-block">
+<div class="line"><strong>OUTPUT :</strong></div>
+<div class="line">The factorial of 3 is 6</div>
+</div>
+</div>
+<p>In the above example, factorial() is a recursive function as it calls itself.</p>
+<p>When we call this function with a positive integer, it will recursively call itself by decreasing the number.</p>
+<p>Each function multiplies the number with the factorial of the number below it until it is equal to one. This recursive call can be explained in the following steps.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">factorial</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>          <span class="c1"># 1st call with 3</span>
+<span class="mi">3</span> <span class="o">*</span> <span class="n">factorial</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>      <span class="c1"># 2nd call with 2</span>
+<span class="mi">3</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">factorial</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># 3rd call with 1</span>
+<span class="mi">3</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">*</span> <span class="mi">1</span>             <span class="c1"># return from 3rd call as number=1</span>
+<span class="mi">3</span> <span class="o">*</span> <span class="mi">2</span>                 <span class="c1"># return from 2nd call</span>
+<span class="mi">6</span>                     <span class="c1"># return from 1st call</span>
+</pre></div>
+</div>
+<p>Letâs look at an image that shows a step-by-step process of what is going on:</p>
+<div class="figure align-center" id="id2">
+<a class="reference internal image-reference" href="../_images/recursion-function2.png"><img alt="../_images/recursion-function2.png" src="../_images/recursion-function2.png" style="width: 60%;" /></a>
+<p class="caption"><span class="caption-text">Working of a recursive factorial function</span></p>
+</div>
+<p>Factorial by a recursive method
+Working of a recursive factorial function</p>
+<p>Our recursion ends when the number reduces to 1. This is called the base condition.</p>
+<p>Every recursive function must have a base condition that stops the recursion or else the function calls itself infinitely.</p>
+<p>The Python interpreter limits the depths of recursion to help avoid infinite recursions, resulting in stack overflows.</p>
+<p>By default, the maximum depth of recursion is 1000. If the limit is crossed, it results in RecursionError. Letâs look at one such condition.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">recursor</span><span class="p">():</span>
+    <span class="n">recursor</span><span class="p">()</span>
+<span class="n">recursor</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="outputs docutils container">
+<div class="line-block">
+<div class="line"><strong>OUTPUT :</strong></div>
+<div class="line">Traceback (most recent call last):</div>
+<div class="line">File â&lt;string&gt;â, line 3, in &lt;module&gt;</div>
+<div class="line">File â&lt;string&gt;â, line 2, in a</div>
+<div class="line">File â&lt;string&gt;â, line 2, in a</div>
+<div class="line">File â&lt;string&gt;â, line 2, in a</div>
+<div class="line">[Previous line repeated 996 more times]</div>
+<div class="line">RecursionError: maximum recursion depth exceeded</div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="advantages-of-recursion">
+<h2>Advantages of Recursion</h2>
+<ul class="simple">
+<li>Recursive functions make the code look clean and elegant.</li>
+<li>A complex task can be broken down into simpler sub-problems using recursion.</li>
+<li>Sequence generation is easier with recursion than using some nested iteration.</li>
+</ul>
+</div>
+<div class="section" id="disadvantages-of-recursion">
+<h2>Disadvantages of Recursion</h2>
+<ul class="simple">
+<li>Sometimes the logic behind recursion is hard to follow through.</li>
+<li>Recursive calls are expensive (inefficient) as they take up a lot of memory and time.</li>
+<li>Recursive functions are hard to debug.</li>
+</ul>
+</div>
+</div>
+
+<!-- /body -->
+                            </div>
+                        </div>
+                        <!-- pager.html -->
+                        <nav aria-label="Page navigation example">
+    <ul class="pagination justify-content-center">
+        <li class="page-item">
+            <a class="page-link" href="variableArguments.html" title="Accesskey Alt(+Shift)+p">
+                Previous
+            </a>
+        </li>
+        <li class="page-item">
+            <a class="page-link" href="PartialFunction.html" title="Accesskey Alt(+Shift)+n">
+                Next
+            </a>
+        </li>
+        
+    </ul>
+</nav>
+                        <!-- /pager.html -->
+                    </div>
+                    <button id="scroll" class="material-scrolltop" type="scroll" title="Back to top"
+                        style="display: block;">
+                        <svg class="svg-inline--fa fa-chevron-up fa-w-14" aria-hidden="true" data-prefix="fas"
+                            data-icon="chevron-up" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"
+                            data-fa-i2svg="">
+                            <path fill="currentColor"
+                                d="M240.971 130.524l194.343 194.343c9.373 9.373 9.373 24.569 0 33.941l-22.667 22.667c-9.357 9.357-24.522 9.375-33.901.04L224 227.495 69.255 381.516c-9.379 9.335-24.544 9.317-33.901-.04l-22.667-22.667c-9.373-9.373-9.373-24.569 0-33.941L207.03 130.525c9.372-9.373 24.568-9.373 33.941-.001z">
+                            </path>
+                        </svg>
+                    </button>
+                    <button id="search-icon" class="material-search" title="Quick Search - ctrl+z">
+                        <svg class="svg-inline--fa fa-search fa-w-16" aria-hidden="true" data-prefix="fas"
+                            data-icon="search" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"
+                            data-fa-i2svg="">
+                            <path fill="currentColor"
+                                d="M505 442.7L405.3 343c-4.5-4.5-10.6-7-17-7H372c27.6-35.3 44-79.7 44-128C416 93.1 322.9 0 208 0S0 93.1 0 208s93.1 208 208 208c48.3 0 92.7-16.4 128-44v16.3c0 6.4 2.5 12.5 7 17l99.7 99.7c9.4 9.4 24.6 9.4 33.9 0l28.3-28.3c9.4-9.4 9.4-24.6.1-34zM208 336c-70.7 0-128-57.2-128-128 0-70.7 57.2-128 128-128 70.7 0 128 57.2 128 128 0 70.7-57.2 128-128 128z">
+                            </path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="page-footer">
+            <!-- footer.html -->
+            <footer>
+    <div class="frame frame-ruler-before frame-background-dark">
+        <div class="frame-container">
+            <div class="frame-inner">
+                <div class="footer-additional">
+                </div>
+                <div class="footer-meta">
+                    <div class="footer-meta-copyright">
+                        &copy; Copyright 2020, pankaj bhilingwal
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+            <!-- /footer.html -->
+        </div>
+    </div>
+    
+    <script type="text/javascript">
+    var DOCUMENTATION_OPTIONS = {
+        URL_ROOT: '../',
+        VERSION: '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE: true
+    };
+</script>
+    <script type="text/javascript" src="../_static/js/jquery.min.js"></script>
+    <script type="text/javascript" src="../_static/js/underscore.min.js"></script>
+    <script type="text/javascript" src="../_static/js/doctools.min.js"></script>
+    <script type="text/javascript" src="../_static/js/popper.min.js"></script>
+    <script type="text/javascript" src="../_static/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../_static/js/theme.min.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script type="text/javascript" src="../_static/js/searchtools.min.js"></script>
+    <script type="text/javascript" src="../_static/js/autocomplete.min.js"></script>
+    
+    <script type="text/javascript">
+        jQuery(function () {
+            Search.loadIndex("../searchindex.js");
+        });
+    </script>
+    <script type="text/javascript" id="searchindexloader"></script>
+    <!-- scripts2 --><!-- /scripts2 -->
+    <!-- footer2 --><!-- /footer2 -->
+    <!-- <script>
+        let scrollButton = document.getElementById("scroll");
+
+        function scrollFunction() {
+            document.documentElement.scrollTop > 200 ? scrollButton.style.display = "block" : scrollButton.style
+                .display =
+                "none"
+        }
+        scrollButton.style.display = "none", window.onscroll = function () {
+            scrollFunction()
+        };
+        let intervalId = 0;
+
+        function scrollStep() {
+            0 === window.pageYOffset && clearInterval(intervalId), window.scroll(0, window.pageYOffset - 2e3)
+        }
+
+        function scrollToTop() {
+            intervalId = setInterval(scrollStep, 16.66)
+        }
+        scrollButton.addEventListener("click", scrollToTop);
+    </script> -->
+    <script>
+        scrollButton = document.getElementById("scroll");
+        scrollButton.style.display = "none"
+
+        $(window).scroll(function () {
+            if ($(this).scrollTop() > 200) {
+                $('#scroll').fadeIn();
+            } else {
+                $('#scroll').fadeOut();
+            }
+        });
+    </script>
+
+    <script>
+        $('#scroll').click(function () {
+            $("html,body").animate({
+                scrollTop: 0
+            }, "slow");
+        });
+    </script>
+
+    <script>
+        let searchButton = document.getElementById("search-icon");
+
+        function search() {
+            searchinput.focus()
+        }
+        searchButton.addEventListener("click", search);
+    </script>
+</body>
+
+</html>

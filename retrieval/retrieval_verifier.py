@@ -30,7 +30,7 @@ class RetrievalVerifier:
     def __init__(self, max_workers: int = 1):
 
         self.client = Client(
-            host="http://10.35.206.48:11434"
+            host="http://10.99.39.48:11434"
         )
 
         self.model = "qwen3:8b"

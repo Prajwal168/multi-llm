@@ -1,4 +1,5 @@
 import json
+import uuid
 
 from dotenv import load_dotenv
 
@@ -29,6 +30,11 @@ from execution.executor import Executor
 
 
 app = FastAPI()
+
+# New value every time the server process starts. The frontend compares
+# this to the one it saved, so a backend restart wipes the saved data
+# while a plain page refresh keeps it.
+BOOT_ID = uuid.uuid4().hex
 
 
 # ==========================================================
@@ -99,6 +105,15 @@ class RetrievalRequest(BaseModel):
 
 class ExecutionRequest(BaseModel):
     execution_packages: list
+
+# ==========================================================
+# SESSION ENDPOINT
+# ==========================================================
+
+@app.get("/api/session")
+def get_session():
+    return {"boot_id": BOOT_ID}
+
 
 # ==========================================================
 # MEDIATOR ENDPOINT

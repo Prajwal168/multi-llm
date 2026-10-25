@@ -1,0 +1,1505 @@
+
+<!DOCTYPE html>
+<html lang="en-GB" prefix="og: https://ogp.me/ns#" class="s-light site-s-light">
+
+<head>
+
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	
+<!-- Search Engine Optimisation by Rank Math - https://rankmath.com/ -->
+<title>Fibonacci Number | Recursive Python Solution</title><link rel="preload" as="image" imagesrcset="https://codeanddebug.in/blog/wp-content/uploads/2025/06/fibonacci-number-featured-image-1024x502.png 1024w, https://codeanddebug.in/blog/wp-content/uploads/2025/06/fibonacci-number-featured-image-1200x588.png 1200w, https://codeanddebug.in/blog/wp-content/uploads/2025/06/fibonacci-number-featured-image.png 1224w" imagesizes="(max-width: 814px) 100vw, 814px" /><link rel="preload" as="font" href="https://codeanddebug.in/blog/wp-content/themes/smart-mag/css/icons/fonts/ts-icons.woff2?v3.2" type="font/woff2" crossorigin="anonymous" />
+<meta name="description" content="Find the n-th Fibonacci number with a recursive function in Python. Clear problem statement, examples, easy-to-grasp intuition, commented code, dry run, and Big-O complexity."/>
+<meta name="robots" content="follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large"/>
+<link rel="canonical" href="https://codeanddebug.in/blog/fibonacci-number/" />
+<meta property="og:locale" content="en_GB" />
+<meta property="og:type" content="article" />
+<meta property="og:title" content="Fibonacci Number | Recursive Python Solution" />
+<meta property="og:description" content="Find the n-th Fibonacci number with a recursive function in Python. Clear problem statement, examples, easy-to-grasp intuition, commented code, dry run, and Big-O complexity." />
+<meta property="og:url" content="https://codeanddebug.in/blog/fibonacci-number/" />
+<meta property="og:site_name" content="Code and Debug" />
+<meta property="article:tag" content="Easy" />
+<meta property="article:tag" content="Math" />
+<meta property="article:tag" content="Recursion" />
+<meta property="article:section" content="Data Structures &amp; Algorithms" />
+<meta property="og:updated_time" content="2025-06-09T14:11:18+05:30" />
+<meta property="og:image" content="https://codeanddebug.in/blog/wp-content/uploads/2025/06/fibonacci-number-featured-image.png" />
+<meta property="og:image:secure_url" content="https://codeanddebug.in/blog/wp-content/uploads/2025/06/fibonacci-number-featured-image.png" />
+<meta property="og:image:width" content="1224" />
+<meta property="og:image:height" content="600" />
+<meta property="og:image:alt" content="Featured Image of a question to find the fibonacci number" />
+<meta property="og:image:type" content="image/png" />
+<meta property="article:published_time" content="2025-06-09T14:10:06+05:30" />
+<meta property="article:modified_time" content="2025-06-09T14:11:18+05:30" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Fibonacci Number | Recursive Python Solution" />
+<meta name="twitter:description" content="Find the n-th Fibonacci number with a recursive function in Python. Clear problem statement, examples, easy-to-grasp intuition, commented code, dry run, and Big-O complexity." />
+<meta name="twitter:image" content="https://codeanddebug.in/blog/wp-content/uploads/2025/06/fibonacci-number-featured-image.png" />
+<meta name="twitter:label1" content="Written by" />
+<meta name="twitter:data1" content="codeanddebug" />
+<meta name="twitter:label2" content="Time to read" />
+<meta name="twitter:data2" content="2 minutes" />
+<script type="application/ld+json" class="rank-math-schema">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://codeanddebug.in/blog/#organization","name":"Code and Debug","url":"https://codeanddebug.in/blog","logo":{"@type":"ImageObject","@id":"https://codeanddebug.in/blog/#logo","url":"https://codeanddebug.in/blog/wp-content/uploads/2025/05/logo.png","contentUrl":"https://codeanddebug.in/blog/wp-content/uploads/2025/05/logo.png","caption":"Code and Debug","inLanguage":"en-GB","width":"250","height":"250"}},{"@type":"WebSite","@id":"https://codeanddebug.in/blog/#website","url":"https://codeanddebug.in/blog","name":"Code and Debug","alternateName":"Code and Debug","publisher":{"@id":"https://codeanddebug.in/blog/#organization"},"inLanguage":"en-GB"},{"@type":"ImageObject","@id":"https://codeanddebug.in/blog/wp-content/uploads/2025/06/fibonacci-number-featured-image.png","url":"https://codeanddebug.in/blog/wp-content/uploads/2025/06/fibonacci-number-featured-image.png","width":"1224","height":"600","caption":"Featured Image of a question to find the fibonacci number","inLanguage":"en-GB"},{"@type":"WebPage","@id":"https://codeanddebug.in/blog/fibonacci-number/#webpage","url":"https://codeanddebug.in/blog/fibonacci-number/","name":"Fibonacci Number | Recursive Python Solution","datePublished":"2025-06-09T14:10:06+05:30","dateModified":"2025-06-09T14:11:18+05:30","isPartOf":{"@id":"https://codeanddebug.in/blog/#website"},"primaryImageOfPage":{"@id":"https://codeanddebug.in/blog/wp-content/uploads/2025/06/fibonacci-number-featured-image.png"},"inLanguage":"en-GB"},{"@type":"Person","@id":"https://codeanddebug.in/blog/author/codeanddebug/","name":"codeanddebug","url":"https://codeanddebug.in/blog/author/codeanddebug/","image":{"@type":"ImageObject","@id":"https://secure.gravatar.com/avatar/551b684f5d99efd6f23d62bff94065f57354dc3fefcf19c44797ce117d409170?s=96&amp;d=mm&amp;r=g","url":"https://secure.gravatar.com/avatar/551b684f5d99efd6f23d62bff94065f57354dc3fefcf19c44797ce117d409170?s=96&amp;d=mm&amp;r=g","caption":"codeanddebug","inLanguage":"en-GB"},"sameAs":["https://codeanddebug.in/blog"],"worksFor":{"@id":"https://codeanddebug.in/blog/#organization"}},{"@type":"BlogPosting","headline":"Fibonacci Number | Recursive Python Solution","keywords":"Fibonacci Number","datePublished":"2025-06-09T14:10:06+05:30","dateModified":"2025-06-09T14:11:18+05:30","articleSection":"Beginner, Data Structures &amp; Algorithms","author":{"@id":"https://codeanddebug.in/blog/author/codeanddebug/","name":"codeanddebug"},"publisher":{"@id":"https://codeanddebug.in/blog/#organization"},"description":"Find the n-th Fibonacci number with a recursive function in Python. Clear problem statement, examples, easy-to-grasp intuition, commented code, dry run, and Big-O complexity.","name":"Fibonacci Number | Recursive Python Solution","@id":"https://codeanddebug.in/blog/fibonacci-number/#richSnippet","isPartOf":{"@id":"https://codeanddebug.in/blog/fibonacci-number/#webpage"},"image":{"@id":"https://codeanddebug.in/blog/wp-content/uploads/2025/06/fibonacci-number-featured-image.png"},"inLanguage":"en-GB","mainEntityOfPage":{"@id":"https://codeanddebug.in/blog/fibonacci-number/#webpage"}}]}</script>
+<!-- /Rank Math WordPress SEO plugin -->
+
+<link rel='dns-prefetch' href='//fonts.googleapis.com' />
+<link rel="alternate" type="application/rss+xml" title="Code and Debug - Blog &raquo; Feed" href="https://codeanddebug.in/blog/feed/" />
+<link rel="alternate" type="application/rss+xml" title="Code and Debug - Blog &raquo; Comments Feed" href="https://codeanddebug.in/blog/comments/feed/" />
+<link rel="alternate" type="application/rss+xml" title="Code and Debug - Blog &raquo; Fibonacci Number | Recursive Python Solution Comments Feed" href="https://codeanddebug.in/blog/fibonacci-number/feed/" />
+<link rel="alternate" title="oEmbed (JSON)" type="application/json+oembed" href="https://codeanddebug.in/blog/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fcodeanddebug.in%2Fblog%2Ffibonacci-number%2F" />
+<link rel="alternate" title="oEmbed (XML)" type="text/xml+oembed" href="https://codeanddebug.in/blog/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fcodeanddebug.in%2Fblog%2Ffibonacci-number%2F&#038;format=xml" />
+<style id="wp-img-auto-sizes-contain-inline-css">
+img:is([sizes=auto i],[sizes^="auto," i]){contain-intrinsic-size:3000px 1500px}
+/*# sourceURL=wp-img-auto-sizes-contain-inline-css */
+</style>
+<style id="wp-emoji-styles-inline-css">
+
+	img.wp-smiley, img.emoji {
+		display: inline !important;
+		border: none !important;
+		box-shadow: none !important;
+		height: 1em !important;
+		width: 1em !important;
+		margin: 0 0.07em !important;
+		vertical-align: -0.1em !important;
+		background: none !important;
+		padding: 0 !important;
+	}
+/*# sourceURL=wp-emoji-styles-inline-css */
+</style>
+<link rel='stylesheet' id='wp-block-library-css' href='https://codeanddebug.in/blog/wp-includes/css/dist/block-library/style.min.css?ver=7.1.2' media='all' />
+<style id="classic-theme-styles-inline-css">
+/*! This file is auto-generated */
+.wp-block-button__link{color:#fff;background-color:#32373c;border-radius:9999px;box-shadow:none;text-decoration:none;padding:calc(.667em + 2px) calc(1.333em + 2px);font-size:1.125em}.wp-block-file__button{background:#32373c;color:#fff;text-decoration:none}
+/*# sourceURL=/wp-includes/css/classic-themes.min.css */
+</style>
+<style id="kevinbatdorf-code-block-pro-style-inline-css">
+.wp-block-kevinbatdorf-code-block-pro{direction:ltr!important;font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;-webkit-text-size-adjust:100%!important;box-sizing:border-box!important;position:relative!important}.wp-block-kevinbatdorf-code-block-pro *{box-sizing:border-box!important}.wp-block-kevinbatdorf-code-block-pro pre,.wp-block-kevinbatdorf-code-block-pro pre *{font-size:inherit!important;line-height:inherit!important}.wp-block-kevinbatdorf-code-block-pro:not(.code-block-pro-editor) pre{background-image:none!important;border:0!important;border-radius:0!important;border-style:none!important;border-width:0!important;color:inherit!important;font-family:inherit!important;margin:0!important;overflow:auto!important;overflow-wrap:normal!important;padding:16px 0 16px 16px!important;text-align:left!important;white-space:pre!important;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;box-shadow:var(--tw-ring-offset-shadow,0 0 #0000),var(--tw-ring-shadow,0 0 #0000),var(--tw-shadow)!important;outline:2px solid transparent!important;outline-offset:2px!important}.wp-block-kevinbatdorf-code-block-pro:not(.code-block-pro-editor) pre:focus-visible{outline-color:inherit!important}.wp-block-kevinbatdorf-code-block-pro.padding-disabled:not(.code-block-pro-editor)
+	pre{padding:0!important}.wp-block-kevinbatdorf-code-block-pro.padding-bottom-disabled pre{padding-bottom:0!important}.wp-block-kevinbatdorf-code-block-pro:not(.code-block-pro-editor) pre code{background:none!important;background-color:transparent!important;border:0!important;border-radius:0!important;border-style:none!important;border-width:0!important;color:inherit!important;display:block!important;font-family:inherit!important;margin:0!important;overflow-wrap:normal!important;padding:0!important;text-align:left!important;white-space:pre!important;width:100%!important;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;box-shadow:var(--tw-ring-offset-shadow,0 0 #0000),var(--tw-ring-shadow,0 0 #0000),var(--tw-shadow)!important}.wp-block-kevinbatdorf-code-block-pro:not(.code-block-pro-editor)
+	pre
+	code
+	.line{display:inline-block!important;min-width:var(--cbp-block-width,100%)!important;vertical-align:top!important}.wp-block-kevinbatdorf-code-block-pro.cbp-has-line-numbers:not(.code-block-pro-editor)
+	pre
+	code
+	.line{padding-left:calc(12px + var(--cbp-line-number-width, auto))!important}.wp-block-kevinbatdorf-code-block-pro.cbp-has-line-numbers:not(.code-block-pro-editor)
+	pre
+	code{counter-increment:step calc(var(--cbp-line-number-start, 1) - 1)!important;counter-reset:step!important}.wp-block-kevinbatdorf-code-block-pro pre code .line{position:relative!important}.wp-block-kevinbatdorf-code-block-pro:not(.code-block-pro-editor)
+	pre
+	code
+	.line:before{content:""!important;display:inline-block!important}.wp-block-kevinbatdorf-code-block-pro.cbp-has-line-numbers:not(.code-block-pro-editor)
+	pre
+	code
+	.line:not(.cbp-line-number-disabled):before{color:var(--cbp-line-number-color,#999)!important;content:counter(step)!important;counter-increment:step!important;left:0!important;opacity:.5!important;position:absolute!important;text-align:right!important;transition-duration:.5s!important;transition-property:opacity!important;transition-timing-function:cubic-bezier(.4,0,.2,1)!important;-webkit-user-select:none!important;-moz-user-select:none!important;user-select:none!important;width:var(--cbp-line-number-width,auto)!important}.wp-block-kevinbatdorf-code-block-pro.cbp-highlight-hover .line{min-height:var(--cbp-block-height,100%)!important}.wp-block-kevinbatdorf-code-block-pro .line.cbp-line-highlight .cbp-line-highlighter,.wp-block-kevinbatdorf-code-block-pro .line.cbp-no-blur:hover .cbp-line-highlighter,.wp-block-kevinbatdorf-code-block-pro.cbp-highlight-hover:not(.cbp-blur-enabled:not(.cbp-unblur-on-hover))
+		.line:hover .cbp-line-highlighter{background:var(--cbp-line-highlight-color,rgba(14,165,233,.2))!important;left:-16px!important;min-height:var(--cbp-block-height,100%)!important;min-width:calc(var(--cbp-block-width, 100%) + 16px)!important;pointer-events:none!important;position:absolute!important;top:0!important;width:100%!important}[data-code-block-pro-font-family="Code-Pro-Comic-Mono.ttf"].wp-block-kevinbatdorf-code-block-pro .line.cbp-line-highlight .cbp-line-highlighter,[data-code-block-pro-font-family="Code-Pro-Comic-Mono.ttf"].wp-block-kevinbatdorf-code-block-pro .line.cbp-no-blur:hover .cbp-line-highlighter,[data-code-block-pro-font-family="Code-Pro-Comic-Mono.ttf"].wp-block-kevinbatdorf-code-block-pro.cbp-highlight-hover:not(.cbp-blur-enabled:not(.cbp-unblur-on-hover))
+		.line:hover .cbp-line-highlighter{top:-.125rem!important}[data-code-block-pro-font-family=Code-Pro-Fira-Code].wp-block-kevinbatdorf-code-block-pro .line.cbp-line-highlight .cbp-line-highlighter,[data-code-block-pro-font-family=Code-Pro-Fira-Code].wp-block-kevinbatdorf-code-block-pro .line.cbp-no-blur:hover .cbp-line-highlighter,[data-code-block-pro-font-family=Code-Pro-Fira-Code].wp-block-kevinbatdorf-code-block-pro.cbp-highlight-hover:not(.cbp-blur-enabled:not(.cbp-unblur-on-hover))
+		.line:hover .cbp-line-highlighter{top:-1.5px!important}[data-code-block-pro-font-family="Code-Pro-Deja-Vu-Mono.ttf"].wp-block-kevinbatdorf-code-block-pro .line.cbp-line-highlight .cbp-line-highlighter,[data-code-block-pro-font-family="Code-Pro-Deja-Vu-Mono.ttf"].wp-block-kevinbatdorf-code-block-pro .line.cbp-no-blur:hover .cbp-line-highlighter,[data-code-block-pro-font-family="Code-Pro-Deja-Vu-Mono.ttf"].wp-block-kevinbatdorf-code-block-pro.cbp-highlight-hover:not(.cbp-blur-enabled:not(.cbp-unblur-on-hover))
+		.line:hover .cbp-line-highlighter,[data-code-block-pro-font-family=Code-Pro-Cozette].wp-block-kevinbatdorf-code-block-pro .line.cbp-line-highlight .cbp-line-highlighter,[data-code-block-pro-font-family=Code-Pro-Cozette].wp-block-kevinbatdorf-code-block-pro .line.cbp-no-blur:hover .cbp-line-highlighter,[data-code-block-pro-font-family=Code-Pro-Cozette].wp-block-kevinbatdorf-code-block-pro.cbp-highlight-hover:not(.cbp-blur-enabled:not(.cbp-unblur-on-hover))
+		.line:hover .cbp-line-highlighter{top:-1px!important}.wp-block-kevinbatdorf-code-block-pro:not(.code-block-pro-editor).padding-disabled pre
+	.line.cbp-line-highlight:after{left:0!important;width:100%!important}.wp-block-kevinbatdorf-code-block-pro.cbp-blur-enabled
+	pre
+	.line:not(.cbp-no-blur){filter:blur(1.35px)!important;opacity:.8!important;pointer-events:none!important;transition-duration:.2s!important;transition-property:all!important;transition-timing-function:cubic-bezier(.4,0,.2,1)!important}.wp-block-kevinbatdorf-code-block-pro.cbp-blur-enabled.cbp-unblur-on-hover:hover
+	pre
+	.line:not(.cbp-no-blur){opacity:1!important;pointer-events:auto!important;--tw-blur: ;filter:var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)!important}.wp-block-kevinbatdorf-code-block-pro:not(.code-block-pro-editor) pre *{font-family:inherit!important}.cbp-see-more-simple-btn-hover{transition-property:none!important}.cbp-see-more-simple-btn-hover:hover{box-shadow:inset 0 0 100px 100px hsla(0,0%,100%,.1)!important}.code-block-pro-copy-button{border:0!important;border-style:none!important;border-width:0!important;cursor:pointer!important;left:auto!important;line-height:1!important;opacity:.1!important;outline:2px solid transparent!important;outline-offset:2px!important;padding:6px!important;position:absolute!important;right:0!important;top:0!important;transition-duration:.2s!important;transition-property:opacity!important;transition-timing-function:cubic-bezier(.4,0,.2,1)!important;z-index:10!important}.code-block-pro-copy-button:focus{opacity:.4!important}.code-block-pro-copy-button:focus-visible{outline-color:inherit!important}.code-block-pro-copy-button:not([data-has-text-button]){background:none!important;background-color:transparent!important}body
+	.wp-block-kevinbatdorf-code-block-pro:not(#x)
+	.code-block-pro-copy-button-textarea,body .wp-block-kevinbatdorf-code-block-pro:not(#x)
+	.code-block-pro-copy-button-pre{clip:rect(0,0,0,0)!important;background-color:transparent!important;border-width:0!important;color:transparent!important;height:1px!important;left:0!important;margin:-.25rem!important;opacity:0!important;overflow:hidden!important;pointer-events:none!important;position:absolute!important;resize:none!important;top:0!important;white-space:nowrap!important;width:1px!important;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;box-shadow:var(--tw-ring-offset-shadow,0 0 #0000),var(--tw-ring-shadow,0 0 #0000),var(--tw-shadow)!important}.wp-block-kevinbatdorf-code-block-pro.padding-disabled
+	.code-block-pro-copy-button{padding:0!important}.wp-block-kevinbatdorf-code-block-pro:hover .code-block-pro-copy-button{opacity:.5!important}.wp-block-kevinbatdorf-code-block-pro .code-block-pro-copy-button:hover{opacity:.9!important}.code-block-pro-copy-button[data-has-text-button],.wp-block-kevinbatdorf-code-block-pro:hover
+	.code-block-pro-copy-button[data-has-text-button]{opacity:1!important}.wp-block-kevinbatdorf-code-block-pro
+	.code-block-pro-copy-button[data-has-text-button]:hover{opacity:.8!important}.code-block-pro-copy-button[data-has-text-button]{border-radius:.75rem!important;display:block!important;margin-right:.75rem!important;margin-top:.7rem!important;padding:.125rem .375rem!important}.code-block-pro-copy-button[data-inside-header-type=headlightsMuted],.code-block-pro-copy-button[data-inside-header-type^=headlights]{margin-top:.85rem!important}.code-block-pro-copy-button[data-inside-header-type=headlightsMutedAlt]{margin-top:.65rem!important}.code-block-pro-copy-button[data-inside-header-type=simpleString]{margin-top:.645rem!important}.code-block-pro-copy-button[data-inside-header-type=pillString]{margin-top:1rem!important}.code-block-pro-copy-button[data-inside-header-type=pillString]
+	.cbp-btn-text{position:relative!important;top:1px!important}.cbp-btn-text{font-size:.75rem!important;line-height:1rem!important}.code-block-pro-copy-button .without-check{display:block!important}.code-block-pro-copy-button .with-check{display:none!important}.code-block-pro-copy-button.cbp-copying{opacity:1!important}.code-block-pro-copy-button.cbp-copying .without-check{display:none!important}.code-block-pro-copy-button.cbp-copying .with-check{display:block!important}.cbp-footer-link:hover{text-decoration-line:underline!important}@media print{.wp-block-kevinbatdorf-code-block-pro pre{max-height:none!important}.wp-block-kevinbatdorf-code-block-pro:not(#x) .line:before{background-color:transparent!important;color:inherit!important}.wp-block-kevinbatdorf-code-block-pro:not(#x) .cbp-line-highlighter,.wp-block-kevinbatdorf-code-block-pro:not(#x)>span{display:none!important}}
+
+/*# sourceURL=https://codeanddebug.in/blog/wp-content/plugins/code-block-pro/build/style-index.css */
+</style>
+<style id="merpress-mermaidjs-style-inline-css">
+.mermaid svg,.wp-block-merpress-mermaidjs img{display:block;margin:auto}.diagram-source-image>.mermaid,.diagram-source-mermaid>img{display:none}.mermaid-error{opacity:.5}.wp-block-merpress-mermaidjs.alignwide img{margin-left:auto;margin-right:auto;max-width:var(--wp--style--global--wide-size)}.wp-block-merpress-mermaidjs.alignfull img{width:100%}.wp-block-merpress-mermaidjs.alignleft img{float:left;margin-right:1em;max-width:50%}.wp-block-merpress-mermaidjs.alignright img{float:right;margin-left:1em;max-width:50%}.wp-block-merpress-mermaidjs:not(.alignleft,.alignright,.alignfull,.alignwide) img{max-width:var(--wp--style--global--content-size)}
+
+/*# sourceURL=https://codeanddebug.in/blog/wp-content/plugins/merpress/build/style-index.css */
+</style>
+<link rel='stylesheet' id='ultimate_blocks-cgb-style-css-css' href='https://codeanddebug.in/blog/wp-content/plugins/ultimate-blocks/dist/blocks.style.build.css?ver=3.6.0' media='all' />
+<style id="global-styles-inline-css">
+:root{--wp--preset--aspect-ratio--square: 1;--wp--preset--aspect-ratio--4-3: 4/3;--wp--preset--aspect-ratio--3-4: 3/4;--wp--preset--aspect-ratio--3-2: 3/2;--wp--preset--aspect-ratio--2-3: 2/3;--wp--preset--aspect-ratio--16-9: 16/9;--wp--preset--aspect-ratio--9-16: 9/16;--wp--preset--color--black: #000000;--wp--preset--color--cyan-bluish-gray: #abb8c3;--wp--preset--color--white: #ffffff;--wp--preset--color--pale-pink: #f78da7;--wp--preset--color--vivid-red: #cf2e2e;--wp--preset--color--luminous-vivid-orange: #ff6900;--wp--preset--color--luminous-vivid-amber: #fcb900;--wp--preset--color--light-green-cyan: #7bdcb5;--wp--preset--color--vivid-green-cyan: #00d084;--wp--preset--color--pale-cyan-blue: #8ed1fc;--wp--preset--color--vivid-cyan-blue: #0693e3;--wp--preset--color--vivid-purple: #9b51e0;--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple: linear-gradient(135deg,rgb(6,147,227) 0%,rgb(155,81,224) 100%);--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan: linear-gradient(135deg,rgb(122,220,180) 0%,rgb(0,208,130) 100%);--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange: linear-gradient(135deg,rgb(252,185,0) 0%,rgb(255,105,0) 100%);--wp--preset--gradient--luminous-vivid-orange-to-vivid-red: linear-gradient(135deg,rgb(255,105,0) 0%,rgb(207,46,46) 100%);--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray: linear-gradient(135deg,rgb(238,238,238) 0%,rgb(169,184,195) 100%);--wp--preset--gradient--cool-to-warm-spectrum: linear-gradient(135deg,rgb(74,234,220) 0%,rgb(151,120,209) 20%,rgb(207,42,186) 40%,rgb(238,44,130) 60%,rgb(251,105,98) 80%,rgb(254,248,76) 100%);--wp--preset--gradient--blush-light-purple: linear-gradient(135deg,rgb(255,206,236) 0%,rgb(152,150,240) 100%);--wp--preset--gradient--blush-bordeaux: linear-gradient(135deg,rgb(254,205,165) 0%,rgb(254,45,45) 50%,rgb(107,0,62) 100%);--wp--preset--gradient--luminous-dusk: linear-gradient(135deg,rgb(255,203,112) 0%,rgb(199,81,192) 50%,rgb(65,88,208) 100%);--wp--preset--gradient--pale-ocean: linear-gradient(135deg,rgb(255,245,203) 0%,rgb(182,227,212) 50%,rgb(51,167,181) 100%);--wp--preset--gradient--electric-grass: linear-gradient(135deg,rgb(202,248,128) 0%,rgb(113,206,126) 100%);--wp--preset--gradient--midnight: linear-gradient(135deg,rgb(2,3,129) 0%,rgb(40,116,252) 100%);--wp--preset--font-size--small: 13px;--wp--preset--font-size--medium: 20px;--wp--preset--font-size--large: 36px;--wp--preset--font-size--x-large: 42px;--wp--preset--spacing--20: 0.44rem;--wp--preset--spacing--30: 0.67rem;--wp--preset--spacing--40: 1rem;--wp--preset--spacing--50: 1.5rem;--wp--preset--spacing--60: 2.25rem;--wp--preset--spacing--70: 3.38rem;--wp--preset--spacing--80: 5.06rem;--wp--preset--shadow--natural: 6px 6px 9px rgba(0, 0, 0, 0.2);--wp--preset--shadow--deep: 12px 12px 50px rgba(0, 0, 0, 0.4);--wp--preset--shadow--sharp: 6px 6px 0px rgba(0, 0, 0, 0.2);--wp--preset--shadow--outlined: 6px 6px 0px -3px rgb(255, 255, 255), 6px 6px rgb(0, 0, 0);--wp--preset--shadow--crisp: 6px 6px 0px rgb(0, 0, 0);}.wp-block-button{--wp--preset--dimension--25: 25%;--wp--preset--dimension--50: 50%;--wp--preset--dimension--75: 75%;--wp--preset--dimension--100: 100%;}:where(body) { margin: 0; }:where(.is-layout-flex){gap: 0.5em;}:where(.is-layout-grid){gap: 0.5em;}body .is-layout-flex{display: flex;}.is-layout-flex{flex-wrap: wrap;align-items: center;}.is-layout-flex > :is(*, div){margin: 0;}body .is-layout-grid{display: grid;}.is-layout-grid > :is(*, div){margin: 0;}body{padding-top: 0px;padding-right: 0px;padding-bottom: 0px;padding-left: 0px;}:root :where(.wp-element-button, .wp-block-button__link){background-color: #32373c;border-width: 0;color: #fff;font-family: inherit;font-size: inherit;font-style: inherit;font-weight: inherit;letter-spacing: inherit;line-height: inherit;padding-top: calc(0.667em + 2px);padding-right: calc(1.333em + 2px);padding-bottom: calc(0.667em + 2px);padding-left: calc(1.333em + 2px);text-decoration: none;text-transform: inherit;}.has-black-color{color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-color{color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-color{color: var(--wp--preset--color--white) !important;}.has-pale-pink-color{color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-color{color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-color{color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-color{color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-color{color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-color{color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-color{color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-color{color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-color{color: var(--wp--preset--color--vivid-purple) !important;}.has-black-background-color{background-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-background-color{background-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-background-color{background-color: var(--wp--preset--color--white) !important;}.has-pale-pink-background-color{background-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-background-color{background-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-background-color{background-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-background-color{background-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-background-color{background-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-background-color{background-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-background-color{background-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-background-color{background-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-background-color{background-color: var(--wp--preset--color--vivid-purple) !important;}.has-black-border-color{border-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-border-color{border-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-border-color{border-color: var(--wp--preset--color--white) !important;}.has-pale-pink-border-color{border-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-border-color{border-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-border-color{border-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-border-color{border-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-border-color{border-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-border-color{border-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-border-color{border-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-border-color{border-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-border-color{border-color: var(--wp--preset--color--vivid-purple) !important;}.has-vivid-cyan-blue-to-vivid-purple-gradient-background{background: var(--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple) !important;}.has-light-green-cyan-to-vivid-green-cyan-gradient-background{background: var(--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan) !important;}.has-luminous-vivid-amber-to-luminous-vivid-orange-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange) !important;}.has-luminous-vivid-orange-to-vivid-red-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-orange-to-vivid-red) !important;}.has-very-light-gray-to-cyan-bluish-gray-gradient-background{background: var(--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray) !important;}.has-cool-to-warm-spectrum-gradient-background{background: var(--wp--preset--gradient--cool-to-warm-spectrum) !important;}.has-blush-light-purple-gradient-background{background: var(--wp--preset--gradient--blush-light-purple) !important;}.has-blush-bordeaux-gradient-background{background: var(--wp--preset--gradient--blush-bordeaux) !important;}.has-luminous-dusk-gradient-background{background: var(--wp--preset--gradient--luminous-dusk) !important;}.has-pale-ocean-gradient-background{background: var(--wp--preset--gradient--pale-ocean) !important;}.has-electric-grass-gradient-background{background: var(--wp--preset--gradient--electric-grass) !important;}.has-midnight-gradient-background{background: var(--wp--preset--gradient--midnight) !important;}.has-small-font-size{font-size: var(--wp--preset--font-size--small) !important;}.has-medium-font-size{font-size: var(--wp--preset--font-size--medium) !important;}.has-large-font-size{font-size: var(--wp--preset--font-size--large) !important;}.has-x-large-font-size{font-size: var(--wp--preset--font-size--x-large) !important;}
+:root :where(.wp-block-icon svg){width: 24px;}
+:where(.wp-block-gallery.is-layout-flex){gap: var( --wp--style--gallery-gap-default, var( --gallery-block--gutter-size, var( --wp--style--block-gap, 0.5em ) ) );}:where(.wp-block-gallery.is-layout-grid){gap: var( --wp--style--gallery-gap-default, var( --gallery-block--gutter-size, var( --wp--style--block-gap, 0.5em ) ) );}
+:where(.wp-block-latest-posts.is-layout-flex){gap: 1.25em;}:where(.wp-block-latest-posts.is-layout-grid){gap: 1.25em;}
+:where(.wp-block-post-template.is-layout-flex){gap: 1.25em;}:where(.wp-block-post-template.is-layout-grid){gap: 1.25em;}
+:where(.wp-block-term-template.is-layout-flex){gap: 1.25em;}:where(.wp-block-term-template.is-layout-grid){gap: 1.25em;}
+:where(.wp-block-columns.is-layout-flex){gap: 2em;}:where(.wp-block-columns.is-layout-grid){gap: 2em;}
+:root :where(.wp-block-pullquote){font-size: 1.5em;line-height: 1.6;}
+/*# sourceURL=global-styles-inline-css */
+</style>
+<link rel='stylesheet' id='ub-extension-style-css-css' href='https://codeanddebug.in/blog/wp-content/plugins/ultimate-blocks/src/extensions/style.css?ver=7.1.2' media='all' />
+<link rel='stylesheet' id='smartmag-core-css' href='https://codeanddebug.in/blog/wp-content/themes/smart-mag/style.css?ver=10.3.0' media='all' />
+<style id="smartmag-core-inline-css">
+:root { --c-main: #3c3fde;
+--c-main-rgb: 60,63,222;
+--text-font: "Inter", system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
+--body-font: "Inter", system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
+--ui-font: "Outfit", system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
+--title-font: "Outfit", system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
+--h-font: "Outfit", system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
+--title-font: var(--ui-font);
+--h-font: var(--ui-font);
+--text-h-font: var(--h-font);
+--title-font: "Inter", system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
+--title-size-xs: 15px;
+--title-size-m: 19px;
+--main-width: 1240px;
+--p-title-space: 11px;
+--c-excerpts: #474747;
+--excerpt-size: 14px; }
+.s-dark body { background-color: #101016; }
+.post-title:not(._) { line-height: 1.4; }
+:root { --wrap-padding: 35px; }
+:root { --sidebar-width: 336px; }
+.ts-row, .has-el-gap { --sidebar-c-width: calc(var(--sidebar-width) + var(--grid-gutter-h) + var(--sidebar-c-pad)); }
+.smart-head-main { --c-shadow: rgba(0,0,0,0.02); }
+.smart-head-main .smart-head-top { --head-h: 42px; border-image: linear-gradient(90deg, #e40666 0%, #3c3fde 100%); border-image-slice: 1; border-image-width: 3px 0 0 0; border-width: 3px 0; border-image-width: 0 0 3px 0; }
+.smart-head-main .smart-head-mid { --head-h: 70px; border-bottom-width: 1px; border-bottom-color: #efefef; }
+.s-dark .smart-head-main .smart-head-mid,
+.smart-head-main .s-dark.smart-head-mid { border-bottom-color: #3f3f3f; }
+.navigation-main .menu > li > a { font-size: 15.4px; letter-spacing: 0.01em; }
+.navigation-main { --nav-items-space: 15px; }
+.s-light .navigation { --c-nav-blip: var(--c-main); }
+.smart-head-mobile .smart-head-mid { border-image: linear-gradient(90deg, #e40666 0%, #3c3fde 100%); border-image-slice: 1; border-image-width: 3px 0 0 0; border-width: 3px 0; }
+.navigation-small { margin-left: calc(-1 * var(--nav-items-space)); }
+.s-dark .navigation-small { --c-nav-hov: rgba(255,255,255,0.76); }
+.s-dark .smart-head-main .spc-social,
+.smart-head-main .s-dark .spc-social { --c-spc-social: #ffffff; --c-spc-social-hov: rgba(255,255,255,0.92); }
+.smart-head-main .spc-social { --spc-social-fs: 13px; --spc-social-size: 26px; --spc-social-space: 5px; }
+.s-dark .smart-head-main .search-icon:hover,
+.smart-head-main .s-dark .search-icon:hover { color: #bcbcbc; }
+.smart-head-main { --search-icon-size: 18px; }
+.s-dark .smart-head-main .offcanvas-toggle:hover,
+.smart-head-main .s-dark .offcanvas-toggle:hover { --c-hamburger: #bcbcbc; }
+.smart-head .ts-button1 { font-size: 12px; border-radius: 6px; height: 34px; line-height: 34px; padding-left: 14px; padding-right: 14px; }
+.smart-head .h-text { font-family: var(--body-font); color: #afafaf; }
+.s-dark .smart-head .h-text,
+.smart-head .s-dark .h-text { color: #11a7dd; }
+.post-meta .text-in, .post-meta .post-cat > a { font-size: 11px; }
+.post-meta .post-cat > a { font-weight: 600; }
+.post-meta { --p-meta-sep: "\25c6"; --p-meta-sep-pad: 7px; }
+.post-meta .meta-item:before { transform: scale(.65); }
+.l-post { --media-radius: 10px; }
+.cat-labels .category { font-weight: 600; letter-spacing: 0.06em; border-radius: 5px; padding-top: 2px; padding-bottom: 2px; padding-left: 10px; padding-right: 10px; }
+.block-head-c .heading { font-size: 19px; text-transform: initial; }
+.block-head-e3 .heading { font-size: 22px; }
+.load-button { padding-top: 13px; padding-bottom: 13px; padding-left: 13px; padding-right: 13px; border-radius: 20px; }
+.loop-grid-base .media { margin-bottom: 20px; }
+.loop-grid .l-post { border-radius: 10px; overflow: hidden; }
+.has-nums .l-post { --num-font: "Outfit", system-ui, -apple-system, "Segoe UI", Arial, sans-serif; }
+.has-nums-a .l-post .post-title:before,
+.has-nums-b .l-post .content:before { font-weight: 500; }
+.has-nums-c .l-post .post-title:before,
+.has-nums-c .l-post .content:before { font-size: 18px; }
+.loop-list-card .l-post { border-radius: 10px; overflow: hidden; }
+.loop-small .ratio-is-custom { padding-bottom: calc(100% / 1.3); }
+.loop-small .media { width: 30%; max-width: 50%; }
+.loop-small .media:not(i) { max-width: 97px; }
+.single-featured .featured, .the-post-header .featured { border-radius: 10px; --media-radius: 10px; overflow: hidden; }
+.post-meta-single .meta-item, .post-meta-single .text-in { font-size: 13px; }
+.the-post-header .post-meta .post-title { font-family: var(--body-font); font-weight: 800; line-height: 1.3; letter-spacing: -0.01em; }
+.entry-content { letter-spacing: -0.005em; }
+.site-s-light .entry-content { color: #0a0a0a; }
+:where(.entry-content) a { text-decoration: underline; text-underline-offset: 4px; text-decoration-thickness: 2px; }
+.review-box .overall { border-radius: 8px; }
+.review-box .rating-bar, .review-box .bar { height: 18px; border-radius: 8px; }
+.review-box .label { font-size: 15px; }
+.s-head-large .sub-title { font-size: 19px; }
+.s-post-large .post-content-wrap { display: grid; grid-template-columns: minmax(0, 1fr); }
+.s-post-large .entry-content { max-width: min(100%, calc(750px + var(--p-spacious-pad)*2)); justify-self: center; }
+.category .feat-grid { --grid-gap: 10px; }
+.spc-newsletter { --box-roundness: 10px; }
+@media (min-width: 1200px) { .breadcrumbs { font-size: 13px; }
+.nav-hov-b .menu > li > a:before { width: calc(100% - (var(--nav-items-space, 15px)*2)); left: var(--nav-items-space); }
+.post-content h2 { font-size: 27px; }
+.post-content h3 { font-size: 23px; } }
+@media (min-width: 941px) and (max-width: 1200px) { :root { --sidebar-width: 300px; }
+.ts-row, .has-el-gap { --sidebar-c-width: calc(var(--sidebar-width) + var(--grid-gutter-h) + var(--sidebar-c-pad)); }
+.navigation-main .menu > li > a { font-size: calc(10px + (15.4px - 10px) * .7); } }
+@media (min-width: 768px) and (max-width: 940px) { .ts-contain, .main { padding-left: 35px; padding-right: 35px; }
+.layout-boxed-inner { --wrap-padding: 35px; }
+:root { --wrap-padding: 35px; } }
+@media (max-width: 767px) { .ts-contain, .main { padding-left: 25px; padding-right: 25px; }
+.layout-boxed-inner { --wrap-padding: 25px; }
+:root { --wrap-padding: 25px; }
+.block-head-e3 .heading { font-size: 18px; } }
+@media (min-width: 940px) and (max-width: 1300px) { :root { --wrap-padding: min(35px, 5vw); } }
+
+
+/*# sourceURL=smartmag-core-inline-css */
+</style>
+<link rel='stylesheet' id='smartmag-magnific-popup-css' href='https://codeanddebug.in/blog/wp-content/themes/smart-mag/css/lightbox.css?ver=10.3.0' media='all' />
+<link rel='stylesheet' id='smartmag-icons-css' href='https://codeanddebug.in/blog/wp-content/themes/smart-mag/css/icons/icons.css?ver=10.3.0' media='all' />
+<link rel='stylesheet' id='smartmag-gfonts-custom-css' href='https://fonts.googleapis.com/css?family=Inter%3A400%2C500%2C600%2C700%2C800%7COutfit%3A400%2C500%2C600%2C700&#038;display=swap' media='all' />
+<script id="smartmag-lazy-inline-js-after">
+/**
+ * @copyright ThemeSphere
+ * @preserve
+ */
+var BunyadLazy={};BunyadLazy.load=function(){function a(e,n){var t={};e.dataset.bgset&&e.dataset.sizes?(t.sizes=e.dataset.sizes,t.srcset=e.dataset.bgset):t.src=e.dataset.bgsrc,function(t){var a=t.dataset.ratio;if(0<a){const e=t.parentElement;if(e.classList.contains("media-ratio")){const n=e.style;n.getPropertyValue("--a-ratio")||(n.paddingBottom=100/a+"%")}}}(e);var a,o=document.createElement("img");for(a in o.onload=function(){var t="url('"+(o.currentSrc||o.src)+"')",a=e.style;a.backgroundImage!==t&&requestAnimationFrame(()=>{a.backgroundImage=t,n&&n()}),o.onload=null,o.onerror=null,o=null},o.onerror=o.onload,t)o.setAttribute(a,t[a]);o&&o.complete&&0<o.naturalWidth&&o.onload&&o.onload()}function e(t){t.dataset.loaded||a(t,()=>{document.dispatchEvent(new Event("lazyloaded")),t.dataset.loaded=1})}function n(t){"complete"===document.readyState?t():window.addEventListener("load",t)}return{initEarly:function(){var t,a=()=>{document.querySelectorAll(".img.bg-cover:not(.lazyload)").forEach(e)};"complete"!==document.readyState?(t=setInterval(a,150),n(()=>{a(),clearInterval(t)})):a()},callOnLoad:n,initBgImages:function(t){t&&n(()=>{document.querySelectorAll(".img.bg-cover").forEach(e)})},bgLoad:a}}(),BunyadLazy.load.initEarly();
+//# sourceURL=smartmag-lazy-inline-js-after
+</script>
+<script id="mermaid-js" src="https://codeanddebug.in/blog/wp-content/plugins/merpress/public/mermaid.min.js?ver=11.9.0"></script>
+<script id="merpress-mermaidjs-script-2-js" src="https://codeanddebug.in/blog/wp-content/plugins/merpress/build/mermaid.js?ver=dd21009e403e0932fb5a"></script>
+<script id="sphere-post-views-js" src="https://codeanddebug.in/blog/wp-content/plugins/sphere-post-views/assets/js/post-views.js?ver=1.0.1"></script>
+<script id="sphere-post-views-js-after">
+var Sphere_PostViews = {"ajaxUrl":"https:\/\/codeanddebug.in\/blog\/wp-admin\/admin-ajax.php?sphere_post_views=1","sampling":0,"samplingRate":10,"repeatCountDelay":0,"postID":271,"token":"d6f9a1e3ba"}
+//# sourceURL=sphere-post-views-js-after
+</script>
+<script id="jquery-core-js" src="https://codeanddebug.in/blog/wp-includes/js/jquery/jquery.min.js?ver=3.7.1"></script>
+<script id="jquery-migrate-js" src="https://codeanddebug.in/blog/wp-includes/js/jquery/jquery-migrate.min.js?ver=3.4.1"></script>
+<link rel="https://api.w.org/" href="https://codeanddebug.in/blog/wp-json/" /><link rel="alternate" title="JSON" type="application/json" href="https://codeanddebug.in/blog/wp-json/wp/v2/posts/271" /><link rel="EditURI" type="application/rsd+xml" title="RSD" href="https://codeanddebug.in/blog/xmlrpc.php?rsd" />
+<meta name="generator" content="WordPress 7.1.2" />
+<link rel='shortlink' href='https://codeanddebug.in/blog/?p=271' />
+
+		<script>
+		var BunyadSchemeKey = 'bunyad-scheme';
+		(() => {
+			const d = document.documentElement;
+			const c = d.classList;
+			var scheme = localStorage.getItem(BunyadSchemeKey);
+			
+			if (scheme) {
+				d.dataset.origClass = c;
+				scheme === 'dark' ? c.remove('s-light', 'site-s-light') : c.remove('s-dark', 'site-s-dark');
+				c.add('site-s-' + scheme, 's-' + scheme);
+			}
+		})();
+		</script>
+		<meta name="generator" content="Elementor 4.2.4; features: e_font_icon_svg, additional_custom_breakpoints; settings: css_print_method-external, google_font-enabled, font_display-swap">
+			<style>
+				.e-con.e-parent:nth-of-type(n+4):not(.e-lazyloaded):not(.e-no-lazyload),
+				.e-con.e-parent:nth-of-type(n+4):not(.e-lazyloaded):not(.e-no-lazyload) * {
+					background-image: none !important;
+				}
+				@media screen and (max-height: 1024px) {
+					.e-con.e-parent:nth-of-type(n+3):not(.e-lazyloaded):not(.e-no-lazyload),
+					.e-con.e-parent:nth-of-type(n+3):not(.e-lazyloaded):not(.e-no-lazyload) * {
+						background-image: none !important;
+					}
+				}
+				@media screen and (max-height: 640px) {
+					.e-con.e-parent:nth-of-type(n+2):not(.e-lazyloaded):not(.e-no-lazyload),
+					.e-con.e-parent:nth-of-type(n+2):not(.e-lazyloaded):not(.e-no-lazyload) * {
+						background-image: none !important;
+					}
+				}
+			</style>
+			<script async id="google_gtagjs" src="https://www.googletagmanager.com/gtag/js?id=G-C17J31C2FT"></script>
+<script id="google_gtagjs-inline">
+window.dataLayer = window.dataLayer || [];function gtag(){dataLayer.push(arguments);}gtag('js', new Date());gtag('config', 'G-C17J31C2FT', {} );
+</script>
+<link rel="icon" href="https://codeanddebug.in/blog/wp-content/uploads/2025/05/cropped-fav-icon-300x300-blog-32x32.png" sizes="32x32" />
+<link rel="icon" href="https://codeanddebug.in/blog/wp-content/uploads/2025/05/cropped-fav-icon-300x300-blog-192x192.png" sizes="192x192" />
+<link rel="apple-touch-icon" href="https://codeanddebug.in/blog/wp-content/uploads/2025/05/cropped-fav-icon-300x300-blog-180x180.png" />
+<meta name="msapplication-TileImage" content="https://codeanddebug.in/blog/wp-content/uploads/2025/05/cropped-fav-icon-300x300-blog-270x270.png" />
+
+
+</head>
+
+<body class="wp-singular post-template-default single single-post postid-271 single-format-standard wp-theme-smart-mag right-sidebar post-layout-large-b post-cat-3 has-lb has-lb-sm ts-img-hov-fade layout-normal elementor-default elementor-kit-10">
+
+
+
+<div class="main-wrap">
+
+	
+<div class="off-canvas-backdrop"></div>
+<div class="mobile-menu-container off-canvas s-dark hide-menu-lg" id="off-canvas">
+
+	<div class="off-canvas-head">
+		<a href="#" class="close">
+			<span class="visuallyhidden">Close Menu</span>
+			<i class="tsi tsi-times"></i>
+		</a>
+
+		<div class="ts-logo">
+					</div>
+	</div>
+
+	<div class="off-canvas-content">
+
+					<ul class="mobile-menu"></ul>
+		
+					<div class="off-canvas-widgets">
+				<div id="nav_menu-3" class="widget widget_nav_menu"><div class="widget-title block-head block-head-ac block-head-b"><h5 class="heading">Code and Debug</h5></div><div class="menu-default-menu-container"><ul id="menu-default-menu" class="menu"><li id="menu-item-111" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-111"><a href="https://codeanddebug.in/">Home</a></li>
+<li id="menu-item-112" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-112"><a href="https://codeanddebug.in/#courses">Our Courses</a></li>
+<li id="menu-item-115" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home menu-item-115"><a href="https://codeanddebug.in/blog/">Blog</a></li>
+<li id="menu-item-113" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-113"><a href="https://www.codeanddebug.in/about">About Us</a></li>
+<li id="menu-item-114" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-114"><a href="https://www.codeanddebug.in/contact">Contact Us</a></li>
+</ul></div></div>			</div>
+		
+		
+		<div class="spc-social-block spc-social spc-social-b smart-head-social">
+		
+			
+				<a href="https://www.facebook.com/codeanddebugedu" class="link service s-facebook" target="_blank" rel="nofollow noopener">
+					<i class="icon tsi tsi-facebook"></i>					<span class="visuallyhidden">Facebook</span>
+				</a>
+									
+			
+				<a href="#" class="link service s-twitter" target="_blank" rel="nofollow noopener">
+					<i class="icon tsi tsi-twitter"></i>					<span class="visuallyhidden">X (Twitter)</span>
+				</a>
+									
+			
+				<a href="https://www.instagram.com/codeanddebug/?hl=en" class="link service s-instagram" target="_blank" rel="nofollow noopener">
+					<i class="icon tsi tsi-instagram"></i>					<span class="visuallyhidden">Instagram</span>
+				</a>
+									
+			
+				<a href="https://www.youtube.com/@codeanddebug" class="link service s-youtube" target="_blank" rel="nofollow noopener">
+					<i class="icon tsi tsi-youtube-play"></i>					<span class="visuallyhidden">YouTube</span>
+				</a>
+									
+			
+				<a href="https://wa.me/919712928220" class="link service s-whatsapp" target="_blank" rel="nofollow noopener">
+					<i class="icon tsi tsi-whatsapp"></i>					<span class="visuallyhidden">WhatsApp</span>
+				</a>
+									
+			
+		</div>
+
+		
+	</div>
+
+</div>
+<div class="smart-head smart-head-a smart-head-main" id="smart-head" data-sticky="auto" data-sticky-type="smart" data-sticky-full>
+	
+	<div class="smart-head-row smart-head-top s-dark smart-head-row-full">
+
+		<div class="inner wrap">
+
+							
+				<div class="items items-left ">
+					<div class="nav-wrap">
+		<nav class="navigation navigation-small nav-hov-a">
+			<ul id="menu-default-menu-1" class="menu"><li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-111"><a href="https://codeanddebug.in/">Home</a></li>
+<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-112"><a href="https://codeanddebug.in/#courses">Our Courses</a></li>
+<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home menu-item-115"><a href="https://codeanddebug.in/blog/">Blog</a></li>
+<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-113"><a href="https://www.codeanddebug.in/about">About Us</a></li>
+<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-114"><a href="https://www.codeanddebug.in/contact">Contact Us</a></li>
+</ul>		</nav>
+	</div>
+				</div>
+
+							
+				<div class="items items-center empty">
+								</div>
+
+							
+				<div class="items items-right ">
+				
+		<div class="spc-social-block spc-social spc-social-b smart-head-social">
+		
+			
+				<a href="https://www.facebook.com/codeanddebugedu" class="link service s-facebook" target="_blank" rel="nofollow noopener">
+					<i class="icon tsi tsi-facebook"></i>					<span class="visuallyhidden">Facebook</span>
+				</a>
+									
+			
+				<a href="https://www.instagram.com/codeanddebug/?hl=en" class="link service s-instagram" target="_blank" rel="nofollow noopener">
+					<i class="icon tsi tsi-instagram"></i>					<span class="visuallyhidden">Instagram</span>
+				</a>
+									
+			
+				<a href="https://www.youtube.com/@codeanddebug" class="link service s-youtube" target="_blank" rel="nofollow noopener">
+					<i class="icon tsi tsi-youtube-play"></i>					<span class="visuallyhidden">YouTube</span>
+				</a>
+									
+			
+				<a href="https://www.linkedin.com/company/code-debug/" class="link service s-linkedin" target="_blank" rel="nofollow noopener">
+					<i class="icon tsi tsi-linkedin"></i>					<span class="visuallyhidden">LinkedIn</span>
+				</a>
+									
+			
+				<a href="https://wa.me/919712928220" class="link service s-whatsapp" target="_blank" rel="nofollow noopener">
+					<i class="icon tsi tsi-whatsapp"></i>					<span class="visuallyhidden">WhatsApp</span>
+				</a>
+									
+			
+		</div>
+
+						</div>
+
+						
+		</div>
+	</div>
+
+	
+	<div class="smart-head-row smart-head-mid is-light smart-head-row-full">
+
+		<div class="inner wrap">
+
+							
+				<div class="items items-left ">
+				
+<button class="offcanvas-toggle has-icon" type="button" aria-label="Menu">
+	<span class="hamburger-icon hamburger-icon-b">
+		<span class="inner"></span>
+	</span>
+</button>	<a href="https://codeanddebug.in/blog/" title="Code and Debug &#8211; Blog" rel="home" class="logo-link ts-logo logo-is-image">
+		<span>
+			
+				
+					<img fetchpriority="high" src="https://codeanddebug.in/blog/wp-content/uploads/2025/05/fav-icon-300x300-blog.png" class="logo-image logo-image-dark" alt="Code and Debug &#8211; Blog" width="300" height="300"/><img src="https://codeanddebug.in/blog/wp-content/uploads/2025/05/fav-icon-300x300-blog.png" class="logo-image" alt="Code and Debug &#8211; Blog" width="300" height="300"/>
+									 
+					</span>
+	</a>	<div class="nav-wrap">
+		<nav class="navigation navigation-main nav-hov-b">
+					</nav>
+	</div>
+				</div>
+
+							
+				<div class="items items-center empty">
+								</div>
+
+							
+				<div class="items items-right ">
+				
+<div class="scheme-switcher has-icon-only">
+	<a href="#" class="toggle is-icon toggle-dark" title="Switch to Dark Design - easier on eyes.">
+		<i class="icon tsi tsi-moon"></i>
+	</a>
+	<a href="#" class="toggle is-icon toggle-light" title="Switch to Light Design.">
+		<i class="icon tsi tsi-bright"></i>
+	</a>
+</div>
+
+	<a href="#" class="search-icon has-icon-only is-icon" title="Search">
+		<i class="tsi tsi-search"></i>
+	</a>
+
+				</div>
+
+						
+		</div>
+	</div>
+
+	</div>
+<div class="smart-head smart-head-a smart-head-mobile" id="smart-head-mobile" data-sticky="mid" data-sticky-type="smart" data-sticky-full>
+	
+	<div class="smart-head-row smart-head-mid smart-head-row-3 s-dark smart-head-row-full">
+
+		<div class="inner wrap">
+
+							
+				<div class="items items-left ">
+				
+<button class="offcanvas-toggle has-icon" type="button" aria-label="Menu">
+	<span class="hamburger-icon hamburger-icon-a">
+		<span class="inner"></span>
+	</span>
+</button>				</div>
+
+							
+				<div class="items items-center ">
+					<a href="https://codeanddebug.in/blog/" title="Code and Debug &#8211; Blog" rel="home" class="logo-link ts-logo logo-is-image">
+		<span>
+			
+				
+					<img fetchpriority="high" src="https://codeanddebug.in/blog/wp-content/uploads/2025/05/fav-icon-300x300-blog.png" class="logo-image logo-image-dark" alt="Code and Debug &#8211; Blog" width="300" height="300"/><img src="https://codeanddebug.in/blog/wp-content/uploads/2025/05/fav-icon-300x300-blog.png" class="logo-image" alt="Code and Debug &#8211; Blog" width="300" height="300"/>
+									 
+					</span>
+	</a>				</div>
+
+							
+				<div class="items items-right ">
+				
+
+	<a href="#" class="search-icon has-icon-only is-icon" title="Search">
+		<i class="tsi tsi-search"></i>
+	</a>
+
+				</div>
+
+						
+		</div>
+	</div>
+
+	</div>
+<nav class="breadcrumbs is-full-width breadcrumbs-a" id="breadcrumb"><div class="inner ts-contain "><span><a href="https://codeanddebug.in/blog/"><span>Home</span></a></span><span class="delim">&raquo;</span><span><a href="https://codeanddebug.in/blog/category/data-structures-and-algorithm/"><span>Data Structures &amp; Algorithms</span></a></span><span class="delim">&raquo;</span><span class="current">Fibonacci Number | Recursive Python Solution</span></div></nav>
+<div class="main ts-contain cf right-sidebar">
+	
+		
+	<div class="s-head-large s-head-has-sep the-post-header s-head-modern s-head-large-b has-share-meta-right">
+	<div class="post-meta post-meta-a post-meta-left post-meta-single has-below"><div class="post-meta-items meta-above"><span class="meta-item cat-labels">
+						
+						<a href="https://codeanddebug.in/blog/category/data-structures-and-algorithm/" class="category term-color-3" rel="category">Data Structures &amp; Algorithms</a>
+					</span>
+					</div><h1 class="is-title post-title">Fibonacci Number | Recursive Python Solution</h1><div class="meta-below-has-right"><div class="post-meta-items meta-below has-author-img"><span class="meta-item post-author has-img"><img alt='codeanddebug' src='https://secure.gravatar.com/avatar/551b684f5d99efd6f23d62bff94065f57354dc3fefcf19c44797ce117d409170?s=32&#038;d=mm&#038;r=g' srcset='https://secure.gravatar.com/avatar/551b684f5d99efd6f23d62bff94065f57354dc3fefcf19c44797ce117d409170?s=64&#038;d=mm&#038;r=g 2x' class='avatar avatar-32 photo' height='32' width='32' decoding='async'/><span class="by">By</span> <a href="https://codeanddebug.in/blog/author/codeanddebug/" rel="author">codeanddebug</a></span><span class="meta-item date"><time class="post-date" datetime="2025-06-09T14:10:06+05:30">9 June 2025</time></span><span class="meta-item has-next-icon date-modified"><span class="updated-on">Updated:</span><time class="post-date" datetime="2025-06-09T14:11:18+05:30">9 June 2025</time></span><span class="has-next-icon meta-item comments has-icon"><a href="https://codeanddebug.in/blog/fibonacci-number/#respond"><i class="tsi tsi-comment-o"></i>No Comments</a></span><span class="meta-item read-time has-icon"><i class="tsi tsi-clock"></i>4 Mins Read</span></div> 
+	<div class="is-not-global post-share post-share-b spc-social-colors  post-share-b4">
+
+					<span class="share-text">
+				<i class="icon tsi tsi-share1"></i>
+				Share			</span>
+				
+		
+				
+			<a href="https://www.facebook.com/sharer.php?u=https%3A%2F%2Fcodeanddebug.in%2Fblog%2Ffibonacci-number%2F" class="cf service s-facebook service-lg" 
+				title="Share on Facebook" target="_blank" rel="nofollow noopener">
+				<i class="tsi tsi-facebook"></i>
+				<span class="label">Facebook</span>
+							</a>
+				
+				
+			<a href="https://twitter.com/intent/tweet?url=https%3A%2F%2Fcodeanddebug.in%2Fblog%2Ffibonacci-number%2F&#038;text=Fibonacci%20Number%20%7C%20Recursive%20Python%20Solution" class="cf service s-twitter service-lg" 
+				title="Share on X (Twitter)" target="_blank" rel="nofollow noopener">
+				<i class="tsi tsi-twitter"></i>
+				<span class="label">Twitter</span>
+							</a>
+				
+				
+			<a href="https://pinterest.com/pin/create/button/?url=https%3A%2F%2Fcodeanddebug.in%2Fblog%2Ffibonacci-number%2F&#038;media=https%3A%2F%2Fcodeanddebug.in%2Fblog%2Fwp-content%2Fuploads%2F2025%2F06%2Ffibonacci-number-featured-image.png&#038;description=Fibonacci%20Number%20%7C%20Recursive%20Python%20Solution" class="cf service s-pinterest service-lg" 
+				title="Share on Pinterest" target="_blank" rel="nofollow noopener">
+				<i class="tsi tsi-pinterest"></i>
+				<span class="label">Pinterest</span>
+							</a>
+				
+				
+			<a href="https://www.linkedin.com/shareArticle?mini=true&#038;url=https%3A%2F%2Fcodeanddebug.in%2Fblog%2Ffibonacci-number%2F" class="cf service s-linkedin service-lg" 
+				title="Share on LinkedIn" target="_blank" rel="nofollow noopener">
+				<i class="tsi tsi-linkedin"></i>
+				<span class="label">LinkedIn</span>
+							</a>
+				
+				
+			<a href="https://www.tumblr.com/share/link?url=https%3A%2F%2Fcodeanddebug.in%2Fblog%2Ffibonacci-number%2F&#038;name=Fibonacci%20Number%20%7C%20Recursive%20Python%20Solution" class="cf service s-tumblr service-sm" 
+				title="Share on Tumblr" target="_blank" rel="nofollow noopener">
+				<i class="tsi tsi-tumblr"></i>
+				<span class="label">Tumblr</span>
+							</a>
+				
+				
+			<a href="https://www.reddit.com/submit?url=https%3A%2F%2Fcodeanddebug.in%2Fblog%2Ffibonacci-number%2F&#038;title=Fibonacci%20Number%20%7C%20Recursive%20Python%20Solution" class="cf service s-reddit service-sm" 
+				title="Share on Reddit" target="_blank" rel="nofollow noopener">
+				<i class="tsi tsi-reddit-alien"></i>
+				<span class="label">Reddit</span>
+							</a>
+				
+				
+			<a href="https://t.me/share/url?url=https%3A%2F%2Fcodeanddebug.in%2Fblog%2Ffibonacci-number%2F&#038;title=Fibonacci%20Number%20%7C%20Recursive%20Python%20Solution" class="cf service s-telegram service-sm" 
+				title="Share on Telegram" target="_blank" rel="nofollow noopener">
+				<i class="tsi tsi-telegram"></i>
+				<span class="label">Telegram</span>
+							</a>
+				
+				
+			<a href="mailto:?subject=Fibonacci%20Number%20%7C%20Recursive%20Python%20Solution&#038;body=https%3A%2F%2Fcodeanddebug.in%2Fblog%2Ffibonacci-number%2F" class="cf service s-email service-sm" 
+				title="Share via Email" target="_blank" rel="nofollow noopener">
+				<i class="tsi tsi-envelope-o"></i>
+				<span class="label">Email</span>
+							</a>
+				
+		
+				
+					<a href="#" class="show-more" title="Show More Social Sharing"><i class="tsi tsi-share"></i></a>
+		
+				
+	</div>
+
+</div></div>	
+	
+</div>
+<div class="ts-row">
+	<div class="col-8 main-content s-post-contain">
+
+		
+					<div class="single-featured">	
+	<div class="featured has-media-shadows">
+				
+			<a href="https://codeanddebug.in/blog/wp-content/uploads/2025/06/fibonacci-number-featured-image.png" class="image-link media-ratio ar-bunyad-main" title="Fibonacci Number | Recursive Python Solution"><img width="814" height="532" src="https://codeanddebug.in/blog/wp-content/uploads/2025/06/fibonacci-number-featured-image-1024x502.png" class="attachment-bunyad-main size-bunyad-main no-lazy skip-lazy wp-post-image" alt="Featured Image of a question to find the fibonacci number" sizes="(max-width: 814px) 100vw, 814px" title="Fibonacci Number | Recursive Python Solution" decoding="async" srcset="https://codeanddebug.in/blog/wp-content/uploads/2025/06/fibonacci-number-featured-image-1024x502.png 1024w, https://codeanddebug.in/blog/wp-content/uploads/2025/06/fibonacci-number-featured-image-1200x588.png 1200w, https://codeanddebug.in/blog/wp-content/uploads/2025/06/fibonacci-number-featured-image.png 1224w" /></a>		
+						
+			</div>
+
+	</div>
+		
+		<div class="the-post s-post-large-b s-post-large">
+
+			<article id="post-271" class="post-271 post type-post status-publish format-standard has-post-thumbnail category-data-structures-and-algorithm category-beginner tag-easy tag-math tag-recursion">
+				
+<div class="post-content-wrap has-share-float">
+						<div class="post-share-float share-float-b is-hidden spc-social-colors spc-social-colored">
+	<div class="inner">
+					<span class="share-text">Share</span>
+		
+		<div class="services">
+					
+				
+			<a href="https://www.facebook.com/sharer.php?u=https%3A%2F%2Fcodeanddebug.in%2Fblog%2Ffibonacci-number%2F" class="cf service s-facebook" target="_blank" title="Facebook" rel="nofollow noopener">
+				<i class="tsi tsi-facebook"></i>
+				<span class="label">Facebook</span>
+
+							</a>
+				
+				
+			<a href="https://twitter.com/intent/tweet?url=https%3A%2F%2Fcodeanddebug.in%2Fblog%2Ffibonacci-number%2F&text=Fibonacci%20Number%20%7C%20Recursive%20Python%20Solution" class="cf service s-twitter" target="_blank" title="Twitter" rel="nofollow noopener">
+				<i class="tsi tsi-twitter"></i>
+				<span class="label">Twitter</span>
+
+							</a>
+				
+				
+			<a href="https://www.linkedin.com/shareArticle?mini=true&url=https%3A%2F%2Fcodeanddebug.in%2Fblog%2Ffibonacci-number%2F" class="cf service s-linkedin" target="_blank" title="LinkedIn" rel="nofollow noopener">
+				<i class="tsi tsi-linkedin"></i>
+				<span class="label">LinkedIn</span>
+
+							</a>
+				
+				
+			<a href="https://pinterest.com/pin/create/button/?url=https%3A%2F%2Fcodeanddebug.in%2Fblog%2Ffibonacci-number%2F&media=https%3A%2F%2Fcodeanddebug.in%2Fblog%2Fwp-content%2Fuploads%2F2025%2F06%2Ffibonacci-number-featured-image.png&description=Fibonacci%20Number%20%7C%20Recursive%20Python%20Solution" class="cf service s-pinterest" target="_blank" title="Pinterest" rel="nofollow noopener">
+				<i class="tsi tsi-pinterest-p"></i>
+				<span class="label">Pinterest</span>
+
+							</a>
+				
+				
+			<a href="mailto:?subject=Fibonacci%20Number%20%7C%20Recursive%20Python%20Solution&body=https%3A%2F%2Fcodeanddebug.in%2Fblog%2Ffibonacci-number%2F" class="cf service s-email" target="_blank" title="Email" rel="nofollow noopener">
+				<i class="tsi tsi-envelope-o"></i>
+				<span class="label">Email</span>
+
+							</a>
+				
+		
+					
+		</div>
+	</div>		
+</div>
+			
+	<div class="post-content cf entry-content content-spacious">
+
+		
+				
+		
+<p class="wp-block-paragraph">Find the <em>n-th</em> Fibonacci number with a recursive function in Python. Clear problem statement, examples, easy-to-grasp intuition, commented code, dry run, and Big-O complexity.</p>
+
+
+
+<p class="wp-block-paragraph">The<strong> [<a href="https://leetcode.com/problems/fibonacci-number/description/" target="_blank" rel="noreferrer noopener"><mark style="background-color:rgba(0, 0, 0, 0)" class="has-inline-color has-vivid-purple-color"><span style="text-decoration: underline;">Problem Link</span></mark></a>]</strong> is given here for your quick reference.</p>
+
+
+<div style="max-width: -moz-fit-content" class="wp-block-ub-table-of-contents-block ub_table-of-contents ub_table-of-contents-collapsed" id="ub_table-of-contents-c19ac9f6-4837-4e1b-898d-f272eeb854cd" data-linktodivider="false" data-showtext="show" data-hidetext="hide" data-scrolltype="auto" data-enablesmoothscroll="true" data-initiallyhideonmobile="false" data-initiallyshow="false"><div class="ub_table-of-contents-header-container" style="">
+			<div class="ub_table-of-contents-header" style="text-align: left; ">
+				<div class="ub_table-of-contents-title" style="">Contents:</div>
+				<div class="ub_table-of-contents-header-toggle">
+			<div class="ub_table-of-contents-toggle" style="">
+			 [<a class="ub_table-of-contents-toggle-link" href="#" style="">show</a>]
+			</div>
+		</div>
+			</div>
+		</div><div class="ub_table-of-contents-extra-container" style="">
+			<div class="ub_table-of-contents-container ub_table-of-contents-1-column ub-hide">
+				<ul style=""><li style=""><a href="https://codeanddebug.in/blog/fibonacci-number/#0-what-does-the-problem-ask" style="">What does the problem ask?</a></li><li style=""><a href="https://codeanddebug.in/blog/fibonacci-number/#1-examples" style="">Examples</a></li><li style=""><a href="https://codeanddebug.in/blog/fibonacci-number/#2-intuition-amp-approach" style="">Intuition &amp; Approach</a></li><li style=""><a href="https://codeanddebug.in/blog/fibonacci-number/#3-code" style="">Code</a></li><li style=""><a href="https://codeanddebug.in/blog/fibonacci-number/#4-code-explanation" style="">Code explanation</a></li><li style=""><a href="https://codeanddebug.in/blog/fibonacci-number/#5-dry-run-for-n-5" style="">Dry run for n = 5</a></li><li style=""><a href="https://codeanddebug.in/blog/fibonacci-number/#6-complexity" style="">Complexity</a></li><li style=""><a href="https://codeanddebug.in/blog/fibonacci-number/#7-conclusion" style="">Conclusion</a></li></ul>
+			</div>
+		</div></div>
+
+
+<h2 class="wp-block-heading" id="0-what-does-the-problem-ask">What does the problem ask?</h2>
+
+
+
+<p class="wp-block-paragraph">For a non-negative integer <code>n</code>, return the <em>n-th</em> value in the <strong>Fibonacci sequence</strong>:</p>
+
+
+
+<div class="wp-block-kevinbatdorf-code-block-pro" data-code-block-pro-font-family="Code-Pro-JetBrains-Mono" style="font-size:.875rem;font-family:Code-Pro-JetBrains-Mono,ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;line-height:1.25rem;--cbp-tab-width:2;tab-size:var(--cbp-tab-width, 2)"><span style="display:block;padding:16px 0 0 16px;margin-bottom:-1px;width:100%;text-align:left;background-color:#1E1E1E"><svg xmlns="http://www.w3.org/2000/svg" width="54" height="14" viewBox="0 0 54 14"><g fill="none" fill-rule="evenodd" transform="translate(1 1)"><circle cx="6" cy="6" r="6" fill="#FF5F56" stroke="#E0443E" stroke-width=".5"></circle><circle cx="26" cy="6" r="6" fill="#FFBD2E" stroke="#DEA123" stroke-width=".5"></circle><circle cx="46" cy="6" r="6" fill="#27C93F" stroke="#1AAB29" stroke-width=".5"></circle></g></svg></span><span role="button" tabindex="0" data-code="F(0) = 0
+F(1) = 1
+F(n) = F(n-1) + F(n-2)   for n ≥ 2" style="color:#D4D4D4;display:none" aria-label="Copy" class="code-block-pro-copy-button"><svg xmlns="http://www.w3.org/2000/svg" style="width:24px;height:24px" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path class="with-check" stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path><path class="without-check" stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg></span><pre class="shiki dark-plus" style="background-color: #1E1E1E" tabindex="0"><code><span class="line"><span style="color: #D4D4D4">F(</span><span style="color: #B5CEA8">0</span><span style="color: #D4D4D4">) = </span><span style="color: #B5CEA8">0</span></span>
+<span class="line"><span style="color: #D4D4D4">F(</span><span style="color: #B5CEA8">1</span><span style="color: #D4D4D4">) = </span><span style="color: #B5CEA8">1</span></span>
+<span class="line"><span style="color: #D4D4D4">F(n) = F(n-</span><span style="color: #B5CEA8">1</span><span style="color: #D4D4D4">) + F(n-</span><span style="color: #B5CEA8">2</span><span style="color: #D4D4D4">)   </span><span style="color: #C586C0">for</span><span style="color: #D4D4D4"> n ≥ </span><span style="color: #B5CEA8">2</span></span></code></pre></div>
+
+
+
+<hr class="wp-block-separator has-alpha-channel-opacity"/>
+
+
+
+<h2 class="wp-block-heading" id="1-examples">Examples</h2>
+
+
+
+<figure class="wp-block-table"><table class="has-fixed-layout"><thead><tr><th><code>n</code></th><th>Output</th><th>Sequence so far</th></tr></thead><tbody><tr><td>0</td><td>0</td><td>0</td></tr><tr><td>1</td><td>1</td><td>0 1</td></tr><tr><td>2</td><td>1</td><td>0 1 1</td></tr><tr><td>3</td><td>2</td><td>0 1 1 2</td></tr><tr><td>4</td><td>3</td><td>0 1 1 2 3</td></tr><tr><td>5</td><td>5</td><td>0 1 1 2 3 5</td></tr></tbody></table></figure>
+
+
+
+<blockquote class="wp-block-quote is-layout-flow wp-block-quote-is-layout-flow">
+<p class="wp-block-paragraph"><em>Also read about Leetcode #7 : <strong><a href="https://codeanddebug.in/blog/reverse-integer-python-program-explained/" target="_blank" rel="noreferrer noopener"><mark style="background-color:rgba(0, 0, 0, 0)" class="has-inline-color has-vivid-purple-color"><span style="text-decoration: underline;">Reverse Integer Python Program</span></mark></a></strong>.</em></p>
+</blockquote>
+
+
+
+<h2 class="wp-block-heading" id="2-intuition-amp-approach">Intuition &amp; Approach</h2>
+
+
+
+<p class="wp-block-paragraph">The definition of the Fibonacci sequence is <strong>self-referencing</strong>:</p>
+
+
+
+<ul class="wp-block-list">
+<li>Base cases: <code>F(0) = 0</code>, <code>F(1) = 1</code>.</li>
+
+
+
+<li>Any larger <code>F(n)</code> equals the <strong>sum of the two previous numbers</strong>.</li>
+</ul>
+
+
+
+<p class="wp-block-paragraph">This naturally maps to <strong>recursion</strong>:</p>
+
+
+
+<ul class="wp-block-list">
+<li>If <code>n</code> is <code>0</code> or <code>1</code>, return it right away.</li>
+
+
+
+<li>Otherwise, call the same function for <code>n-1</code> and <code>n-2</code>, add the results, and return the sum.</li>
+</ul>
+
+
+
+<hr class="wp-block-separator has-alpha-channel-opacity"/>
+
+
+
+<h2 class="wp-block-heading" id="3-code">Code</h2>
+
+
+
+<div class="wp-block-kevinbatdorf-code-block-pro" data-code-block-pro-font-family="Code-Pro-JetBrains-Mono" style="font-size:.875rem;font-family:Code-Pro-JetBrains-Mono,ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;line-height:1.25rem;--cbp-tab-width:2;tab-size:var(--cbp-tab-width, 2)"><span style="display:block;padding:16px 0 0 16px;margin-bottom:-1px;width:100%;text-align:left;background-color:#1E1E1E"><svg xmlns="http://www.w3.org/2000/svg" width="54" height="14" viewBox="0 0 54 14"><g fill="none" fill-rule="evenodd" transform="translate(1 1)"><circle cx="6" cy="6" r="6" fill="#FF5F56" stroke="#E0443E" stroke-width=".5"></circle><circle cx="26" cy="6" r="6" fill="#FFBD2E" stroke="#DEA123" stroke-width=".5"></circle><circle cx="46" cy="6" r="6" fill="#27C93F" stroke="#1AAB29" stroke-width=".5"></circle></g></svg></span><span role="button" tabindex="0" data-code="class Solution:
+    # helper that returns F(num)
+    def func(self, num):
+        if num &lt;= 1:            # base cases: F(0)=0, F(1)=1
+            return num
+        # recursive calls for previous two numbers
+        return self.func(num - 1) + self.func(num - 2)
+
+    def fib(self, n: int) -&gt; int:
+        # simply delegate to the helper
+        return self.func(n)" style="color:#D4D4D4;display:none" aria-label="Copy" class="code-block-pro-copy-button"><svg xmlns="http://www.w3.org/2000/svg" style="width:24px;height:24px" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path class="with-check" stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path><path class="without-check" stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg></span><pre class="shiki dark-plus" style="background-color: #1E1E1E" tabindex="0"><code><span class="line"><span style="color: #569CD6">class</span><span style="color: #D4D4D4"> </span><span style="color: #4EC9B0">Solution</span><span style="color: #D4D4D4">:</span></span>
+<span class="line"><span style="color: #D4D4D4">    </span><span style="color: #6A9955"># helper that returns F(num)</span></span>
+<span class="line"><span style="color: #D4D4D4">    </span><span style="color: #569CD6">def</span><span style="color: #D4D4D4"> </span><span style="color: #DCDCAA">func</span><span style="color: #D4D4D4">(</span><span style="color: #9CDCFE">self</span><span style="color: #D4D4D4">, </span><span style="color: #9CDCFE">num</span><span style="color: #D4D4D4">):</span></span>
+<span class="line"><span style="color: #D4D4D4">        </span><span style="color: #C586C0">if</span><span style="color: #D4D4D4"> num &lt;= </span><span style="color: #B5CEA8">1</span><span style="color: #D4D4D4">:            </span><span style="color: #6A9955"># base cases: F(0)=0, F(1)=1</span></span>
+<span class="line"><span style="color: #D4D4D4">            </span><span style="color: #C586C0">return</span><span style="color: #D4D4D4"> num</span></span>
+<span class="line"><span style="color: #D4D4D4">        </span><span style="color: #6A9955"># recursive calls for previous two numbers</span></span>
+<span class="line"><span style="color: #D4D4D4">        </span><span style="color: #C586C0">return</span><span style="color: #D4D4D4"> </span><span style="color: #569CD6">self</span><span style="color: #D4D4D4">.func(num - </span><span style="color: #B5CEA8">1</span><span style="color: #D4D4D4">) + </span><span style="color: #569CD6">self</span><span style="color: #D4D4D4">.func(num - </span><span style="color: #B5CEA8">2</span><span style="color: #D4D4D4">)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color: #D4D4D4">    </span><span style="color: #569CD6">def</span><span style="color: #D4D4D4"> </span><span style="color: #DCDCAA">fib</span><span style="color: #D4D4D4">(</span><span style="color: #9CDCFE">self</span><span style="color: #D4D4D4">, </span><span style="color: #9CDCFE">n</span><span style="color: #D4D4D4">: </span><span style="color: #4EC9B0">int</span><span style="color: #D4D4D4">) -&gt; </span><span style="color: #4EC9B0">int</span><span style="color: #D4D4D4">:</span></span>
+<span class="line"><span style="color: #D4D4D4">        </span><span style="color: #6A9955"># simply delegate to the helper</span></span>
+<span class="line"><span style="color: #D4D4D4">        </span><span style="color: #C586C0">return</span><span style="color: #D4D4D4"> </span><span style="color: #569CD6">self</span><span style="color: #D4D4D4">.func(n)</span></span></code></pre></div>
+
+
+
+<hr class="wp-block-separator has-alpha-channel-opacity"/>
+
+
+
+<h2 class="wp-block-heading" id="4-code-explanation">Code explanation</h2>
+
+
+
+<ol class="wp-block-list">
+<li><strong><code>func(num)</code></strong>
+<ul class="wp-block-list">
+<li>If <code>num</code> is <code>0</code> or <code>1</code>, return it (ends recursion).</li>
+
+
+
+<li>Otherwise return <code>func(num-1) + func(num-2)</code>.</li>
+</ul>
+</li>
+
+
+
+<li><strong><code>fib(n)</code></strong>
+<ul class="wp-block-list">
+<li>Acts as a thin wrapper that calls <code>func</code>.</li>
+</ul>
+</li>
+</ol>
+
+
+
+<p class="wp-block-paragraph">The recursion tree keeps expanding until every branch hits a base case, then sums bubble back up to the original call.</p>
+
+
+
+<hr class="wp-block-separator has-alpha-channel-opacity"/>
+
+
+
+<h2 class="wp-block-heading" id="5-dry-run-for-n-5">Dry run for <code>n = 5</code></h2>
+
+
+
+<div class="wp-block-merpress-mermaidjs diagram-source-mermaid"><pre class="mermaid">graph TD
+    A["fib(5)&lt;br/>calls func(5)"] --> B["func(5)&lt;br/>5 > 1, so recurse"]
+    
+    B --> C["func(4)&lt;br/>4 > 1, so recurse"]
+    B --> D["func(3)&lt;br/>3 > 1, so recurse"]
+    
+    C --> E["func(3)&lt;br/>3 > 1, so recurse"]
+    C --> F["func(2)&lt;br/>2 > 1, so recurse"]
+    
+    D --> G["func(2)&lt;br/>2 > 1, so recurse"]
+    D --> H["func(1)&lt;br/>1 ≤ 1, return 1"]
+    
+    E --> I["func(2)&lt;br/>2 > 1, so recurse"]
+    E --> J["func(1)&lt;br/>1 ≤ 1, return 1"]
+    
+    F --> K["func(1)&lt;br/>1 ≤ 1, return 1"]
+    F --> L["func(0)&lt;br/>0 ≤ 1, return 0"]
+    
+    G --> M["func(1)&lt;br/>1 ≤ 1, return 1"]
+    G --> N["func(0)&lt;br/>0 ≤ 1, return 0"]
+    
+    I --> O["func(1)&lt;br/>1 ≤ 1, return 1"]
+    I --> P["func(0)&lt;br/>0 ≤ 1, return 0"]
+    
+    %% Return value annotations
+    H -.-> |"returns 1"| D
+    J -.-> |"returns 1"| E
+    K -.-> |"returns 1"| F
+    L -.-> |"returns 0"| F
+    M -.-> |"returns 1"| G
+    N -.-> |"returns 0"| G
+    O -.-> |"returns 1"| I
+    P -.-> |"returns 0"| I
+    
+    %% Intermediate calculations
+    I -.-> |"1 + 0 = 1"| E
+    E -.-> |"1 + 1 = 2"| C
+    F -.-> |"1 + 0 = 1"| C
+    C -.-> |"2 + 1 = 3"| B
+    
+    G -.-> |"1 + 0 = 1"| D
+    D -.-> |"1 + 1 = 2"| B
+    
+    B -.-> |"3 + 2 = 5"| A
+    
+    %% Styling
+    classDef baseCase fill:#e1f5fe,stroke:#01579b,stroke-width:2px
+    classDef recursive fill:#fff3e0,stroke:#e65100,stroke-width:2px
+    classDef result fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
+    
+    class H,J,K,L,M,N,O,P baseCase
+    class B,C,D,E,F,G,I recursive
+    class A result</pre></div>
+
+
+
+<p class="wp-block-paragraph">So <code>fib(5)</code> returns 5.</p>
+
+
+
+<hr class="wp-block-separator has-alpha-channel-opacity"/>
+
+
+
+<h2 class="wp-block-heading" id="6-complexity">Complexity</h2>
+
+
+
+<figure class="wp-block-table"><table class="has-fixed-layout"><thead><tr><th>Measure</th><th>Value</th></tr></thead><tbody><tr><td><strong>Time</strong></td><td><strong>O(2ⁿ)</strong> – every call branches into two more calls until base cases.</td></tr><tr><td><strong>Space</strong></td><td><strong>O(n)</strong> – maximum depth of the recursion stack.</td></tr></tbody></table></figure>
+
+
+
+<p class="wp-block-paragraph"><em>In plain words:</em> the recursive method is easy to write but repeats work many times, making it slow for large <code>n</code>. The memory used grows linearly with <code>n</code> because each pending call waits on its two children.</p>
+
+
+
+<hr class="wp-block-separator has-alpha-channel-opacity"/>
+
+
+
+<h2 class="wp-block-heading" id="7-conclusion">Conclusion</h2>
+
+
+
+<p class="wp-block-paragraph">A direct recursive implementation follows the mathematical definition of Fibonacci numbers and is great for learning recursion. For bigger inputs you would switch to memoization or an iterative approach, but this simple version clearly shows the concept in just a few lines of Python.</p>
+
+
+
+<div class="wp-block-buttons is-content-justification-center is-layout-flex wp-container-core-buttons-is-layout-fe48e5de wp-block-buttons-is-layout-flex">
+<div class="wp-block-button"><a class="wp-block-button__link wp-element-button" href="https://codeanddebug.in/course/master-dsa-with-leetcode" target="_blank" rel="noreferrer noopener">Join our FREE Advance DSA COURSE</a></div>
+</div>
+
+
+
+<hr class="wp-block-separator has-alpha-channel-opacity"/>
+
+
+
+<p class="wp-block-paragraph"><em>For any changes to the article, kindly email at <a href="mailto:code@codeanddebug.in">code@codeanddebug.in</a> or contact us at <a href="tel:+91-9712928220">+91-9712928220</a>.</em></p>
+
+
+
+<p class="wp-block-paragraph"></p>
+
+				
+		
+		
+		
+	</div>
+</div>
+	
+	<div class="the-post-tags"><a href="https://codeanddebug.in/blog/tag/easy/" rel="tag">Easy</a> <a href="https://codeanddebug.in/blog/tag/math/" rel="tag">Math</a> <a href="https://codeanddebug.in/blog/tag/recursion/" rel="tag">Recursion</a></div>
+			</article>
+
+			
+	
+	<div class="post-share-bot">
+		<span class="info">Share.</span>
+		
+		<span class="share-links spc-social spc-social-colors spc-social-bg">
+
+			
+			
+				<a href="https://www.facebook.com/sharer.php?u=https%3A%2F%2Fcodeanddebug.in%2Fblog%2Ffibonacci-number%2F" class="service s-facebook tsi tsi-facebook" 
+					title="Share on Facebook" target="_blank" rel="nofollow noopener">
+					<span class="visuallyhidden">Facebook</span>
+
+									</a>
+					
+			
+				<a href="https://twitter.com/intent/tweet?url=https%3A%2F%2Fcodeanddebug.in%2Fblog%2Ffibonacci-number%2F&#038;text=Fibonacci%20Number%20%7C%20Recursive%20Python%20Solution" class="service s-twitter tsi tsi-twitter" 
+					title="Share on X (Twitter)" target="_blank" rel="nofollow noopener">
+					<span class="visuallyhidden">Twitter</span>
+
+									</a>
+					
+			
+				<a href="https://pinterest.com/pin/create/button/?url=https%3A%2F%2Fcodeanddebug.in%2Fblog%2Ffibonacci-number%2F&#038;media=https%3A%2F%2Fcodeanddebug.in%2Fblog%2Fwp-content%2Fuploads%2F2025%2F06%2Ffibonacci-number-featured-image.png&#038;description=Fibonacci%20Number%20%7C%20Recursive%20Python%20Solution" class="service s-pinterest tsi tsi-pinterest" 
+					title="Share on Pinterest" target="_blank" rel="nofollow noopener">
+					<span class="visuallyhidden">Pinterest</span>
+
+									</a>
+					
+			
+				<a href="https://www.linkedin.com/shareArticle?mini=true&#038;url=https%3A%2F%2Fcodeanddebug.in%2Fblog%2Ffibonacci-number%2F" class="service s-linkedin tsi tsi-linkedin" 
+					title="Share on LinkedIn" target="_blank" rel="nofollow noopener">
+					<span class="visuallyhidden">LinkedIn</span>
+
+									</a>
+					
+			
+				<a href="https://www.tumblr.com/share/link?url=https%3A%2F%2Fcodeanddebug.in%2Fblog%2Ffibonacci-number%2F&#038;name=Fibonacci%20Number%20%7C%20Recursive%20Python%20Solution" class="service s-tumblr tsi tsi-tumblr" 
+					title="Share on Tumblr" target="_blank" rel="nofollow noopener">
+					<span class="visuallyhidden">Tumblr</span>
+
+									</a>
+					
+			
+				<a href="mailto:?subject=Fibonacci%20Number%20%7C%20Recursive%20Python%20Solution&#038;body=https%3A%2F%2Fcodeanddebug.in%2Fblog%2Ffibonacci-number%2F" class="service s-email tsi tsi-envelope-o" 
+					title="Share via Email" target="_blank" rel="nofollow noopener">
+					<span class="visuallyhidden">Email</span>
+
+									</a>
+					
+			
+			
+		</span>
+	</div>
+	
+
+
+	<section class="navigate-posts">
+	
+		<div class="previous">
+					<span class="main-color title"><i class="tsi tsi-chevron-left"></i> Previous Article</span><span class="link"><a href="https://codeanddebug.in/blog/palindrome-string-recursive-iterative-solution/" rel="prev">Palindrome String | Recursive &amp; Iterative Python Solutions</a></span>
+				</div>
+		<div class="next">
+					<span class="main-color title">Next Article <i class="tsi tsi-chevron-right"></i></span><span class="link"><a href="https://codeanddebug.in/blog/course-schedule-1/" rel="next">Course Schedule | Leetcode 207 | Kahn’s Algorithm Walk-through in Python</a></span>
+				</div>		
+	</section>
+
+
+
+			<div class="author-box">
+			<section class="author-info">
+
+	<img alt='' src='https://secure.gravatar.com/avatar/551b684f5d99efd6f23d62bff94065f57354dc3fefcf19c44797ce117d409170?s=95&#038;d=mm&#038;r=g' srcset='https://secure.gravatar.com/avatar/551b684f5d99efd6f23d62bff94065f57354dc3fefcf19c44797ce117d409170?s=190&#038;d=mm&#038;r=g 2x' class='avatar avatar-95 photo' height='95' width='95' decoding='async'/>	
+	<div class="description">
+		<a href="https://codeanddebug.in/blog/author/codeanddebug/" rel="author">codeanddebug</a>		
+		<ul class="social-icons">
+					
+			<li>
+				<a href="https://codeanddebug.in/blog" class="icon tsi tsi-home" title="Website"> 
+					<span class="visuallyhidden">Website</span></a>				
+			</li>
+			
+			
+				</ul>
+		
+		<p class="bio"></p>
+	</div>
+	
+</section>		</div>
+	
+
+	<section class="related-posts">
+							
+							
+				<div class="block-head block-head-ac block-head-e block-head-e3 is-left">
+
+					<h4 class="heading">Related <span class="color">Posts</span></h4>					
+									</div>
+				
+			
+				<section class="block-wrap block-grid cols-gap-sm mb-none has-media-shadows" data-id="1">
+
+				
+			<div class="block-content">
+					
+	<div class="loop loop-grid loop-grid-sm grid grid-3 md:grid-2 xs:grid-1">
+
+					
+<article class="l-post grid-post grid-sm-post">
+
+	
+			<div class="media">
+
+		
+			<a href="https://codeanddebug.in/blog/dsa-interview-cheat-sheet/" class="image-link media-ratio ratio-16-9" title="DSA Interview Cheat Sheet: All Patterns You Need to Know"><span data-bgsrc="https://codeanddebug.in/blog/wp-content/uploads/2026/04/DSA-Interview-Cheat-Sheet-Banner-450x221.png" class="img bg-cover wp-post-image attachment-bunyad-medium size-bunyad-medium lazyload" data-bgset="https://codeanddebug.in/blog/wp-content/uploads/2026/04/DSA-Interview-Cheat-Sheet-Banner-450x221.png 450w, https://codeanddebug.in/blog/wp-content/uploads/2026/04/DSA-Interview-Cheat-Sheet-Banner-1024x502.png 1024w, https://codeanddebug.in/blog/wp-content/uploads/2026/04/DSA-Interview-Cheat-Sheet-Banner-768x376.png 768w, https://codeanddebug.in/blog/wp-content/uploads/2026/04/DSA-Interview-Cheat-Sheet-Banner-1200x588.png 1200w, https://codeanddebug.in/blog/wp-content/uploads/2026/04/DSA-Interview-Cheat-Sheet-Banner.png 1224w" data-sizes="(max-width: 390px) 100vw, 390px"></span></a>			
+			
+			
+			
+		
+		</div>
+	
+
+	
+		<div class="content">
+
+			<div class="post-meta post-meta-a has-below"><div class="post-meta-items meta-above"><span class="meta-item post-cat">
+						
+						<a href="https://codeanddebug.in/blog/category/data-structures-and-algorithm/" class="category term-color-3" rel="category">Data Structures &amp; Algorithms</a>
+					</span>
+					</div><h4 class="is-title post-title"><a href="https://codeanddebug.in/blog/dsa-interview-cheat-sheet/">DSA Interview Cheat Sheet: All Patterns You Need to Know</a></h4><div class="post-meta-items meta-below"><span class="meta-item date"><span class="date-link"><time class="post-date" datetime="2026-04-04T14:13:51+05:30">4 April 2026</time></span></span></div></div>			
+			
+			
+		</div>
+
+	
+</article>					
+<article class="l-post grid-post grid-sm-post">
+
+	
+			<div class="media">
+
+		
+			<a href="https://codeanddebug.in/blog/symmetric-tree/" class="image-link media-ratio ratio-16-9" title="Symmetric Tree | Leetcode 101 | Recursive DFS Approach"><span data-bgsrc="https://codeanddebug.in/blog/wp-content/uploads/2025/09/symmetric-tree-featured-image-450x221.png" class="img bg-cover wp-post-image attachment-bunyad-medium size-bunyad-medium lazyload" data-bgset="https://codeanddebug.in/blog/wp-content/uploads/2025/09/symmetric-tree-featured-image-450x221.png 450w, https://codeanddebug.in/blog/wp-content/uploads/2025/09/symmetric-tree-featured-image-1024x502.png 1024w, https://codeanddebug.in/blog/wp-content/uploads/2025/09/symmetric-tree-featured-image-768x376.png 768w, https://codeanddebug.in/blog/wp-content/uploads/2025/09/symmetric-tree-featured-image-1200x588.png 1200w, https://codeanddebug.in/blog/wp-content/uploads/2025/09/symmetric-tree-featured-image.png 1224w" data-sizes="(max-width: 390px) 100vw, 390px" role="img" aria-label="Featured image of a question to solve Symmetric Tree"></span></a>			
+			
+			
+			
+		
+		</div>
+	
+
+	
+		<div class="content">
+
+			<div class="post-meta post-meta-a has-below"><div class="post-meta-items meta-above"><span class="meta-item post-cat">
+						
+						<a href="https://codeanddebug.in/blog/category/data-structures-and-algorithm/" class="category term-color-3" rel="category">Data Structures &amp; Algorithms</a>
+					</span>
+					</div><h4 class="is-title post-title"><a href="https://codeanddebug.in/blog/symmetric-tree/">Symmetric Tree | Leetcode 101 | Recursive DFS Approach</a></h4><div class="post-meta-items meta-below"><span class="meta-item date"><span class="date-link"><time class="post-date" datetime="2025-09-02T12:36:27+05:30">2 September 2025</time></span></span></div></div>			
+			
+			
+		</div>
+
+	
+</article>					
+<article class="l-post grid-post grid-sm-post">
+
+	
+			<div class="media">
+
+		
+			<a href="https://codeanddebug.in/blog/binary-tree-right-side-view/" class="image-link media-ratio ratio-16-9" title="Binary Tree Right Side View | Leetcode 199 | BFS and DFS Approaches"><span data-bgsrc="https://codeanddebug.in/blog/wp-content/uploads/2025/09/binary-tree-right-side-view-featured-image-450x221.png" class="img bg-cover wp-post-image attachment-bunyad-medium size-bunyad-medium lazyload" data-bgset="https://codeanddebug.in/blog/wp-content/uploads/2025/09/binary-tree-right-side-view-featured-image-450x221.png 450w, https://codeanddebug.in/blog/wp-content/uploads/2025/09/binary-tree-right-side-view-featured-image-1024x502.png 1024w, https://codeanddebug.in/blog/wp-content/uploads/2025/09/binary-tree-right-side-view-featured-image-768x376.png 768w, https://codeanddebug.in/blog/wp-content/uploads/2025/09/binary-tree-right-side-view-featured-image-1200x588.png 1200w, https://codeanddebug.in/blog/wp-content/uploads/2025/09/binary-tree-right-side-view-featured-image.png 1224w" data-sizes="(max-width: 390px) 100vw, 390px" role="img" aria-label="Featured image of a question to solve right side View of Binary Tree"></span></a>			
+			
+			
+			
+		
+		</div>
+	
+
+	
+		<div class="content">
+
+			<div class="post-meta post-meta-a has-below"><div class="post-meta-items meta-above"><span class="meta-item post-cat">
+						
+						<a href="https://codeanddebug.in/blog/category/data-structures-and-algorithm/" class="category term-color-3" rel="category">Data Structures &amp; Algorithms</a>
+					</span>
+					</div><h4 class="is-title post-title"><a href="https://codeanddebug.in/blog/binary-tree-right-side-view/">Binary Tree Right Side View | Leetcode 199 | BFS and DFS Approaches</a></h4><div class="post-meta-items meta-below"><span class="meta-item date"><span class="date-link"><time class="post-date" datetime="2025-09-02T12:33:00+05:30">2 September 2025</time></span></span></div></div>			
+			
+			
+		</div>
+
+	
+</article>		
+	</div>
+
+		
+			</div>
+
+		</section>
+		
+	</section>			
+			<div class="comments">
+				
+	
+
+			<div class="ts-comments-show">
+			<a href="#" class="ts-button ts-button-b">
+				Add A Comment			</a>
+		</div>
+	
+
+	<div id="comments">
+		<div class="comments-area ts-comments-hidden">
+
+		
+	
+		<div id="respond" class="comment-respond">
+		<div id="reply-title" class="h-tag comment-reply-title"><span class="heading">Leave A Reply</span> <small><a rel="nofollow" id="cancel-comment-reply-link" href="/blog/fibonacci-number/#respond" style="display:none;">Cancel Reply</a></small></div><form action="https://codeanddebug.in/blog/wp-comments-post.php" method="post" id="commentform" class="comment-form">
+			<p>
+				<textarea name="comment" id="comment" cols="45" rows="8" aria-required="true" placeholder="Your Comment"  maxlength="65525" required="required"></textarea>
+			</p><p class="form-field comment-form-author"><input id="author" name="author" type="text" placeholder="Name *" value="" size="30" maxlength="245" required='required' /></p>
+<p class="form-field comment-form-email"><input id="email" name="email" type="email" placeholder="Email *" value="" size="30" maxlength="100" required='required' /></p>
+<p class="form-field comment-form-url"><input id="url" name="url" type="text" inputmode="url" placeholder="Website" value="" size="30" maxlength="200" /></p>
+
+		<p class="comment-form-cookies-consent">
+			<input id="wp-comment-cookies-consent" name="wp-comment-cookies-consent" type="checkbox" value="yes" />
+			<label for="wp-comment-cookies-consent">Save my name, email, and website in this browser for the next time I comment.
+			</label>
+		</p>
+<p class="form-submit"><input name="submit" type="submit" id="comment-submit" class="submit" value="Post Comment" /> <input type='hidden' name='comment_post_ID' value='271' id='comment_post_ID' />
+<input type='hidden' name='comment_parent' id='comment_parent' value='0' />
+</p></form>	</div><!-- #respond -->
+			</div>
+	</div><!-- #comments -->
+			</div>
+
+		</div>
+	</div>
+	
+			
+	
+	<aside class="col-4 main-sidebar has-sep">
+	
+			<div class="inner ts-sticky-native">
+		
+			<div id="categories-3" class="widget widget_categories"><div class="widget-title block-head block-head-ac block-head block-head-ac block-head-c is-left has-style"><h5 class="heading">Categories</h5></div>
+			<ul>
+					<li class="cat-item cat-item-3"><a href="https://codeanddebug.in/blog/category/data-structures-and-algorithm/">Data Structures &amp; Algorithms</a> (241)
+<ul class='children'>
+	<li class="cat-item cat-item-4"><a href="https://codeanddebug.in/blog/category/data-structures-and-algorithm/beginner/">Beginner</a> (82)
+</li>
+	<li class="cat-item cat-item-5"><a href="https://codeanddebug.in/blog/category/data-structures-and-algorithm/expert/">Expert</a> (52)
+</li>
+	<li class="cat-item cat-item-6"><a href="https://codeanddebug.in/blog/category/data-structures-and-algorithm/intermediate/">Intermediate</a> (106)
+</li>
+</ul>
+</li>
+	<li class="cat-item cat-item-46"><a href="https://codeanddebug.in/blog/category/pandas/">Pandas</a> (1)
+</li>
+	<li class="cat-item cat-item-45"><a href="https://codeanddebug.in/blog/category/resume/">Resume</a> (1)
+</li>
+			</ul>
+
+			</div>
+		<div id="smartmag-block-posts-small-3" class="widget ts-block-widget smartmag-widget-posts-small">		
+		<div class="block">
+					<section class="block-wrap block-posts-small block-sc mb-none has-media-shadows" data-id="2">
+
+			<div class="widget-title block-head block-head-ac block-head block-head-ac block-head-c is-left has-style"><h5 class="heading">Recent Posts</h5></div>	
+			<div class="block-content">
+				
+	<div class="loop loop-small loop-small-a loop-sep loop-small-sep grid grid-1 md:grid-1 sm:grid-1 xs:grid-1">
+
+					
+<article class="l-post small-post small-a-post m-pos-left">
+
+	
+			<div class="media">
+
+		
+			<a href="https://codeanddebug.in/blog/pandas-python-roadmap/" class="image-link media-ratio ratio-is-custom" title="Pandas Python: The Complete Roadmap for Beginners in 2026"><span data-bgsrc="https://codeanddebug.in/blog/wp-content/uploads/2026/04/pandas-python-roadmap-Banner-300x147.png" class="img bg-cover wp-post-image attachment-medium size-medium lazyload" data-bgset="https://codeanddebug.in/blog/wp-content/uploads/2026/04/pandas-python-roadmap-Banner-300x147.png 300w, https://codeanddebug.in/blog/wp-content/uploads/2026/04/pandas-python-roadmap-Banner-1024x502.png 1024w, https://codeanddebug.in/blog/wp-content/uploads/2026/04/pandas-python-roadmap-Banner-768x376.png 768w, https://codeanddebug.in/blog/wp-content/uploads/2026/04/pandas-python-roadmap-Banner-450x221.png 450w, https://codeanddebug.in/blog/wp-content/uploads/2026/04/pandas-python-roadmap-Banner-1200x588.png 1200w, https://codeanddebug.in/blog/wp-content/uploads/2026/04/pandas-python-roadmap-Banner.png 1224w" data-sizes="(max-width: 122px) 100vw, 122px" role="img" aria-label="python pandas banner image"></span></a>			
+			
+			
+			
+		
+		</div>
+	
+
+	
+		<div class="content">
+
+			<div class="post-meta post-meta-a post-meta-left has-below"><h4 class="is-title post-title"><a href="https://codeanddebug.in/blog/pandas-python-roadmap/">Pandas Python: The Complete Roadmap for Beginners in 2026</a></h4><div class="post-meta-items meta-below"><span class="meta-item date"><span class="date-link"><time class="post-date" datetime="2026-04-08T11:36:24+05:30">8 April 2026</time></span></span></div></div>			
+			
+			
+		</div>
+
+	
+</article>	
+					
+<article class="l-post small-post small-a-post m-pos-left">
+
+	
+			<div class="media">
+
+		
+			<a href="https://codeanddebug.in/blog/dsa-interview-cheat-sheet/" class="image-link media-ratio ratio-is-custom" title="DSA Interview Cheat Sheet: All Patterns You Need to Know"><span data-bgsrc="https://codeanddebug.in/blog/wp-content/uploads/2026/04/DSA-Interview-Cheat-Sheet-Banner-300x147.png" class="img bg-cover wp-post-image attachment-medium size-medium lazyload" data-bgset="https://codeanddebug.in/blog/wp-content/uploads/2026/04/DSA-Interview-Cheat-Sheet-Banner-300x147.png 300w, https://codeanddebug.in/blog/wp-content/uploads/2026/04/DSA-Interview-Cheat-Sheet-Banner-1024x502.png 1024w, https://codeanddebug.in/blog/wp-content/uploads/2026/04/DSA-Interview-Cheat-Sheet-Banner-768x376.png 768w, https://codeanddebug.in/blog/wp-content/uploads/2026/04/DSA-Interview-Cheat-Sheet-Banner-450x221.png 450w, https://codeanddebug.in/blog/wp-content/uploads/2026/04/DSA-Interview-Cheat-Sheet-Banner-1200x588.png 1200w, https://codeanddebug.in/blog/wp-content/uploads/2026/04/DSA-Interview-Cheat-Sheet-Banner.png 1224w" data-sizes="(max-width: 122px) 100vw, 122px"></span></a>			
+			
+			
+			
+		
+		</div>
+	
+
+	
+		<div class="content">
+
+			<div class="post-meta post-meta-a post-meta-left has-below"><h4 class="is-title post-title"><a href="https://codeanddebug.in/blog/dsa-interview-cheat-sheet/">DSA Interview Cheat Sheet: All Patterns You Need to Know</a></h4><div class="post-meta-items meta-below"><span class="meta-item date"><span class="date-link"><time class="post-date" datetime="2026-04-04T14:13:51+05:30">4 April 2026</time></span></span></div></div>			
+			
+			
+		</div>
+
+	
+</article>	
+					
+<article class="l-post small-post small-a-post m-pos-left">
+
+	
+			<div class="media">
+
+		
+			<a href="https://codeanddebug.in/blog/symmetric-tree/" class="image-link media-ratio ratio-is-custom" title="Symmetric Tree | Leetcode 101 | Recursive DFS Approach"><span data-bgsrc="https://codeanddebug.in/blog/wp-content/uploads/2025/09/symmetric-tree-featured-image-300x147.png" class="img bg-cover wp-post-image attachment-medium size-medium lazyload" data-bgset="https://codeanddebug.in/blog/wp-content/uploads/2025/09/symmetric-tree-featured-image-300x147.png 300w, https://codeanddebug.in/blog/wp-content/uploads/2025/09/symmetric-tree-featured-image-1024x502.png 1024w, https://codeanddebug.in/blog/wp-content/uploads/2025/09/symmetric-tree-featured-image-768x376.png 768w, https://codeanddebug.in/blog/wp-content/uploads/2025/09/symmetric-tree-featured-image-450x221.png 450w, https://codeanddebug.in/blog/wp-content/uploads/2025/09/symmetric-tree-featured-image-1200x588.png 1200w, https://codeanddebug.in/blog/wp-content/uploads/2025/09/symmetric-tree-featured-image.png 1224w" data-sizes="(max-width: 122px) 100vw, 122px" role="img" aria-label="Featured image of a question to solve Symmetric Tree"></span></a>			
+			
+			
+			
+		
+		</div>
+	
+
+	
+		<div class="content">
+
+			<div class="post-meta post-meta-a post-meta-left has-below"><h4 class="is-title post-title"><a href="https://codeanddebug.in/blog/symmetric-tree/">Symmetric Tree | Leetcode 101 | Recursive DFS Approach</a></h4><div class="post-meta-items meta-below"><span class="meta-item date"><span class="date-link"><time class="post-date" datetime="2025-09-02T12:36:27+05:30">2 September 2025</time></span></span></div></div>			
+			
+			
+		</div>
+
+	
+</article>	
+					
+<article class="l-post small-post small-a-post m-pos-left">
+
+	
+			<div class="media">
+
+		
+			<a href="https://codeanddebug.in/blog/binary-tree-right-side-view/" class="image-link media-ratio ratio-is-custom" title="Binary Tree Right Side View | Leetcode 199 | BFS and DFS Approaches"><span data-bgsrc="https://codeanddebug.in/blog/wp-content/uploads/2025/09/binary-tree-right-side-view-featured-image-300x147.png" class="img bg-cover wp-post-image attachment-medium size-medium lazyload" data-bgset="https://codeanddebug.in/blog/wp-content/uploads/2025/09/binary-tree-right-side-view-featured-image-300x147.png 300w, https://codeanddebug.in/blog/wp-content/uploads/2025/09/binary-tree-right-side-view-featured-image-1024x502.png 1024w, https://codeanddebug.in/blog/wp-content/uploads/2025/09/binary-tree-right-side-view-featured-image-768x376.png 768w, https://codeanddebug.in/blog/wp-content/uploads/2025/09/binary-tree-right-side-view-featured-image-450x221.png 450w, https://codeanddebug.in/blog/wp-content/uploads/2025/09/binary-tree-right-side-view-featured-image-1200x588.png 1200w, https://codeanddebug.in/blog/wp-content/uploads/2025/09/binary-tree-right-side-view-featured-image.png 1224w" data-sizes="(max-width: 122px) 100vw, 122px" role="img" aria-label="Featured image of a question to solve right side View of Binary Tree"></span></a>			
+			
+			
+			
+		
+		</div>
+	
+
+	
+		<div class="content">
+
+			<div class="post-meta post-meta-a post-meta-left has-below"><h4 class="is-title post-title"><a href="https://codeanddebug.in/blog/binary-tree-right-side-view/">Binary Tree Right Side View | Leetcode 199 | BFS and DFS Approaches</a></h4><div class="post-meta-items meta-below"><span class="meta-item date"><span class="date-link"><time class="post-date" datetime="2025-09-02T12:33:00+05:30">2 September 2025</time></span></span></div></div>			
+			
+			
+		</div>
+
+	
+</article>	
+					
+<article class="l-post small-post small-a-post m-pos-left">
+
+	
+			<div class="media">
+
+		
+			<a href="https://codeanddebug.in/blog/bottom-view-of-binary-tree/" class="image-link media-ratio ratio-is-custom" title="Bottom View of Binary Tree | BFS with Horizontal Distance Mapping"><span data-bgsrc="https://codeanddebug.in/blog/wp-content/uploads/2025/09/bottom-view-of-binary-tree-featured-image-300x147.png" class="img bg-cover wp-post-image attachment-medium size-medium lazyload" data-bgset="https://codeanddebug.in/blog/wp-content/uploads/2025/09/bottom-view-of-binary-tree-featured-image-300x147.png 300w, https://codeanddebug.in/blog/wp-content/uploads/2025/09/bottom-view-of-binary-tree-featured-image-1024x502.png 1024w, https://codeanddebug.in/blog/wp-content/uploads/2025/09/bottom-view-of-binary-tree-featured-image-768x376.png 768w, https://codeanddebug.in/blog/wp-content/uploads/2025/09/bottom-view-of-binary-tree-featured-image-450x221.png 450w, https://codeanddebug.in/blog/wp-content/uploads/2025/09/bottom-view-of-binary-tree-featured-image-1200x588.png 1200w, https://codeanddebug.in/blog/wp-content/uploads/2025/09/bottom-view-of-binary-tree-featured-image.png 1224w" data-sizes="(max-width: 122px) 100vw, 122px" role="img" aria-label="Featured image of a question to solve Bottom View of Binary Tree"></span></a>			
+			
+			
+			
+		
+		</div>
+	
+
+	
+		<div class="content">
+
+			<div class="post-meta post-meta-a post-meta-left has-below"><h4 class="is-title post-title"><a href="https://codeanddebug.in/blog/bottom-view-of-binary-tree/">Bottom View of Binary Tree | BFS with Horizontal Distance Mapping</a></h4><div class="post-meta-items meta-below"><span class="meta-item date"><span class="date-link"><time class="post-date" datetime="2025-09-02T12:24:19+05:30">2 September 2025</time></span></span></div></div>			
+			
+			
+		</div>
+
+	
+</article>	
+		
+	</div>
+
+					</div>
+
+		</section>
+				</div>
+
+		</div>		</div>
+	
+	</aside>
+	
+</div>
+	</div>
+
+			<footer class="main-footer cols-gap-lg footer-bold s-dark">
+
+					
+	
+			<div class="lower-footer bold-footer-lower">
+			<div class="ts-contain inner">
+
+				
+
+				
+		<div class="spc-social-block spc-social spc-social-b ">
+		
+			
+				<a href="https://www.facebook.com/codeanddebugedu" class="link service s-facebook" target="_blank" rel="nofollow noopener">
+					<i class="icon tsi tsi-facebook"></i>					<span class="visuallyhidden">Facebook</span>
+				</a>
+									
+			
+				<a href="https://www.instagram.com/codeanddebug/?hl=en" class="link service s-instagram" target="_blank" rel="nofollow noopener">
+					<i class="icon tsi tsi-instagram"></i>					<span class="visuallyhidden">Instagram</span>
+				</a>
+									
+			
+				<a href="https://www.youtube.com/@codeanddebug" class="link service s-youtube" target="_blank" rel="nofollow noopener">
+					<i class="icon tsi tsi-youtube-play"></i>					<span class="visuallyhidden">YouTube</span>
+				</a>
+									
+			
+				<a href="https://www.linkedin.com/company/code-debug/" class="link service s-linkedin" target="_blank" rel="nofollow noopener">
+					<i class="icon tsi tsi-linkedin"></i>					<span class="visuallyhidden">LinkedIn</span>
+				</a>
+									
+			
+				<a href="https://wa.me/919712928220" class="link service s-whatsapp" target="_blank" rel="nofollow noopener">
+					<i class="icon tsi tsi-whatsapp"></i>					<span class="visuallyhidden">WhatsApp</span>
+				</a>
+									
+			
+		</div>
+
+		
+				
+				<div class="copyright">
+					© 2025 <a href="https://codeanddebug.in/">Code and Debug</a>. All rights reserved.				</div>
+			</div>
+		</div>		
+			</footer>
+		
+	
+</div><!-- .main-wrap -->
+
+
+
+	<div class="search-modal-wrap" data-scheme="dark">
+		<div class="search-modal-box" role="dialog" aria-modal="true">
+
+			<form method="get" class="search-form" action="https://codeanddebug.in/blog/">
+				<input type="search" class="search-field live-search-query" name="s" placeholder="Search..." value="" required />
+
+				<button type="submit" class="search-submit visuallyhidden">Submit</button>
+
+				<p class="message">
+					Type above and press <em>Enter</em> to search. Press <em>Esc</em> to cancel.				</p>
+						
+			</form>
+
+		</div>
+	</div>
+
+
+<script type="speculationrules">
+{"prefetch":[{"source":"document","where":{"and":[{"href_matches":"/blog/*"},{"not":{"href_matches":["/blog/wp-*.php","/blog/wp-admin/*","/blog/wp-content/uploads/*","/blog/wp-content/*","/blog/wp-content/plugins/*","/blog/wp-content/themes/smart-mag/*","/blog/*\\?(.+)"]}},{"not":{"selector_matches":"a[rel~=\"nofollow\"]"}},{"not":{"selector_matches":".no-prefetch, .no-prefetch a"}}]},"eagerness":"conservative"}]}
+</script>
+<script type="application/ld+json">{"@context":"http:\/\/schema.org","@type":"Article","headline":"Fibonacci Number | Recursive Python Solution","url":"https:\/\/codeanddebug.in\/blog\/fibonacci-number\/","image":{"@type":"ImageObject","url":"https:\/\/codeanddebug.in\/blog\/wp-content\/uploads\/2025\/06\/fibonacci-number-featured-image.png","width":1224,"height":600},"datePublished":"2025-06-09T14:10:06+05:30","dateModified":"2025-06-09T14:11:18+05:30","author":{"@type":"Person","name":"codeanddebug","url":"https:\/\/codeanddebug.in\/blog\/author\/codeanddebug\/"},"publisher":{"@type":"Organization","name":"Code and Debug - Blog","sameAs":"https:\/\/codeanddebug.in\/blog","logo":{"@type":"ImageObject","url":"https:\/\/codeanddebug.in\/blog\/wp-content\/uploads\/2025\/05\/fav-icon-300x300-blog.png"}},"mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/codeanddebug.in\/blog\/fibonacci-number\/"}}</script>
+			<script>
+				( () => {
+					const lazyloadRunObserver = () => {
+						const lazyloadBackgrounds = document.querySelectorAll( `.e-con.e-parent:not(.e-lazyloaded)` );
+						const lazyloadBackgroundObserver = new IntersectionObserver( ( entries ) => {
+							entries.forEach( ( entry ) => {
+								if ( entry.isIntersecting ) {
+									let lazyloadBackground = entry.target;
+									if( lazyloadBackground ) {
+										lazyloadBackground.classList.add( 'e-lazyloaded' );
+									}
+									lazyloadBackgroundObserver.unobserve( entry.target );
+								}
+							});
+						}, { rootMargin: '200px 0px 200px 0px' } );
+						lazyloadBackgrounds.forEach( ( lazyloadBackground ) => {
+							lazyloadBackgroundObserver.observe( lazyloadBackground );
+						} );
+					};
+					const events = [
+						'DOMContentLoaded',
+						'elementor/lazyload/observe',
+					];
+					events.forEach( ( event ) => {
+						document.addEventListener( event, lazyloadRunObserver );
+					} );
+				} )();
+			</script>
+			<script data-cfasync="false">SphereCore_AutoPosts = [{"id":267,"title":"Palindrome String | Recursive &amp; Iterative Python Solutions","url":"https:\/\/codeanddebug.in\/blog\/palindrome-string-recursive-iterative-solution\/"},{"id":262,"title":"Detect Cycle in a Directed Graph \u2013 Kahn\u2019s Algorithm (BFS Topological Check) in Python","url":"https:\/\/codeanddebug.in\/blog\/detect-cycle-in-a-directed-graph-kahns-algorithm-bfs\/"},{"id":259,"title":"Topological Sort (Kahn\u2019s Algorithm) \u2013 Simple BFS Solution in Python","url":"https:\/\/codeanddebug.in\/blog\/topo-sort-kahns-algorithm\/"},{"id":255,"title":"Detect Cycle in a Directed Graph","url":"https:\/\/codeanddebug.in\/blog\/detect-cycle-in-a-directed-graph\/"},{"id":251,"title":"Topological Sort in Graph | Simple DFS + Stack Solution in Python","url":"https:\/\/codeanddebug.in\/blog\/topological-sort-in-graph\/"},{"id":246,"title":"Is Graph Bipartite? | Leetcode 785 | Easy 2-Color DFS Solution in Python","url":"https:\/\/codeanddebug.in\/blog\/is-graph-bipartite\/"}];</script><script type="application/ld+json">{"@context":"https:\/\/schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"item":{"@type":"WebPage","@id":"https:\/\/codeanddebug.in\/blog\/","name":"Home"}},{"@type":"ListItem","position":2,"item":{"@type":"WebPage","@id":"https:\/\/codeanddebug.in\/blog\/category\/data-structures-and-algorithm\/","name":"Data Structures &amp; Algorithms"}},{"@type":"ListItem","position":3,"item":{"@type":"WebPage","@id":"https:\/\/codeanddebug.in\/blog\/fibonacci-number\/","name":"Fibonacci Number | Recursive Python Solution"}}]}</script>
+<style id="core-block-supports-inline-css">
+.wp-container-core-buttons-is-layout-fe48e5de{justify-content:center;}
+/*# sourceURL=core-block-supports-inline-css */
+</style>
+<script id="smartmag-lazyload-js-extra">
+var BunyadLazyConf = {"type":"normal"};
+//# sourceURL=smartmag-lazyload-js-extra
+</script>
+<script id="smartmag-lazyload-js" src="https://codeanddebug.in/blog/wp-content/themes/smart-mag/js/lazyload.js?ver=10.3.0"></script>
+<script id="spc-auto-load-post-js" src="https://codeanddebug.in/blog/wp-content/plugins/sphere-core/components/auto-load-post/js/auto-load-post.js?ver=1.7.1"></script>
+<script id="magnific-popup-js" src="https://codeanddebug.in/blog/wp-content/themes/smart-mag/js/jquery.mfp-lightbox.js?ver=10.3.0"></script>
+<script id="theia-sticky-sidebar-js" src="https://codeanddebug.in/blog/wp-content/themes/smart-mag/js/jquery.sticky-sidebar.js?ver=10.3.0"></script>
+<script id="smartmag-theme-js-extra">
+var Bunyad = {"ajaxurl":"https://codeanddebug.in/blog/wp-admin/admin-ajax.php"};
+//# sourceURL=smartmag-theme-js-extra
+</script>
+<script id="smartmag-theme-js" src="https://codeanddebug.in/blog/wp-content/themes/smart-mag/js/theme.js?ver=10.3.0"></script>
+<script id="smartmag-float-share-js" src="https://codeanddebug.in/blog/wp-content/themes/smart-mag/js/float-share.js?ver=10.3.0"></script>
+<script async data-wp-strategy="async" fetchpriority="low" id="comment-reply-js" src="https://codeanddebug.in/blog/wp-includes/js/comment-reply.min.js?ver=7.1.2"></script>
+<script id="ultimate_blocks-scrollby-polyfill-js" src="https://codeanddebug.in/blog/wp-content/plugins/ultimate-blocks/src/blocks/scrollby-polyfill.js?ver=3.6.0"></script>
+<script id="ultimate_blocks-table-of-contents-front-script-js" src="https://codeanddebug.in/blog/wp-content/plugins/ultimate-blocks/src/blocks/table-of-contents/front.build.js?ver=3.6.0"></script>
+<script data-wp-strategy="defer" id="kevinbatdorf-code-block-pro-view-script-js" src="https://codeanddebug.in/blog/wp-content/plugins/code-block-pro/build/front/front.js?ver=897e78bb623a899126f1"></script>
+<script id="kevinbatdorf-code-block-pro-view-script-js-after">
+window.codeBlockPro = {"pluginUrl":"https:\/\/codeanddebug.in\/blog\/wp-content\/plugins\/code-block-pro\/"};
+//# sourceURL=kevinbatdorf-code-block-pro-view-script-js-after
+</script>
+<script data-wp-strategy="defer" defer id="merpress-mermaidjs-view-script-js" src="https://codeanddebug.in/blog/wp-content/plugins/merpress/build/mermaid-init.js?ver=8e7709a4ed33bd4cde48"></script>
+<script id="wp-emoji-settings" type="application/json">
+{"baseUrl":"https://s.w.org/images/core/emoji/17.0.2/72x72/","ext":".png","svgUrl":"https://s.w.org/images/core/emoji/17.0.2/svg/","svgExt":".svg","source":{"concatemoji":"https://codeanddebug.in/blog/wp-includes/js/wp-emoji-release.min.js?ver=7.1.2"}}
+</script>
+<script type="module">
+/*! This file is auto-generated */
+var e="script#wp-emoji-settings",t=document.querySelector(e);if(!(t instanceof HTMLScriptElement))throw new Error("Element missing: "+e);const r=JSON.parse(t.text),s=(window._wpemojiSettings=r,"wpEmojiSettingsSupports"),o=["flag","emoji"];function i(e){try{var t={supportTests:e,timestamp:(new Date).valueOf()};sessionStorage.setItem(s,JSON.stringify(t))}catch(e){}}function c(e,t,n){e.clearRect(0,0,e.canvas.width,e.canvas.height),e.fillText(t,0,0);t=new Uint32Array(e.getImageData(0,0,e.canvas.width,e.canvas.height).data);e.clearRect(0,0,e.canvas.width,e.canvas.height),e.fillText(n,0,0);const r=new Uint32Array(e.getImageData(0,0,e.canvas.width,e.canvas.height).data);return t.every((e,t)=>e===r[t])}function p(e,t){e.clearRect(0,0,e.canvas.width,e.canvas.height),e.fillText(t,0,0);var n=e.getImageData(16,16,1,1);for(let e=0;e<n.data.length;e++)if(0!==n.data[e])return!1;return!0}function u(e,t,n,r){switch(t){case"flag":return n(e,"\ud83c\udff3\ufe0f\u200d\u26a7\ufe0f","\ud83c\udff3\ufe0f\u200b\u26a7\ufe0f")?!1:!n(e,"\ud83c\udde8\ud83c\uddf6","\ud83c\udde8\u200b\ud83c\uddf6")&&!n(e,"\ud83c\udff4\udb40\udc67\udb40\udc62\udb40\udc65\udb40\udc6e\udb40\udc67\udb40\udc7f","\ud83c\udff4\u200b\udb40\udc67\u200b\udb40\udc62\u200b\udb40\udc65\u200b\udb40\udc6e\u200b\udb40\udc67\u200b\udb40\udc7f");case"emoji":return!r(e,"\ud83e\u1fac8")}return!1}function f(e,t,n,r){let a;const s=(a="undefined"!=typeof WorkerGlobalScope&&self instanceof WorkerGlobalScope?new OffscreenCanvas(300,150):document.createElement("canvas")).getContext("2d",{willReadFrequently:!0}),o=(s.textBaseline="top",s.font="600 32px Arial",{});return e.forEach(e=>{o[e]=t(s,e,n,r)}),o}function a(e){var t=document.createElement("script");t.src=e,t.defer=!0,document.head.appendChild(t)}r.supports={everything:!0,everythingExceptFlag:!0},new Promise(t=>{let n=function(){try{var e=JSON.parse(sessionStorage.getItem(s));if("object"==typeof e&&"number"==typeof e.timestamp&&(new Date).valueOf()<e.timestamp+604800&&"object"==typeof e.supportTests)return e.supportTests}catch(e){}return null}();if(!n){if("undefined"!=typeof Worker&&"undefined"!=typeof OffscreenCanvas&&"undefined"!=typeof URL&&URL.createObjectURL&&"undefined"!=typeof Blob)try{var e="postMessage("+f.toString()+"("+[JSON.stringify(o),u.toString(),c.toString(),p.toString()].join(",")+"));",r=new Blob([e],{type:"text/javascript"});const a=new Worker(URL.createObjectURL(r),{name:"wpTestEmojiSupports"});return void(a.onmessage=e=>{i(n=e.data),a.terminate(),t(n)})}catch(e){}i(n=f(o,u,c,p))}t(n)}).then(e=>{for(const n in e)r.supports[n]=e[n],r.supports.everything=r.supports.everything&&r.supports[n],"flag"!==n&&(r.supports.everythingExceptFlag=r.supports.everythingExceptFlag&&r.supports[n]);var t;r.supports.everythingExceptFlag=r.supports.everythingExceptFlag&&!r.supports.flag,r.supports.everything||((t=r.source||{}).concatemoji?a(t.concatemoji):t.wpemoji&&t.twemoji&&(a(t.twemoji),a(t.wpemoji)))});
+//# sourceURL=https://codeanddebug.in/blog/wp-includes/js/wp-emoji-loader.min.js
+</script>
+
+
+</body>
+</html>

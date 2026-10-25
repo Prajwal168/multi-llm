@@ -1,0 +1,415 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="UTF-8">
+<link rel="alternate" href="https://note.nkmk.me/python-sys-recursionlimit/" hreflang="ja" /><link rel="alternate" href="https://note.nkmk.me/en/python-sys-recursionlimit/" hreflang="en" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta name="description" content="In Python, the sys.getrecursionlimit() and sys.setrecursionlimit() functions are used to get and set the recursion limit, which is the maximum recursion depth allowed by the interpreter. The number of ...">
+
+<title>Get/Set the Recursion Limit in Python: sys.getrecursionlimit, sys.setrecursionlimit | note.nkmk.me</title>
+
+<meta property="og:locale" content="en_US" />
+<meta property="og:title" content="Get/Set the Recursion Limit in Python: sys.getrecursionlimit, sys.setrecursionlimit | note.nkmk.me" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://note.nkmk.me/en/python-sys-recursionlimit/" />
+<meta property="og:description" content="In Python, the sys.getrecursionlimit() and sys.setrecursionlimit() functions are used to get and set the recursion limit, which is the maximum recursion depth allowed by the interpreter. The number of ..." />
+<meta property="og:image" content="https://i.gyazo.com/5d1b2ab5838e5191e136bb27094da555.png" />
+<meta name="twitter:card" content="summary" />
+
+<link href="//note.nkmk.me/en/css/style.css" rel="stylesheet">
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-6SMTSXX5XJ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-6SMTSXX5XJ');
+</script>
+
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3230114175671394" crossorigin="anonymous"></script>
+
+<script type="application/ld+json">
+[{"@context":"http://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"item":{"@id":"https://note.nkmk.me/en/","name":"Home"}},{"@type":"ListItem","position":2,"item":{"@id":"https://note.nkmk.me/en/python/","name":"Python"}}]},
+{"@context":"http://schema.org","@type":"Article","author":{"@type":"Person","name":"nkmk","url":["https://github.com/nkmk","https://twitter.com/nkmk_me"]},"headline":"Get/Set the Recursion Limit in Python: sys.getrecursionlimit, sys.setrecursionlimit","datePublished":"2022-05-27","dateModified":"2024-01-29","description":"In Python, the sys.getrecursionlimit() and sys.setrecursionlimit() functions are used to get and set the recursion limit, which is the maximum recursion depth allowed by the interpreter. The number of ..."}]
+</script>
+
+
+</head>
+
+<body>
+    <header>
+        <div class='header-container'>
+            <div class='header-title'>
+                <a href="//note.nkmk.me/en/">note.nkmk.me</a>
+            </div>
+        </div>
+    </header>
+    <div id="center-container">
+        <main>
+            
+<ol id="breadcrumb">
+    <li><a href="//note.nkmk.me/en/">Home</a></li>
+<li><a href="//note.nkmk.me/en/python/">Python</a></li>
+</ol>
+<article>
+    <h1>Get/Set the Recursion Limit in Python: sys.getrecursionlimit, sys.setrecursionlimit</h1>
+    <div id="info">
+        Modified: <time datetime="2024-01-29">2024-01-29</time> | Tags: <a href="//note.nkmk.me/en/python/">Python</a>
+    </div>
+
+    <div id="content">
+    <div><p>In Python, the <code>sys.getrecursionlimit()</code> and <code>sys.setrecursionlimit()</code> functions are used to get and set the recursion limit, which is the maximum recursion depth allowed by the interpreter.</p>
+<p>The number of recursions is also limited by the stack size. In some environments, the maximum stack size can be modified using the <code>resource</code> module. In my case, this was successful on Ubuntu but not on Windows or macOS.</p>
+<div class="toc"><span class="toctitle">Contents</span><ul>
+<li><a href="#get-the-recursion-limit-sysgetrecursionlimit">Get the recursion limit: <code>sys.getrecursionlimit()</code></a></li>
+<li><a href="#set-the-recursion-limit-syssetrecursionlimit">Set the recursion limit: <code>sys.setrecursionlimit()</code></a></li>
+<li><a href="#change-the-maximum-stack-size-resourcesetrlimit">Change the maximum stack size: <code>resource.setrlimit()</code></a></li>
+</ul>
+</div>
+<p>The sample code below was tested on Ubuntu.</p>
+<div class="ad-block-inside">
+    <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-3230114175671394" data-ad-slot="4622893684" data-ad-format="auto"></ins>
+    <script>
+    (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+</div><h2 id="get-the-recursion-limit-sysgetrecursionlimit">Get the recursion limit: <code>sys.getrecursionlimit()</code></h2>
+<p>You can get the current value of the recursion limit with <code>sys.getrecursionlimit()</code>.</p>
+<ul>
+<li><a href="https://docs.python.org/3/library/sys.html#sys.getrecursionlimit">sys.getrecursionlimit() â Python 3.12.1 documentation</a></li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">sys</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">getrecursionlimit</span><span class="p">())</span>
+<span class="c1"># 1000</span>
+</code></pre>
+<div class="source">source: <a href="https://github.com/nkmk/python-snippets/blob/95f0664bd4aeaa09474a8c3ea67da31812305bd3/notebook/sys_recursionlimit.py#L4-L5">sys_recursionlimit.py</a></div>
+</div>
+
+<p>The default limit is <code>1000</code> in this example, but it may vary depending on the environment.</p>
+<p>Consider a simple recursive function that takes a positive integer <code>n</code> as its argument, where the number of recursions equals <code>n</code>.</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">recu_test</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">n</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">'Finish'</span><span class="p">)</span>
+        <span class="k">return</span>
+    <span class="n">recu_test</span><span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+</code></pre>
+<div class="source">source: <a href="https://github.com/nkmk/python-snippets/blob/95f0664bd4aeaa09474a8c3ea67da31812305bd3/notebook/sys_recursionlimit.py#L7-L11">sys_recursionlimit.py</a></div>
+</div>
+
+<p>If <code>n</code> exceeds the limit, a <code>RecursionError</code> occurs.</p>
+<div class="highlight"><pre><span></span><code><span class="n">recu_test</span><span class="p">(</span><span class="mi">950</span><span class="p">)</span>
+<span class="c1"># Finish</span>
+
+<span class="c1"># recu_test(1500)</span>
+<span class="c1"># RecursionError: maximum recursion depth exceeded in comparison</span>
+</code></pre>
+<div class="source">source: <a href="https://github.com/nkmk/python-snippets/blob/95f0664bd4aeaa09474a8c3ea67da31812305bd3/notebook/sys_recursionlimit.py#L13-L17">sys_recursionlimit.py</a></div>
+</div>
+
+<p>It is important to note that the value returned by <code>sys.getrecursionlimit()</code> represents the maximum depth of the Python interpreter stack rather than the absolute maximum number of recursions. As a result, a <code>RecursionError</code> may be raised even if the actual number of recursions is slightly below this limit.</p>
+<blockquote>
+<p>The recursion limit is not the limit on recursion but the maximum depth of the python interpreter stack.<br>
+<cite><a href="https://stackoverflow.com/questions/38265839/max-recursion-is-not-exactly-what-sys-getrecursionlimit-claims-how-come/38265931#38265931">python - Max recursion is not exactly what sys.getrecursionlimit() claims. How come? - Stack Overflow</a></cite></p>
+</blockquote>
+<div class="highlight"><pre><span></span><code><span class="c1"># recu_test(995)</span>
+<span class="c1"># RecursionError: maximum recursion depth exceeded while calling a Python object</span>
+</code></pre>
+<div class="source">source: <a href="https://github.com/nkmk/python-snippets/blob/95f0664bd4aeaa09474a8c3ea67da31812305bd3/notebook/sys_recursionlimit.py#L19-L20">sys_recursionlimit.py</a></div>
+</div>
+
+<h2 id="set-the-recursion-limit-syssetrecursionlimit">Set the recursion limit: <code>sys.setrecursionlimit()</code></h2>
+<p>You can set the recursion limit with <code>sys.setrecursionlimit()</code>.</p>
+<ul>
+<li><a href="https://docs.python.org/3/library/sys.html#sys.setrecursionlimit">sys.setrecursionlimit() â Python 3.12.1 documentation</a></li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">sys</span>
+
+<span class="n">sys</span><span class="o">.</span><span class="n">setrecursionlimit</span><span class="p">(</span><span class="mi">2000</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">getrecursionlimit</span><span class="p">())</span>
+<span class="c1"># 2000</span>
+</code></pre>
+<div class="source">source: <a href="https://github.com/nkmk/python-snippets/blob/95f0664bd4aeaa09474a8c3ea67da31812305bd3/notebook/sys_recursionlimit.py#L22-L25">sys_recursionlimit.py</a></div>
+</div>
+
+<p>Larger values enable deeper recursion.</p>
+<div class="highlight"><pre><span></span><code><span class="n">recu_test</span><span class="p">(</span><span class="mi">1500</span><span class="p">)</span>
+<span class="c1"># Finish</span>
+</code></pre>
+<div class="source">source: <a href="https://github.com/nkmk/python-snippets/blob/95f0664bd4aeaa09474a8c3ea67da31812305bd3/notebook/sys_recursionlimit.py#L27-L28">sys_recursionlimit.py</a></div>
+</div>
+
+<p>Setting the limit too high or too low may cause errors.</p>
+<blockquote>
+<p>The highest possible limit is platform-dependent. A user may need to set the limit higher when they have a program that requires deep recursion and a platform that supports a higher limit. This should be done with care, because a too-high limit can lead to a crash. If the new limit is too low at the current recursion depth, a <code>RecursionError</code> exception is raised.
+<cite><a href="https://docs.python.org/3/library/sys.html#sys.setrecursionlimit">sys.setrecursionlimit() â Python 3.12.1 documentation</a></cite></p>
+</blockquote>
+<div class="highlight"><pre><span></span><code><span class="n">sys</span><span class="o">.</span><span class="n">setrecursionlimit</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">getrecursionlimit</span><span class="p">())</span>
+<span class="c1"># 4</span>
+
+<span class="c1"># sys.setrecursionlimit(3)</span>
+<span class="c1"># RecursionError: cannot set the recursion limit to 3 at the recursion depth 1: the limit is too low</span>
+
+<span class="n">sys</span><span class="o">.</span><span class="n">setrecursionlimit</span><span class="p">(</span><span class="mi">10</span> <span class="o">**</span> <span class="mi">9</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">getrecursionlimit</span><span class="p">())</span>
+<span class="c1"># 1000000000</span>
+
+<span class="c1"># sys.setrecursionlimit(10 ** 10)</span>
+<span class="c1"># OverflowError: signed integer is greater than maximum</span>
+</code></pre>
+<div class="source">source: <a href="https://github.com/nkmk/python-snippets/blob/95f0664bd4aeaa09474a8c3ea67da31812305bd3/notebook/sys_recursionlimit.py#L30-L42">sys_recursionlimit.py</a></div>
+</div>
+
+<p>Additionally, as explained next, the stack size also constrains the maximum recursive limit.</p>
+<div class="ad-block-inside">
+    <ins class="adsbygoogle" style="display:block; text-align:center;" data-ad-layout="in-article" data-ad-format="fluid" data-ad-client="ca-pub-3230114175671394" data-ad-slot="6956237898"></ins>
+    <script>
+        (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+</div><h2 id="change-the-maximum-stack-size-resourcesetrlimit">Change the maximum stack size: <code>resource.setrlimit()</code></h2>
+<p>Even after increasing the recursion limit, executing a large number of recursions can lead to a segmentation fault.</p>
+<div class="highlight"><pre><span></span><code><span class="n">sys</span><span class="o">.</span><span class="n">setrecursionlimit</span><span class="p">(</span><span class="mi">10</span> <span class="o">**</span> <span class="mi">9</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">getrecursionlimit</span><span class="p">())</span>
+<span class="c1"># 1000000000</span>
+
+<span class="n">recu_test</span><span class="p">(</span><span class="mi">10</span> <span class="o">**</span> <span class="mi">4</span><span class="p">)</span>
+<span class="c1"># Finish</span>
+
+<span class="c1"># recu_test(10 ** 5)</span>
+<span class="c1"># Segmentation fault</span>
+</code></pre>
+<div class="source">source: <a href="https://github.com/nkmk/python-snippets/blob/95f0664bd4aeaa09474a8c3ea67da31812305bd3/notebook/sys_recursionlimit.py#L44-L48">sys_recursionlimit.py</a></div>
+</div>
+
+<p>In Python, you can change the maximum stack size with the <code>resource</code> module. Note that the <code>resource</code> module is specific to Unix-based systems and is unavailable on Windows.</p>
+<ul>
+<li><a href="https://docs.python.org/3/library/unix.html">Unix Specific Services â Python 3.12.1 documentation</a></li>
+<li><a href="https://docs.python.org/3/library/resource.html">resource â Resource usage information â Python 3.12.1 documentation</a></li>
+</ul>
+<p>You can get the limits of the specified resource as <code>(soft_limit, hard_limit)</code> with <code>resource.getrlimit()</code>. <code>resource.RLIMIT_STACK</code>, which represents the maximum size of the call stack of the current process, is specified in the following example.</p>
+<ul>
+<li><a href="https://docs.python.org/3/library/resource.html#resource.getrlimit">resource.getrlimit() â Python 3.12.1 documentation</a></li>
+<li><a href="https://docs.python.org/3/library/resource.html#resource.RLIMIT_STACK">resource.RLIMIT_STACK â Python 3.12.1 documentation</a></li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">resource</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">resource</span><span class="o">.</span><span class="n">getrlimit</span><span class="p">(</span><span class="n">resource</span><span class="o">.</span><span class="n">RLIMIT_STACK</span><span class="p">))</span>
+<span class="c1"># (8388608, -1)</span>
+</code></pre>
+<div class="source">source: <a href="https://github.com/nkmk/python-snippets/blob/95f0664bd4aeaa09474a8c3ea67da31812305bd3/notebook/sys_recursionlimit.py#L50-L51">sys_recursionlimit.py</a></div>
+</div>
+
+<p>In this example, the soft limit is <code>8388608</code> (8388608 B = 8192 KB = 8 MB), and the hard limit is <code>-1</code> (unlimited).</p>
+<p>You can change the limit of the resource with <code>resource.setrlimit()</code>. The soft limit is set to <code>-1</code> (unlimited) in the following example. Alternatively, the constant <code>resource.RLIM_INFINITY</code> can be used to represent an unlimited limit.</p>
+<ul>
+<li><a href="https://docs.python.org/3/library/resource.html#resource.setrlimit">resource.setrlimit() â Python 3.12.1 documentation</a></li>
+</ul>
+<p>Setting the soft limit to <code>-1</code> enables deeper recursion previously limited by segmentation faults.</p>
+<div class="highlight"><pre><span></span><code><span class="n">resource</span><span class="o">.</span><span class="n">setrlimit</span><span class="p">(</span><span class="n">resource</span><span class="o">.</span><span class="n">RLIMIT_STACK</span><span class="p">,</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">resource</span><span class="o">.</span><span class="n">getrlimit</span><span class="p">(</span><span class="n">resource</span><span class="o">.</span><span class="n">RLIMIT_STACK</span><span class="p">))</span>
+<span class="c1"># (-1, -1)</span>
+
+<span class="n">recu_test</span><span class="p">(</span><span class="mi">10</span> <span class="o">**</span> <span class="mi">5</span><span class="p">)</span>
+<span class="c1"># Finish</span>
+</code></pre>
+<div class="source">source: <a href="https://github.com/nkmk/python-snippets/blob/95f0664bd4aeaa09474a8c3ea67da31812305bd3/notebook/sys_recursionlimit.py#L53-L59">sys_recursionlimit.py</a></div>
+</div>
+
+<p>In this example, the soft limit is set to <code>-1</code> for a simple experiment, but in practice, it is safer to set an appropriate limit.</p>
+<p>On macOS, attempting to set an unlimited soft limit results in a <code>ValueError: not allowed to raise maximum limit</code>. Running the script with <code>sudo</code> did not help. It might be a system-imposed limitation.</p>
+<blockquote>
+<p>A process with the effective UID of super-user can request any valid limit value, including unlimited, but <code>ValueError</code> will still be raised if the requested limit exceeds the system imposed limit.
+<cite><a href="https://docs.python.org/3/library/resource.html#resource.setrlimit">resource.setrlimit() â Python 3.12.1 documentation</a></cite></p>
+</blockquote></div>
+    </div>
+
+    <div class='ad-block'>
+        <ins class="adsbygoogle ad_PC"
+     data-ad-client="ca-pub-3230114175671394"
+     data-ad-slot="4866714571"
+     data-ad-format="auto"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+<ins class="adsbygoogle ad_PC"
+     data-ad-client="ca-pub-3230114175671394"
+     data-ad-slot="3687642075"
+     data-ad-format="auto"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+<ins class="adsbygoogle ad_mobile"
+     data-ad-client="ca-pub-3230114175671394"
+     data-ad-slot="6663011974"
+     data-ad-format="auto"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+    </div><h2>Related Categories</h2>
+    <div class="link-list" id="related-category">
+        <ul class="columns">
+            <li><a href="//note.nkmk.me/en/python/">Python</a></li></ul>
+    </div>
+    
+    <h2>Related Articles</h2>
+    <div class="link-list" id="related-post">
+      <ul>
+          <li><a href="//note.nkmk.me/en/python-numpy-nan-replace/">NumPy: Replace NaN (np.nan) using np.nan_to_num() and np.isnan()</a></li>
+          <li><a href="//note.nkmk.me/en/python-file-io-open-with/">Read, Write, and Create Files in Python (with and open())</a></li>
+          <li><a href="//note.nkmk.me/en/python-pandas-map-applymap-apply/">pandas: Apply functions to values, rows, columns with map(), apply()</a></li>
+          <li><a href="//note.nkmk.me/en/python-package-version/">Check the Versions of Python Packages</a></li>
+          <li><a href="//note.nkmk.me/en/python-pandas-dtype-astype/">pandas: How to use astype() to cast dtype of DataFrame</a></li>
+          <li><a href="//note.nkmk.me/en/python-function-def-return/">Define and Call Functions in Python (def, return)</a></li>
+          <li><a href="//note.nkmk.me/en/python-pandas-dataframe-for-iteration/">pandas: Iterate DataFrame with for loop (iterrows, itertuples, items)</a></li>
+          <li><a href="//note.nkmk.me/en/python-sys-exit/">How to Exit a Python Program: sys.exit()</a></li>
+          <li><a href="//note.nkmk.me/en/python-textwrap-wrap-fill-shorten/">Wrap and Truncate a String with textwrap in Python</a></li>
+          <li><a href="//note.nkmk.me/en/python-math-sin-cos-tan/">Trigonometric Functions in Python: sin, cos, tan, arcsin, arccos, arctan</a></li>
+          <li><a href="//note.nkmk.me/en/python-zero-padding/">Pad Strings and Numbers with Zeros in Python (Zero-padding)</a></li>
+          <li><a href="//note.nkmk.me/en/python-tuple-single-empty/">A Tuple with One Element Requires a Comma in Python</a></li>
+          <li><a href="//note.nkmk.me/en/python-raw-string-escape/">Raw Strings in Python</a></li>
+          <li><a href="//note.nkmk.me/en/python-list-append-extend-insert/">Add an Item to a List in Python: append, extend, insert</a></li>
+          <li><a href="//note.nkmk.me/en/python-pandas-at-iat-loc-iloc/">pandas: Get/Set values with loc, iloc, at, iat</a></li></ul>
+  </div>
+</article>
+
+        </main>
+        
+<nav id="side">
+    
+
+<div id="side-search" class="side-block">
+    <div class="side-title">Search</div>
+    <div id="search-box">
+        <script async src="https://cse.google.com/cse.js?cx=d57f3b188e10e5ec7">
+        </script>
+        <div class="gcse-searchbox-only"></div>
+    </div>
+</div>
+<div id="side-category" class="side-block">
+   <div class="side-title">Categories</div>
+    <ul class="has-sub-categories"><li class="self"><a href="//note.nkmk.me/en/python/">Python</a>
+            <ul class="nav-columns">
+                <li class="other"><a href="//note.nkmk.me/en/numpy/">NumPy</a></li>
+                <li class="other"><a href="//note.nkmk.me/en/opencv/">OpenCV</a></li>
+                <li class="other"><a href="//note.nkmk.me/en/pandas/">pandas</a></li>
+                <li class="other"><a href="//note.nkmk.me/en/pillow/">Pillow</a></li>
+                <li class="other"><a href="//note.nkmk.me/en/pip/">pip</a></li>
+                <li class="other"><a href="//note.nkmk.me/en/scikit-image/">scikit-image</a></li>
+                <li class="other"><a href="//note.nkmk.me/en/uv/">uv</a></li></ul>
+        </li></ul>
+    <ul class="nav-columns">
+        <li class="other"><a href="//note.nkmk.me/en/git/">Git</a></li>
+        <li class="other"><a href="//note.nkmk.me/en/jupyter-notebook/">Jupyter Notebook</a></li>
+        <li class="other"><a href="//note.nkmk.me/en/mac/">Mac</a></li>
+        <li class="other"><a href="//note.nkmk.me/en/windows/">Windows</a></li>
+        <li class="other"><a href="//note.nkmk.me/en/image-processing/">Image Processing</a></li>
+        <li class="other"><a href="//note.nkmk.me/en/file/">File</a></li>
+        <li class="other"><a href="//note.nkmk.me/en/csv/">CSV</a></li>
+        <li class="other"><a href="//note.nkmk.me/en/json/">JSON</a></li>
+        <li class="other"><a href="//note.nkmk.me/en/pdf/">PDF</a></li>
+        <li class="other"><a href="//note.nkmk.me/en/date-and-time/">Date and time</a></li>
+        <li class="other"><a href="//note.nkmk.me/en/string/">String</a></li>
+        <li class="other"><a href="//note.nkmk.me/en/regex/">Regex</a></li>
+        <li class="other"><a href="//note.nkmk.me/en/numeric/">Numeric</a></li>
+        <li class="other"><a href="//note.nkmk.me/en/dictionary/">Dictionary</a></li>
+        <li class="other"><a href="//note.nkmk.me/en/list/">List</a></li>
+        <li class="other"><a href="//note.nkmk.me/en/error-handling/">Error handling</a></li>
+        <li class="other"><a href="//note.nkmk.me/en/mathematics/">Mathematics</a></li>
+        <li class="other"><a href="//note.nkmk.me/en/summary/">Summary</a></li></ul>
+</div>
+<div id="side-about" class="side-block">
+    <div class="side-title">About</div>
+    <ul>
+        <li>GitHub: <a href="https://github.com/nkmk">nkmk</a></li>
+    </ul>
+</div>
+
+    <div class="side-block">
+    <div class="side-ad-block">
+        <ins class="adsbygoogle ad-side-res"
+                data-ad-client="ca-pub-3230114175671394"
+                data-ad-slot="9819148575"
+                data-ad-format="vertical"></ins>
+        <script>
+        (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
+
+        <ins class="adsbygoogle ad-side-res"
+                data-ad-client="ca-pub-3230114175671394"
+                data-ad-slot="2566866979"
+                data-ad-format="rectangle"></ins>
+        <script>
+        (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
+    </div>
+</div>
+    <div class="side-block">
+    <div class="side-title">Related Articles</div>
+    <div class="link-list" id="side-related-post">
+        <ul>
+            <li><a href="//note.nkmk.me/en/python-numpy-nan-replace/">NumPy: Replace NaN (np.nan) using np.nan_to_num() and np.isnan()</a></li>
+            <li><a href="//note.nkmk.me/en/python-file-io-open-with/">Read, Write, and Create Files in Python (with and open())</a></li>
+            <li><a href="//note.nkmk.me/en/python-pandas-map-applymap-apply/">pandas: Apply functions to values, rows, columns with map(), apply()</a></li>
+            <li><a href="//note.nkmk.me/en/python-package-version/">Check the Versions of Python Packages</a></li>
+            <li><a href="//note.nkmk.me/en/python-pandas-dtype-astype/">pandas: How to use astype() to cast dtype of DataFrame</a></li></ul>
+    </div>
+</div>
+
+<div class="side-block">
+    <div class="side-ad-block">
+        <ins class="adsbygoogle ad-side-res"
+                data-ad-client="ca-pub-3230114175671394"
+                data-ad-slot="7005376257"
+                data-ad-format="rectangle"></ins>
+        <script>
+        (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
+    </div>
+</div>
+
+<div class="sticky-block">
+<div class="side-block">
+    <div class="side-ad-block">
+        <ins class="adsbygoogle ad-side-res"
+                data-ad-client="ca-pub-3230114175671394"
+                data-ad-slot="3748245927"
+                data-ad-format="auto"></ins>
+        <script>
+        (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
+    </div>
+</div>
+</div>
+</nav>
+
+    </div>
+    <footer>
+        <ul>
+            <li>
+                English / <a href="https://note.nkmk.me/">Japanese</a>
+            </li>
+            <li>|</li>
+            <li>
+                <a href="//note.nkmk.me/en/disclaimer/">Disclaimer</a>
+            </li>
+            <li>
+                <a href="//note.nkmk.me/en/privacy-policy/">Privacy policy</a>
+            </li>
+            <li>
+                <a href="https://github.com/nkmk">GitHub</a>
+            </li>
+            <li id="copyright">
+                &copy;<a href="https://nkmk.me/">nkmk.me</a>
+            </li>
+        </ul>
+    </footer>
+    
+</body>
+</html>

@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name='robots' content='index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1' />
+
+	<!-- This site is optimized with the Yoast SEO Premium plugin v28.2 (Yoast SEO v28.5) - https://yoast.com/product/yoast-seo-premium-wordpress/ -->
+	<title>Explain the Transformer Architecture (with Examples and Videos) - AIML.com</title><link rel="preload" href="https://aiml.com/wp-content/uploads/2023/09/Annotated-Transformers-Architecture.png" as="image" imagesrcset="https://aiml.com/wp-content/uploads/2023/09/Annotated-Transformers-Architecture.png 2804w, https://aiml.com/wp-content/uploads/2023/09/Annotated-Transformers-Architecture-300x183.png 300w, https://aiml.com/wp-content/uploads/2023/09/Annotated-Transformers-Architecture-1024x624.png 1024w, https://aiml.com/wp-content/uploads/2023/09/Annotated-Transformers-Architecture-768x468.png 768w, https://aiml.com/wp-content/uploads/2023/09/Annotated-Transformers-Architecture-1536x936.png 1536w, https://aiml.com/wp-content/uploads/2023/09/Annotated-Transformers-Architecture-2048x1247.png 2048w" imagesizes="(max-width: 2804px) 100vw, 2804px" fetchpriority="high" />
+	<meta name="description" content="Transformers architecture is a deep learning model introduced in the paper &quot;Attention Is All You Need&quot; by Vaswani et al. in 2017." />
+	<link rel="canonical" href="https://aiml.com/explain-the-transformer-architecture/" />
+	<meta property="og:locale" content="en_US" />
+	<meta property="og:type" content="article" />
+	<meta property="og:title" content="Explain the Transformer Architecture (with Examples and Videos)" />
+	<meta property="og:description" content="Transformers architecture is a deep learning model introduced in the paper &quot;Attention Is All You Need&quot; by Vaswani et al. in 2017." />
+	<meta property="og:url" content="https://aiml.com/explain-the-transformer-architecture/" />
+	<meta property="og:site_name" content="AIML.com" />
+	<meta property="article:published_time" content="2023-09-04T22:59:05+00:00" />
+	<meta property="article:modified_time" content="2024-03-09T02:08:22+00:00" />
+	<meta property="og:image" content="https://aiml.com/wp-content/uploads/2023/09/Annotated-Transformers-Architecture.png" />
+	<meta name="author" content="AIML.com" />
+	<meta name="twitter:card" content="summary_large_image" />
+	<meta name="twitter:creator" content="@OfficialAIML" />
+	<meta name="twitter:site" content="@OfficialAIML" />
+	<meta name="twitter:label1" content="Written by" />
+	<meta name="twitter:data1" content="AIML.com" />
+	<meta name="twitter:label2" content="Est. reading time" />
+	<meta name="twitter:data2" content="5 minutes" />
+	<script type="application/ld+json" class="yoast-schema-graph">{"@context":"https:\/\/schema.org","@graph":[{"@type":"ScholarlyArticle","@id":"https:\/\/aiml.com\/explain-the-transformer-architecture\/#article","isPartOf":{"@id":"https:\/\/aiml.com\/explain-the-transformer-architecture\/"},"author":{"name":"AIML.com","@id":"https:\/\/aiml.com\/#\/schema\/person\/98d0049228fe74775e8126548296d478"},"headline":"Explain the Transformer Architecture (with Examples and Videos)","datePublished":"2023-09-04T22:59:05+00:00","dateModified":"2024-03-09T02:08:22+00:00","mainEntityOfPage":{"@id":"https:\/\/aiml.com\/explain-the-transformer-architecture\/"},"wordCount":1031,"commentCount":0,"publisher":{"@id":"https:\/\/aiml.com\/#organization"},"image":{"@id":"https:\/\/aiml.com\/explain-the-transformer-architecture\/#primaryimage"},"thumbnailUrl":"https:\/\/aiml.com\/wp-content\/uploads\/2023\/09\/Annotated-Transformers-Architecture.png","keywords":["deep learning","NLP","natural language processing","transformers"],"articleSection":["Transformers"],"inLanguage":"en-US","potentialAction":[{"@type":"CommentAction","name":"Comment","target":["https:\/\/aiml.com\/explain-the-transformer-architecture\/#respond"]}]},{"@type":"WebPage","@id":"https:\/\/aiml.com\/explain-the-transformer-architecture\/","url":"https:\/\/aiml.com\/explain-the-transformer-architecture\/","name":"Explain the Transformer Architecture (with Examples and Videos) - AIML.com","isPartOf":{"@id":"https:\/\/aiml.com\/#website"},"primaryImageOfPage":{"@id":"https:\/\/aiml.com\/explain-the-transformer-architecture\/#primaryimage"},"image":{"@id":"https:\/\/aiml.com\/explain-the-transformer-architecture\/#primaryimage"},"thumbnailUrl":"https:\/\/aiml.com\/wp-content\/uploads\/2023\/09\/Annotated-Transformers-Architecture.png","datePublished":"2023-09-04T22:59:05+00:00","dateModified":"2024-03-09T02:08:22+00:00","description":"Transformers architecture is a deep learning model introduced in the paper \"Attention Is All You Need\" by Vaswani et al. in 2017.","breadcrumb":{"@id":"https:\/\/aiml.com\/explain-the-transformer-architecture\/#breadcrumb"},"inLanguage":"en-US","potentialAction":[{"@type":"ReadAction","target":["https:\/\/aiml.com\/explain-the-transformer-architecture\/"]}],"author":{"@id":"https:\/\/aiml.com\/#\/schema\/person\/98d0049228fe74775e8126548296d478"}},{"@type":"ImageObject","inLanguage":"en-US","@id":"https:\/\/aiml.com\/explain-the-transformer-architecture\/#primaryimage","url":"https:\/\/aiml.com\/wp-content\/uploads\/2023\/09\/Annotated-Transformers-Architecture.png","contentUrl":"https:\/\/aiml.com\/wp-content\/uploads\/2023\/09\/Annotated-Transformers-Architecture.png","width":2804,"height":1708,"caption":"Key components of Transformer Architecture"},{"@type":"BreadcrumbList","@id":"https:\/\/aiml.com\/explain-the-transformer-architecture\/#breadcrumb","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https:\/\/aiml.com\/"},{"@type":"ListItem","position":2,"name":"Posts","item":"https:\/\/aiml.com\/posts\/"},{"@type":"ListItem","position":3,"name":"Machine Learning Interview Questions","item":"https:\/\/aiml.com\/category\/ml-interview-questions\/"},{"@type":"ListItem","position":4,"name":"Deep Learning","item":"https:\/\/aiml.com\/category\/ml-interview-questions\/deep-learning\/"},{"@type":"ListItem","position":5,"name":"DL Architectures","item":"https:\/\/aiml.com\/category\/ml-interview-questions\/deep-learning\/dl-architectures\/"},{"@type":"ListItem","position":6,"name":"Transformers","item":"https:\/\/aiml.com\/category\/ml-interview-questions\/deep-learning\/dl-architectures\/transformers\/"},{"@type":"ListItem","position":7,"name":"Explain the Transformer Architecture (with Examples and Videos)"}]},{"@type":"WebSite","@id":"https:\/\/aiml.com\/#website","url":"https:\/\/aiml.com\/","name":"AIML.com","description":"Machine Learning Resources","publisher":{"@id":"https:\/\/aiml.com\/#organization"},"alternateName":"Machine Learning and Artificial Intelligence","potentialAction":[{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https:\/\/aiml.com\/?s={search_term_string}"},"query-input":{"@type":"PropertyValueSpecification","valueRequired":true,"valueName":"search_term_string"}}],"inLanguage":"en-US"},{"@type":"Organization","@id":"https:\/\/aiml.com\/#organization","name":"AIML.com","alternateName":"Machine Learning and Artificial Intelligence","url":"https:\/\/aiml.com\/","logo":{"@type":"ImageObject","inLanguage":"en-US","@id":"https:\/\/aiml.com\/#\/schema\/logo\/image\/","url":"https:\/\/aiml.com\/wp-content\/uploads\/2021\/07\/aiml_transparent.png","contentUrl":"https:\/\/aiml.com\/wp-content\/uploads\/2021\/07\/aiml_transparent.png","width":2998,"height":2998,"caption":"AIML.com"},"image":{"@id":"https:\/\/aiml.com\/#\/schema\/logo\/image\/"},"sameAs":["https:\/\/x.com\/OfficialAIML","https:\/\/www.linkedin.com\/company\/aiml-com","https:\/\/www.linkedin.com\/groups\/14307160\/"]},{"@type":"Person","@id":"https:\/\/aiml.com\/#\/schema\/person\/98d0049228fe74775e8126548296d478","name":"AIML.com"}]}</script>
+	<!-- / Yoast SEO Premium plugin. -->
+
+
+<style id="wp-img-auto-sizes-contain-inline-css">
+img:is([sizes=auto i],[sizes^="auto," i]){contain-intrinsic-size:3000px 1500px}
+/*# sourceURL=wp-img-auto-sizes-contain-inline-css */
+</style>
+<style id="classic-theme-styles-inline-css">
+/*! This file is auto-generated */
+.wp-block-button__link{color:#fff;background-color:#32373c;border-radius:9999px;box-shadow:none;text-decoration:none;padding:calc(.667em + 2px) calc(1.333em + 2px);font-size:1.125em}.wp-block-file__button{background:#32373c;color:#fff;text-decoration:none}
+/*# sourceURL=/wp-includes/css/classic-themes.min.css */
+</style>
+
+<style>@import url('https://aiml.com/wp-content/plugins/ultimate-member/assets/libs/select2/select2.min.css?ver=4.0.13') layer(bricks);</style><link rel='stylesheet' id='um_tipsy-css' href='https://aiml.com/wp-content/plugins/ultimate-member/assets/libs/tipsy/tipsy.min.css?ver=1.0.0a' media='all' />
+<link rel='stylesheet' id='um-user-tags-css' href='https://aiml.com/wp-content/plugins/um-user-tags/assets/css/um-user-tags.min.css?ver=2.3.1' media='all' />
+<style id="global-styles-inline-css">
+:root{--wp--preset--aspect-ratio--square: 1;--wp--preset--aspect-ratio--4-3: 4/3;--wp--preset--aspect-ratio--3-4: 3/4;--wp--preset--aspect-ratio--3-2: 3/2;--wp--preset--aspect-ratio--2-3: 2/3;--wp--preset--aspect-ratio--16-9: 16/9;--wp--preset--aspect-ratio--9-16: 9/16;--wp--preset--color--black: #000000;--wp--preset--color--cyan-bluish-gray: #abb8c3;--wp--preset--color--white: #ffffff;--wp--preset--color--pale-pink: #f78da7;--wp--preset--color--vivid-red: #cf2e2e;--wp--preset--color--luminous-vivid-orange: #ff6900;--wp--preset--color--luminous-vivid-amber: #fcb900;--wp--preset--color--light-green-cyan: #7bdcb5;--wp--preset--color--vivid-green-cyan: #00d084;--wp--preset--color--pale-cyan-blue: #8ed1fc;--wp--preset--color--vivid-cyan-blue: #0693e3;--wp--preset--color--vivid-purple: #9b51e0;--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple: linear-gradient(135deg,rgb(6,147,227) 0%,rgb(155,81,224) 100%);--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan: linear-gradient(135deg,rgb(122,220,180) 0%,rgb(0,208,130) 100%);--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange: linear-gradient(135deg,rgb(252,185,0) 0%,rgb(255,105,0) 100%);--wp--preset--gradient--luminous-vivid-orange-to-vivid-red: linear-gradient(135deg,rgb(255,105,0) 0%,rgb(207,46,46) 100%);--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray: linear-gradient(135deg,rgb(238,238,238) 0%,rgb(169,184,195) 100%);--wp--preset--gradient--cool-to-warm-spectrum: linear-gradient(135deg,rgb(74,234,220) 0%,rgb(151,120,209) 20%,rgb(207,42,186) 40%,rgb(238,44,130) 60%,rgb(251,105,98) 80%,rgb(254,248,76) 100%);--wp--preset--gradient--blush-light-purple: linear-gradient(135deg,rgb(255,206,236) 0%,rgb(152,150,240) 100%);--wp--preset--gradient--blush-bordeaux: linear-gradient(135deg,rgb(254,205,165) 0%,rgb(254,45,45) 50%,rgb(107,0,62) 100%);--wp--preset--gradient--luminous-dusk: linear-gradient(135deg,rgb(255,203,112) 0%,rgb(199,81,192) 50%,rgb(65,88,208) 100%);--wp--preset--gradient--pale-ocean: linear-gradient(135deg,rgb(255,245,203) 0%,rgb(182,227,212) 50%,rgb(51,167,181) 100%);--wp--preset--gradient--electric-grass: linear-gradient(135deg,rgb(202,248,128) 0%,rgb(113,206,126) 100%);--wp--preset--gradient--midnight: linear-gradient(135deg,rgb(2,3,129) 0%,rgb(40,116,252) 100%);--wp--preset--font-size--small: 13px;--wp--preset--font-size--medium: 20px;--wp--preset--font-size--large: 36px;--wp--preset--font-size--x-large: 42px;--wp--preset--spacing--20: 0.44rem;--wp--preset--spacing--30: 0.67rem;--wp--preset--spacing--40: 1rem;--wp--preset--spacing--50: 1.5rem;--wp--preset--spacing--60: 2.25rem;--wp--preset--spacing--70: 3.38rem;--wp--preset--spacing--80: 5.06rem;--wp--preset--shadow--natural: 6px 6px 9px rgba(0, 0, 0, 0.2);--wp--preset--shadow--deep: 12px 12px 50px rgba(0, 0, 0, 0.4);--wp--preset--shadow--sharp: 6px 6px 0px rgba(0, 0, 0, 0.2);--wp--preset--shadow--outlined: 6px 6px 0px -3px rgb(255, 255, 255), 6px 6px rgb(0, 0, 0);--wp--preset--shadow--crisp: 6px 6px 0px rgb(0, 0, 0);}.wp-block-button{--wp--preset--dimension--25: 25%;--wp--preset--dimension--50: 50%;--wp--preset--dimension--75: 75%;--wp--preset--dimension--100: 100%;}:where(body) { margin: 0; }:where(.is-layout-flex){gap: 0.5em;}:where(.is-layout-grid){gap: 0.5em;}body .is-layout-flex{display: flex;}.is-layout-flex{flex-wrap: wrap;align-items: center;}.is-layout-flex > :is(*, div){margin: 0;}body .is-layout-grid{display: grid;}.is-layout-grid > :is(*, div){margin: 0;}body{padding-top: 0px;padding-right: 0px;padding-bottom: 0px;padding-left: 0px;}:root :where(.wp-element-button, .wp-block-button__link){background-color: #32373c;border-width: 0;color: #fff;font-family: inherit;font-size: inherit;font-style: inherit;font-weight: inherit;letter-spacing: inherit;line-height: inherit;padding-top: calc(0.667em + 2px);padding-right: calc(1.333em + 2px);padding-bottom: calc(0.667em + 2px);padding-left: calc(1.333em + 2px);text-decoration: none;text-transform: inherit;}.has-black-color{color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-color{color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-color{color: var(--wp--preset--color--white) !important;}.has-pale-pink-color{color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-color{color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-color{color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-color{color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-color{color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-color{color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-color{color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-color{color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-color{color: var(--wp--preset--color--vivid-purple) !important;}.has-black-background-color{background-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-background-color{background-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-background-color{background-color: var(--wp--preset--color--white) !important;}.has-pale-pink-background-color{background-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-background-color{background-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-background-color{background-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-background-color{background-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-background-color{background-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-background-color{background-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-background-color{background-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-background-color{background-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-background-color{background-color: var(--wp--preset--color--vivid-purple) !important;}.has-black-border-color{border-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-border-color{border-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-border-color{border-color: var(--wp--preset--color--white) !important;}.has-pale-pink-border-color{border-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-border-color{border-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-border-color{border-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-border-color{border-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-border-color{border-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-border-color{border-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-border-color{border-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-border-color{border-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-border-color{border-color: var(--wp--preset--color--vivid-purple) !important;}.has-vivid-cyan-blue-to-vivid-purple-gradient-background{background: var(--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple) !important;}.has-light-green-cyan-to-vivid-green-cyan-gradient-background{background: var(--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan) !important;}.has-luminous-vivid-amber-to-luminous-vivid-orange-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange) !important;}.has-luminous-vivid-orange-to-vivid-red-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-orange-to-vivid-red) !important;}.has-very-light-gray-to-cyan-bluish-gray-gradient-background{background: var(--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray) !important;}.has-cool-to-warm-spectrum-gradient-background{background: var(--wp--preset--gradient--cool-to-warm-spectrum) !important;}.has-blush-light-purple-gradient-background{background: var(--wp--preset--gradient--blush-light-purple) !important;}.has-blush-bordeaux-gradient-background{background: var(--wp--preset--gradient--blush-bordeaux) !important;}.has-luminous-dusk-gradient-background{background: var(--wp--preset--gradient--luminous-dusk) !important;}.has-pale-ocean-gradient-background{background: var(--wp--preset--gradient--pale-ocean) !important;}.has-electric-grass-gradient-background{background: var(--wp--preset--gradient--electric-grass) !important;}.has-midnight-gradient-background{background: var(--wp--preset--gradient--midnight) !important;}.has-small-font-size{font-size: var(--wp--preset--font-size--small) !important;}.has-medium-font-size{font-size: var(--wp--preset--font-size--medium) !important;}.has-large-font-size{font-size: var(--wp--preset--font-size--large) !important;}.has-x-large-font-size{font-size: var(--wp--preset--font-size--x-large) !important;}
+/*# sourceURL=global-styles-inline-css */
+</style>
+
+<link rel='stylesheet' id='um_fonticons_fa-css' href='https://aiml.com/wp-content/plugins/ultimate-member/assets/libs/legacy/fonticons/fonticons-fa.min.css?ver=2.13.1' media='all' />
+<link rel='stylesheet' id='um-user-bookmarks-css' href='https://aiml.com/wp-content/plugins/um-user-bookmarks/assets/css/um-user-bookmarks.min.css?ver=2.1.6' media='all' />
+<link rel='stylesheet' id='learndash_quiz_front_css-css' href='//aiml.com/wp-content/plugins/sfwd-lms/themes/legacy/templates/learndash_quiz_front.min.css?ver=4.25.7' media='all' />
+<link rel='stylesheet' id='jquery-dropdown-css-css' href='//aiml.com/wp-content/plugins/sfwd-lms/assets/css/jquery.dropdown.min.css?ver=4.25.7' media='all' />
+<link rel='stylesheet' id='learndash_lesson_video-css' href='//aiml.com/wp-content/plugins/sfwd-lms/themes/legacy/templates/learndash_lesson_video.min.css?ver=4.25.7' media='all' />
+<link rel='stylesheet' id='learndash-course-grid-skin-grid-css' href='https://aiml.com/wp-content/plugins/sfwd-lms/includes/course-grid/templates/skins/grid/style.css?ver=4.25.7' media='all' />
+<link rel='stylesheet' id='learndash-course-grid-pagination-css' href='https://aiml.com/wp-content/plugins/sfwd-lms/includes/course-grid/templates/pagination/style.css?ver=4.25.7' media='all' />
+<link rel='stylesheet' id='learndash-course-grid-card-grid-1-css' href='https://aiml.com/wp-content/plugins/sfwd-lms/includes/course-grid/templates/cards/grid-1/style.css?ver=4.25.7' media='all' />
+<link rel='stylesheet' id='bricks-frontend-css' href='https://aiml.com/wp-content/themes/bricks/assets/css/frontend-layer.min.css?ver=1763926727' media='all' />
+<style id="bricks-frontend-inline-css">
+@font-face{font-family:"Roboto";font-weight:200;font-display:swap;src:url(https://aiml.com/wp-content/uploads/2025/05/Roboto-ExtraLight.woff2) format("woff2");}@font-face{font-family:"Roboto";font-weight:300;font-display:swap;src:url(https://aiml.com/wp-content/uploads/2025/05/Roboto-Light.woff2) format("woff2");}@font-face{font-family:"Roboto";font-weight:400;font-display:swap;src:url(https://aiml.com/wp-content/uploads/2025/05/Roboto-Regular.woff2) format("woff2");}@font-face{font-family:"Roboto";font-weight:500;font-display:swap;src:url(https://aiml.com/wp-content/uploads/2025/05/Roboto-Medium.woff2) format("woff2");}@font-face{font-family:"Roboto";font-weight:600;font-display:swap;src:url(https://aiml.com/wp-content/uploads/2025/05/Roboto-SemiBold.woff2) format("woff2");}@font-face{font-family:"Roboto";font-weight:700;font-display:swap;src:url(https://aiml.com/wp-content/uploads/2025/05/Roboto-Bold.woff2) format("woff2");}@font-face{font-family:"Roboto";font-weight:800;font-display:swap;src:url(https://aiml.com/wp-content/uploads/2025/05/Roboto-ExtraBold.woff2) format("woff2");}@font-face{font-family:"Roboto";font-weight:900;font-display:swap;src:url(https://aiml.com/wp-content/uploads/2025/05/Roboto-Black.woff2) format("woff2");}
+
+/*# sourceURL=bricks-frontend-inline-css */
+</style>
+<link rel='stylesheet' id='torchmedia-bricks-theme-main-css' href='https://aiml.com/wp-content/themes/aiml/assets/css/main.min.css?ver=1.0.0' media='all' />
+<link rel='stylesheet' id='bricks-font-awesome-6-brands-css' href='https://aiml.com/wp-content/themes/bricks/assets/css/libs/font-awesome-6-brands-layer.min.css?ver=1757481493' media='all' />
+<link rel='stylesheet' id='bricks-font-awesome-6-css' href='https://aiml.com/wp-content/themes/bricks/assets/css/libs/font-awesome-6-layer.min.css?ver=1757481493' media='all' />
+<link rel='stylesheet' id='bricks-ionicons-css' href='https://aiml.com/wp-content/themes/bricks/assets/css/libs/ionicons-layer.min.css?ver=1757481493' media='all' />
+<link rel='stylesheet' id='tablepress-default-css' href='https://aiml.com/wp-content/tablepress-combined.min.css?ver=70' media='all' />
+<style id="bricks-frontend-inline-inline-css">
+:root {}:where(:root) .bricks-color-primary {color: #1e73be}:where(:root) .bricks-background-primary {background-color: #1e73be}:where(:root) .bricks-color-secondary {color: #61ce70}:where(:root) .bricks-background-secondary {background-color: #61ce70} .brxe-section {padding-top: 100px; padding-right: 30px; padding-bottom: 100px; padding-left: 30px} body {color: #000000; font-size: 18px; font-family: "Roboto"} h1, h2, h3, h4, h5, h6 {font-family: "Roboto"} h1 {font-family: "Helvetica"; font-size: 32px} h2 {font-size: 22px} h3 {font-size: 18px} .brxe-container {column-gap: 30px; row-gap: 30px; width: 1440px} .woocommerce main.site-main {width: 1440px} #brx-content.wordpress {width: 1440px} :root .bricks-button[class*="secondary"]:not(.outline) {background-color: #61ce70} :root .bricks-button[class*="secondary"] {color: #000000} .bricks-button {padding-top: .75em; padding-right: 1.5em; padding-bottom: .75em; padding-left: 1.5em} :root .bricks-button[class*="primary"]:not(.outline) {background-color: #1e73be} :root .bricks-button[class*="primary"] {color: #ffffff; text-transform: uppercase; font-size: 14px; font-weight: 500} .bricks-button.sm {padding-top: .5em; padding-bottom: .5em} :root .bricks-button[class*="warning"]:not(.outline) {background-color: #f0ad4e} :root .bricks-button[class*="warning"] {color: #000000} :where(.brxe-accordion .accordion-content-wrapper) a, :where(.brxe-icon-box .content) a, :where(.brxe-list) a, :where(.brxe-post-content):not([data-source="bricks"]) a, :where(.brxe-posts .dynamic p) a, :where(.brxe-shortcode) a, :where(.brxe-tabs .tab-content) a, :where(.brxe-team-members) .description a, :where(.brxe-testimonials) .testimonial-content-wrapper a, :where(.brxe-text) a, :where(a.brxe-text), :where(.brxe-text-basic) a, :where(a.brxe-text-basic), :where(.brxe-post-comments) .comment-content a {color: #1e73be}.brxe-alert.info {color: #31708f; background-color: #d9edf7; border-top: 0 solid #bcdff1; border-right: 0 solid #bcdff1; border-bottom: 0 solid #bcdff1; border-left: 8px solid #bcdff1}.brxe-alert {padding-top: 15px; padding-right: 20px; padding-bottom: 15px; padding-left: 20px}.brxe-divider .line {border-top-width: 1px}.brxe-divider.horizontal .line {border-top-color: #616161}.brxe-divider.vertical .line {border-right-color: #616161}.brxe-divider .icon i {color: #616161}@media (max-width: 991px) { .brxe-section {padding-top: 80px; padding-right: 30px; padding-bottom: 80px; padding-left: 30px}}@media (max-width: 767px) { .brxe-section {padding-top: 60px; padding-right: 20px; padding-bottom: 60px; padding-left: 20px}}@media (max-width: 478px) { .brxe-section {padding-top: 40px; padding-bottom: 40px}}.main-nav.brxe-nav-menu .bricks-nav-menu > li > a {justify-content: flex-start; font-size: 17px; color: #000000; font-weight: 600; line-height: 1.1; border-bottom: 2px solid rgba(0, 0, 0, 0); padding-top: 6px; padding-right: 0; padding-bottom: 6px; padding-left: 0}.main-nav.brxe-nav-menu .bricks-nav-menu > li > .brx-submenu-toggle {justify-content: flex-start; border-bottom: 2px solid rgba(0, 0, 0, 0)}.main-nav.brxe-nav-menu .bricks-nav-menu > li > .brx-submenu-toggle > * {font-size: 17px; color: #000000; font-weight: 600; line-height: 1.1; padding-top: 6px; padding-right: 0; padding-bottom: 6px; padding-left: 0}.main-nav.brxe-nav-menu .bricks-nav-menu .current-menu-item > a {color: #1e73be; border-bottom: 2px solid #1e73be}.main-nav.brxe-nav-menu .bricks-nav-menu .current-menu-item > .brx-submenu-toggle > * {color: #1e73be}.main-nav.brxe-nav-menu .bricks-nav-menu > .current-menu-parent > a {color: #1e73be; border-bottom: 2px solid #1e73be}.main-nav.brxe-nav-menu .bricks-nav-menu > .current-menu-parent > .brx-submenu-toggle > * {color: #1e73be}.main-nav.brxe-nav-menu .bricks-nav-menu > .current-menu-ancestor > a {color: #1e73be; border-bottom: 2px solid #1e73be}.main-nav.brxe-nav-menu .bricks-nav-menu > .current-menu-ancestor > .brx-submenu-toggle > * {color: #1e73be}.main-nav.brxe-nav-menu .bricks-nav-menu .brx-submenu-toggle button {margin-left: 10px}.main-nav.brxe-nav-menu .bricks-nav-menu button[aria-expanded="false"] > * {transform: rotateZ(90deg)}.main-nav.brxe-nav-menu .bricks-nav-menu button[aria-expanded="true"] > * {transform: rotateZ(-90deg)}.main-nav.brxe-nav-menu .bricks-nav-menu > li:hover > a {color: #61ce70; border-bottom: 2px solid #61ce70}.main-nav.brxe-nav-menu .bricks-nav-menu > li:hover > .brx-submenu-toggle > * {color: #61ce70}.main-nav.brxe-nav-menu .bricks-nav-menu > li:hover > .brx-submenu-toggle {border-bottom: 2px solid #61ce70}.main-nav.brxe-nav-menu .bricks-nav-menu .current-menu-item > .brx-submenu-toggle {border-bottom: 2px solid #1e73be}.main-nav.brxe-nav-menu .bricks-nav-menu > .current-menu-parent > .brx-submenu-toggle {border-bottom: 2px solid #1e73be}.main-nav.brxe-nav-menu .bricks-nav-menu > .current-menu-ancestor > .brx-submenu-toggle {border-bottom: 2px solid #1e73be}.main-nav.brxe-nav-menu .bricks-nav-menu .sub-menu a {padding-top: 8px; padding-right: 20px; padding-bottom: 8px; padding-left: 15px}.main-nav.brxe-nav-menu .bricks-nav-menu .sub-menu button {padding-top: 8px; padding-right: 20px; padding-bottom: 8px; padding-left: 15px}.main-nav.brxe-nav-menu .bricks-nav-menu .sub-menu > li > a {font-size: 15px; line-height: 1.1}.main-nav.brxe-nav-menu .bricks-nav-menu .sub-menu > li > .brx-submenu-toggle > * {font-size: 15px; line-height: 1.1}.main-nav.brxe-nav-menu .bricks-nav-menu .sub-menu > li:hover > a {color: #61ce70}.main-nav.brxe-nav-menu .bricks-nav-menu .sub-menu > li:hover > .brx-submenu-toggle > * {color: #61ce70}.main-nav.brxe-nav-menu .bricks-nav-menu .sub-menu > .current-menu-item > a:hover {color: #f0ad4e}.main-nav.brxe-nav-menu .bricks-nav-menu .sub-menu > .current-menu-item > .brx-submenu-toggle > *:hover {color: #f0ad4e}.main-nav.brxe-nav-menu .bricks-nav-menu .sub-menu > .current-menu-ancestor > a:hover {color: #f0ad4e}.main-nav.brxe-nav-menu .bricks-nav-menu .sub-menu > .current-menu-ancestor > .brx-submenu-toggle > *:hover {color: #f0ad4e}.main-nav.brxe-nav-menu .bricks-mobile-menu-wrapper {top: 76px}.main-nav.brxe-nav-menu .bricks-nav-menu > li {margin-left: 0}.main-nav.brxe-nav-menu .bricks-nav-menu {gap: 0px}.main-nav.brxe-nav-menu .bricks-mobile-menu-wrapper:before {background-color: rgba(255, 255, 255, 0.94)}.main-nav.brxe-nav-menu .bricks-mobile-menu-overlay {background-color: rgba(255, 255, 255, 0)}@media (max-width: 767px) {.main-nav.brxe-nav-menu .bricks-nav-menu {flex-direction: column}.main-nav.brxe-nav-menu .bricks-mobile-menu-wrapper {text-align: left}.main-nav.brxe-nav-menu .bricks-mobile-menu > li > a {padding-top: 10px; padding-right: 20px; padding-bottom: 10px; padding-left: 20px; font-size: 17px; line-height: 1.1; color: #212121}.main-nav.brxe-nav-menu .bricks-mobile-menu > li > .brx-submenu-toggle > * {padding-top: 10px; padding-right: 20px; padding-bottom: 10px; padding-left: 20px; font-size: 17px; line-height: 1.1; color: #212121}.main-nav.brxe-nav-menu .bricks-mobile-menu > .menu-item-has-children .brx-submenu-toggle button {font-size: 17px; color: #212121}.main-nav.brxe-nav-menu .bricks-mobile-menu .sub-menu > .menu-item > a {padding-top: 10px; padding-right: 20px; padding-bottom: 10px; padding-left: 40px}.main-nav.brxe-nav-menu .bricks-mobile-menu .sub-menu > .menu-item > .brx-submenu-toggle > * {padding-top: 10px; padding-right: 20px; padding-bottom: 10px; padding-left: 40px}.main-nav.brxe-nav-menu .bricks-mobile-menu .sub-menu > li > a {font-size: 15px; line-height: 1.1; color: #212121}.main-nav.brxe-nav-menu .bricks-mobile-menu .sub-menu > li > .brx-submenu-toggle > * {font-size: 15px; line-height: 1.1; color: #212121}.main-nav.brxe-nav-menu .bricks-mobile-menu .sub-menu > .current-menu-item > a {color: #1e73be; font-weight: 700}.main-nav.brxe-nav-menu .bricks-mobile-menu .sub-menu > .current-menu-item > .brx-submenu-toggle > * {color: #1e73be; font-weight: 700}.main-nav.brxe-nav-menu .bricks-mobile-menu [aria-current="page"] {color: #1e73be; font-weight: 700}.main-nav.brxe-nav-menu .bricks-mobile-menu [aria-current="page"] + button {color: #1e73be; font-weight: 700}.main-nav.brxe-nav-menu .bricks-mobile-menu > .current-menu-item > a {color: #1e73be; font-weight: 700}.main-nav.brxe-nav-menu .bricks-mobile-menu > .current-menu-parent > a {color: #1e73be; font-weight: 700}.main-nav.brxe-nav-menu .bricks-mobile-menu > .current-menu-item > .brx-submenu-toggle > * {color: #1e73be; font-weight: 700}.main-nav.brxe-nav-menu .bricks-mobile-menu > .current-menu-parent > .brx-submenu-toggle > * {color: #1e73be; font-weight: 700}}.nav-buttons.brxe-button {border-radius: 10px; padding-top: 8px; padding-bottom: 8px; font-size: 14px; font-weight: 500; flex-shrink: 0}@media (max-width: 478px) {.nav-buttons.brxe-button {padding-top: 6px; padding-right: 15px; padding-bottom: 6px; padding-left: 15px}}.left-column.brxe-block {width: 25%; max-width: 265px; row-gap: 30px}@media (max-width: 767px) {.left-column.brxe-block {width: 100%}}.sidebar-tree.brxe-shortcode {font-size: 15px}.main-column.brxe-block {width: 55%; row-gap: 30px; flex-grow: 1}@media (max-width: 991px) {.main-column.brxe-block {width: 65%}}@media (max-width: 767px) {.main-column.brxe-block {width: 100%}}.notice-box.brxe-alert {font-size: 16px; line-height: 1.3}.notice-box { align-items: flex-start;} .notice-box svg { position: relative; margin-top: 10px}.comments textarea { height: 100px;}.right-column.brxe-block {width: 20%; max-width: 250px; align-items: center; row-gap: 30px}@media (max-width: 991px) {.right-column.brxe-block {width: 35%; max-width: 500px}}@media (max-width: 767px) {.right-column.brxe-block {width: 100%; max-width: 768px}}.footer.brxe-section {font-size: 13px; row-gap: 20px; padding-top: 30px; padding-bottom: 30px}#brxe-79c2b8 {max-width: 225px; width: 25%; display: flex; flex-shrink: 0}@media (max-width: 767px) {#brxe-79c2b8 {width: 33%}}@media (max-width: 478px) {#brxe-79c2b8 {width: 40%}}@layer bricks {@media (max-width: 767px) {#brxe-c3623e .bricks-nav-menu-wrapper { display: none; }#brxe-c3623e .bricks-mobile-menu-toggle { display: block; }}}#brxe-c3623e .bricks-nav-menu > li > a {padding-top: 12px}#brxe-c3623e .bricks-nav-menu > li > .brx-submenu-toggle > * {padding-top: 12px}#brxe-27bdff {flex-direction: row; align-items: center; justify-content: flex-end; column-gap: 10px; row-gap: 10px; flex-shrink: 1; display: flex; width: auto}#brxe-a93dd0 .bricks-nav-menu > li > a {font-size: 16px; line-height: 40px; justify-content: flex-end}#brxe-a93dd0 .bricks-nav-menu > li > .brx-submenu-toggle > * {font-size: 16px; line-height: 40px}#brxe-a93dd0 .bricks-nav-menu .sub-menu {background-color: #ffffff; box-shadow: 0 0 15px 0 rgba(0, 0, 0, 0.11); border-top: 15px solid #ffffff; border-bottom: 15px solid #ffffff}#brxe-a93dd0 .bricks-nav-menu .sub-menu > li > a {color: #000000; font-size: 16px; line-height: 1.5}#brxe-a93dd0 .bricks-nav-menu .sub-menu > li > .brx-submenu-toggle > * {color: #000000; font-size: 16px; line-height: 1.5}#brxe-a93dd0 .bricks-nav-menu .sub-menu a {padding-top: 5px; padding-bottom: 5px; justify-content: flex-end}#brxe-a93dd0 .bricks-nav-menu .sub-menu button {padding-top: 5px; padding-bottom: 5px; justify-content: flex-end}#brxe-a93dd0 .bricks-nav-menu .sub-menu > .current-menu-item > a {background-color: #e0e0e0}#brxe-a93dd0 .bricks-nav-menu .sub-menu > .current-menu-item > .brx-submenu-toggle {background-color: #e0e0e0}#brxe-a93dd0 .bricks-nav-menu .sub-menu > .current-menu-ancestor > a {background-color: #e0e0e0}#brxe-a93dd0 .bricks-nav-menu .sub-menu > .current-menu-ancestor > .brx-submenu-toggle {background-color: #e0e0e0}#brxe-a93dd0 .bricks-nav-menu > li > .brx-submenu-toggle {justify-content: flex-end}#brxe-a93dd0 li > a > img { border: 1px solid #000; border-radius: 50%; aspect-ratio: 1/1; object-fit: cover;}#brxe-7c9dd6 {flex-direction: column; align-items: flex-end; flex-shrink: 1; display: flex; width: auto}#brxe-fd7a3a {flex-direction: row; align-items: center; justify-content: space-between; flex-wrap: nowrap}@media (max-width: 991px) {#brxe-fd7a3a {flex-direction: column-reverse; align-items: flex-end; row-gap: 5px}}@media (max-width: 767px) {#brxe-fd7a3a {flex-direction: row-reverse; align-items: center; justify-content: flex-start; column-gap: 30px}}@media (max-width: 478px) {#brxe-fd7a3a {column-gap: 20px}}#brxe-dfbd65 {flex-direction: row; justify-content: space-between; align-items: center; flex-wrap: nowrap; column-gap: 45px}@media (max-width: 991px) {#brxe-dfbd65 {column-gap: 20px}}#brxe-39b819 {padding-top: 21px; padding-bottom: 15px}#brxe-b275c2 {font-size: 15px; font-weight: 500}#brxe-5c138b {font-size: 18px}#brxe-gfjhjz {font-size: 15px; font-weight: 500}#brxe-62bd58 {flex-direction: row; align-items: center; column-gap: 10px; color: #757575}#brxe-687888 {display: none}@media (max-width: 767px) {#brxe-687888 {display: flex}}.brxe-bkfbtj button {background-color: #424242; color: #ffffff; font-size: 16px; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; height: 35px; width: 35px}.brxe-bkfbtj input[type=search] {height: 35px; background-color: #e0e0e0; border-style: none; font-size: .8em; text-align: left; line-height: 1.1; width: 100%}.brxe-bkfbtj input[type=search]::placeholder {color: #424242}.brxe-bkfbtj .bricks-search-overlay .bricks-search-form {max-width: 100%}.brxe-jolbpb {width: 100%; flex-direction: column; align-items: stretch}.brxe-4ed9d6 {text-align: center; font-weight: 600}.brxe-c33e73 .repeater-item:nth-child(1) .icon {color: #1e73be; font-size: 26px}.brxe-c33e73 .repeater-item:nth-child(1) span {font-size: 15px}.brxe-c33e73 .repeater-item:nth-child(1).has-link a {color: #1e73be}.brxe-c33e73 .repeater-item:nth-child(1).no-link {color: #1e73be}.brxe-c33e73 .repeater-item:nth-child(2).has-link a {color: #1e73be}.brxe-c33e73 .repeater-item:nth-child(2).no-link {color: #1e73be}.brxe-c33e73 .repeater-item:nth-child(2) span {font-size: 15px}.brxe-c33e73 .repeater-item:nth-child(2) .icon {color: #000000}.brxe-c33e73 {flex-direction: column; gap: 9px}.brxe-c33e73 li.has-link a, .brxe-c33e73 li.no-link {justify-content: flex-start; gap: 10px; align-items: flex-start; line-height: 1.1}.brxe-c33e73 .icon {font-size: 24px}.brxe-c33e73 svg {height: 24px; width: auto}.brxe-xsaokk {flex-direction: column; align-items: center; row-gap: 15px}.brxe-135d1b {text-align: center; line-height: 1.4}.brxe-nshomo {flex-direction: column; align-items: center; border: 1px dashed #616161; padding-top: 15px; padding-right: 25px; padding-bottom: 15px; padding-left: 25px; row-gap: 10px}#brxe-dnzmru .repeater-item [data-field-id="6ff78b"] {text-align: left; font-size: 15px; color: #1e73be; line-height: 1.3}#brxe-dnzmru li {text-align: center}#brxe-dnzmru .related-posts-title {font-size: 20px; text-align: center; line-height: 1.2; margin-bottom: 10px}#brxe-dnzmru ul {grid-template-columns: repeat(1, 1fr); grid-auto-flow: unset; gap: 10px}#brxe-dnzmru h5 { padding-bottom: 10px; border-bottom: 1px solid #ccc;}#brxe-1117b1 {flex-direction: row}@media (max-width: 767px) {#brxe-1117b1 {flex-direction: column}}#brxe-2f8f80 {padding-top: 30px; padding-bottom: 30px}#brxe-6b9763 {text-align: center}#brxe-2c75ea {flex-direction: column; align-items: center; row-gap: 5px}#brx-header.brx-sticky.scrolling > .brxe-section,#brx-header.brx-sticky.scrolling > .brxe-container,#brx-header.brx-sticky.scrolling > .brxe-block,#brx-header.brx-sticky.scrolling > .brxe-div {background-color: rgba(255, 255, 255, 0.95)}#brx-header.brx-sticky.scrolling:not(.slide-up) > .brxe-section,#brx-header.brx-sticky.scrolling:not(.slide-up) > .brxe-container,#brx-header.brx-sticky.scrolling:not(.slide-up) > .brxe-block,#brx-header.brx-sticky.scrolling:not(.slide-up) > .brxe-div {box-shadow: 0 10px 20px 0 rgba(0, 0, 0, 0.08)}
+/*# sourceURL=bricks-frontend-inline-inline-css */
+</style>
+<link rel='stylesheet' id='um_modal-css' href='https://aiml.com/wp-content/plugins/ultimate-member/assets/css/um-modal.min.css?ver=2.13.1' media='all' />
+<link rel='stylesheet' id='um_ui-css' href='https://aiml.com/wp-content/plugins/ultimate-member/assets/libs/jquery-ui/jquery-ui.min.css?ver=1.13.2' media='all' />
+<link rel='stylesheet' id='um_raty-css' href='https://aiml.com/wp-content/plugins/ultimate-member/assets/libs/raty/um-raty.min.css?ver=2.6.0' media='all' />
+<link rel='stylesheet' id='um_fileupload-css' href='https://aiml.com/wp-content/plugins/ultimate-member/assets/css/um-fileupload.min.css?ver=2.13.1' media='all' />
+<link rel='stylesheet' id='um_confirm-css' href='https://aiml.com/wp-content/plugins/ultimate-member/assets/libs/um-confirm/um-confirm.min.css?ver=1.0' media='all' />
+<link rel='stylesheet' id='um_notice-css' href='https://aiml.com/wp-content/plugins/ultimate-member/assets/libs/um-notice/um-notice.min.css?ver=1.0' media='all' />
+<link rel='stylesheet' id='um_datetime-css' href='https://aiml.com/wp-content/plugins/ultimate-member/assets/libs/pickadate/default.min.css?ver=3.6.2' media='all' />
+<link rel='stylesheet' id='um_datetime_date-css' href='https://aiml.com/wp-content/plugins/ultimate-member/assets/libs/pickadate/default.date.min.css?ver=3.6.2' media='all' />
+<link rel='stylesheet' id='um_datetime_time-css' href='https://aiml.com/wp-content/plugins/ultimate-member/assets/libs/pickadate/default.time.min.css?ver=3.6.2' media='all' />
+<link rel='stylesheet' id='um_fonticons_ii-css' href='https://aiml.com/wp-content/plugins/ultimate-member/assets/libs/legacy/fonticons/fonticons-ii.min.css?ver=2.13.1' media='all' />
+<link rel='stylesheet' id='um_fontawesome-css' href='https://aiml.com/wp-content/plugins/ultimate-member/assets/css/um-fontawesome.min.css?ver=6.5.2' media='all' />
+<link rel='stylesheet' id='um_common-css' href='https://aiml.com/wp-content/plugins/ultimate-member/assets/css/common.min.css?ver=2.13.1' media='all' />
+<link rel='stylesheet' id='um_responsive-css' href='https://aiml.com/wp-content/plugins/ultimate-member/assets/css/um-responsive.min.css?ver=2.13.1' media='all' />
+<link rel='stylesheet' id='um_styles-css' href='https://aiml.com/wp-content/plugins/ultimate-member/assets/css/um-styles.min.css?ver=2.13.1' media='all' />
+<link rel='stylesheet' id='um_crop-css' href='https://aiml.com/wp-content/plugins/ultimate-member/assets/libs/cropper/cropper.min.css?ver=1.6.1' media='all' />
+<link rel='stylesheet' id='um_profile-css' href='https://aiml.com/wp-content/plugins/ultimate-member/assets/css/um-profile.min.css?ver=2.13.1' media='all' />
+<link rel='stylesheet' id='um_account-css' href='https://aiml.com/wp-content/plugins/ultimate-member/assets/css/um-account.min.css?ver=2.13.1' media='all' />
+<link rel='stylesheet' id='um_misc-css' href='https://aiml.com/wp-content/plugins/ultimate-member/assets/css/um-misc.min.css?ver=2.13.1' media='all' />
+<link rel='stylesheet' id='um_default_css-css' href='https://aiml.com/wp-content/plugins/ultimate-member/assets/css/um-old-default.min.css?ver=2.13.1' media='all' />
+<link rel='stylesheet' id='um-stripe-css' href='https://aiml.com/wp-content/plugins/um-stripe/assets/css/stripe.min.css?ver=1.0' media='all' />
+<script id="jquery-core-js" src="https://aiml.com/wp-includes/js/jquery/jquery.min.js?ver=3.7.1"></script>
+<script id="um-gdpr-js" src="https://aiml.com/wp-content/plugins/ultimate-member/assets/js/um-gdpr.min.js?ver=2.13.1"></script>
+<link rel="https://api.w.org/" href="https://aiml.com/wp-json/" /><link rel="alternate" title="JSON" type="application/json" href="https://aiml.com/wp-json/wp/v2/posts/2935" /><script async src="https://aiml.com/wp-content/uploads/perfmatters/gtagv4.js?id=G-QDYZM3MLVH"></script><script>window.dataLayer = window.dataLayer || [];function gtag(){dataLayer.push(arguments);}gtag("js", new Date());gtag("config", "G-QDYZM3MLVH");</script><link rel="icon" href="https://aiml.com/wp-content/uploads/2021/07/cropped-aiml_transparent-32x32.png" sizes="32x32" />
+<link rel="icon" href="https://aiml.com/wp-content/uploads/2021/07/cropped-aiml_transparent-192x192.png" sizes="192x192" />
+<link rel="apple-touch-icon" href="https://aiml.com/wp-content/uploads/2021/07/cropped-aiml_transparent-180x180.png" />
+<meta name="msapplication-TileImage" content="https://aiml.com/wp-content/uploads/2021/07/cropped-aiml_transparent-270x270.png" />
+
+<meta property="og:url" content="https://aiml.com/explain-the-transformer-architecture/" />
+<meta property="og:site_name" content="AIML.com" />
+<meta property="og:title" content="Explain the Transformer Architecture (with Examples and Videos)" />
+<meta property="og:description" content="The key components for Transformer Architecture are Self-Attention, Multi-headed Attention, Positional Encoding, Residual Connections, Layer Normalization, and stacked layers. 
+
+&lt;a href=&quot;https://aiml.com/explain-the-transformer-architecture/&quot;&gt;Read more..&lt;/a&gt;" />
+<meta property="og:type" content="article" />
+<noscript><style>.perfmatters-lazy[data-src]{display:none !important;}</style></noscript><style>.perfmatters-lazy-youtube{position:relative;width:100%;max-width:100%;height:0;padding-bottom:56.23%;overflow:hidden}.perfmatters-lazy-youtube img{position:absolute;top:0;right:0;bottom:0;left:0;display:block;width:100%;max-width:100%;height:auto;margin:auto;border:none;cursor:pointer;transition:.5s all;-webkit-transition:.5s all;-moz-transition:.5s all}.perfmatters-lazy-youtube img:hover{-webkit-filter:brightness(75%)}.perfmatters-lazy-youtube .play{position:absolute;top:50%;left:50%;right:auto;width:68px;height:48px;margin-left:-34px;margin-top:-24px;background:url(https://aiml.com/wp-content/plugins/perfmatters/img/youtube.svg) no-repeat;background-position:center;background-size:cover;pointer-events:none;filter:grayscale(1)}.perfmatters-lazy-youtube:hover .play{filter:grayscale(0)}.perfmatters-lazy-youtube iframe{position:absolute;top:0;left:0;width:100%;height:100%;z-index:99}.wp-has-aspect-ratio .wp-block-embed__wrapper{position:relative;}.wp-has-aspect-ratio .perfmatters-lazy-youtube{position:absolute;top:0;right:0;bottom:0;left:0;width:100%;height:100%;padding-bottom:0}</style><style id="wp-block-heading-inline-css">
+h1:where(.wp-block-heading).has-background,h2:where(.wp-block-heading).has-background,h3:where(.wp-block-heading).has-background,h4:where(.wp-block-heading).has-background,h5:where(.wp-block-heading).has-background,h6:where(.wp-block-heading).has-background{padding:1.25em 2.375em}h1.has-text-align-left[style*=writing-mode]:where([style*=vertical-lr]),h1.has-text-align-right[style*=writing-mode]:where([style*=vertical-rl]),h2.has-text-align-left[style*=writing-mode]:where([style*=vertical-lr]),h2.has-text-align-right[style*=writing-mode]:where([style*=vertical-rl]),h3.has-text-align-left[style*=writing-mode]:where([style*=vertical-lr]),h3.has-text-align-right[style*=writing-mode]:where([style*=vertical-rl]),h4.has-text-align-left[style*=writing-mode]:where([style*=vertical-lr]),h4.has-text-align-right[style*=writing-mode]:where([style*=vertical-rl]),h5.has-text-align-left[style*=writing-mode]:where([style*=vertical-lr]),h5.has-text-align-right[style*=writing-mode]:where([style*=vertical-rl]),h6.has-text-align-left[style*=writing-mode]:where([style*=vertical-lr]),h6.has-text-align-right[style*=writing-mode]:where([style*=vertical-rl]){rotate:180deg}
+/*# sourceURL=https://aiml.com/wp-includes/blocks/heading/style.min.css */
+</style>
+<style id="wp-block-image-inline-css">
+.wp-block-image>a,.wp-block-image>figure>a{display:inline-block}.wp-block-image img{box-sizing:border-box;height:auto;max-width:100%;vertical-align:bottom}@media not (prefers-reduced-motion){.wp-block-image img.hide{visibility:hidden}.wp-block-image img.show{animation:show-content-image .4s}}.wp-block-image[style*=border-radius] img,.wp-block-image[style*=border-radius]>a{border-radius:inherit}.wp-block-image.has-custom-border img{box-sizing:border-box}.wp-block-image.aligncenter{text-align:center}.wp-block-image.alignfull>a,.wp-block-image.alignwide>a{width:100%}.wp-block-image.alignfull img,.wp-block-image.alignwide img{height:auto;width:100%}.wp-block-image .aligncenter,.wp-block-image .alignleft,.wp-block-image .alignright,.wp-block-image.aligncenter,.wp-block-image.alignleft,.wp-block-image.alignright{display:table}.wp-block-image .aligncenter>figcaption,.wp-block-image .alignleft>figcaption,.wp-block-image .alignright>figcaption,.wp-block-image.aligncenter>figcaption,.wp-block-image.alignleft>figcaption,.wp-block-image.alignright>figcaption{caption-side:bottom;display:table-caption}.wp-block-image .alignleft{float:left;margin:.5em 1em .5em 0}.wp-block-image .alignright{float:right;margin:.5em 0 .5em 1em}.wp-block-image .aligncenter{margin-left:auto;margin-right:auto}.wp-block-image :where(figcaption){margin-bottom:1em;margin-top:.5em}.wp-block-image.is-style-circle-mask img{border-radius:9999px}@supports ((-webkit-mask-image:none) or (mask-image:none)) or (-webkit-mask-image:none){.wp-block-image.is-style-circle-mask img{border-radius:0;-webkit-mask-image:url('data:image/svg+xml;utf8,<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="50"/></svg>');mask-image:url('data:image/svg+xml;utf8,<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="50"/></svg>');mask-mode:alpha;-webkit-mask-position:center;mask-position:center;-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;-webkit-mask-size:contain;mask-size:contain}}:root :where(.wp-block-image.is-style-rounded img,.wp-block-image .is-style-rounded img){border-radius:9999px}.wp-block-image figure{margin:0}.wp-lightbox-container{display:flex;flex-direction:column;position:relative}.wp-lightbox-container img{cursor:zoom-in}.wp-lightbox-container img:hover+button{opacity:1}.wp-lightbox-container button{align-items:center;backdrop-filter:blur(16px) saturate(180%);background-color:rgba(90,90,90,.25);border:none;border-radius:4px;cursor:zoom-in;display:flex;height:20px;justify-content:center;opacity:0;padding:0;position:absolute;right:16px;text-align:center;top:16px;width:20px;z-index:100}@media not (prefers-reduced-motion){.wp-lightbox-container button{transition:opacity .2s ease}}.wp-lightbox-container button:focus-visible{outline:3px auto rgba(90,90,90,.25);outline:3px auto -webkit-focus-ring-color;outline-offset:3px}.wp-lightbox-container button:hover{cursor:pointer;opacity:1}.wp-lightbox-container button:focus{opacity:1}.wp-lightbox-container button:focus,.wp-lightbox-container button:hover,.wp-lightbox-container button:not(:hover):not(:active):not(.has-background){background-color:rgba(90,90,90,.25);border:none}.wp-lightbox-overlay{box-sizing:border-box;cursor:zoom-out;height:100vh;left:0;overflow:hidden;position:fixed;top:0;visibility:hidden;width:100%;z-index:100000}.wp-lightbox-overlay .wp-lightbox-close-button{align-items:center;cursor:pointer;display:flex;font-family:inherit;gap:8px;justify-content:center;line-height:1;min-height:40px;min-width:40px;padding:0 4px;position:absolute;right:calc(env(safe-area-inset-right) + 16px);top:calc(env(safe-area-inset-top) + 16px);z-index:5000000}.wp-lightbox-overlay .wp-lightbox-close-button:focus,.wp-lightbox-overlay .wp-lightbox-close-button:hover,.wp-lightbox-overlay .wp-lightbox-close-button:not(:hover):not(:active):not(.has-background){background:none;border:none}.wp-lightbox-overlay .wp-lightbox-close-button:has(.wp-lightbox-close-text:not([hidden])) .wp-lightbox-close-icon svg{height:1em;width:1em}.wp-lightbox-overlay .wp-lightbox-close-icon svg{display:block}.wp-lightbox-overlay .wp-lightbox-navigation-button-next,.wp-lightbox-overlay .wp-lightbox-navigation-button-prev{align-items:center;bottom:16px;cursor:pointer;display:flex;font-family:inherit;gap:4px;justify-content:center;line-height:1;min-height:40px;min-width:40px;padding:0 8px;position:absolute;z-index:2000002}.wp-lightbox-overlay .wp-lightbox-navigation-button-next[hidden],.wp-lightbox-overlay .wp-lightbox-navigation-button-prev[hidden]{display:none}@media (min-width:960px){.wp-lightbox-overlay .wp-lightbox-navigation-button-next,.wp-lightbox-overlay .wp-lightbox-navigation-button-prev{bottom:50%;transform:translateY(-50%)}}.wp-lightbox-overlay .wp-lightbox-navigation-button-next:focus,.wp-lightbox-overlay .wp-lightbox-navigation-button-next:hover,.wp-lightbox-overlay .wp-lightbox-navigation-button-next:not(:hover):not(:active):not(.has-background),.wp-lightbox-overlay .wp-lightbox-navigation-button-prev:focus,.wp-lightbox-overlay .wp-lightbox-navigation-button-prev:hover,.wp-lightbox-overlay .wp-lightbox-navigation-button-prev:not(:hover):not(:active):not(.has-background){background:none;border:none;padding:0 8px}.wp-lightbox-overlay .wp-lightbox-navigation-button-next:has(.wp-lightbox-navigation-text:not([hidden])) .wp-lightbox-navigation-icon svg,.wp-lightbox-overlay .wp-lightbox-navigation-button-prev:has(.wp-lightbox-navigation-text:not([hidden])) .wp-lightbox-navigation-icon svg{display:block;height:1.5em;width:1.5em}.wp-lightbox-overlay .wp-lightbox-navigation-button-prev{left:calc(env(safe-area-inset-left) + 16px)}.wp-lightbox-overlay .wp-lightbox-navigation-button-next{right:calc(env(safe-area-inset-right) + 16px)}.wp-lightbox-overlay .wp-lightbox-navigation-icon svg{vertical-align:middle}.wp-lightbox-overlay .lightbox-image-container{height:var(--wp--lightbox-container-height);left:50%;overflow:hidden;position:absolute;top:50%;transform:translate(-50%,-50%);transform-origin:top left;width:var(--wp--lightbox-container-width);z-index:2000001}.wp-lightbox-overlay .wp-block-image{align-items:center;box-sizing:border-box;display:flex;height:100%;justify-content:center;margin:0;position:relative;transform-origin:0 0;width:100%;z-index:3000000}.wp-lightbox-overlay .wp-block-image img{height:var(--wp--lightbox-image-height);min-height:var(--wp--lightbox-image-height);min-width:var(--wp--lightbox-image-width);width:var(--wp--lightbox-image-width)}.wp-lightbox-overlay .wp-block-image figcaption{display:none}.wp-lightbox-overlay button{background:none;border:none}.wp-lightbox-overlay .scrim{background-color:#fff;height:100%;opacity:.9;position:absolute;width:100%;z-index:2000000}.wp-lightbox-overlay.active{visibility:visible}@media not (prefers-reduced-motion){.wp-lightbox-overlay.active{animation:turn-on-visibility .25s both}.wp-lightbox-overlay.active img{animation:turn-on-visibility .35s both}.wp-lightbox-overlay.show-closing-animation:not(.active){animation:turn-off-visibility .35s both}.wp-lightbox-overlay.show-closing-animation:not(.active) img{animation:turn-off-visibility .25s both}.wp-lightbox-overlay.zoom.active{animation:none;opacity:1;visibility:visible}.wp-lightbox-overlay.zoom.active .lightbox-image-container{animation:lightbox-zoom-in .4s}.wp-lightbox-overlay.zoom.active .lightbox-image-container img{animation:none}.wp-lightbox-overlay.zoom.active .scrim{animation:turn-on-visibility .4s forwards}.wp-lightbox-overlay.zoom.show-closing-animation:not(.active){animation:none}.wp-lightbox-overlay.zoom.show-closing-animation:not(.active) .lightbox-image-container{animation:lightbox-zoom-out .4s}.wp-lightbox-overlay.zoom.show-closing-animation:not(.active) .lightbox-image-container img{animation:none}.wp-lightbox-overlay.zoom.show-closing-animation:not(.active) .scrim{animation:turn-off-visibility .4s forwards}}@keyframes show-content-image{0%{visibility:hidden}99%{visibility:hidden}to{visibility:visible}}@keyframes turn-on-visibility{0%{opacity:0}to{opacity:1}}@keyframes turn-off-visibility{0%{opacity:1;visibility:visible}99%{opacity:0;visibility:visible}to{opacity:0;visibility:hidden}}@keyframes lightbox-zoom-in{0%{transform:translate(calc((-100vw + var(--wp--lightbox-scrollbar-width))/2 + var(--wp--lightbox-initial-left-position)),calc(-50vh + var(--wp--lightbox-initial-top-position))) scale(var(--wp--lightbox-scale))}to{transform:translate(-50%,-50%) scale(1)}}@keyframes lightbox-zoom-out{0%{transform:translate(-50%,-50%) scale(1);visibility:visible}99%{visibility:visible}to{transform:translate(calc((-100vw + var(--wp--lightbox-scrollbar-width))/2 + var(--wp--lightbox-initial-left-position)),calc(-50vh + var(--wp--lightbox-initial-top-position))) scale(var(--wp--lightbox-scale));visibility:hidden}}
+/*# sourceURL=https://aiml.com/wp-includes/blocks/image/style.min.css */
+</style>
+<style id="wp-block-list-inline-css">
+ol,ul{box-sizing:border-box}:root :where(.wp-block-list.has-background){padding:1.25em 2.375em}
+/*# sourceURL=https://aiml.com/wp-includes/blocks/list/style.min.css */
+</style>
+<style id="wp-block-paragraph-inline-css">
+.is-small-text{font-size:.875em}.is-regular-text{font-size:1em}.is-large-text{font-size:2.25em}.is-larger-text{font-size:3em}.has-drop-cap:not(:focus):first-letter{float:left;font-size:8.4em;font-style:normal;font-weight:100;line-height:.68;margin:.05em .1em 0 0;text-transform:uppercase}body.rtl .has-drop-cap:not(:focus):first-letter{float:none;margin-left:.1em}p.has-drop-cap.has-background{overflow:hidden}:root :where(p.has-background){padding:1.25em 2.375em}:where(p.has-text-color:not(.has-link-color)) a{color:inherit}p.has-text-align-left[style*="writing-mode:vertical-lr"],p.has-text-align-right[style*="writing-mode:vertical-rl"]{rotate:180deg}
+/*# sourceURL=https://aiml.com/wp-includes/blocks/paragraph/style.min.css */
+</style>
+<style id="wp-block-embed-inline-css">
+.wp-block-embed.alignleft,.wp-block-embed.alignright,.wp-block[data-align=left]>[data-type="core/embed"],.wp-block[data-align=right]>[data-type="core/embed"]{max-width:360px;width:100%}.wp-block-embed.alignleft .wp-block-embed__wrapper,.wp-block-embed.alignright .wp-block-embed__wrapper,.wp-block[data-align=left]>[data-type="core/embed"] .wp-block-embed__wrapper,.wp-block[data-align=right]>[data-type="core/embed"] .wp-block-embed__wrapper{min-width:280px}.wp-block-cover .wp-block-embed{min-height:240px;min-width:320px}.wp-block-group.is-layout-flex .wp-block-embed{flex:1 1 0%;min-width:0}.wp-block-embed{overflow-wrap:break-word}.wp-block-embed :where(figcaption){margin-bottom:1em;margin-top:.5em}.wp-block-embed iframe{max-width:100%}.wp-block-embed__wrapper{position:relative}.wp-embed-responsive .wp-has-aspect-ratio .wp-block-embed__wrapper:before{content:"";display:block;padding-top:50%}.wp-embed-responsive .wp-has-aspect-ratio iframe{bottom:0;height:100%;left:0;position:absolute;right:0;top:0;width:100%}.wp-embed-responsive .wp-embed-aspect-21-9 .wp-block-embed__wrapper:before{padding-top:42.85%}.wp-embed-responsive .wp-embed-aspect-18-9 .wp-block-embed__wrapper:before{padding-top:50%}.wp-embed-responsive .wp-embed-aspect-16-9 .wp-block-embed__wrapper:before{padding-top:56.25%}.wp-embed-responsive .wp-embed-aspect-4-3 .wp-block-embed__wrapper:before{padding-top:75%}.wp-embed-responsive .wp-embed-aspect-1-1 .wp-block-embed__wrapper:before{padding-top:100%}.wp-embed-responsive .wp-embed-aspect-9-16 .wp-block-embed__wrapper:before{padding-top:177.77%}.wp-embed-responsive .wp-embed-aspect-1-2 .wp-block-embed__wrapper:before{padding-top:200%}
+/*# sourceURL=https://aiml.com/wp-includes/blocks/embed/style.min.css */
+</style>
+<style id="wp-block-spacer-inline-css">
+.wp-block-spacer{clear:both}
+/*# sourceURL=https://aiml.com/wp-includes/blocks/spacer/style.min.css */
+</style>
+<style id="wp-block-library-inline-css">
+:root{--wp-block-synced-color:#7a00df;--wp-block-synced-color--rgb:122,0,223;--wp-bound-block-color:var(--wp-block-synced-color);--wp-editor-canvas-background:#ddd;--wp-admin-theme-color:#007cba;--wp-admin-theme-color--rgb:0,124,186;--wp-admin-theme-color-darker-10:#006ba1;--wp-admin-theme-color-darker-10--rgb:0,107,160.5;--wp-admin-theme-color-darker-20:#005a87;--wp-admin-theme-color-darker-20--rgb:0,90,135;--wp-admin-border-width-focus:2px}@media (min-resolution:192dpi){:root{--wp-admin-border-width-focus:1.5px}}.wp-element-button{cursor:pointer}:root .has-very-light-gray-background-color{background-color:#eee}:root .has-very-dark-gray-background-color{background-color:#313131}:root .has-very-light-gray-color{color:#eee}:root .has-very-dark-gray-color{color:#313131}:root .has-vivid-green-cyan-to-vivid-cyan-blue-gradient-background{background:linear-gradient(135deg,#00d084,#0693e3)}:root .has-purple-crush-gradient-background{background:linear-gradient(135deg,#34e2e4,#4721fb 50%,#ab1dfe)}:root .has-hazy-dawn-gradient-background{background:linear-gradient(135deg,#faaca8,#dad0ec)}:root .has-subdued-olive-gradient-background{background:linear-gradient(135deg,#fafae1,#67a671)}:root .has-atomic-cream-gradient-background{background:linear-gradient(135deg,#fdd79a,#004a59)}:root .has-nightshade-gradient-background{background:linear-gradient(135deg,#330968,#31cdcf)}:root .has-midnight-gradient-background{background:linear-gradient(135deg,#020381,#2874fc)}:root{--wp--preset--font-size--normal:16px;--wp--preset--font-size--huge:42px}.has-regular-font-size{font-size:1em}.has-larger-font-size{font-size:2.625em}.has-normal-font-size{font-size:var(--wp--preset--font-size--normal)}.has-huge-font-size{font-size:var(--wp--preset--font-size--huge)}:root .has-text-align-center{text-align:center}:root .has-text-align-left{text-align:left}:root .has-text-align-right{text-align:right}.has-fit-text{white-space:nowrap!important}#end-resizable-editor-section{display:none}.aligncenter{clear:both}.items-justified-left{justify-content:flex-start}.items-justified-center{justify-content:center}.items-justified-right{justify-content:flex-end}.items-justified-space-between{justify-content:space-between}.screen-reader-text{word-wrap:normal!important;border:0;clip-path:inset(50%);height:1px;margin:-1px;overflow:hidden;padding:0;position:absolute;width:1px;word-break:normal!important}.screen-reader-text:focus{background-color:#ddd;clip-path:none;color:#444;display:block;font-size:1em;height:auto;left:5px;line-height:normal;padding:15px 23px 14px;text-decoration:none;top:5px;width:auto;z-index:100000}html :where(.has-border-color){border-style:solid}html :where([style^=border-color],[style*=";border-color"],[style*="; border-color"]){border-style:solid}html :where([style^=border-top-color],[style*=";border-top-color"],[style*="; border-top-color"]){border-top-style:solid}html :where([style^=border-right-color],[style*=";border-right-color"],[style*="; border-right-color"]){border-right-style:solid}html :where([style^=border-bottom-color],[style*=";border-bottom-color"],[style*="; border-bottom-color"]){border-bottom-style:solid}html :where([style^=border-left-color],[style*=";border-left-color"],[style*="; border-left-color"]){border-left-style:solid}html :where([style^=border-width],[style*=";border-width"],[style*="; border-width"]){border-style:solid}html :where([style^=border-top-width],[style*=";border-top-width"],[style*="; border-top-width"]){border-top-style:solid}html :where([style^=border-right-width],[style*=";border-right-width"],[style*="; border-right-width"]){border-right-style:solid}html :where([style^=border-bottom-width],[style*=";border-bottom-width"],[style*="; border-bottom-width"]){border-bottom-style:solid}html :where([style^=border-left-width],[style*=";border-left-width"],[style*="; border-left-width"]){border-left-style:solid}html :where(img[class*=wp-image-]){height:auto;max-width:100%}:where(figure){margin:0 0 1em}html :where(.is-position-sticky){--wp-admin--admin-bar--position-offset:var(--wp-admin--admin-bar--height,0px)}@media screen and (max-width:600px){html :where(.is-position-sticky){--wp-admin--admin-bar--position-offset:0px}}
+/*wp_block_styles_on_demand_placeholder:6ab3a89f34f90*/
+/*# sourceURL=wp-block-library-inline-css */
+</style>
+<link rel='stylesheet' id='advgb_blocks_styles-css' href='https://aiml.com/wp-content/plugins/advanced-gutenberg-pro/lib/vendor/publishpress/publishpress-blocks/assets/css/blocks.css?ver=3.2.4' media='all' />
+<link rel='stylesheet' id='advgb_blocks_styles_pro-css' href='https://aiml.com/wp-content/plugins/advanced-gutenberg-pro/assets/css/blocks-pro.css?ver=3.2.4' media='all' />
+<link rel='stylesheet' id='multiple-authors-widget-css-css' href='https://aiml.com/wp-content/plugins/publishpress-authors-pro/lib/vendor/publishpress/publishpress-authors/src/assets/css/multiple-authors-widget.css?ver=4.15.0' media='all' />
+<style id="multiple-authors-widget-css-inline-css">
+:root { --ppa-color-scheme: #655997; --ppa-color-scheme-active: #514779; }
+/*# sourceURL=multiple-authors-widget-css-inline-css */
+</style>
+<link rel='stylesheet' id='multiple-authors-fontawesome-css' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css?ver=4.15.0' media='all' />
+<style id="bricks-dynamic-data-inline-css">
+
+/* TEMPLATE SHORTCODE CSS (ID: 9291) */
+
+/* BREAKPOINT: Desktop (BASE) */
+#brxe-gptkpn.horizontal .line {border-top-style: double}
+#brxe-gptkpn.vertical .line {border-right-style: double}
+
+
+/* BREAKPOINT: Desktop (BASE) */
+#brxe-9428fc {font-weight: 600; padding-top: 15px}
+
+
+/*# sourceURL=bricks-dynamic-data-inline-css */
+</style>
+
+</head>
+
+<body class="wp-singular post-template-default single single-post postid-2935 single-format-standard wp-theme-bricks wp-child-theme-aiml brx-body bricks-is-frontend wp-embed-responsive">		<a class="skip-link" href="#brx-content">Skip to main content</a>
+
+					<a class="skip-link" href="#brx-footer">Skip to footer</a>
+			<header id="brx-header" class="brx-sticky on-scroll" data-slide-up-after="500"><section id="brxe-39b819" class="brxe-section bricks-lazy-hidden"><div id="brxe-dfbd65" class="brxe-container bricks-lazy-hidden"><a id="brxe-79c2b8" class="brxe-image tag" href="https://aiml.com/"><img src="data:image/svg+xml,%3Csvg%20xmlns=&#039;http://www.w3.org/2000/svg&#039;%20viewBox=&#039;0%200%200%200&#039;%3E%3C/svg%3E" class="css-filter size-full bricks-lazy-hidden" alt="" decoding="async" data-src="https://aiml.com/wp-content/uploads/2025/05/AIML_side.svg" data-type="string" /></a><div id="brxe-fd7a3a" class="brxe-block bricks-lazy-hidden"><div id="brxe-c3623e" data-script-id="c3623e" class="brxe-nav-menu main-nav"><nav class="bricks-nav-menu-wrapper mobile_landscape"><ul id="menu-primary-menu" class="bricks-nav-menu"><li id="menu-item-123" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-home menu-item-123 bricks-menu-item"><a href="https://aiml.com/">Home</a></li>
+<li id="menu-item-32" class="menu-item menu-item-type-taxonomy menu-item-object-category current-post-ancestor menu-item-has-children menu-item-32 bricks-menu-item"><div class="brx-submenu-toggle icon-right"><a href="https://aiml.com/category/ml-interview-questions/">Interview Questions</a><button aria-expanded="false" aria-label="Interview Questions Sub menu"><i class="ion-ios-arrow-forward menu-item-icon"></i></button></div>
+<ul class="sub-menu">
+	<li id="menu-item-4493" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4493 bricks-menu-item"><a href="https://aiml.com/category/ml-interview-questions/machine-learning-basics/">Machine Learning Basics</a></li>
+	<li id="menu-item-4494" class="menu-item menu-item-type-taxonomy menu-item-object-category current-post-ancestor menu-item-4494 bricks-menu-item"><a href="https://aiml.com/category/ml-interview-questions/deep-learning/">Deep Learning</a></li>
+	<li id="menu-item-4495" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4495 bricks-menu-item"><a href="https://aiml.com/category/ml-interview-questions/supervised-learning/">Supervised Learning</a></li>
+	<li id="menu-item-4496" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4496 bricks-menu-item"><a href="https://aiml.com/category/ml-interview-questions/unsupervised-learning/">Unsupervised Learning</a></li>
+	<li id="menu-item-4497" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4497 bricks-menu-item"><a href="https://aiml.com/category/ml-interview-questions/natural-language-processing-nlp/">Natural Language Processing</a></li>
+	<li id="menu-item-4498" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4498 bricks-menu-item"><a href="https://aiml.com/category/ml-interview-questions/statistics/">Statistics</a></li>
+	<li id="menu-item-4499" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4499 bricks-menu-item"><a href="https://aiml.com/category/ml-interview-questions/data-preparation/">Data Preparation</a></li>
+</ul>
+</li>
+<li id="menu-item-4422" class="menu-item menu-item-type-taxonomy menu-item-object-ld_quiz_category menu-item-4422 bricks-menu-item"><a href="https://aiml.com/quiz-category/quizzes/">Technical Quizzes</a></li>
+<li id="menu-item-10738" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-10738 bricks-menu-item"><a href="https://aiml.com/ai-fun-games/">AI Fun Games</a></li>
+<li id="menu-item-8336" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-8336 bricks-menu-item"><a href="https://aiml.com/jobs/">Jobs</a></li>
+</ul></nav>			<button class="bricks-mobile-menu-toggle" aria-haspopup="true" aria-label="Open mobile menu" aria-expanded="false">
+				<span class="bar-top"></span>
+				<span class="bar-center"></span>
+				<span class="bar-bottom"></span>
+			</button>
+			<nav class="bricks-mobile-menu-wrapper right"><ul id="menu-primary-menu-1" class="bricks-mobile-menu"><li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-home menu-item-123 bricks-menu-item"><a href="https://aiml.com/">Home</a></li>
+<li class="menu-item menu-item-type-taxonomy menu-item-object-category current-post-ancestor menu-item-has-children menu-item-32 bricks-menu-item"><div class="brx-submenu-toggle icon-right"><a href="https://aiml.com/category/ml-interview-questions/">Interview Questions</a><button aria-expanded="false" aria-label="Interview Questions Sub menu"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 12" fill="none" class="menu-item-icon"><path d="M1.50002 4L6.00002 8L10.5 4" stroke-width="1.5" stroke="currentcolor"></path></svg></button></div>
+<ul class="sub-menu">
+	<li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4493 bricks-menu-item"><a href="https://aiml.com/category/ml-interview-questions/machine-learning-basics/">Machine Learning Basics</a></li>
+	<li class="menu-item menu-item-type-taxonomy menu-item-object-category current-post-ancestor menu-item-4494 bricks-menu-item"><a href="https://aiml.com/category/ml-interview-questions/deep-learning/">Deep Learning</a></li>
+	<li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4495 bricks-menu-item"><a href="https://aiml.com/category/ml-interview-questions/supervised-learning/">Supervised Learning</a></li>
+	<li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4496 bricks-menu-item"><a href="https://aiml.com/category/ml-interview-questions/unsupervised-learning/">Unsupervised Learning</a></li>
+	<li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4497 bricks-menu-item"><a href="https://aiml.com/category/ml-interview-questions/natural-language-processing-nlp/">Natural Language Processing</a></li>
+	<li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4498 bricks-menu-item"><a href="https://aiml.com/category/ml-interview-questions/statistics/">Statistics</a></li>
+	<li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4499 bricks-menu-item"><a href="https://aiml.com/category/ml-interview-questions/data-preparation/">Data Preparation</a></li>
+</ul>
+</li>
+<li class="menu-item menu-item-type-taxonomy menu-item-object-ld_quiz_category menu-item-4422 bricks-menu-item"><a href="https://aiml.com/quiz-category/quizzes/">Technical Quizzes</a></li>
+<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-10738 bricks-menu-item"><a href="https://aiml.com/ai-fun-games/">AI Fun Games</a></li>
+<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-8336 bricks-menu-item"><a href="https://aiml.com/jobs/">Jobs</a></li>
+</ul></nav><div class="bricks-mobile-menu-overlay"></div></div><div id="brxe-7c9dd6" class="brxe-block bricks-lazy-hidden"><div id="brxe-27bdff" class="brxe-block bricks-lazy-hidden"><a id="brxe-dafa9a" class="brxe-button nav-buttons bricks-button bricks-background-secondary" href="https://aiml.com/login/">Login</a><a id="brxe-d052a2" class="brxe-button nav-buttons bricks-button bricks-background-warning" href="https://aiml.com/register/">Sign Up</a></div></div></div></div></section></header><main id="brx-content"><section id="brxe-2f8f80" class="brxe-section bricks-lazy-hidden"><div id="brxe-1117b1" class="brxe-container bricks-lazy-hidden"><div id="brxe-921a50" class="brxe-block left-column bricks-lazy-hidden"><div id="brxe-30c73a" class="brxe-shortcode sidebar-tree"><div class="sidebar-categories"><div class="sidebar-title">Explore Questions by Topics</div><ul><li><span class="no-toggle"></span><a href="https://aiml.com/category/ml-interview-questions/computer-vision/">Computer Vision</a> (15)</li><li><span class="no-toggle"></span><a href="https://aiml.com/category/ml-interview-questions/generative-ai/">Generative AI</a> (3)</li><li><span class="no-toggle"></span><a href="https://aiml.com/category/ml-interview-questions/reinforcement-learning/">Reinforcement Learning</a> (13)</li><li><span class="no-toggle"></span><a href="https://aiml.com/category/ml-interview-questions/agentic-ai/">Agentic AI</a> (5)</li><li><span class="no-toggle"></span><a href="https://aiml.com/category/ml-interview-questions/machine-learning-basics/">Machine Learning Basics</a> (18)</li><li><button class="toggle">–</button><a href="https://aiml.com/category/ml-interview-questions/deep-learning/">Deep Learning</a> (78)<ul class="visible"><li><span class="no-toggle"></span><a href="https://aiml.com/category/ml-interview-questions/deep-learning/dl-basics/">DL Basics</a> (16)</li><li><button class="toggle">–</button><a href="https://aiml.com/category/ml-interview-questions/deep-learning/dl-architectures/">DL Architectures</a> (21)<ul class="visible"><li><span class="no-toggle"></span><a href="https://aiml.com/category/ml-interview-questions/deep-learning/dl-architectures/feedforward-network-mlp/">Feedforward Network / MLP</a> (3)</li><li><span class="no-toggle"></span><a href="https://aiml.com/category/ml-interview-questions/deep-learning/dl-architectures/sequence-models/">Sequence models</a> (6)</li><li class="active"><span class="no-toggle"></span><a href="https://aiml.com/category/ml-interview-questions/deep-learning/dl-architectures/transformers/">Transformers</a> (11)</li></ul></li><li><span class="no-toggle"></span><a href="https://aiml.com/category/ml-interview-questions/deep-learning/dl-training-and-optimization/">DL Training and Optimization</a> (39)</li></ul></li><li><button class="toggle">–</button><a href="https://aiml.com/category/ml-interview-questions/natural-language-processing-nlp/">Natural Language Processing</a> (34)<ul class="visible"><li><span class="no-toggle"></span><a href="https://aiml.com/category/ml-interview-questions/natural-language-processing-nlp/nlp-data-preparation/">NLP Data Preparation</a> (18)</li></ul></li><li><button class="toggle">–</button><a href="https://aiml.com/category/ml-interview-questions/supervised-learning/">Supervised Learning</a> (115)<ul class="visible"><li><button class="toggle">–</button><a href="https://aiml.com/category/ml-interview-questions/supervised-learning/regression-supervised-learning/">Regression</a> (41)<ul class="visible"><li><span class="no-toggle"></span><a href="https://aiml.com/category/ml-interview-questions/supervised-learning/regression-supervised-learning/regression/">Linear Regression</a> (26)</li><li><span class="no-toggle"></span><a href="https://aiml.com/category/ml-interview-questions/supervised-learning/regression-supervised-learning/generalized-linear-models/">Generalized Linear Models</a> (9)</li><li><span class="no-toggle"></span><a href="https://aiml.com/category/ml-interview-questions/supervised-learning/regression-supervised-learning/regularization/">Regularization</a> (6)</li></ul></li><li><button class="toggle">–</button><a href="https://aiml.com/category/ml-interview-questions/supervised-learning/classification/">Classification</a> (70)<ul class="visible"><li><span class="no-toggle"></span><a href="https://aiml.com/category/ml-interview-questions/supervised-learning/classification/logistic-regression/">Logistic Regression</a> (10)</li><li><span class="no-toggle"></span><a href="https://aiml.com/category/ml-interview-questions/supervised-learning/classification/support-vector-machine/">Support Vector Machine</a> (9)</li><li><span class="no-toggle"></span><a href="https://aiml.com/category/ml-interview-questions/supervised-learning/classification/ensemble-learning/">Ensemble Learning</a> (24)</li><li><span class="no-toggle"></span><a href="https://aiml.com/category/ml-interview-questions/supervised-learning/classification/other-classification-models/">Other Classification Models</a> (9)</li><li><span class="no-toggle"></span><a href="https://aiml.com/category/ml-interview-questions/supervised-learning/classification/classification-evaluations/">Classification Evaluations</a> (9)</li></ul></li></ul></li><li><button class="toggle">–</button><a href="https://aiml.com/category/ml-interview-questions/unsupervised-learning/">Unsupervised Learning</a> (64)<ul class="visible"><li><button class="toggle">–</button><a href="https://aiml.com/category/ml-interview-questions/unsupervised-learning/clustering/">Clustering</a> (40)<ul class="visible"><li><span class="no-toggle"></span><a href="https://aiml.com/category/ml-interview-questions/unsupervised-learning/clustering/distance-measures/">Distance Measures</a> (9)</li><li><span class="no-toggle"></span><a href="https://aiml.com/category/ml-interview-questions/unsupervised-learning/clustering/k-means-clustering/">K-Means Clustering</a> (10)</li><li><span class="no-toggle"></span><a href="https://aiml.com/category/ml-interview-questions/unsupervised-learning/clustering/hierarchical-clustering/">Hierarchical Clustering</a> (3)</li><li><span class="no-toggle"></span><a href="https://aiml.com/category/ml-interview-questions/unsupervised-learning/clustering/gaussian-mixture-models/">Gaussian Mixture Models</a> (5)</li><li><span class="no-toggle"></span><a href="https://aiml.com/category/ml-interview-questions/unsupervised-learning/clustering/clustering-evaluations/">Clustering Evaluations</a> (5)</li></ul></li><li><span class="no-toggle"></span><a href="https://aiml.com/category/ml-interview-questions/unsupervised-learning/dimensionality-reduction/">Dimensionality Reduction</a> (12)</li></ul></li><li><span class="no-toggle"></span><a href="https://aiml.com/category/ml-interview-questions/statistics/">Statistics</a> (35)</li><li><button class="toggle">–</button><a href="https://aiml.com/category/ml-interview-questions/data-preparation/">Data Preparation</a> (35)<ul class="visible"><li><span class="no-toggle"></span><a href="https://aiml.com/category/ml-interview-questions/data-preparation/feature-engineering/">Feature Engineering</a> (30)</li><li><span class="no-toggle"></span><a href="https://aiml.com/category/ml-interview-questions/data-preparation/sampling-techniques/">Sampling Techniques</a> (5)</li></ul></li></ul></div></div></div><div id="brxe-813db1" class="brxe-block main-column bricks-lazy-hidden"><h1 id="brxe-8628ea" class="brxe-post-title">Explain the Transformer Architecture (with Examples and Videos)</h1><div id="brxe-62bd58" class="brxe-block bricks-lazy-hidden"><div id="brxe-b275c2" class="brxe-post-meta post-meta"><span class="item">Categories: <a href="https://aiml.com/category/ml-interview-questions/deep-learning/dl-architectures/transformers/">Transformers</a></span></div><i id="brxe-5c138b" class="fa fa-calendar brxe-icon"></i><div id="brxe-gfjhjz" class="brxe-post-meta post-meta"><span class="item">Updated: March 9, 2024</span></div></div><div id="brxe-1e1dc0" class="brxe-post-content" data-source="editor">
+<p class="wp-block-paragraph"><em>Related Questions:</em><br><em>–&nbsp;<a href="https://aiml.com/what-are-transformers/" target="_blank" rel="noreferrer noopener">What are transformers? Discuss the major breakthroughs in transformer models</a></em><br><em>–&nbsp;<a href="https://aiml.com/what-are-the-main-advantages-of-the-transformer-models/" target="_blank" rel="noreferrer noopener">What are the primary advantages of transformer models?</a></em><br><em>–&nbsp;<a href="https://aiml.com/what-are-the-drawbacks-of-transformer-models/" target="_blank" rel="noreferrer noopener">What are the limitations of transformer models?</a></em><br><em>–&nbsp;<a href="https://aiml.com/what-is-natural-language-processing-nlp-list-some-of-the-most-common-nlp-tasks/" target="_blank" rel="noreferrer noopener">What is Natural Language Processing (NLP) ? List the different types of NLP tasks</a></em></p>
+
+
+
+<div style="height:30px" aria-hidden="true" class="wp-block-spacer"></div>
+
+
+
+<p class="wp-block-paragraph">Transformers architecture is a deep learning model introduced in the paper &#8220;<a href="https://arxiv.org/abs/1706.03762" target="_blank" rel="noreferrer noopener">Attention Is All You Need</a>&#8221; by Vaswani et al. in 2017. It has revolutionized the field of natural language processing (NLP) and has since been used in various other machine learning tasks due to its remarkable ability to capture long-range dependencies in data and its parallelizable nature. Here&#8217;s an overview of the key components and concepts of the Transformer architecture:</p>
+
+
+<div class="wp-block-image">
+<figure class="aligncenter size-full"><img data-perfmatters-preload fetchpriority="high" decoding="async" width="2804" height="1708" src="https://aiml.com/wp-content/uploads/2023/09/Annotated-Transformers-Architecture.png" alt="" class="wp-image-2978" srcset="https://aiml.com/wp-content/uploads/2023/09/Annotated-Transformers-Architecture.png 2804w, https://aiml.com/wp-content/uploads/2023/09/Annotated-Transformers-Architecture-300x183.png 300w, https://aiml.com/wp-content/uploads/2023/09/Annotated-Transformers-Architecture-1024x624.png 1024w, https://aiml.com/wp-content/uploads/2023/09/Annotated-Transformers-Architecture-768x468.png 768w, https://aiml.com/wp-content/uploads/2023/09/Annotated-Transformers-Architecture-1536x936.png 1536w, https://aiml.com/wp-content/uploads/2023/09/Annotated-Transformers-Architecture-2048x1247.png 2048w" sizes="(max-width: 2804px) 100vw, 2804px" /><figcaption class="wp-element-caption">Title: Annotated Transformer Architecture</figcaption></figure>
+</div>
+
+
+<div style="height:20px" aria-hidden="true" class="wp-block-spacer"></div>
+
+
+
+<p class="wp-block-paragraph"><strong>1. Self-Attention Mechanism</strong></p>
+
+
+
+<p class="wp-block-paragraph"><strong><em>Related questions:</em></strong> <a href="https://aiml.com/explain-self-attention-and-masked-self-attention-as-used-in-transformers/" target="_blank" rel="noreferrer noopener">Explain Attention, and Masked Self-Attention as used in Transformers</a></p>
+
+
+
+<p class="wp-block-paragraph"><a href="https://aiml.com/explain-cross-attention-and-how-is-it-different-from-self-attention/" target="_blank" rel="noreferrer noopener">Explain Cross-Attention and how is it different from Self-Attention?</a> </p>
+
+
+
+<p class="wp-block-paragraph">&nbsp;&nbsp;&nbsp;&#8211; Self-attention computes a weighted sum of all input elements, where the weights are determined dynamically based on their inter-relationships. This allows capturing dependencies between distant words in a sentence.</p>
+
+
+
+<p class="wp-block-paragraph">&nbsp;&nbsp;&nbsp;&#8211; In order to determine the weights dynamically, the self-attention mechanism computes three vectors for each input element: Key (<em>k</em>), Query (<em>q</em>), and Value (<em>v</em>). These vectors are then used to compute the weights of different words in the input sequence as explained in the diagram below: </p>
+
+
+<div class="wp-block-image">
+<figure class="aligncenter size-full is-resized"><img decoding="async" width="2858" height="1602" src="data:image/svg+xml,%3Csvg%20xmlns=&#039;http://www.w3.org/2000/svg&#039;%20width=&#039;2858&#039;%20height=&#039;1602&#039;%20viewBox=&#039;0%200%202858%201602&#039;%3E%3C/svg%3E" alt="Step by Step explanation of Self Attention Mechanism in Transformer Block" class="wp-image-2943 perfmatters-lazy" style="width:840px;height:471px" title="Step by Step explanation of Self Attention in Transformers" data-src="https://aiml.com/wp-content/uploads/2023/09/transformers-self-attention-step-by-step-explanation.png" data-srcset="https://aiml.com/wp-content/uploads/2023/09/transformers-self-attention-step-by-step-explanation.png 2858w, https://aiml.com/wp-content/uploads/2023/09/transformers-self-attention-step-by-step-explanation-300x168.png 300w, https://aiml.com/wp-content/uploads/2023/09/transformers-self-attention-step-by-step-explanation-1024x574.png 1024w, https://aiml.com/wp-content/uploads/2023/09/transformers-self-attention-step-by-step-explanation-768x430.png 768w, https://aiml.com/wp-content/uploads/2023/09/transformers-self-attention-step-by-step-explanation-1536x861.png 1536w, https://aiml.com/wp-content/uploads/2023/09/transformers-self-attention-step-by-step-explanation-2048x1148.png 2048w" data-sizes="(max-width: 2858px) 100vw, 2858px" /><noscript><img decoding="async" width="2858" height="1602" src="https://aiml.com/wp-content/uploads/2023/09/transformers-self-attention-step-by-step-explanation.png" alt="Step by Step explanation of Self Attention Mechanism in Transformer Block" class="wp-image-2943" style="width:840px;height:471px" title="Step by Step explanation of Self Attention in Transformers" srcset="https://aiml.com/wp-content/uploads/2023/09/transformers-self-attention-step-by-step-explanation.png 2858w, https://aiml.com/wp-content/uploads/2023/09/transformers-self-attention-step-by-step-explanation-300x168.png 300w, https://aiml.com/wp-content/uploads/2023/09/transformers-self-attention-step-by-step-explanation-1024x574.png 1024w, https://aiml.com/wp-content/uploads/2023/09/transformers-self-attention-step-by-step-explanation-768x430.png 768w, https://aiml.com/wp-content/uploads/2023/09/transformers-self-attention-step-by-step-explanation-1536x861.png 1536w, https://aiml.com/wp-content/uploads/2023/09/transformers-self-attention-step-by-step-explanation-2048x1148.png 2048w" sizes="(max-width: 2858px) 100vw, 2858px" /></noscript><figcaption class="wp-element-caption">Title: Step-by-step explanation of Self-Attention mechanism in Transformer Blocks<br>Source: AIML.com Research</figcaption></figure>
+</div>
+
+
+<div style="height:20px" aria-hidden="true" class="wp-block-spacer"></div>
+
+
+
+<p class="wp-block-paragraph"><strong>2. Multi-Head Attention</strong></p>
+
+
+
+<p class="wp-block-paragraph"><strong><em>Related Question:</em></strong> <a href="https://aiml.com/what-is-multi-head-attention-and-how-does-it-improve-model-performance-over-single-attention-head/" target="_blank" rel="noreferrer noopener">What is Multi-head Attention and how does it improve model performance over single Attention head?</a></p>
+
+
+
+<p class="wp-block-paragraph">&nbsp;&nbsp;&nbsp;&#8211; The role of multi-head attention is to capture different types of relationships in the data. This is accomplished by using multiple self-attention heads in parallel, whereby each head learns different aspects of the input, allowing the model to attend to various patterns simultaneously.</p>
+
+
+
+<p class="wp-block-paragraph">&nbsp;&nbsp;&nbsp;&#8211; <code>Head_size</code> for each head is computed as <code>d_embed / num_of_heads</code>. Thereafter, output from each head is concatenated to generate an attention vector of dimension <code>d_embed</code>. This vector is then passed through another projection matrix of dimension (<code>d_embed x d_embed</code>) to generate the final multi-head attention vector as explained below: </p>
+
+
+<div class="wp-block-image">
+<figure class="aligncenter size-full is-resized"><img decoding="async" width="2590" height="1412" src="data:image/svg+xml,%3Csvg%20xmlns=&#039;http://www.w3.org/2000/svg&#039;%20width=&#039;2590&#039;%20height=&#039;1412&#039;%20viewBox=&#039;0%200%202590%201412&#039;%3E%3C/svg%3E" alt class="wp-image-2963 perfmatters-lazy" style="width:570px;height:311px" data-src="https://aiml.com/wp-content/uploads/2023/09/multi-head-attention-formulation.png" data-srcset="https://aiml.com/wp-content/uploads/2023/09/multi-head-attention-formulation.png 2590w, https://aiml.com/wp-content/uploads/2023/09/multi-head-attention-formulation-300x164.png 300w, https://aiml.com/wp-content/uploads/2023/09/multi-head-attention-formulation-1024x558.png 1024w, https://aiml.com/wp-content/uploads/2023/09/multi-head-attention-formulation-768x419.png 768w, https://aiml.com/wp-content/uploads/2023/09/multi-head-attention-formulation-1536x837.png 1536w, https://aiml.com/wp-content/uploads/2023/09/multi-head-attention-formulation-2048x1117.png 2048w" data-sizes="(max-width: 2590px) 100vw, 2590px" /><noscript><img decoding="async" width="2590" height="1412" src="https://aiml.com/wp-content/uploads/2023/09/multi-head-attention-formulation.png" alt="" class="wp-image-2963" style="width:570px;height:311px" srcset="https://aiml.com/wp-content/uploads/2023/09/multi-head-attention-formulation.png 2590w, https://aiml.com/wp-content/uploads/2023/09/multi-head-attention-formulation-300x164.png 300w, https://aiml.com/wp-content/uploads/2023/09/multi-head-attention-formulation-1024x558.png 1024w, https://aiml.com/wp-content/uploads/2023/09/multi-head-attention-formulation-768x419.png 768w, https://aiml.com/wp-content/uploads/2023/09/multi-head-attention-formulation-1536x837.png 1536w, https://aiml.com/wp-content/uploads/2023/09/multi-head-attention-formulation-2048x1117.png 2048w" sizes="(max-width: 2590px) 100vw, 2590px" /></noscript><figcaption class="wp-element-caption">Title: Formulation of multi-head attention</figcaption></figure>
+</div>
+
+
+<div style="height:20px" aria-hidden="true" class="wp-block-spacer"></div>
+
+
+
+<p class="wp-block-paragraph"><strong>3. Positional Encoding</strong></p>
+
+
+
+<p class="wp-block-paragraph"><strong><em>Related Question:</em></strong> Explain the need for Positional Encoding and how it is implemented in Transformers?</p>
+
+
+
+<p class="wp-block-paragraph">&nbsp;&nbsp;&nbsp;&#8211; Unlike recurrent neural networks (RNNs) and convolutional neural networks (CNNs), the Transformer does not have built-in notions of sequence order.</p>
+
+
+
+<p class="wp-block-paragraph">&nbsp;&nbsp;&nbsp;&#8211; Positional encoding is added to the input embeddings to provide information about the position of each word in the sequence, enabling the model to consider the order of elements.</p>
+
+
+
+<div style="height:20px" aria-hidden="true" class="wp-block-spacer"></div>
+
+
+
+<p class="wp-block-paragraph">4. <strong>Stacked Attention layers with Dropout, Residual Connections, and Layer Normalization</strong></p>
+
+
+
+<p class="wp-block-paragraph"><strong><em>Related Questions:</em></strong> <a href="https://aiml.com/what-is-dropout/">Explain how Dropout helps with better training of Deep Learning models?</a> </p>
+
+
+
+<p class="wp-block-paragraph">Explain the need for Residual Connections?</p>
+
+
+
+<p class="wp-block-paragraph">Explain Layer Normalization and how it helps with stabilizing model training? </p>
+
+
+
+<p class="wp-block-paragraph">&nbsp;&nbsp;&nbsp;&#8211; The Transformer consists of multiple identical layers stacked on top of each other. Each layer contains a multi-head self-attention sub-layer followed by a feedforward neural network sub-layer.</p>
+
+
+
+<p class="wp-block-paragraph">&nbsp;&nbsp;&nbsp;&#8211; The output of each sub-layer is passed through a dropout layer, a layer normalization step, and residual connections are employed to facilitate gradient flow during training.</p>
+
+
+
+<p class="wp-block-paragraph">&nbsp;&nbsp;&nbsp;&#8211; Residual connections (skip connections) help mitigate the <a href="https://aiml.com/what-do-you-mean-by-vanishing-and-exploding-gradient-problem-and-how-are-they-typically-addressed/" target="_blank" rel="noreferrer noopener">vanishing gradient problem</a> and facilitate the training of deep networks.</p>
+
+
+
+<p class="wp-block-paragraph">&nbsp;&nbsp;&nbsp;&#8211; Layer normalization is applied before and after the sub-layers to stabilize training.</p>
+
+
+
+<div style="height:20px" aria-hidden="true" class="wp-block-spacer"></div>
+
+
+
+<p class="wp-block-paragraph"><strong>5. Position-wise Feedforward Layer</strong></p>
+
+
+
+<p class="wp-block-paragraph">&nbsp;&nbsp;&nbsp;&#8211; After multiple attention layers, in the final layer transformer applies a position-wise feedforward layer to each position independently.</p>
+
+
+
+<p class="wp-block-paragraph">&nbsp;&nbsp;&nbsp;&#8211; This layer typically consists of a linear transformations with a <a href="https://aiml.com/what-is-rectified-linear-unit-relu-activation-function/">ReLU activation</a>, followed by a <a href="https://aiml.com/discuss-softmax-activation-function/">softmax</a> layer.</p>
+
+
+
+<div style="height:30px" aria-hidden="true" class="wp-block-spacer"></div>
+
+
+
+<h4 class="wp-block-heading" id="h-encoder-decoder-architecture-for-sequence-to-sequence-tasks"><strong>Encoder-Decoder Architecture (for sequence-to-sequence tasks)</strong></h4>
+
+
+
+<p class="wp-block-paragraph"><strong><em>Related Questions:</em></strong> What are Encoder models? </p>
+
+
+
+<p class="wp-block-paragraph">What are Decoder models? </p>
+
+
+
+<p class="wp-block-paragraph">What are Encoder-Decoder models? </p>
+
+
+<div class="wp-block-image">
+<figure class="aligncenter size-full"><img decoding="async" width="2822" height="1712" src="data:image/svg+xml,%3Csvg%20xmlns=&#039;http://www.w3.org/2000/svg&#039;%20width=&#039;2822&#039;%20height=&#039;1712&#039;%20viewBox=&#039;0%200%202822%201712&#039;%3E%3C/svg%3E" alt class="wp-image-2975 perfmatters-lazy" data-src="https://aiml.com/wp-content/uploads/2023/09/encoder-decoder-architecture.png" data-srcset="https://aiml.com/wp-content/uploads/2023/09/encoder-decoder-architecture.png 2822w, https://aiml.com/wp-content/uploads/2023/09/encoder-decoder-architecture-300x182.png 300w, https://aiml.com/wp-content/uploads/2023/09/encoder-decoder-architecture-1024x621.png 1024w, https://aiml.com/wp-content/uploads/2023/09/encoder-decoder-architecture-768x466.png 768w, https://aiml.com/wp-content/uploads/2023/09/encoder-decoder-architecture-1536x932.png 1536w, https://aiml.com/wp-content/uploads/2023/09/encoder-decoder-architecture-2048x1242.png 2048w" data-sizes="(max-width: 2822px) 100vw, 2822px" /><noscript><img decoding="async" width="2822" height="1712" src="https://aiml.com/wp-content/uploads/2023/09/encoder-decoder-architecture.png" alt="" class="wp-image-2975" srcset="https://aiml.com/wp-content/uploads/2023/09/encoder-decoder-architecture.png 2822w, https://aiml.com/wp-content/uploads/2023/09/encoder-decoder-architecture-300x182.png 300w, https://aiml.com/wp-content/uploads/2023/09/encoder-decoder-architecture-1024x621.png 1024w, https://aiml.com/wp-content/uploads/2023/09/encoder-decoder-architecture-768x466.png 768w, https://aiml.com/wp-content/uploads/2023/09/encoder-decoder-architecture-1536x932.png 1536w, https://aiml.com/wp-content/uploads/2023/09/encoder-decoder-architecture-2048x1242.png 2048w" sizes="(max-width: 2822px) 100vw, 2822px" /></noscript><figcaption class="wp-element-caption">Title: The original transformer architecture was designed for Sequence-to-Sequence (Machine Translation) task, and thus consisted of two set of layers: Encoder layer that work with input language, and Decoder layer that generates target language and is trained by masking future words</figcaption></figure>
+</div>
+
+
+<p class="wp-block-paragraph">&nbsp;&nbsp;&nbsp;&#8211; In tasks like machine translation, where the input and output sequences can be of different lengths, the Transformer uses an encoder-decoder architecture.</p>
+
+
+
+<p class="wp-block-paragraph">&nbsp;&nbsp;&nbsp;&#8211; The encoder processes the input sequence, and the decoder generates the output sequence.</p>
+
+
+
+<p class="wp-block-paragraph">&nbsp;&nbsp;&nbsp;&#8211; The encoder and decoder each have their own stacks of layers, and the decoder additionally employs masked self-attention to ensure that each position only looks at previous positions during generation.</p>
+
+
+
+<div style="height:20px" aria-hidden="true" class="wp-block-spacer"></div>
+
+
+
+<h4 class="wp-block-heading" id="h-summary"><strong>Summary</strong></h4>
+
+
+
+<p class="wp-block-paragraph">The Transformer architecture has had a profound impact on various NLP tasks, including machine translation, text generation, question answering, and sentiment analysis. Its parallelizable nature and ability to capture long-range dependencies make it highly versatile and efficient for many sequence-based applications. Variants of the Transformer architecture, such as BERT, GPT, and T5, have further improved performance on a wide range of NLP benchmarks.</p>
+
+
+
+<div style="height:30px" aria-hidden="true" class="wp-block-spacer"></div>
+
+
+
+<h3 class="wp-block-heading" id="h-video-explanation"><strong>Video Explanation</strong></h3>
+
+
+
+<p class="wp-block-paragraph">In the following video Andrej Karpathy implements the full GPT-2 model from scratch in numpy. In the process, he explains Attention, Self-attention, Multi-headed Attention, Layer Normalization, Residual connections, dropout, and Encoder-Decoder architecture in detail. </p>
+
+
+
+<p class="wp-block-paragraph">Even though  the video&#8217;s runtime is 2 hrs, this video is &#8220;All you need to understand Transformers&#8221;. The whole GPT-2 model is implemented in less than 250 lines of python code, and the associated code is shared on <a href="https://github.com/karpathy/ng-video-lecture/blob/master/gpt.py" target="_blank" rel="noreferrer noopener">github</a>. </p>
+
+
+
+<p class="wp-block-paragraph">YouTube Link: <a href="https://www.youtube.com/watch?v=kCc8FmEb1nY" target="_blank" rel="noreferrer noopener">https://www.youtube.com/watch?v=kCc8FmEb1nY</a> (Runtime: 2 hrs)</p>
+
+
+
+<figure class="wp-block-embed aligncenter is-type-video is-provider-youtube wp-block-embed-youtube wp-embed-aspect-16-9 wp-has-aspect-ratio"><div class="wp-block-embed__wrapper">
+<div class="perfmatters-lazy-youtube" data-src="https://www.youtube.com/embed/kCc8FmEb1nY" data-id="kCc8FmEb1nY" data-query="feature=oembed" onclick="perfmattersLazyLoadYouTube(this);"><div><img src="data:image/svg+xml,%3Csvg%20xmlns=&#039;http://www.w3.org/2000/svg&#039;%20width=&#039;480&#039;%20height=&#039;360&#039;%20viewBox=&#039;0%200%20480%20360&#039;%3E%3C/svg%3E" alt="YouTube video" width="480" height="360" data-pin-nopin="true" nopin="nopin" class="perfmatters-lazy" data-src="https://i.ytimg.com/vi/kCc8FmEb1nY/hqdefault.jpg" /><noscript><img src="https://i.ytimg.com/vi/kCc8FmEb1nY/hqdefault.jpg" alt="YouTube video" width="480" height="360" data-pin-nopin="true" nopin="nopin"></noscript><div class="play"></div></div></div><noscript><iframe title="Let&#039;s build GPT: from scratch, in code, spelled out." width="500" height="281" src="https://www.youtube.com/embed/kCc8FmEb1nY?feature=oembed" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></noscript>
+</div><figcaption class="wp-element-caption">Title: This video is &#8220;All you need to understand and implement Transformers inside-out&#8221; </figcaption></figure>
+
+
+
+<div style="height:20px" aria-hidden="true" class="wp-block-spacer"></div>
+
+
+
+<p class="wp-block-paragraph"><strong>Other Video Recommendations:</strong></p>
+
+
+
+<p class="wp-block-paragraph">The following two video lectures from Prof. Pascal Poupart:</p>
+
+
+
+<ul class="wp-block-list">
+<li>In this video lecture, Prof. Poupart explains the origins of &#8220;<strong>Attention</strong>&#8220;, which was introduced by <a href="https://arxiv.org/abs/1409.0473" target="_blank" rel="noreferrer noopener">Bahdanau et al.</a> and was used with Recurrent Neural Networks for machine translation task: <a href="https://youtu.be/lClNhXVNZ-0?t=4050" target="_blank" rel="noreferrer noopener">https://youtu.be/lClNhXVNZ-0?t=4050</a> (Watch from 1:07:30 &#8211; 1:30:00) </li>
+</ul>
+
+
+
+<div style="height:20px" aria-hidden="true" class="wp-block-spacer"></div>
+
+
+
+<figure class="wp-block-embed is-type-video is-provider-youtube wp-block-embed-youtube wp-embed-aspect-16-9 wp-has-aspect-ratio"><div class="wp-block-embed__wrapper">
+<div class="perfmatters-lazy-youtube" data-src="https://www.youtube.com/embed/lClNhXVNZ-0" data-id="lClNhXVNZ-0" data-query="start=4050&amp;feature=oembed" onclick="perfmattersLazyLoadYouTube(this);"><div><img src="data:image/svg+xml,%3Csvg%20xmlns=&#039;http://www.w3.org/2000/svg&#039;%20width=&#039;480&#039;%20height=&#039;360&#039;%20viewBox=&#039;0%200%20480%20360&#039;%3E%3C/svg%3E" alt="YouTube video" width="480" height="360" data-pin-nopin="true" nopin="nopin" class="perfmatters-lazy" data-src="https://i.ytimg.com/vi/lClNhXVNZ-0/hqdefault.jpg" /><noscript><img src="https://i.ytimg.com/vi/lClNhXVNZ-0/hqdefault.jpg" alt="YouTube video" width="480" height="360" data-pin-nopin="true" nopin="nopin"></noscript><div class="play"></div></div></div><noscript><iframe title="CS480/680 Lecture 18: Recurrent and recursive neural networks" width="500" height="281" src="https://www.youtube.com/embed/lClNhXVNZ-0?start=4050&#038;feature=oembed" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></noscript>
+</div><figcaption class="wp-element-caption">Attention by Prof. Poupart, University of Waterloo</figcaption></figure>
+
+
+
+<div style="height:20px" aria-hidden="true" class="wp-block-spacer"></div>
+
+
+
+<ul class="wp-block-list">
+<li>In the next video lecture, Prof. Poupart dives into the Transformers Architecture in detail, and explains the associate math behind it: </li>
+</ul>
+
+
+
+<div style="height:20px" aria-hidden="true" class="wp-block-spacer"></div>
+
+
+
+<figure class="wp-block-embed is-type-video is-provider-youtube wp-block-embed-youtube wp-embed-aspect-16-9 wp-has-aspect-ratio"><div class="wp-block-embed__wrapper">
+<div class="perfmatters-lazy-youtube" data-src="https://www.youtube.com/embed/OyFJWRnt_AY" data-id="OyFJWRnt_AY" data-query="feature=oembed" onclick="perfmattersLazyLoadYouTube(this);"><div><img src="data:image/svg+xml,%3Csvg%20xmlns=&#039;http://www.w3.org/2000/svg&#039;%20width=&#039;480&#039;%20height=&#039;360&#039;%20viewBox=&#039;0%200%20480%20360&#039;%3E%3C/svg%3E" alt="YouTube video" width="480" height="360" data-pin-nopin="true" nopin="nopin" class="perfmatters-lazy" data-src="https://i.ytimg.com/vi/OyFJWRnt_AY/hqdefault.jpg" /><noscript><img src="https://i.ytimg.com/vi/OyFJWRnt_AY/hqdefault.jpg" alt="YouTube video" width="480" height="360" data-pin-nopin="true" nopin="nopin"></noscript><div class="play"></div></div></div><noscript><iframe title="CS480/680 Lecture 19: Attention and Transformer Networks" width="500" height="281" src="https://www.youtube.com/embed/OyFJWRnt_AY?feature=oembed" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></noscript>
+</div><figcaption class="wp-element-caption">Transformers Architecture by Prof. Poupart, University of Waterloo</figcaption></figure>
+
+
+
+<div style="height:20px" aria-hidden="true" class="wp-block-spacer"></div>
+
+                
+                    <!--begin code -->
+
+                    
+                    <div class="pp-multiple-authors-boxes-wrapper pp-multiple-authors-wrapper pp-multiple-authors-layout-simple_list multiple-authors-target-the-content box-post-id-8502 box-instance-id-1 ppma_boxes_8502"
+                    data-post_id="8502"
+                    data-instance_id="1"
+                    data-additional_class="pp-multiple-authors-layout-simple_list.multiple-authors-target-the-content"
+                    data-original_class="pp-multiple-authors-boxes-wrapper pp-multiple-authors-wrapper box-post-id-8502 box-instance-id-1">
+                                                                                    <h2 class="widget-title box-header-title">Author</h2>
+                                                                            <span class="ppma-layout-prefix"></span>
+                        <div class="ppma-author-category-wrap">
+                                                                                                                                    <span class="ppma-category-group ppma-category-group-1 category-index-0">
+                                                                                                                        <ul class="pp-multiple-authors-boxes-ul author-ul-0">
+                                                                                                                                                                                                                                                                                                                                                            
+                                                                                                                    <li class="pp-multiple-authors-boxes-li author_index_0 author_aiml_team has-avatar">
+                                                                                                                                                                                    <div class="pp-author-boxes-avatar">
+                                                                    <div class="avatar-image">
+                                                                                                                                                                                                                                                                                                                                                                                                                            </div>
+                                                                                                                                    </div>
+                                                            
+                                                            <div class="pp-author-boxes-avatar-details">
+                                                                <div class="pp-author-boxes-name multiple-authors-name"><a href="https://aiml.com/author/aiml_team/" rel="author" title="AIML.com" class="author url fn">AIML.com</a></div>                                                                                                                                                                                                    
+                                                                                                                                            <div class="pp-author-boxes-description multiple-authors-description author-description-0">
+                                                                                                                                                                                                                                                                                                    </div>
+                                                                                                                                                                                                    
+                                                                                                                                
+                                                                                                                            </div>
+                                                                                                                                                                                                                        </li>
+                                                                                                                                                                                                                                                                                        </ul>
+                                                                            </span>
+                                                                                                                        </div>
+                        <span class="ppma-layout-suffix"></span>
+                                            </div>
+                    <!--end code -->
+                    
+                
+                            
+        </div><div id="brxe-f37bb2" class="brxe-divider horizontal"><div class="line"></div></div><div id="brxe-77579c" class="brxe-alert notice-box alert info dismissable"><div class="content"><p><strong>Help us improve this post by suggesting in comments below:</strong></p>
+<p>&#8211; modifications to the text, and infographics <br />&#8211; video resources that offer clear explanations for this question <br />&#8211; code snippets and case studies relevant to this concept <br />&#8211; online blogs, and research publications that are a “must read” on this topic</p>
+</div><svg version="1.1" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><g stroke-linecap="round" stroke-width="1" stroke="#000" fill="none" stroke-linejoin="round"><path d="M0.5,0.5l23,23"></path><path d="M23.5,0.5l-23,23"></path></g><path fill="none" d="M0,0h24v24h-24Z"></path></svg>
+</div><div id="brxe-5e1d52" class="brxe-post-comments comments">		<div id="comments">
+			<div class="bricks-comments-inner">
+					<div id="respond" class="comment-respond">
+		<h4 id="reply-title" class="comment-reply-title">Leave the first comment <small><a  id="cancel-comment-reply-link" href="/explain-the-transformer-architecture/#respond" style="display:none;">(Cancel Reply)</a></small></h4><p class="must-log-in">You must be <a href="https://aiml.com/wp-login.php?redirect_to=https%3A%2F%2Faiml.com%2Fexplain-the-transformer-architecture%2F">logged in</a> to post a comment.</p>	</div><!-- #respond -->
+				</div>
+		</div>
+			</div><div id="brxe-127629" class="brxe-template"><div id="brxe-ffba4b" class="brxe-block bricks-lazy-hidden"><div id="brxe-gptkpn" class="brxe-divider horizontal"><div class="line"></div></div><div id="brxe-9428fc" class="brxe-text-basic">Partner Ad</div><div id="brxe-4bb1af" data-script-id="4bb1af" class="brxe-code"><!-- Bottom Ads -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-7593512852482271"
+     data-ad-slot="9400325137"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins><script>(adsbygoogle = window.adsbygoogle || []).push({});</script></div></div></div></div><div id="brxe-259621" class="brxe-block right-column bricks-lazy-hidden"><div id="brxe-687888" class="brxe-shortcode sidebar-tree"><div class="sidebar-categories"><div class="sidebar-title">Explore Questions by Topics</div><ul><li><span class="no-toggle"></span><a href="https://aiml.com/category/ml-interview-questions/computer-vision/">Computer Vision</a> (15)</li><li><span class="no-toggle"></span><a href="https://aiml.com/category/ml-interview-questions/generative-ai/">Generative AI</a> (3)</li><li><span class="no-toggle"></span><a href="https://aiml.com/category/ml-interview-questions/reinforcement-learning/">Reinforcement Learning</a> (13)</li><li><span class="no-toggle"></span><a href="https://aiml.com/category/ml-interview-questions/agentic-ai/">Agentic AI</a> (5)</li><li><span class="no-toggle"></span><a href="https://aiml.com/category/ml-interview-questions/machine-learning-basics/">Machine Learning Basics</a> (18)</li><li><button class="toggle">–</button><a href="https://aiml.com/category/ml-interview-questions/deep-learning/">Deep Learning</a> (78)<ul class="visible"><li><span class="no-toggle"></span><a href="https://aiml.com/category/ml-interview-questions/deep-learning/dl-basics/">DL Basics</a> (16)</li><li><button class="toggle">–</button><a href="https://aiml.com/category/ml-interview-questions/deep-learning/dl-architectures/">DL Architectures</a> (21)<ul class="visible"><li><span class="no-toggle"></span><a href="https://aiml.com/category/ml-interview-questions/deep-learning/dl-architectures/feedforward-network-mlp/">Feedforward Network / MLP</a> (3)</li><li><span class="no-toggle"></span><a href="https://aiml.com/category/ml-interview-questions/deep-learning/dl-architectures/sequence-models/">Sequence models</a> (6)</li><li class="active"><span class="no-toggle"></span><a href="https://aiml.com/category/ml-interview-questions/deep-learning/dl-architectures/transformers/">Transformers</a> (11)</li></ul></li><li><span class="no-toggle"></span><a href="https://aiml.com/category/ml-interview-questions/deep-learning/dl-training-and-optimization/">DL Training and Optimization</a> (39)</li></ul></li><li><button class="toggle">–</button><a href="https://aiml.com/category/ml-interview-questions/natural-language-processing-nlp/">Natural Language Processing</a> (34)<ul class="visible"><li><span class="no-toggle"></span><a href="https://aiml.com/category/ml-interview-questions/natural-language-processing-nlp/nlp-data-preparation/">NLP Data Preparation</a> (18)</li></ul></li><li><button class="toggle">–</button><a href="https://aiml.com/category/ml-interview-questions/supervised-learning/">Supervised Learning</a> (115)<ul class="visible"><li><button class="toggle">–</button><a href="https://aiml.com/category/ml-interview-questions/supervised-learning/regression-supervised-learning/">Regression</a> (41)<ul class="visible"><li><span class="no-toggle"></span><a href="https://aiml.com/category/ml-interview-questions/supervised-learning/regression-supervised-learning/regression/">Linear Regression</a> (26)</li><li><span class="no-toggle"></span><a href="https://aiml.com/category/ml-interview-questions/supervised-learning/regression-supervised-learning/generalized-linear-models/">Generalized Linear Models</a> (9)</li><li><span class="no-toggle"></span><a href="https://aiml.com/category/ml-interview-questions/supervised-learning/regression-supervised-learning/regularization/">Regularization</a> (6)</li></ul></li><li><button class="toggle">–</button><a href="https://aiml.com/category/ml-interview-questions/supervised-learning/classification/">Classification</a> (70)<ul class="visible"><li><span class="no-toggle"></span><a href="https://aiml.com/category/ml-interview-questions/supervised-learning/classification/logistic-regression/">Logistic Regression</a> (10)</li><li><span class="no-toggle"></span><a href="https://aiml.com/category/ml-interview-questions/supervised-learning/classification/support-vector-machine/">Support Vector Machine</a> (9)</li><li><span class="no-toggle"></span><a href="https://aiml.com/category/ml-interview-questions/supervised-learning/classification/ensemble-learning/">Ensemble Learning</a> (24)</li><li><span class="no-toggle"></span><a href="https://aiml.com/category/ml-interview-questions/supervised-learning/classification/other-classification-models/">Other Classification Models</a> (9)</li><li><span class="no-toggle"></span><a href="https://aiml.com/category/ml-interview-questions/supervised-learning/classification/classification-evaluations/">Classification Evaluations</a> (9)</li></ul></li></ul></li><li><button class="toggle">–</button><a href="https://aiml.com/category/ml-interview-questions/unsupervised-learning/">Unsupervised Learning</a> (64)<ul class="visible"><li><button class="toggle">–</button><a href="https://aiml.com/category/ml-interview-questions/unsupervised-learning/clustering/">Clustering</a> (40)<ul class="visible"><li><span class="no-toggle"></span><a href="https://aiml.com/category/ml-interview-questions/unsupervised-learning/clustering/distance-measures/">Distance Measures</a> (9)</li><li><span class="no-toggle"></span><a href="https://aiml.com/category/ml-interview-questions/unsupervised-learning/clustering/k-means-clustering/">K-Means Clustering</a> (10)</li><li><span class="no-toggle"></span><a href="https://aiml.com/category/ml-interview-questions/unsupervised-learning/clustering/hierarchical-clustering/">Hierarchical Clustering</a> (3)</li><li><span class="no-toggle"></span><a href="https://aiml.com/category/ml-interview-questions/unsupervised-learning/clustering/gaussian-mixture-models/">Gaussian Mixture Models</a> (5)</li><li><span class="no-toggle"></span><a href="https://aiml.com/category/ml-interview-questions/unsupervised-learning/clustering/clustering-evaluations/">Clustering Evaluations</a> (5)</li></ul></li><li><span class="no-toggle"></span><a href="https://aiml.com/category/ml-interview-questions/unsupervised-learning/dimensionality-reduction/">Dimensionality Reduction</a> (12)</li></ul></li><li><span class="no-toggle"></span><a href="https://aiml.com/category/ml-interview-questions/statistics/">Statistics</a> (35)</li><li><button class="toggle">–</button><a href="https://aiml.com/category/ml-interview-questions/data-preparation/">Data Preparation</a> (35)<ul class="visible"><li><span class="no-toggle"></span><a href="https://aiml.com/category/ml-interview-questions/data-preparation/feature-engineering/">Feature Engineering</a> (30)</li><li><span class="no-toggle"></span><a href="https://aiml.com/category/ml-interview-questions/data-preparation/sampling-techniques/">Sampling Techniques</a> (5)</li></ul></li></ul></div></div><div class="brxe-jolbpb brxe-block bricks-lazy-hidden"><div class="brxe-bkfbtj brxe-search">
+<form role="search" method="get" class="bricks-search-form" action="https://aiml.com/">
+			<label for="search-input-bkfbtj" class="screen-reader-text"><span>Search</span></label>
+		<input type="search" placeholder="Search ..." value="" name="s" id="search-input-bkfbtj" />
+
+	<button type="submit"><i class="fas fa-magnifying-glass overlay-trigger"></i></button></form>
+</div></div><div class="brxe-xsaokk brxe-block bricks-lazy-hidden"><div class="brxe-4ed9d6 brxe-text-basic">Join us on:</div><ul class="brxe-c33e73 brxe-social-icons"><li class="repeater-item has-link"><a href="https://www.linkedin.com/groups/14307160/" target="_blank"><i class="fab fa-linkedin icon"></i><span>Machine Learning Interview Preparation Group</span></a></li><li class="repeater-item has-link"><a href="https://x.com/OfficialAIML" target="_blank"><i class="fab fa-x-twitter icon"></i><span>@OfficialAIML</span></a></li></ul></div><div class="brxe-nshomo brxe-block bricks-lazy-hidden"><div class="brxe-135d1b brxe-text-basic">Find out all the ways that you can</div><a class="brxe-4976da brxe-button bricks-button sm bricks-background-secondary" href="https://aiml.com/contribute/">Contribute</a></div><div id="brxe-dnzmru" class="brxe-related-posts bricks-related-posts"><h5 class="related-posts-title">Other Questions in <a href="https://aiml.com/category/ml-interview-questions/deep-learning/dl-architectures/transformers/">Transformers</a></h5><ul class="related-posts"><li class="repeater-item"><div class="post-content"><div class="dynamic" data-field-id="6ff78b"><a href="https://aiml.com/t5-architecture-explained-encoder-decoder-model-comparison/" aria-label="Read more about T5 Architecture Explained &amp; Encoder-Decoder Model Comparison">T5 Architecture Explained &amp; Encoder-Decoder Model Comparison</a></div></div></li><li class="repeater-item"><div class="post-content"><div class="dynamic" data-field-id="6ff78b"><a href="https://aiml.com/compare-the-different-transformer-based-model-architectures/" aria-label="Read more about Compare the different Transformer-based model architectures">Compare the different Transformer-based model architectures</a></div></div></li><li class="repeater-item"><div class="post-content"><div class="dynamic" data-field-id="6ff78b"><a href="https://aiml.com/making-transformers-work-scale-access-deployment-and-ethics/" aria-label="Read more about Making Transformers Work: Scale, Access, Deployment and Ethics">Making Transformers Work: Scale, Access, Deployment and Ethics</a></div></div></li><li class="repeater-item"><div class="post-content"><div class="dynamic" data-field-id="6ff78b"><a href="https://aiml.com/what-are-transformers/" aria-label="Read more about What are Transformers? Discuss the evolution, advantages and major breakthroughs in transformer models">What are Transformers? Discuss the evolution, advantages and major breakthroughs in transformer models</a></div></div></li><li class="repeater-item"><div class="post-content"><div class="dynamic" data-field-id="6ff78b"><a href="https://aiml.com/what-are-the-main-advantages-of-the-transformer-models/" aria-label="Read more about What are the primary advantages of transformer models?">What are the primary advantages of transformer models?</a></div></div></li><li class="repeater-item"><div class="post-content"><div class="dynamic" data-field-id="6ff78b"><a href="https://aiml.com/what-are-the-drawbacks-of-transformer-models/" aria-label="Read more about What are the limitations of transformer models?">What are the limitations of transformer models?</a></div></div></li><li class="repeater-item"><div class="post-content"><div class="dynamic" data-field-id="6ff78b"><a href="https://aiml.com/explain-the-need-for-positional-encoding-in-transformer-models/" aria-label="Read more about Explain the need for Positional Encoding in Transformer models">Explain the need for Positional Encoding in Transformer models</a></div></div></li><li class="repeater-item"><div class="post-content"><div class="dynamic" data-field-id="6ff78b"><a href="https://aiml.com/explain-self-attention-and-masked-self-attention-as-used-in-transformers/" aria-label="Read more about Explain Self-Attention, and Masked Self-Attention as used in Transformers">Explain Self-Attention, and Masked Self-Attention as used in Transformers</a></div></div></li><li class="repeater-item"><div class="post-content"><div class="dynamic" data-field-id="6ff78b"><a href="https://aiml.com/what-is-multi-head-attention-and-how-does-it-improve-model-performance-over-single-attention-head/" aria-label="Read more about Multi-Head Attention: Why It Outperforms Single-Head Models">Multi-Head Attention: Why It Outperforms Single-Head Models</a></div></div></li><li class="repeater-item"><div class="post-content"><div class="dynamic" data-field-id="6ff78b"><a href="https://aiml.com/explain-cross-attention-and-how-is-it-different-from-self-attention/" aria-label="Read more about Cross-Attention vs Self-Attention Explained">Cross-Attention vs Self-Attention Explained</a></div></div></li></ul></div></div></div></section></main><footer id="brx-footer"><section id="brxe-b4fb55" class="brxe-section footer bricks-lazy-hidden"><div id="brxe-8efd84" class="brxe-divider horizontal"><div class="line"></div></div><div id="brxe-2c75ea" class="brxe-container bricks-lazy-hidden"><div id="brxe-6b9763" class="brxe-text-basic"><b>© 2026 AIML.COM&nbsp; |&nbsp;  <span style="color:red;">♥</span> Sunnyvale, California</b></div></div></section></footer>
+<div id="um_upload_single" style="display:none;"></div>
+
+<div id="um_view_photo" style="display:none;">
+	<a href="javascript:void(0);" data-action="um_remove_modal" class="um-modal-close" aria-label="Close view photo modal">
+		<i class="um-faicon-times"></i>
+	</a>
+
+	<div class="um-modal-body photo">
+		<div class="um-modal-photo"></div>
+	</div>
+</div>
+<script type="speculationrules">
+{"prefetch":[{"source":"document","where":{"and":[{"href_matches":"/*"},{"not":{"href_matches":["/wp-*.php","/wp-admin/*","/wp-content/uploads/*","/wp-content/*","/wp-content/plugins/*","/wp-content/themes/aiml/*","/wp-content/themes/bricks/*","/*\\?(.+)"]}},{"not":{"selector_matches":"a[rel~=\"nofollow\"]"}},{"not":{"selector_matches":".no-prefetch, .no-prefetch a"}}]},"eagerness":"conservative"}]}
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7593512852482271"
+     crossorigin="anonymous"></script><style id="mutliple-author-box-inline-style">.pp-multiple-authors-boxes-wrapper.pp-multiple-authors-layout-simple_list.multiple-authors-target-the-content .pp-author-boxes-avatar img { 
+        width: 35px !important; 
+        height: 35px !important; 
+    }
+
+    .pp-multiple-authors-boxes-wrapper.pp-multiple-authors-layout-simple_list.multiple-authors-target-the-content .pp-author-boxes-avatar img {
+        border-style: none !important; 
+    }
+
+    .pp-multiple-authors-boxes-wrapper.pp-multiple-authors-layout-simple_list.multiple-authors-target-the-content .pp-author-boxes-avatar img {
+        border-radius: 30% !important; 
+    }
+
+    .pp-multiple-authors-boxes-wrapper.pp-multiple-authors-layout-simple_list.multiple-authors-target-the-content .pp-author-boxes-meta a {
+        background-color: #655997 !important; 
+    }
+
+    .pp-multiple-authors-boxes-wrapper.pp-multiple-authors-layout-simple_list.multiple-authors-target-the-content .pp-author-boxes-meta a {
+        color: #ffffff !important; 
+    }
+
+    .pp-multiple-authors-boxes-wrapper.pp-multiple-authors-layout-simple_list.multiple-authors-target-the-content .pp-author-boxes-meta a:hover {
+        color: #ffffff !important; 
+    }
+
+    .pp-multiple-authors-boxes-wrapper.pp-multiple-authors-layout-simple_list.multiple-authors-target-the-content .ppma-author-user_email-profile-data {
+        background-color: #655997 !important; 
+    }
+
+    .pp-multiple-authors-boxes-wrapper.pp-multiple-authors-layout-simple_list.multiple-authors-target-the-content .ppma-author-user_email-profile-data {
+        border-radius: 100% !important; 
+    }
+
+    .pp-multiple-authors-boxes-wrapper.pp-multiple-authors-layout-simple_list.multiple-authors-target-the-content .ppma-author-user_email-profile-data {
+        color: #ffffff !important; 
+    }
+
+    .pp-multiple-authors-boxes-wrapper.pp-multiple-authors-layout-simple_list.multiple-authors-target-the-content .ppma-author-user_email-profile-data:hover {
+        color: #ffffff !important; 
+    }
+
+    .pp-multiple-authors-boxes-wrapper.pp-multiple-authors-layout-simple_list.multiple-authors-target-the-content .ppma-author-user_url-profile-data {
+        border-radius: 100% !important; 
+    }
+
+    .pp-multiple-authors-boxes-wrapper.pp-multiple-authors-layout-simple_list.multiple-authors-target-the-content .ppma-author-user_url-profile-data {
+        color: #1e73be !important; 
+    }
+
+    .pp-multiple-authors-boxes-wrapper.pp-multiple-authors-layout-simple_list.multiple-authors-target-the-content .ppma-author-user_url-profile-data:hover {
+        color: #1e73be !important; 
+    }
+
+    .pp-multiple-authors-boxes-wrapper.pp-multiple-authors-layout-simple_list.multiple-authors-target-the-content .pp-author-boxes-recent-posts-title {
+        border-bottom-style: dotted !important; 
+    }
+
+    .pp-multiple-authors-boxes-wrapper.pp-multiple-authors-layout-simple_list.multiple-authors-target-the-content .pp-author-boxes-recent-posts-item {
+        text-align: left !important; 
+    }
+
+    .pp-multiple-authors-boxes-wrapper.pp-multiple-authors-layout-simple_list.multiple-authors-target-the-content .pp-multiple-authors-boxes-li {
+        border-style: solid !important; 
+    }
+
+    .pp-multiple-authors-boxes-wrapper.pp-multiple-authors-layout-simple_list.multiple-authors-target-the-content .pp-multiple-authors-boxes-li {
+        border-color: #999999 !important; 
+    }
+
+    .pp-multiple-authors-boxes-wrapper.pp-multiple-authors-layout-simple_list.multiple-authors-target-the-content .pp-multiple-authors-boxes-li {
+        color: #3c434a !important; 
+    }
+
+    .pp-multiple-authors-boxes-wrapper.pp-multiple-authors-layout-simple_list.multiple-authors-target-the-content .ppma-author-category-wrap .ppma-category-group {
+        margin-bottom: px !important; 
+    }
+
+    .pp-multiple-authors-boxes-wrapper.pp-multiple-authors-layout-simple_list.multiple-authors-target-the-content .ppma-author-category-wrap .ppma-category-group {
+        margin-right: px !important; 
+    }
+
+    .pp-multiple-authors-boxes-wrapper.pp-multiple-authors-layout-simple_list.multiple-authors-target-the-content .ppma-author-category-wrap {
+        font-size: px !important; 
+    }
+
+    .pp-multiple-authors-boxes-wrapper.pp-multiple-authors-layout-simple_list.multiple-authors-target-the-content .ppma-author-category-wrap .ppma-category-group-title {
+        font-weight:  !important; 
+    }
+
+.pp-multiple-authors-boxes-wrapper.pp-multiple-authors-layout-simple_list .pp-multiple-authors-boxes-ul li {
+    border-left: none !important;
+    border-right: none !important;
+    border-left-style: none !important;
+    border-left-color: white !important;
+    border-left-width: 0px !important;
+    border-right-style: none !important;
+    border-right-color: white !important;
+    border-right-width: 0px !important;
+}
+
+.pp-multiple-authors-boxes-wrapper.pp-multiple-authors-layout-simple_list h2 {
+    margin-top: 36px !important;
+}
+
+.pp-author-boxes-description multiple-authors-description {
+	margin-bottom: 0px !important;
+}</style>        <script type="text/javascript">
+            /* <![CDATA[ */
+           document.querySelectorAll("ul.nav-menu").forEach(
+               ulist => { 
+                    if (ulist.querySelectorAll("li").length == 0) {
+                        ulist.style.display = "none";
+
+                                            } 
+                }
+           );
+            /* ]]> */
+        </script>
+        <script id="underscore-js" src="https://aiml.com/wp-includes/js/underscore.min.js?ver=1.13.8"></script>
+<script id="wp-util-js-extra">
+var _wpUtilSettings = {"ajax":{"url":"/wp-admin/admin-ajax.php"}};
+//# sourceURL=wp-util-js-extra
+</script>
+<script id="wp-util-js" src="https://aiml.com/wp-includes/js/wp-util.min.js?ver=7.1.1"></script>
+<script id="wp-hooks-js" src="https://aiml.com/wp-includes/js/dist/hooks.min.js?ver=f0f188028580e8dc1255"></script>
+<script id="wp-i18n-js" src="https://aiml.com/wp-includes/js/dist/i18n.min.js?ver=1dfe7db3940c23ea9216"></script>
+<script id="wp-i18n-js-after">
+wp.i18n.setLocaleData( { 'text direction\u0004ltr': [ 'ltr' ] } );
+//# sourceURL=wp-i18n-js-after
+</script>
+<script id="um-user-bookmarks-js" src="https://aiml.com/wp-content/plugins/um-user-bookmarks/assets/js/um-user-bookmarks.min.js?ver=2.1.6"></script>
+<script id="learndash-course-grid-skin-grid-js" src="https://aiml.com/wp-content/plugins/sfwd-lms/includes/course-grid/templates/skins/grid/script.js?ver=4.25.7"></script>
+<script id="learndash-js-extra">
+var LearnDash_Course_Grid = {"ajaxurl":"https://aiml.com/wp-admin/admin-ajax.php","nonce":{"load_posts":"604afc51a7"}};
+//# sourceURL=learndash-js-extra
+</script>
+<script id="learndash-js" src="https://aiml.com/wp-content/plugins/sfwd-lms/includes/course-grid/assets/js/script.js?ver=4.25.7"></script>
+<script id="torchmedia-bricks-theme-main-js-js" src="https://aiml.com/wp-content/themes/aiml/assets/js/main.min.js?ver=1.0.0"></script>
+<script id="bricks-scripts-js-extra">
+var bricksData = {"debug":"","locale":"en_US","ajaxUrl":"https://aiml.com/wp-admin/admin-ajax.php","restApiUrl":"https://aiml.com/wp-json/bricks/v1/","nonce":"55a571bdde","formNonce":"5d0297ae24","wpRestNonce":"c9fd227596","postId":"2935","recaptchaIds":[],"animatedTypingInstances":[],"videoInstances":[],"splideInstances":[],"tocbotInstances":[],"swiperInstances":[],"queryLoopInstances":[],"interactions":[],"filterInstances":[],"isotopeInstances":[],"activeFiltersCountInstances":[],"googleMapInstances":[],"facebookAppId":"","headerPosition":"top","offsetLazyLoad":"300","baseUrl":"https://aiml.com/explain-the-transformer-architecture/","useQueryFilter":"","pageFilters":[],"language":"","wpmlUrlFormat":"","multilangPlugin":"","i18n":{"openAccordion":"Open accordion","openMobileMenu":"Open mobile menu","closeMobileMenu":"Close mobile menu","showPassword":"Show password","hidePassword":"Hide password","prevSlide":"Previous slide","nextSlide":"Next slide","firstSlide":"Go to first slide","lastSlide":"Go to last slide","slideX":"Go to slide %s","play":"Start autoplay","pause":"Pause autoplay","splide":{"carousel":"carousel","select":"Select a slide to show","slide":"slide","slideLabel":"%1$s of %2$s"},"swiper":{"slideLabelMessage":"{{index}} / {{slidesLength}}"},"noLocationsFound":"No locations found","locationTitle":"Location title","locationSubtitle":"Location subtitle","locationContent":"Location content"},"selectedFilters":[],"filterNiceNames":[],"bricksGoogleMarkerScript":"https://aiml.com/wp-content/themes/bricks/assets/js/libs/bricks-google-marker.min.js?v=2.0.2","infoboxScript":"https://aiml.com/wp-content/themes/bricks/assets/js/libs/infobox.min.js?v=2.0.2","markerClustererScript":"https://aiml.com/wp-content/themes/bricks/assets/js/libs/markerclusterer.min.js?v=2.0.2","mainQueryId":""};
+//# sourceURL=bricks-scripts-js-extra
+</script>
+<script id="bricks-scripts-js" src="https://aiml.com/wp-content/themes/bricks/assets/js/bricks.min.js?ver=1757481493"></script>
+<script id="learndash-main-ns-extra">
+window.learndash = window.learndash || {};
+window.learndash.global = Object.assign(window.learndash.global || {}, {"ajaxurl":"https:\/\/aiml.com\/wp-admin\/admin-ajax.php"});
+</script><script id="learndash-main-js" src="https://aiml.com/wp-content/plugins/sfwd-lms/src/assets/dist/js/main.js?ver=4.25.7"></script>
+<script id="learndash-breakpoints-ns-extra">
+window.learndash = window.learndash || {};
+window.learndash.views = window.learndash.views || {};
+window.learndash.views.breakpoints = Object.assign(window.learndash.views.breakpoints || {}, {"list":{"mobile":375,"tablet":420,"extra-small":600,"small":720,"medium":960,"large":1240,"wide":1440}});
+</script><script id="learndash-breakpoints-js" src="https://aiml.com/wp-content/plugins/sfwd-lms/src/assets/dist/js/breakpoints.js?ver=4.25.7"></script>
+<script id="learndash-front-js-extra">
+var ldVars = {"postID":"2935","videoReqMsg":"You must watch the video before accessing this content","ajaxurl":"https://aiml.com/wp-admin/admin-ajax.php"};
+//# sourceURL=learndash-front-js-extra
+</script>
+<script id="learndash-front-js" src="//aiml.com/wp-content/plugins/sfwd-lms/themes/ld30/assets/js/learndash.js?ver=4.25.7"></script>
+<script id="perfmatters-lazy-load-js-before">
+window.lazyLoadOptions={elements_selector:"img[data-src],.perfmatters-lazy,.perfmatters-lazy-css-bg",thresholds:"0px 0px",class_loading:"pmloading",class_loaded:"pmloaded",callback_loaded:function(element){if(element.tagName==="IFRAME"){if(element.classList.contains("pmloaded")){if(typeof window.jQuery!="undefined"){if(jQuery.fn.fitVids){jQuery(element).parent().fitVids()}}}}}};window.addEventListener("LazyLoad::Initialized",function(e){var lazyLoadInstance=e.detail.instance;});function perfmattersLazyLoadYouTube(e){var t=document.createElement("iframe"),r="ID?";r+=0===e.dataset.query.length?"":e.dataset.query+"&",r+="autoplay=1",t.setAttribute("src",r.replace("ID",e.dataset.src)),t.setAttribute("frameborder","0"),t.setAttribute("allowfullscreen","1"),t.setAttribute("allow","accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"),e.replaceChild(t,e.firstChild)}
+//# sourceURL=perfmatters-lazy-load-js-before
+</script>
+<script id="perfmatters-lazy-load-js" async src="https://aiml.com/wp-content/plugins/perfmatters/js/lazyload.min.js?ver=2.4.5"></script>
+<script id="um_tipsy-js" src="https://aiml.com/wp-content/plugins/ultimate-member/assets/libs/tipsy/tipsy.min.js?ver=1.0.0a"></script>
+<script id="um_confirm-js" src="https://aiml.com/wp-content/plugins/ultimate-member/assets/libs/um-confirm/um-confirm.min.js?ver=1.0"></script>
+<script id="um_notice-js" src="https://aiml.com/wp-content/plugins/ultimate-member/assets/libs/um-notice/um-notice.min.js?ver=1.0"></script>
+<script id="um_datetime-js" src="https://aiml.com/wp-content/plugins/ultimate-member/assets/libs/pickadate/picker.min.js?ver=3.6.2"></script>
+<script id="um_datetime_date-js" src="https://aiml.com/wp-content/plugins/ultimate-member/assets/libs/pickadate/picker.date.min.js?ver=3.6.2"></script>
+<script id="um_datetime_time-js" src="https://aiml.com/wp-content/plugins/ultimate-member/assets/libs/pickadate/picker.time.min.js?ver=3.6.2"></script>
+<script id="um_common-js-extra">
+var um_common_variables = {"locale":"en_US"};
+var um_common_variables = {"locale":"en_US"};
+//# sourceURL=um_common-js-extra
+</script>
+<script id="um_common-js" src="https://aiml.com/wp-content/plugins/ultimate-member/assets/js/common.min.js?ver=2.13.1"></script>
+<script id="um_crop-js" src="https://aiml.com/wp-content/plugins/ultimate-member/assets/libs/cropper/cropper.min.js?ver=1.6.1"></script>
+<script id="um_frontend_common-js-extra">
+var um_frontend_common_variables = [];
+//# sourceURL=um_frontend_common-js-extra
+</script>
+<script id="um_frontend_common-js" src="https://aiml.com/wp-content/plugins/ultimate-member/assets/js/common-frontend.min.js?ver=2.13.1"></script>
+<script id="um_modal-js" src="https://aiml.com/wp-content/plugins/ultimate-member/assets/js/um-modal.min.js?ver=2.13.1"></script>
+<script id="um_jquery_form-js" src="https://aiml.com/wp-content/plugins/ultimate-member/assets/libs/jquery-form/jquery-form.min.js?ver=2.13.1"></script>
+<script id="um_fileupload-js" src="https://aiml.com/wp-content/plugins/ultimate-member/assets/libs/fileupload/jquery.uploadfile.min.js?ver=3.1.2"></script>
+<script id="um_functions-js" src="https://aiml.com/wp-content/plugins/ultimate-member/assets/js/um-functions.min.js?ver=2.13.1"></script>
+<script id="um_responsive-js" src="https://aiml.com/wp-content/plugins/ultimate-member/assets/js/um-responsive.min.js?ver=2.13.1"></script>
+<script id="um_conditional-js" src="https://aiml.com/wp-content/plugins/ultimate-member/assets/js/um-conditional.min.js?ver=2.13.1"></script>
+<script id="select2-js" src="https://aiml.com/wp-content/plugins/ultimate-member/assets/libs/select2/select2.full.min.js?ver=4.0.13"></script>
+<script id="um_select2_locale-js" src="https://aiml.com/wp-content/plugins/ultimate-member/assets/libs/select2/i18n/en.js?ver=4.0.13"></script>
+<script id="um_raty-js" src="https://aiml.com/wp-content/plugins/ultimate-member/assets/libs/raty/um-raty.min.js?ver=2.6.0"></script>
+<script id="um_scripts-js-extra">
+var um_scripts = {"max_upload_size":"268435456","nonce":"8a6b893a2a"};
+//# sourceURL=um_scripts-js-extra
+</script>
+<script id="um_scripts-js" src="https://aiml.com/wp-content/plugins/ultimate-member/assets/js/um-scripts.min.js?ver=2.13.1"></script>
+<script id="um_profile-js" src="https://aiml.com/wp-content/plugins/ultimate-member/assets/js/um-profile.min.js?ver=2.13.1"></script>
+<script id="um_account-js" src="https://aiml.com/wp-content/plugins/ultimate-member/assets/js/um-account.min.js?ver=2.13.1"></script>
+<script id="stripe-v3-js" src="https://js.stripe.com/v3/?ver=3.0"></script>
+<script id="um-stripe-js-extra">
+var um_stripe_checkout = {"ajaxurl":"https://aiml.com/wp-admin/admin-ajax.php","pubkey":"pk_live_51RGjyCP2240oagfvSwO8ouOqjDdOe6Qc4Ul7lZ25e1Q0ebbZU4crTZDtBr2k525xYRh7ymdV8TGA0gDCWv5a8f2R00RzFASJuZ","success_url":"https://aiml.com/payment-successful/","checkout_url":"https://aiml.com/checkout/","embedded":"1","check_gif":"https://aiml.com/wp-content/plugins/um-stripe/assets/images/check.gif"};
+//# sourceURL=um-stripe-js-extra
+</script>
+<script id="um-stripe-js" src="https://aiml.com/wp-content/plugins/um-stripe/assets/js/stripe.min.js?ver=1.0"></script>
+<script id="wp-consent-api-js-extra">
+var consent_api = {"consent_type":"","waitfor_consent_hook":"","cookie_expiration":"30","cookie_prefix":"wp_consent","services":[]};
+//# sourceURL=wp-consent-api-js-extra
+</script>
+<script id="wp-consent-api-js" src="https://aiml.com/wp-content/plugins/wp-consent-api/assets/js/wp-consent-api.min.js?ver=2.1.0"></script>
+<script async data-wp-strategy="async" fetchpriority="low" id="comment-reply-js" src="https://aiml.com/wp-includes/js/comment-reply.min.js?ver=7.1.1"></script>
+<script type="application/json" fncls="fnparams-dede7cc5-15fd-4c75-a9f4-36c430ee3a99">
+	{"f":"e4d6e0d1ca444713a0569e6297fe4f41","s":"_2935","sandbox":false}</script>
+</body></html>

@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <title>TCP congestion control</title>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <link rel="preload" as="style" href="/blog/assets/built/screen.css?v=be0756ac2d" />
+    <link rel="preload" as="script" href="/blog/assets/built/casper.js?v=be0756ac2d" />
+
+    <link rel="stylesheet" type="text/css" href="/blog/assets/built/screen.css?v=be0756ac2d" />
+
+    <link rel="canonical" href="https://witestlab.poly.edu/blog/tcp-congestion-control-basics/">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    
+    <meta property="og:site_name" content="Run my testbed experiment">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="TCP congestion control">
+    <meta property="og:description" content="This experiment shows the basic behavior of TCP congestion control. You&#x27;ll see the classic &quot;sawtooth&quot; pattern in a TCP flow&#x27;s congestion window, and you&#x27;ll see how a TCP flow responds to congestion indicators.
+
+It should take about 1 hour to run this experiment.
+
+You can run this experiment on CloudLab,">
+    <meta property="og:url" content="https://witestlab.poly.edu/blog/tcp-congestion-control-basics/">
+    <meta property="og:image" content="https://witestlab.poly.edu/blog/content/images/2025/07/tcp-one-1.svg">
+    <meta property="article:published_time" content="2017-04-10T00:00:00.000Z">
+    <meta property="article:modified_time" content="2025-07-11T16:36:54.000Z">
+    <meta property="article:tag" content="Computer networks">
+    <meta property="article:tag" content="CloudLab">
+    <meta property="article:tag" content="FABRIC">
+    <meta property="article:tag" content="Chameleon">
+    <meta property="article:tag" content="Education">
+    
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="TCP congestion control">
+    <meta name="twitter:description" content="This experiment shows the basic behavior of TCP congestion control. You&#x27;ll see the classic &quot;sawtooth&quot; pattern in a TCP flow&#x27;s congestion window, and you&#x27;ll see how a TCP flow responds to congestion indicators.
+
+It should take about 1 hour to run this experiment.
+
+You can run this experiment on CloudLab,">
+    <meta name="twitter:url" content="https://witestlab.poly.edu/blog/tcp-congestion-control-basics/">
+    <meta name="twitter:image" content="https://witestlab.poly.edu/blog/content/images/2025/07/tcp-one-1.svg">
+    <meta name="twitter:label1" content="Written by">
+    <meta name="twitter:data1" content="Fraida Fund">
+    <meta name="twitter:label2" content="Filed under">
+    <meta name="twitter:data2" content="Computer networks, CloudLab, FABRIC, Chameleon, Education">
+    <meta property="og:image:width" content="1134">
+    <meta property="og:image:height" content="582">
+    
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "publisher": {
+        "@type": "Organization",
+        "name": "Run my testbed experiment",
+        "url": "https://witestlab.poly.edu/blog/",
+        "logo": {
+            "@type": "ImageObject",
+            "url": "https://witestlab.poly.edu/blog/favicon.ico",
+            "width": 48,
+            "height": 48
+        }
+    },
+    "author": {
+        "@type": "Person",
+        "name": "Fraida Fund",
+        "image": {
+            "@type": "ImageObject",
+            "url": "https://witestlab.poly.edu/blog/content/images/2026/07/user-icon.png",
+            "width": 1200,
+            "height": 1200
+        },
+        "url": "https://witestlab.poly.edu/blog/author/ffund/",
+        "sameAs": []
+    },
+    "headline": "TCP congestion control",
+    "url": "https://witestlab.poly.edu/blog/tcp-congestion-control-basics/",
+    "datePublished": "2017-04-10T00:00:00.000Z",
+    "dateModified": "2025-07-11T16:36:54.000Z",
+    "image": {
+        "@type": "ImageObject",
+        "url": "https://witestlab.poly.edu/blog/content/images/2025/07/tcp-one-1.svg",
+        "width": 1134,
+        "height": 582
+    },
+    "keywords": "Computer networks, CloudLab, FABRIC, Chameleon, Education",
+    "description": "This experiment shows the basic behavior of TCP congestion control. You&#x27;ll see the classic &quot;sawtooth&quot; pattern in a TCP flow&#x27;s congestion window, and you&#x27;ll see how a TCP flow responds to congestion indicators.\n\nIt should take about 1 hour to run this experiment.\n\nYou can run this experiment on CloudLab, FABRIC, or Chameleon. Refer to the testbed-specific prerequisites listed below.\n\n\n\n\nCloudlab-specific instructions: Prerequisites\n\n\nTo reproduce this experiment on Cloudlab, you will need an acco",
+    "mainEntityOfPage": "https://witestlab.poly.edu/blog/tcp-congestion-control-basics/"
+}
+    </script>
+
+    <meta name="generator" content="Ghost 5.127">
+    <link rel="alternate" type="application/rss+xml" title="Run my testbed experiment" href="https://witestlab.poly.edu/blog/rss/">
+    
+    <script defer src="https://cdn.jsdelivr.net/ghost/sodo-search@~1.5/umd/sodo-search.min.js" data-key="0885a7bf98864505cc4669962d" data-styles="https://cdn.jsdelivr.net/ghost/sodo-search@~1.5/umd/main.css" data-sodo-search="https://witestlab.poly.edu/blog/" data-locale="en" crossorigin="anonymous"></script>
+    
+    <link href="https://witestlab.poly.edu/blog/webmentions/receive/" rel="webmention">
+    <script defer src="/blog/public/cards.min.js?v=be0756ac2d"></script><style>:root {--ghost-accent-color: #241877;}</style>
+    <link rel="stylesheet" type="text/css" href="/blog/public/cards.min.css?v=be0756ac2d">
+    <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-BXS9G3HCG8"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-BXS9G3HCG8');
+</script>
+
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<meta name="google-site-verification" content="p7Pzp6mnulvIGdR_IB7KHCVLvLBh59X9JkDkplERR6U" />
+<style>
+  
+.cloudlab-specific {
+  border: 3px solid #5e8a90;
+  padding: 15px;
+}
+
+.cloudlab-specific h4 {
+  color: #5e8a90;
+  margin-top: 0;
+  font-size: 2.4rem;
+}
+
+.chameleon-specific {
+  border: 3px solid #9ad61a;
+  padding: 15px;
+}
+
+.chameleon-specific h4 {
+  color: #9ad61a;
+  margin-top: 0;
+  font-size: 2.4rem;
+}
+  
+.fabric-specific {
+  border: 3px solid #47aae1;
+  padding: 15px;
+}
+  
+.fabric-specific h4 {
+  color:#47aae1; 
+  margin-top: 0;
+  font-size: 2.4rem;
+}
+
+.cloudlab-specific,
+.fabric-specific,
+.chameleon-specific {
+  font-size: 2rem;
+  line-height: 1.6em;
+  color: #15171a; /* Matches Casper's default text color */
+  box-sizing: border-box;
+  padding: 15px;
+  border-width: 3px;
+  border-style: solid;
+}
+
+.cloudlab-specific p,
+.fabric-specific p,
+.chameleon-specific p {
+  margin: 0 0 1.6em;
+}
+
+
+</style>
+
+    <link rel="preconnect" href="https://fonts.bunny.net"><link rel="stylesheet" href="https://fonts.bunny.net/css?family=nunito:400,600,700"><style>:root {--gh-font-body: Nunito;}</style>
+
+</head>
+<body class="post-template tag-computer-networks tag-cloudlab tag-fabric tag-chameleon tag-education gh-font-body-nunito is-head-left-logo has-cover">
+<div class="viewport">
+
+    <header id="gh-head" class="gh-head outer">
+        <div class="gh-head-inner inner">
+            <div class="gh-head-brand">
+                <a class="gh-head-logo no-image" href="https://witestlab.poly.edu/blog">
+                        Run my testbed experiment
+                </a>
+                <button class="gh-search gh-icon-btn" aria-label="Search this site" data-ghost-search><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" width="20" height="20"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg></button>
+                <button class="gh-burger" aria-label="Main Menu"></button>
+            </div>
+
+            <nav class="gh-head-menu">
+                <ul class="nav">
+    <li class="nav-home"><a href="https://witestlab.poly.edu/blog/">Home</a></li>
+    <li class="nav-about"><a href="https://witestlab.poly.edu/blog/about/">About</a></li>
+    <li class="nav-fabric"><a href="https://witestlab.poly.edu/blog/tag/fabric/">FABRIC</a></li>
+    <li class="nav-cloudlab"><a href="https://witestlab.poly.edu/blog/tag/cloudlab/">CloudLab</a></li>
+    <li class="nav-chameleon"><a href="https://witestlab.poly.edu/blog/tag/chameleon/">Chameleon</a></li>
+    <li class="nav-powder"><a href="https://witestlab.poly.edu/blog/tag/powder/">POWDER</a></li>
+    <li class="nav-orbit-cosmos"><a href="https://witestlab.poly.edu/blog/tag/cosmos/">ORBIT/COSMOS</a></li>
+    <li class="nav-aerpaw"><a href="https://witestlab.poly.edu/blog/tag/aerpaw/">AERPAW</a></li>
+</ul>
+
+            </nav>
+
+            <div class="gh-head-actions">
+                        <button class="gh-search gh-icon-btn" aria-label="Search this site" data-ghost-search><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" width="20" height="20"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg></button>
+            </div>
+        </div>
+    </header>
+
+    <div class="site-content">
+        
+
+
+
+<main id="site-main" class="site-main">
+<article class="article post tag-computer-networks tag-cloudlab tag-fabric tag-chameleon tag-education ">
+
+    <header class="article-header gh-canvas">
+
+        <div class="article-tag post-card-tags">
+                <span class="post-card-primary-tag">
+                    <a href="/blog/tag/computer-networks/">Computer networks</a>
+                </span>
+        </div>
+
+        <h1 class="article-title">TCP congestion control</h1>
+
+
+        <div class="article-byline">
+        <section class="article-byline-content">
+
+            <ul class="author-list instapaper_ignore">
+                <li class="author-list-item">
+                    <a href="/blog/author/ffund/" class="author-avatar" aria-label="Read more of Fraida Fund">
+                        <img class="author-profile-image" src="/blog/content/images/size/w100/2026/07/user-icon.png" alt="Fraida Fund" />
+                    </a>
+                </li>
+            </ul>
+
+            <div class="article-byline-meta">
+                <h4 class="author-name"><a href="/blog/author/ffund/">Fraida Fund</a></h4>
+                <div class="byline-meta-content">
+                    <time class="byline-meta-date" datetime="2017-04-09">09 Apr 2017</time>
+                        <span class="byline-reading-time"><span class="bull">&bull;</span> 23 min read</span>
+                </div>
+            </div>
+
+        </section>
+        </div>
+
+            <figure class="article-image">
+                <img
+                    srcset="/blog/content/images/size/w300/2025/07/tcp-one-1.svg 300w,
+                            /blog/content/images/size/w600/2025/07/tcp-one-1.svg 600w,
+                            /blog/content/images/size/w1000/2025/07/tcp-one-1.svg 1000w,
+                            /blog/content/images/size/w2000/2025/07/tcp-one-1.svg 2000w"
+                    sizes="(min-width: 1400px) 1400px, 92vw"
+                    src="/blog/content/images/size/w2000/2025/07/tcp-one-1.svg"
+                    alt="TCP congestion control"
+                />
+            </figure>
+
+    </header>
+
+    <section class="gh-content gh-canvas">
+        <p>This experiment shows the basic behavior of TCP congestion control. You'll see the classic "sawtooth" pattern in a TCP flow's congestion window, and you'll see how a TCP flow responds to congestion indicators.</p><p>It should take about 1 hour to run this experiment.</p><p>You can run this experiment on CloudLab, FABRIC, or Chameleon. Refer to the testbed-specific prerequisites listed below.</p>
+<!--kg-card-begin: html-->
+<div class="cloudlab-specific">  
+  <h4>Cloudlab-specific instructions: Prerequisites</h4>
+  <p>To reproduce this experiment on Cloudlab, you will need an account on 
+  <a href="https://cloudlab.us/">Cloudlab</a>, you will need to have 
+  <a href="https://docs.cloudlab.us/users.html#%28part._join-project%29">joined a project</a>, 
+  and you will need to have 
+  <a href="https://docs.cloudlab.us/users.html#%28part._ssh-access%29">set up SSH access</a>.  </p>
+</div>
+
+<!--kg-card-end: html-->
+
+<!--kg-card-begin: html-->
+<div class="fabric-specific">  
+  <h4>FABRIC-specific instructions: Prerequisites</h4>
+<p>To run this experiment on <a href="https://fabric-testbed.net/">FABRIC</a>, you should have a FABRIC account and be part of a FABRIC project. </p>
+</div>
+<!--kg-card-end: html-->
+
+<!--kg-card-begin: html-->
+<div class="chameleon-specific">  
+  <h4>Chameleon-specific instructions: Prerequisites</h4>
+<p>To run this experiment on <a href="https://chameleoncloud.org/">Chameleon</a>, you should have a Chameleon account with keys configured on KVM@TACC, and be part of a Chameleon project. </p>
+</div>
+<!--kg-card-end: html-->
+<ul><li>Skip to <a href="#results">Results</a></li><li>Skip to <a href="#run-my-experiment" rel="noreferrer">Run my experiment</a></li></ul><h2 id="background">Background</h2><p>TCP is arguably one of the most important Internet protocols, as it carries a much higher volume of traffic on the Internet than any other transport-layer protocol.</p><p>Because TCP carries so much traffic, its congestion control algorithm is the main technique which prevents the Internet from slowing to a crawl due to over-utilization. This is a state known as <em>congestion collapse</em>, and occurs when the link is "busy" but not getting useful work done - for example, if the network is clogged with unnecessary retransmissions of lost packets.</p><p>In fact, an Internet collapse <em>has</em> occurred in the past, due to insufficient congestion control. A <a href="https://doi.org/10.1145/52325.52356">1988 paper by Van Jacobson explains</a>:</p><blockquote>In October of '86, the Internet had the first of what became a series of 'congestion collapses.' During this period, the data throughput from LBL to UC Berkeley (sites separated by 400 yards and three IMP hops) dropped from 32 Kbps to 40 bps.</blockquote><p>The effective throughput (the volume of useful data transferred over the link) dropped by a factor of ~1000!</p><p>Because TCP congestion control is so essential, it is also continuously undergoing improvement and refinement. As the Internet (and the characteristics of Internet traffic) changes, TCP congestion control must evolve along with it. However, in this experiment, we'll examine an early variant of TCP congestion control that uses a basic <em>additive increase, multiplicative decrease</em> rule.</p><h3 id="aimd-additive-increase-multiplicative-decrease">AIMD: additive increase, multiplicative decrease</h3><p>Additive-increase/multiplicative-decrease (AIMD) is a feedback control algorithm that is the primary mechanism for adjusting the rate of a TCP flow, i.e. answering the question "How fast should I send?"</p><p>The basic idea of congestion control is that the sender transmits TCP packets on the network, then reacts to observable events to either increase or decrease its sending rate. If it believes the network is over-utilized, then it should decrease its sending rate; if it believes the network is under-utilized, then it should increase its sending rate.</p><p>There are various indicators of congestion that can signal that the network is over-utilized. Packet loss is one such indicator. When a sender transmits TCP packets at rate faster than the capacity of the <em>bottleneck</em> (the link with the smallest capacity in the path), the bottleneck router puts packets in a buffer. As the sender continues to transmit faster than packets can leave the buffer, the buffer will fill with packets until eventually there is no room for more packets. When the buffer is full, the router has no choice but to drop new packets as they arrive. The sender will realize that packets are lost when no ACK is received for them, and it will reduce its sending rate.</p><p>How does the sender reduce its sending rate? Most congestion control algorithm use a <em>congestion window</em> (CWND) to control sending rate. For each connection, TCP maintains a CWND that limits the total number of unacknowledged packets that may be in transit end-to-end ("bytes in flight"). In other words: if the number of unacknowledged segments is equal to the CWND, the sender stops sending data until more acknowledgements are received.</p><p>The CWND is not advertised or exchanged between the sender and receiver - it is a private value maintained locally by each end host. You can not find the CWND by inspecting packet headers.</p><p>When a connection is set up, the CWND is set to a small multiple of the maximum segment size (MSS) allowed on that connection. On modern Linux kernels, the initial CWND is 10 MSS. (Earlier versions used 4 MSS.)</p><p>The basic AIMD algorithm then goes as follows, assuming that packet loss is used as an indicator of congestion:</p><ul><li><strong>Additive increase</strong>: Increase the CWND by a fixed amount (e.g., one MSS) every round-trip time (RTT) that no packet is lost.</li><li><strong>Multiplicative decrease</strong>: Decrease the congestion window by a multiplicative factor (e.g., 1/2) every RTT that a packet loss occurs.</li></ul><p>Sending rate is not controlled entirely by the CWND, since TCP uses <em>flow control</em> in addition to <em>congestion control</em>. Flow control limits the number of unacknowledged segments according to the receive window size advertised by the receiver in packet headers. The rule is then: the maximum amount of data that may be in flight (i.e., not acknowledged) from the sender to the receiver is the minimum of the advertised receive window size (RWND) and CWND.</p><h3 id="slow-start">Slow start</h3><p>The pattern described above helps avoid over-utilization. However, under AIMD, it can take some time for a flow to actually reach link capacity, causing under-utilization of the link. Slow start was introduced to help TCP flows reach link capacity faster.</p><p>Slow start is in effect during the <em>congestion control</em> phase. During congestion control, CWND is increased by the number of segments acknowledged each time an ACK is received. This is exponential growth, rather than the slower linear growth of AIMD during the congestion avoidance phase. The congestion control phase continues until a loss event occurs, or until a <em>slow start threshold</em> is reached.</p><p>Once the slow start threshold is reached (or a packet loss is detected), then the TCP flow enters the congestion avoidance phase. At this point, AIMD kicks in and the CWND of the flow grows linearly.</p><p>How is the slow start threshold set? The slow start threshold is initialized to a large value at the beginning of the connection. Once the first loss event occurs, the slow start threshold is set to half of the CWND at the time of the loss event.</p><h3 id="fast-recovery">Fast recovery</h3><p>We mentioned that TCP can use an ACK timeout to detect lost segments. However, this means that a sender may not know that a segment is lost for a long time! Duplicate acknowledgements are an earlier indication of congestion.</p><p>Recall that an ACK indicates the sequence number of the last in-order byte of data received. When a segment X is lost but subsequent segments X+1, X+2, X+3, etc. are delivered successfully, the receiver will send an ACK for each subsequent segment. But the sequence number in the ACK of X+1, X+2, X+3, etc. will reflect the last segment that was received in order - the sequence number of X-1! Thus, the TCP sender will get "duplicate ACKs" - multiple ACKs with the same sequence number - and can conclude that the following segment was dropped.</p><p>In TCP Reno, the CWND decrease depends on whether congestion was detected by an ACK timeout or by receipt of duplicate ACKs:</p><ul><li>When there is an ACK timeout, the congestion is considered severe, since subsequent segments after the first dropped segment are also not getting through. TCP Reno reduces its CWND to a minimum value, and enters slow start.</li><li>When congestion is detected by the receipt of duplicate ACKs, the congestion is considered less severe. TCP Reno reduces its CWND to the slow start threshold, and enters congestion avoidance. This is known as "fast recovery".</li></ul><h3 id="overview-of-tcp-phases">Overview of TCP phases</h3><p>The following image illustrates the behavior of TCP in congestion control (slow start) mode and congestion avoidance mode.</p><figure class="kg-card kg-image-card kg-width-wide kg-card-hascaption"><img src="https://upload.wikimedia.org/wikipedia/commons/2/24/TCP_Slow-Start_and_Congestion_Avoidance.svg" class="kg-image" alt="" loading="lazy" width="1450" height="758"><figcaption><i><em class="italic" style="white-space: pre-wrap;">Image is GPLv3, via </em></i><a href="https://commons.wikimedia.org/wiki/File:TCP_Slow-Start_and_Congestion_Avoidance.svg"><i><em class="italic" style="white-space: pre-wrap;">Wikimedia Commons</em></i></a><i><em class="italic" style="white-space: pre-wrap;">.</em></i></figcaption></figure><h3 id="animation">Animation</h3><p>The following animation shows AIMD congestion control at work in a network with a buffering router sitting between two hosts. Data (in blue) flows from the sending host at the left to the receiving host at the right; acknowledgements (in red) return over the reverse link. Utilization on the bottleneck link (from the router to the receiver) is noted. The plot at the bottom shows the sender congestion window as a function of time.</p><figure class="kg-card kg-embed-card kg-card-hascaption"><iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/5xxRn2jYdhI?si=I0NNiavNfEZI6Owe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen=""></iframe><figcaption><p><i><em class="italic" style="white-space: pre-wrap;">Animation Source: Guido Appenzeller and Nick McKeown, </em></i><a href="http://guido.appenzeller.net/anims/"><i><em class="italic" style="white-space: pre-wrap;">Router Buffer Animations</em></i></a></p></figcaption></figure><p>As the congestion window increases, the rate at which (blue) packets are sent also increases, until the bottleneck link utilization reaches 100%. Then, as the rate of packets sent continues to increase, packets start to accumulate in the buffer. Eventually, the buffer becomes full and the router must drop new packets.</p><p>When the sender becomes aware of the dropped packet (because no ACK is received for it), it reduces its congestion window by a multiplicative factor. With a smaller congestion window, and many unacknowledged packets already "in flight", it must pause before it can resume transmission, so the buffer has a chance to drain. Once some time passes, and more of the "in flight" segments are acknowledged, the sender can resume transmission and begin to increase its congestion window again. This process continues for the lifetime of the flow, leading to a classic "sawtooth" pattern.</p><h2 id="results">Results</h2><p>In this experiment, we will send three TCP flows through a bottleneck link, and see the classic "sawtooth" pattern of the TCP congestion window, shown as the solid blue line in the plot below. The slow start threshold is shown as an orange line:</p><figure class="kg-card kg-image-card kg-width-wide kg-card-hascaption"><img src="https://witestlab.poly.edu/blog/content/images/2024/03/sender-ss.png" class="kg-image" alt="" loading="lazy" width="1200" height="800" srcset="https://witestlab.poly.edu/blog/content/images/size/w600/2024/03/sender-ss.png 600w, https://witestlab.poly.edu/blog/content/images/size/w1000/2024/03/sender-ss.png 1000w, https://witestlab.poly.edu/blog/content/images/2024/03/sender-ss.png 1200w" sizes="(min-width: 1200px) 1200px"><figcaption><i><em class="italic" style="white-space: pre-wrap;">Figure 1: Congestion window size (blue line) and slow start threshold (orange line) of three TCP flows sharing the same bottleneck.</em></i></figcaption></figure><p>We can also identify</p><ul><li>"Slow start" periods, where the congestion window increases rapidly.</li><li>"Congestion avoidance" periods (when the congestion window increases linearly from than the slow start threshold)</li><li>Instances where duplicate ACKs were received, if any. We are using <a href="http://intronetworks.cs.luc.edu/current/html/reno.html">TCP Reno</a>, which will enter "fast recovery" if it detects congestion by duplicate ACKs. The slow start threshold is set to half of the CWND at the time of the loss event, the new CWND is set to the slow start threshold, and the flow enters "congestion avoidance" mode.</li><li>Instances of ACK timeout, if any. This will cause the congestion window to go back to 1 MSS, and the flow enters "slow start" mode.</li></ul><p>For example, the following annotated image shows a short interval in one TCP flow:</p><figure class="kg-card kg-image-card kg-width-wide kg-card-hascaption"><img src="https://witestlab.poly.edu/blog/content/images/2017/04/tcp-one.svg" class="kg-image" alt="" loading="lazy" width="1134" height="582"><figcaption><i><em class="italic" style="white-space: pre-wrap;">Figure 2: Events in a TCP flow. Slow-start periods are marked in yellow; congestion avoidance periods are in purple. We can also see when indicators of congestion occur: instances of timeout (red), and instances where duplicate ACKs are received (blue) triggering fast recovery (green).</em></i></figcaption></figure><h2 id="run-my-experiment">Run my experiment</h2><p>First, reserve a topology including two end hosts, and a router between them. The router will buffer traffic between the sender and the receiver. If the buffer in the router becomes full, it will drop packets, triggering TCP congestion control behavior.</p><p>Follow the instructions for the testbed you are using (CloudLab, FABRIC, Chameleon) to reserve the resources and log in to each of the hosts in this experiment.</p>
+<!--kg-card-begin: html-->
+<div class="cloudlab-specific">  
+  <h4>Cloudlab-specific instructions: Reserve resources</h4>
+
+  <p>To reserve these resources on Cloudlab, open this profile page:</p>
+
+  <p><a href="https://www.cloudlab.us/p/nyunetworks/education?refspec=refs/heads/tcp_congestion_control">https://www.cloudlab.us/p/nyunetworks/education?refspec=refs/heads/tcp_congestion_control</a></p>
+
+<p>Click "next", then select the Cloudlab project that you are part of and a Cloudlab cluster with available resources. (This experiment is compatible with any of the Cloudlab clusters.) Then click "next", and "finish".</p>
+
+<p>Wait until all of the resources have turned green and have a small check mark in the top right corner of the "topology view" tab, indicating that they are fully configured and ready to log in. Then, click on "list view" to get SSH login details for the hosts and routers. Use these details to SSH into each.</p>
+  
+<p>When you have logged in to each node, continue to the <b>Set up experiment</b> section.</p>
+</div>
+<!--kg-card-end: html-->
+
+<!--kg-card-begin: html-->
+<div class="fabric-specific">  
+  <h4>FABRIC-specific instructions: Reserve resources</h4>
+<p>To run this experiment on FABRIC, open the JupyterHub environment on FABRIC, open a shell, and run</p>
+  
+<pre>
+git clone https://github.com/teaching-on-testbeds/fabric-education tcp_cc 
+cd tcp_cc 
+git checkout tcp_congestion_control  
+</pre>
+<br>
+<p>Then, open the notebook titled "start_here.ipynb".</p>
+<p>Follow along inside the notebook to reserve resources and get the login details for each host and router in the experiment.</p>
+  <p>When you have logged in to each node, continue to the next section.</p>
+</div>
+<!--kg-card-end: html-->
+
+<!--kg-card-begin: html-->
+<div class="chameleon-specific">  
+  <h4>Chameleon-specific instructions: Reserve resources</h4>
+<p>To run this experiment on Chameleon, open the JupyterHub environment on Chameleon, open a shell, and run</p>
+  
+<pre>
+cd work 
+git clone https://github.com/teaching-on-testbeds/chameleon-education tcp_cc 
+cd tcp_cc 
+git checkout tcp_congestion_control
+</pre>
+<br>
+<p>Then, open the notebook titled "start_here.ipynb".</p>
+<p>Follow along inside the notebook to reserve resources and get the login details for each host and router in the experiment.</p>
+  <p>When you have logged in to each node, continue to the next section.</p>
+</div>
+<!--kg-card-end: html-->
+<h3 id="set-up-experiment">Set up experiment</h3><p>On the end hosts ("romeo" and "juliet"), install the <code>iperf</code> network testing tool, with the command</p><pre><code>sudo apt update
+sudo apt -y install iperf3
+</code></pre><p>On romeo, we'll also install the <code>moreutils</code> utility, which will help us with data collection, and some other tools for data visualization:</p><pre><code>sudo apt -y install moreutils python3-pip libjpeg-dev</code></pre><p>and</p><pre><code>sudo python3 -m pip install pandas matplotlib</code></pre><p>and configure an additional setting:</p><pre><code>sudo sysctl -w net.ipv4.tcp_no_metrics_save=1
+</code></pre><p>Now, we will configure the "router" node. Run the following commands in an SSH session on the "router" to configure it as a 1 Mbps bottleneck, with a buffer size of 0.1 MB, in both directions:</p>
+<!--kg-card-begin: html-->
+<pre>
+iface_0=$(ip route get 10.10.1.100 | grep -oP "(?<=dev )[^ ]+") 
+sudo tc qdisc del dev $iface_0 root 
+sudo tc qdisc add dev $iface_0 root handle 1: htb default 3 
+sudo tc class add dev $iface_0 parent 1: classid 1:3 htb rate 1Mbit 
+sudo tc qdisc add dev $iface_0 parent 1:3 handle 3: bfifo limit 0.1MB 
+  
+iface_1=$(ip route get 10.10.2.100 | grep -oP "(?<=dev )[^ ]+") 
+sudo tc qdisc del dev $iface_1 root 
+sudo tc qdisc add dev $iface_1 root handle 1: htb default 3
+sudo tc class add dev $iface_1 parent 1: classid 1:3 htb rate 1Mbit 
+sudo tc qdisc add dev $iface_1 parent 1:3 handle 3: bfifo limit 0.1MB
+</pre>
+<!--kg-card-end: html-->
+<p>Don't worry if you see a message in the output that says</p><pre><code>Error: Cannot delete qdisc with handle of zero.
+</code></pre><p>or</p><pre><code>RTNETLINK answers: No such file or directory
+</code></pre><p>This is normal, and not a problem!</p><h3 id="using-ss-to-observe-tcp-socket-statistics">Using <code>ss</code> to observe TCP socket statistics</h3><p>The parameters of the TCP congestion control algorithm, such as congestion window and slow start threshold, are <em>not</em> included in any packet header, since these are used only on the sender side. Therefore, we can't see the details of the congestion control by monitoring packets in <code>tcpdump</code> or other packet capture tools.</p><p>Instead, we will use <code>ss</code>, a linux utility used to monitor local sockets and display socket statistics. In this section, we'll see what the <code>ss</code> output looks like, and what useful information it includes.</p><p>On the "juliet" host, set up an <code>iperf3</code> server with</p><pre><code>iperf3 -s  -1
+</code></pre><p>On the "romeo" host, initiate a connection to the <code>iperf3</code> server on "juliet" and send data using TCP Reno congestion control, for 60 seconds, with</p><pre><code>iperf3 -c juliet -t 60 -C reno
+</code></pre><p>While <code>iperf3</code> is still sending traffic, open another SSH session on "romeo" and run</p><pre><code>ss -ein dst 10.10.2.100
+</code></pre><p>Here, we use <code>ss</code> with some key arguments:</p><ul><li><code>-e</code> to show detailed socket information</li><li><code>-i</code> to show internal TCP information. This information is known only to the operating system at the sender side; it is not sent over the network or otherwise shared with the receiver.</li><li><code>-n</code> specifies that it should not try to resolve names, but should show numeric values (i.e. IP addresses and not hostnames)</li><li><code>dst 10.10.2.100</code> is a filter that says it should only show sockets with the remote address 10.10.2.100 (the address of "juliet")</li></ul><p>You can learn more about <code>ss</code> arguments with <code>man ss</code> or by visiting the online <a href="https://linux.die.net/man/8/ss">man page</a>.</p><p>The output of this command will look something like this, although the exact details will vary:</p>
+<!--kg-card-begin: html-->
+<pre>
+Netid     State      Recv-Q      Send-Q            Local Address:Port             Peer Address:Port                                                                                                               
+tcp       ESTAB      0           343176              10.10.1.100:49112             10.10.2.100:5201       timer:(on,1.204ms,0) uid:20001 ino:386735 sk:3b <->
+     ts sack reno wscale:7,7 rto:1212 rtt:833.978/7.108 mss:1448 pmtu:1500 rcvmss:536 advmss:1448 cwnd:66 ssthresh:35 bytes_acked:589374 segs_out:557 segs_in:273 data_segs_out:555 send 916.7Kbps lastsnd:8 lastrcv:5016 lastack:8 pacing_rate 1.2Mbps delivery_rate 942.8Kbps busy:4972ms rwnd_limited:96ms(1.9%) unacked:71 retrans:2/76 lost:2 sacked:5 rcv_space:14480 rcv_ssthresh:64088 notsent:240368 minrtt:0.483
+tcp       ESTAB      0           0                   10.10.1.100:49110             10.10.2.100:5201       uid:20001 ino:386734 sk:3c <->
+     ts sack cubic wscale:7,7 rto:208 rtt:5.598/9.458 ato:40 mss:1448 pmtu:1500 rcvmss:536 advmss:1448 cwnd:10 bytes_acked:144 bytes_received:4 segs_out:8 segs_in:7 data_segs_out:3 data_segs_in:3 send 20.7Mbps lastsnd:5020 lastrcv:4972 lastack:4972 pacing_rate 41.4Mbps delivery_rate 9.2Mbps busy:48ms rcv_space:14480 rcv_ssthresh:64088 minrtt:0.723
+</pre>
+<!--kg-card-end: html-->
+<p>We have two TCP sockets with the specified destination address. One is a socket used to share <code>iperf3</code> control information with the receiver. The other is a socket that carries the actual data between the sender and receiver. You can tell which one is which by looking at the <code>data_segs_out</code> value - the control flow only sends a few data segments, but the data flow will transfer hundreds or thousands of segments. In this case, the first lines in the <code>ss</code> output show the data flow, and the last lines show the control flow.</p><p>Also note that the data flow uses TCP Reno, as we specified in the <code>iperf3</code> arguments. The control flow uses whatever congestion control is the system default - here, it's TCP Cubic.</p><p>In the <code>ss</code> output for the data flow, see if you can find:</p><ul><li>the current CWND of this flow. This is shown in units of MSS.</li><li>the slow start threshold of this flow. This is shown in units of MSS. The slow start threshold field, <code>ssthresh</code>, will only appear in the <code>ss</code> output once the flow has entered the congestion avoidance phase.</li><li>the number of retransmitted segments. This will only appear in the <code>ss</code> output once there has been a retransmission in the lifetime of the flow. If it appears in the output, it will show two values: the number of currently unacknowledged retransmitted segments, and the total (cumulative) number of retransmissions for the flow.</li></ul><h3 id="generating-data">Generating data</h3><p>Next, we will generate some TCP flows between the two end hosts, and use it to observe the behavior of the TCP congestion control algorithm.</p><p>While the TCP flows are running, we will also run a script that repeatedly runs <code>ss</code> and redirects the output to a file. When you press Ctrl+C, it will stop running the <code>ss</code> command and process the raw output into a format that is more convenient for data analysis and visualization.</p><p>Download this script on the "romeo" host with</p>
+<!--kg-card-begin: html-->
+<pre>
+wget -O ss-output.sh https://raw.githubusercontent.com/ffund/tcp-ip-essentials/cloudlab/scripts/ss-output.sh
+</pre>
+<!--kg-card-end: html-->
+<p>On the "juliet" host, run</p><pre><code>iperf3 -s -1
+</code></pre><p>In a terminal on the "romeo" host, run</p><pre><code>bash ss-output.sh 10.10.2.100
+</code></pre><p>In a second terminal on the "romeo" host, run</p><pre><code>iperf3 -c juliet -P 3 -t 60 -C reno
+</code></pre><p>Here</p><ul><li><code>-t 60</code> says to run for 60 seconds</li><li><code>-c juliet</code> says to send traffic to the host named "juliet"</li><li><code>-P 3</code> says to send 3 parallel TCP flows</li><li><code>-C reno</code> says to use TCP Reno for the data flows</li></ul><p>While <code>iperf3</code> is running, you will see periodic updates in the <code>iperf3</code> window,  and a continuous flow of socket statistics data in the <code>ss</code> window. After about a minute, you will see a final status report in the <code>iperf3</code> window, and the <code>iperf3</code> process will finish. Then, use Ctrl+C to stop the <code>ss</code> script in the other window. Pressing Ctrl+C once will cause the script to process the raw data, and then exit.</p><p>If you run <code>ls</code> on the "romeo" host, you should see two files generated by the <code>ss</code> script:</p><ul><li><code>sender-ss.txt</code> is the raw output - the complete output of the <code>ss</code> command each time it was executed by the script.</li><li><code>sender-ss.csv</code> is a processed output - the script parsed the raw output, for each line of output, it prints the following comma-separated columns, in order, for each row of output:</li><li>Timestamp (in <a href="https://en.wikipedia.org/wiki/Unix_time">Unix time</a> format)</li><li>TCP sender, in IP:Port format. Each of the TCP flows in this experiment will use a different local port number, and the control flow will use a unique local port number as well. We'll use this field to distinguish the flows.</li><li>Number of currently unacknowledged retransmissions for this flow.</li><li>Cumulative number of retransmissions for this flow.</li><li>Current CWND of this flow.</li><li>Current slow start threshold of this flow.</li><li>Current smoothed RTT of this flow in ms.</li></ul>
+<!--kg-card-begin: html-->
+<div class="fabric-specific">  
+  <h4>FABRIC-specific instructions: Data visualization</h4>
+<p>If you are running this experiment on FABRIC, you can use the "Exercise: Data visualization" section of the "setup.ipynb" notebook to transfer the <code>sender-ss.csv</code> file from the host to the Jupyter environment and visualize the results.</p>
+<p>Then, you can skip to the <b>Notes</b> section.</p>
+</div>
+<!--kg-card-end: html-->
+
+<!--kg-card-begin: html-->
+<div class="chameleon-specific">  
+  <h4>Chameleon-specific instructions: Data visualization</h4>
+<p>If you are running this experiment on Chameleon, you can use the "Exercise: Data visualization" section of the "setup.ipynb" notebook to transfer the <code>sender-ss.csv</code> file from the host to the Jupyter environment and visualize the results.</p>
+<p>Then, you can skip to the <b>Notes</b> section.</p>
+</div>
+<!--kg-card-end: html-->
+<h3 id="visualization">Visualization</h3><p>You can use your preferred data visualization tool or programming language to analyze the results of your experiment. (Make sure to exclude the control flow from your analysis!) For convenience, I share a Python script here.</p><p>You can retrieve the <code>sender-ss.csv</code> data to your laptop, and run the Python script on your laptop. Or you can open a Python terminal on "romeo" by running</p><pre><code>python3
+</code></pre><p>then copy the script below into this terminal and hit Enter to make sure it runs completely. Type exit() and hit Enter to exit the Python terminal. It will have generated an image file named <code>sender-ss.png</code>, which you can transfer to your laptop with <code>scp</code>.</p><pre><code class="language-python">import pandas as pd
+import matplotlib.pyplot as plt
+
+df = pd.read_csv("sender-ss.csv", names=['time', 'sender', 'retx_unacked', 'retx_cum', 'cwnd', 'ssthresh', 'rtt'])
+
+# exclude the "control" flow
+s = df.groupby('sender').size()
+df_filtered = df[df.groupby("sender")['sender'].transform('size') &gt; 100]
+
+senders = df_filtered.sender.unique()
+
+time_min = df_filtered.time.min()
+cwnd_max = 1.1*df_filtered.cwnd.max()
+dfs = [df_filtered[df_filtered.sender==senders[i]] for i in range(3)]
+
+fig, axs = plt.subplots(len(senders), sharex=True, figsize=(12,8))
+fig.suptitle('CWND over time')
+for i in range(len(senders)):
+    if i==len(senders)-1:
+        axs[i].plot(dfs[i]['time']-time_min, dfs[i]['cwnd'], label="cwnd")
+        axs[i].plot(dfs[i]['time']-time_min, dfs[i]['ssthresh'], label="ssthresh")
+        axs[i].set_ylim([0,cwnd_max])
+        axs[i].set_xlabel("Time (s)");
+    else:
+        axs[i].plot(dfs[i]['time']-time_min, dfs[i]['cwnd'])
+        axs[i].plot(dfs[i]['time']-time_min, dfs[i]['ssthresh'])
+        axs[i].set_ylim([0,cwnd_max])
+
+
+plt.tight_layout();
+fig.legend(loc='upper right', ncol=2);
+
+plt.savefig("sender-ss.png")</code></pre><p>At the beginning of each flow, it operates in slow start mode, where the congestion window increases exponentially. When a congestion event occurs, as indicated by the receipt of multiple duplicate ACKs, the slow start threshold is set to half of the current CWND, and then the CWND is reduces to the slow start threshold.</p><p>We'll often see packet losses occur at the same time in multiple flows sharing a bottleneck (as in the figure above), because when the buffer is full, new packets arriving from all flows are dropped.</p><h2 id="notes">Notes</h2><h3 id="exercise">Exercise</h3><p>Create a plot of the congestion window size and slow start threshold for each TCP flow over the duration of the experiment, similar to Figure 1 in the <a href="#results">Results</a> section.</p><p>Annotate your plot, similar to Figure 2 in the <a href="#results">Results</a> section, to show:</p><ul><li>Periods of "Slow Start"</li><li>Periods of "Congestion Avoidance"</li><li>Instances where multiple duplicate ACKs were received (which will trigger "fast recovery")</li><li>Instances of timeout (if any)</li></ul><p>Using your plot and/or experiment data, explain how the behavior of TCP is different in the "Slow Start" and "Congestion Avoidance" phases. Also, using your plot, explain what happens to both the congestion window and the slow start threshold when multiple duplicate ACKs are received.</p><h3 id="additional-exercises-other-congestion-control-algorithms">Additional exercises: other congestion control algorithms</h3><p>In the decades since TCP Reno was first proposed, several other congestion control algorithms have been developed that offer improved performance in some circumstances.</p><p>You can repeat this experiment with other congestion control variants by changing the value of the <code>-C</code> argument in <code>iperf3</code>.</p><p>First, make sure to save the data from the main part of this experiment. When you run the experiment again (with a different control control algorithm), it will overwrite your previous data, so you want to have that safely stored somewhere else first.</p><p>For example, you could run this experiment with TCP Cubic, which is the current default on Linux servers that power much of the Internet. The main difference between TCP Reno and TCP Cubic is the window increase function. While Reno uses the traditional linear increase (W=W+1), Cubic implements a binary search increase which can reach the available bandwidth much faster than Reno. You may read more about Cubic in the <a href="https://www.cs.princeton.edu/courses/archive/fall16/cos561/papers/Cubic08.pdf">TCP Cubic paper</a>.</p><p>To run the experiment with TCP Cubic, you would repeat the steps in the <a href="#generatingdata">Generating Data</a> section above, but with the <code>iperf3</code> command</p><pre><code>iperf3 -c juliet -P 3 -t 60 -C cubic
+
+</code></pre><p>on "romeo".</p><p>The results will look something like this:</p><figure class="kg-card kg-image-card kg-card-hascaption"><img src="https://witestlab.poly.edu/blog/content/images/2024/03/sender-ss-cubic-2.png" class="kg-image" alt="" loading="lazy" width="1200" height="800" srcset="https://witestlab.poly.edu/blog/content/images/size/w600/2024/03/sender-ss-cubic-2.png 600w, https://witestlab.poly.edu/blog/content/images/size/w1000/2024/03/sender-ss-cubic-2.png 1000w, https://witestlab.poly.edu/blog/content/images/2024/03/sender-ss-cubic-2.png 1200w" sizes="(min-width: 720px) 720px"><figcaption><span style="white-space: pre-wrap;">Experiment results for TCP CUBIC.</span></figcaption></figure><p>Notice that unlike Reno, the window size does not increase as a linear function of the time since the last congestion event! Instead, the window size is a cubic function of the time since the last congestion event.</p><h3 id="additional-exercises-low-delay-congestion-control">Additional exercises: low delay congestion control</h3><p>While TCP CUBIC and Reno are designed with the goal of high throughput, they tend to cause high queuing delays in the network, because they reduce their CWND only when they experience a packet loss, i.e. when the queue is full. A full queue means long queuing delays for packets that traverse the queue!</p><p>Some congestion control variants use delay as a signal of congestion, and reduce their sending rate when the delay increases (indicating that the queue is becoming full). An early example is TCP Vegas. You can see this for yourself with a simple experiment to measure the queuing delay with a loss-based congestion control (like Reno or Cubic) and with a delay-based congestion control (Vegas).</p><p>For this experiment we will use <code>iperf3</code> and <code>ping</code> at the same time - <code>iperf3</code> to generate a TCP flow, and <code>ping</code> to estimate the queuing delay induced by the TCP flow.  Run</p><ul><li>on juliet: <code>iperf3 -s -1</code></li><li>on romeo terminal 1: <code>bash ss-output.sh 10.10.2.100</code></li><li>on romeo terminal 2: <code>iperf3 -c juliet -t 60 -C reno</code></li><li>on romeo terminal 3: <code>ping juliet -c 50</code></li></ul><p>(the <code>ping</code> should both start and finish while the <code>iperf3</code> sender is still running). When it finishes, use Ctrl+C to stop the <code>ss-output</code> script. Make a note of the <code>iperf3</code> throughput and the round trip time estimated by <code>ping</code> during the TCP Reno flow.</p><p>Plot the CWND and slow start threshold, along with the RTT of this flow, using the following Python script:</p><pre><code class="language-python">import pandas as pd
+import matplotlib.pyplot as plt
+
+df = pd.read_csv("sender-ss.csv", names=['time', 'sender', 'retx_unacked', 'retx_cum', 'cwnd', 'ssthresh', 'rtt'])
+
+# exclude the "control" flow
+s = df.groupby('sender').size()
+df_filtered = df[df.groupby("sender")['sender'].transform('size') &gt; 100]
+time_min = df_filtered.time.min()
+
+fig, axs = plt.subplots(2, sharex=True, figsize=(8,6))
+
+axs[0].plot(df_filtered['time']-time_min, df_filtered['cwnd'], label="cwnd")
+axs[0].plot(df_filtered['time']-time_min, df_filtered['ssthresh'], label="ssthresh")
+axs[0].set_ylim([0,150])
+
+axs[1].plot(df_filtered['time']-time_min, df_filtered['rtt'], label="rtt", color='purple')
+axs[1].set_ylim([0, 1000])
+axs[1].set_xlabel("Time (s)");
+
+plt.tight_layout();
+fig.legend(loc='upper right', ncol=2);
+
+plt.savefig("cwnd-rtt.png")
+</code></pre><p>and save the <code>cwnd-rtt.png</code> figure on your laptop.</p><p>Then, repeat with Vegas, the delay-based congestion control algorithm. On romeo, run</p><pre><code>sudo modprobe tcp_vegas
+sudo sysctl -w net.ipv4.tcp_allowed_congestion_control="reno cubic vegas"
+</code></pre><p>then, run</p><ul><li>on juliet: <code>iperf3 -s -1</code></li><li>on romeo terminal 1: <code>bash ss-output.sh 10.10.2.100</code></li><li>on romeo terminal 2: <code>iperf3 -c juliet -t 60 -C vegas</code></li><li>on romeo terminal 3: <code>ping juliet -c 50</code></li></ul><p>When it finishes, use Ctrl+C to stop the <code>ss-output</code> script. Make a note of the <code>iperf3</code> throughput and the round trip time estimated by <code>ping</code> during the TCP Vegas flow.</p><p>One problem with TCP Vegas is that it does not work well when it shares a bottleneck link with a TCP Reno flow (or other loss-based flow). To see how this works, we will send two TCP flows through the bottleneck router: one TCP Reno flow, and one TCP Vegas flow.</p><p>We will need two <code>iperf3</code> servers running on juliet, on two different ports. In one terminal on juliet, run</p><pre><code>iperf3 -s -1
+</code></pre><p>to start an <code>iperf3</code> server on the default port 5201, and in a second terminal on juliet, run</p><pre><code>iperf3 -s -1 -p 5301
+</code></pre><p>to start an <code>iperf3</code> server on port 5301.</p><p>You'll need two terminal windows on romeo. In one of them, run</p><pre><code>iperf3 -c juliet -t 60 -C vegas
+</code></pre><p>and a few seconds afterwards, in the second, run</p><pre><code>iperf3 -c juliet -t 60 -C reno -p 5301
+</code></pre><p>Make a note of the throughput reported by <code>iperf3</code> for each flow.</p><h3 id="additional-exercises-tcp-bbr">Additional exercises: TCP BBR</h3><p>A more recent congestion control proposed by Google, called TCP BBR, tries to maximize throughput and at the same time minimize queuing delay in the network. You can read more about it in the <a href="https://research.google/pubs/pub45646/">TCP BBR paper</a>.</p><p>To use the BBR congestion control for your experiment, on romeo, run</p><pre><code>sudo modprobe tcp_bbr
+sudo sysctl -w net.ipv4.tcp_allowed_congestion_control="reno cubic vegas bbr"
+</code></pre><p>This will load the Linux kernel module for TCP BBR.</p><p>Then, repeat the other steps in the <a href="#generatingdata">Generating Data</a> section above, but with the <code>iperf3</code> command</p><pre><code>iperf3 -c juliet -P 3 -t 60 -C bbr
+
+</code></pre><p>on "romeo".</p><p>BBR doesn't use a slow start threshold, so you won't be able to use the same data visualization script (which assumes that there will be an <code>ssthresh</code> field in the data), but you can create a similar plot on your own. The results will look something like this:</p><figure class="kg-card kg-image-card kg-width-wide kg-card-hascaption"><img src="https://witestlab.poly.edu/blog/content/images/2020/10/sender-ss-bbr.svg" class="kg-image" alt="" loading="lazy" width="672" height="672"><figcaption><span style="white-space: pre-wrap;">Experiment results for TCP BBR.</span></figcaption></figure><p>Note that BBR overall maintains a lower CWND than Cubic or Reno, because it wants to minimize queue occupancy. But you'll see in the <code>iperf3</code> output that it still achieves a similar throughput (about 1Mbps total shared between the 3 flows). Also, if you look at the raw <code>ss</code> data for the BBR and the Reno/Cubic flows, you'll note that the BBR flows see a much lower RTT, since they do not fill the queue.</p><h3 id="additional-exercises-explicit-congestion-notification-ecn">Additional exercises: Explicit congestion notification (ECN)</h3><p>Finally, we'll try an experiment with explicit congestion notification. Explicit congestion notification (ECN) is a feature that allows routers to explicitly signal to a TCP sender when there is congestion. This allows the sender to reduce its congestion window <em>before</em> the router is forced to drop packets, reducing retransmissions. It can also help the router maintain a minimal queue, which reduces queuing delay.</p><p>ECN involves both layer 2 and layer 3, and it requires support from both transport layer endpoints (sender <em>and</em> receiver) and routers along the path traversed by the packets.</p><p>We will use ECN together with active queue management, which monitors the queuing delay. At the router, configure a queue in both directions that will mark packets when the queuing delay exceeds 10ms:</p><pre><code>iface_0=$(ip route get 10.10.1.100 | grep -oP "(?&lt;=dev )[^ ]+")
+sudo tc qdisc del dev $iface_0 root  
+sudo tc qdisc add dev $iface_0 root handle 1: htb default 3  
+sudo tc class add dev $iface_0 parent 1: classid 1:3 htb rate 1Mbit  
+sudo tc qdisc add dev $iface_0 parent 1:3 handle 3:  codel limit 100 target 10ms ecn
+
+iface_1=$(ip route get 10.10.2.100 | grep -oP "(?&lt;=dev )[^ ]+")
+sudo tc qdisc del dev $iface_1 root  
+sudo tc qdisc add dev $iface_1 root handle 1: htb default 3  
+sudo tc class add dev $iface_1 parent 1: classid 1:3 htb rate 1Mbit  
+sudo tc qdisc add dev $iface_1 parent 1:3 handle 3:  codel limit 100 target 10ms ecn</code></pre><p>On romeo and juliet, enable ECN in TCP by running</p><pre><code>sudo sysctl -w net.ipv4.tcp_ecn=1   
+</code></pre><p>Next, we'll prepare to capture the TCP flow. On both end hosts, romeo <em>and</em> juliet, run:</p><pre><code>sudo tcpdump -s 80 -i $(ip route get 10.10.1.1 | grep -oP "(?&lt;=dev )[^ ]+") 'tcp' -w $(hostname -s)-tcp-ecn.pcap</code></pre><p>ECN uses two flags in the TCP header: the ECN Echo (ECE) flag, and the Congestion Window Reduced (CWR) flag. It also uses two ECN bits in the DiffServ field of the IP header. Here is how these header fields are used:</p><ul><li>During the connection establishment phase of TCP, both endpoints indicate to the other that they support ECN. First, one host sends an ECN-setup SYN packet: it sets the ECE and CWR flags in the TCP header of the SYN. Then, the other host response with an ECN-setup SYN-ACK packet: it sets the ECE flag (but not the CWR flag) in the TCP header of the SYN-ACK.</li><li>In any subsequent packets that carry data (not pure ACKs!), the sender will set the two ECN bits in the IP header to either 10 or 01. Either of these flag values will indicate to the routers along the path that this data packet uses an ECN-capable transport.</li><li>If the router wants to signal to the TCP sender that there is congestion - for example, if the queue at the router is starting to fill up - then it sets the two ECN bits in the IP header to 11 before forwarding the packet to the destination. This is a "Congestion Experienced" signal.</li><li>If the receiver gets a data packet with the CE signal (the ECN bits in the IP header are set to 11), the receiver will set the ECN-Echo (ECE) flag in the TCP header <em>of the ACK</em> for that packet.</li><li>When the sender gets the ACK with the ECE flag set, it will reduce its CWND. Then it will set the Congestion Window Reduced (CWR) flag in the TCP header of the  next packet.</li></ul><p>With the <code>tcpdump</code> running, we can now run the experiment. In a second terminal on juliet, run</p><pre><code>iperf3 -s -1
+</code></pre><p>In a second terminal on romeo, run</p><pre><code>iperf3 -c juliet -t 60 -C reno
+</code></pre><p>and finally, in a third terminal on romeo, run</p><pre><code>ping -c 50 juliet
+</code></pre><p>When the experiment finishes, compare the delay performance of Reno with ECN (this experiment) to your previous experiment showing the delay performance without ECN.</p><p>Also, transfer the packet captures to your laptop with <code>scp</code>, and look for the ECN-related fields in the IP header and TCP header, during connection establishment and during data transfer.</p>
+<!--kg-card-begin: html-->
+<div class="fabric-specific">  
+  <h4>FABRIC-specific instructions: Transfer files</h4>
+<p>If you are running this experiment on FABRIC, you can use the "Exercise: Transfer .pcap files from a FABRIC host" section of the "setup.ipynb" notebook to transfer the .pcap files from the host to the Jupyter environment, then download them on your laptop.</p>
+</div>
+<!--kg-card-end: html-->
+
+<!--kg-card-begin: html-->
+<div class="chameleon-specific">  
+  <h4>Chameleon instructions: Transfer files</h4>
+<p>If you are running this experiment on Chameleon, you can use the "Exercise: Transfer .pcap files from the remote hosts" section of the "start_here.ipynb" notebook to transfer the .pcap files from the host to the Jupyter environment, then download them on your laptop.</p>
+</div>
+<!--kg-card-end: html-->
+<h3 id="acknowledgements">Acknowledgements</h3><p>This post was updated in October 2020, with contributions from Ashutosh Srivastava. It was updated again to include FABRIC-specific and Chameleon-specific instructions in 2023, with contributions from Mayuri Upadhyaya.</p>
+    </section>
+
+
+</article>
+</main>
+
+
+
+
+            <aside class="read-more-wrap outer">
+                <div class="read-more inner">
+                        
+<article class="post-card post">
+
+    <a class="post-card-image-link" href="/blog/uav-assisted-wireless-localization/">
+
+        <img class="post-card-image"
+            srcset="/blog/content/images/size/w300/2025/11/aerpaw-panel.png 300w,
+                    /blog/content/images/size/w600/2025/11/aerpaw-panel.png 600w,
+                    /blog/content/images/size/w1000/2025/11/aerpaw-panel.png 1000w,
+                    /blog/content/images/size/w2000/2025/11/aerpaw-panel.png 2000w"
+            sizes="(max-width: 1000px) 400px, 800px"
+            src="/blog/content/images/size/w600/2025/11/aerpaw-panel.png"
+            alt="UAV-assisted wireless localization"
+            loading="lazy"
+        />
+
+
+    </a>
+
+    <div class="post-card-content">
+
+        <a class="post-card-content-link" href="/blog/uav-assisted-wireless-localization/">
+            <header class="post-card-header">
+                <div class="post-card-tags">
+                </div>
+                <h2 class="post-card-title">
+                    UAV-assisted wireless localization
+                </h2>
+            </header>
+                <div class="post-card-excerpt">You&#39;ve been asked to contribute your machine learning expertise to a crucial and potentially life-saving mission.
+
+A pair of hikers has gone missing in a national park, and they are believed to be critically injured. Fortunately, they have activated a wireless locator beacon, and it transmits a constant</div>
+        </a>
+
+        <footer class="post-card-meta">
+            <time class="post-card-meta-date" datetime="2025-11-04">04 Nov 2025</time>
+                <span class="post-card-meta-length">20 min read</span>
+        </footer>
+
+    </div>
+
+</article>
+                        
+<article class="post-card post">
+
+    <a class="post-card-image-link" href="/blog/exploring-the-5g-ran/">
+
+        <img class="post-card-image"
+            srcset="/blog/content/images/size/w300/2025/07/ran-overall-1.svg 300w,
+                    /blog/content/images/size/w600/2025/07/ran-overall-1.svg 600w,
+                    /blog/content/images/size/w1000/2025/07/ran-overall-1.svg 1000w,
+                    /blog/content/images/size/w2000/2025/07/ran-overall-1.svg 2000w"
+            sizes="(max-width: 1000px) 400px, 800px"
+            src="/blog/content/images/size/w600/2025/07/ran-overall-1.svg"
+            alt="Exploring the 5G RAN"
+            loading="lazy"
+        />
+
+
+    </a>
+
+    <div class="post-card-content">
+
+        <a class="post-card-content-link" href="/blog/exploring-the-5g-ran/">
+            <header class="post-card-header">
+                <div class="post-card-tags">
+                </div>
+                <h2 class="post-card-title">
+                    Exploring the 5G RAN
+                </h2>
+            </header>
+                <div class="post-card-excerpt">In this experiment, you will explore the 5G RAN by bringing up an end-to-end 5G network on a single server. You will see:
+
+ * how a 5G RAN can be split with the CU (centralized unit) handling SDAP, PDCP, and RRC layers, and the DU (distributed unit) handling RLC, MAC, PHY</div>
+        </a>
+
+        <footer class="post-card-meta">
+            <time class="post-card-meta-date" datetime="2024-04-24">24 Apr 2024</time>
+                <span class="post-card-meta-length">12 min read</span>
+        </footer>
+
+    </div>
+
+</article>
+                        
+<article class="post-card post">
+
+    <a class="post-card-image-link" href="/blog/exploring-the-5g-core-network/">
+
+        <img class="post-card-image"
+            srcset="/blog/content/images/size/w300/2025/07/5g-core-diagram.svg 300w,
+                    /blog/content/images/size/w600/2025/07/5g-core-diagram.svg 600w,
+                    /blog/content/images/size/w1000/2025/07/5g-core-diagram.svg 1000w,
+                    /blog/content/images/size/w2000/2025/07/5g-core-diagram.svg 2000w"
+            sizes="(max-width: 1000px) 400px, 800px"
+            src="/blog/content/images/size/w600/2025/07/5g-core-diagram.svg"
+            alt="Exploring the 5G core network"
+            loading="lazy"
+        />
+
+
+    </a>
+
+    <div class="post-card-content">
+
+        <a class="post-card-content-link" href="/blog/exploring-the-5g-core-network/">
+            <header class="post-card-header">
+                <div class="post-card-tags">
+                </div>
+                <h2 class="post-card-title">
+                    Exploring the 5G core network
+                </h2>
+            </header>
+                <div class="post-card-excerpt">In this experiment, you will explore the 5G core network by bringing up an end-to-end 5G network on a single server. You will see:
+
+ * how 5G core network functions can be deployed in containers
+ * the HTTP2/TCP interfaces between network functions
+ * the NGAP/SCTP interface between the 5G gNodeB and</div>
+        </a>
+
+        <footer class="post-card-meta">
+            <time class="post-card-meta-date" datetime="2024-03-20">20 Mar 2024</time>
+                <span class="post-card-meta-length">14 min read</span>
+        </footer>
+
+    </div>
+
+</article>
+                </div>
+            </aside>
+
+
+
+    </div>
+
+    <footer class="site-footer outer">
+        <div class="inner">
+            <section class="copyright"><a href="https://witestlab.poly.edu/blog">Run my testbed experiment</a> &copy; 2026</section>
+            <nav class="site-footer-nav">
+                
+            </nav>
+            <div class="gh-powered-by"><a href="https://ghost.org/" target="_blank" rel="noopener">Powered by Ghost</a></div>
+        </div>
+    </footer>
+
+</div>
+
+    <div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="pswp__bg"></div>
+
+    <div class="pswp__scroll-wrap">
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)"></button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)"></button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<script
+    src="https://code.jquery.com/jquery-3.5.1.min.js"
+    integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0="
+    crossorigin="anonymous">
+</script>
+<script src="/blog/assets/built/casper.js?v=be0756ac2d"></script>
+<script>
+$(document).ready(function () {
+    // Mobile Menu Trigger
+    $('.gh-burger').click(function () {
+        $('body').toggleClass('gh-head-open');
+    });
+    // FitVids - Makes video embeds responsive
+    $(".gh-content").fitVids();
+});
+</script>
+
+<style>
+  a[href$="#/portal/"] {
+    display: none !important;
+  }
+</style>
+
+</body>
+</html>

@@ -1,0 +1,1466 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <!-- Google Tag Manager -->
+        <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+        new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+        j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+        'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+        })(window,document,'script','dataLayer','GTM-TNF87WR');</script>
+        <!-- End Google Tag Manager -->
+        <meta name="google-site-verification" content="Xlk7NEic81JoLgIDpkx0JxupObtrf8sH-HHghkUeI8w" />
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta name='robots' content='index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1' />
+
+	<!-- This site is optimized with the Yoast SEO plugin v22.0 - https://yoast.com/wordpress/plugins/seo/ -->
+	<title>Attention Mechanisms in Transformers</title>
+	<meta name="description" content="In deep learning, few innovations have had as profound an impact as Transformers. These models have revolutionized the field of NLP and have found applications in diverse domains, from image recognition to speech synthesis." />
+	<link rel="canonical" href="https://www.cloudthat.com/resources/blog/attention-mechanisms-in-transformers/" />
+	<meta property="og:locale" content="en_US" />
+	<meta property="og:type" content="article" />
+	<meta property="og:title" content="Attention Mechanisms in Transformers" />
+	<meta property="og:description" content="In deep learning, few innovations have had as profound an impact as Transformers. These models have revolutionized the field of NLP and have found applications in diverse domains, from image recognition to speech synthesis." />
+	<meta property="og:url" content="https://www.cloudthat.com/resources/blog/attention-mechanisms-in-transformers/" />
+	<meta property="og:site_name" content="CloudThat Resources" />
+	<meta property="article:modified_time" content="2024-06-25T10:17:27+00:00" />
+	<meta property="og:image" content="https://content.cloudthat.com/resources/wp-content/uploads/2023/11/Attention-Mechanisms-in-Transformers.webp" />
+	<meta property="og:image:width" content="890" />
+	<meta property="og:image:height" content="471" />
+	<meta property="og:image:type" content="image/webp" />
+	<meta name="twitter:card" content="summary_large_image" />
+	<script type="application/ld+json" class="yoast-schema-graph">{"@context":"https://schema.org","@graph":[{"@type":"WebPage","@id":"https://www.cloudthat.com/resources/blog/attention-mechanisms-in-transformers/","url":"https://www.cloudthat.com/resources/blog/attention-mechanisms-in-transformers/","name":"Attention Mechanisms in Transformers","isPartOf":{"@id":"https://www.cloudthat.com/resources/#website"},"primaryImageOfPage":{"@id":"https://www.cloudthat.com/resources/blog/attention-mechanisms-in-transformers/#primaryimage"},"image":{"@id":"https://www.cloudthat.com/resources/blog/attention-mechanisms-in-transformers/#primaryimage"},"thumbnailUrl":"https://content.cloudthat.com/resources/wp-content/uploads/2023/11/Attention-Mechanisms-in-Transformers.webp","datePublished":"2023-11-22T09:37:01+00:00","dateModified":"2024-06-25T10:17:27+00:00","description":"In deep learning, few innovations have had as profound an impact as Transformers. These models have revolutionized the field of NLP and have found applications in diverse domains, from image recognition to speech synthesis.","breadcrumb":{"@id":"https://www.cloudthat.com/resources/blog/attention-mechanisms-in-transformers/#breadcrumb"},"inLanguage":"en-US","potentialAction":[{"@type":"ReadAction","target":["https://www.cloudthat.com/resources/blog/attention-mechanisms-in-transformers/"]}]},{"@type":"ImageObject","inLanguage":"en-US","@id":"https://www.cloudthat.com/resources/blog/attention-mechanisms-in-transformers/#primaryimage","url":"https://content.cloudthat.com/resources/wp-content/uploads/2023/11/Attention-Mechanisms-in-Transformers.webp","contentUrl":"https://content.cloudthat.com/resources/wp-content/uploads/2023/11/Attention-Mechanisms-in-Transformers.webp","width":890,"height":471,"caption":"Attention Mechanisms in Transformers"},{"@type":"BreadcrumbList","@id":"https://www.cloudthat.com/resources/blog/attention-mechanisms-in-transformers/#breadcrumb","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://www.cloudthat.com/resources/"},{"@type":"ListItem","position":2,"name":"Blogs","item":"https://www.cloudthat.com/resources/blog/"},{"@type":"ListItem","position":3,"name":"Attention Mechanisms in Transformers"}]},{"@type":"WebSite","@id":"https://www.cloudthat.com/resources/#website","url":"https://www.cloudthat.com/resources/","name":"CloudThat Resources","description":"Learn From the Experts","potentialAction":[{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https://www.cloudthat.com/resources/?s={search_term_string}"},"query-input":"required name=search_term_string"}],"inLanguage":"en-US"}]}</script>
+	<!-- / Yoast SEO plugin. -->
+
+
+<link rel="alternate" type="application/rss+xml" title="CloudThat Resources &raquo; Attention Mechanisms in Transformers Comments Feed" href="https://www.cloudthat.com/resources/blog/attention-mechanisms-in-transformers/feed/" />
+<script type="text/javascript">
+/* <![CDATA[ */
+window._wpemojiSettings = {"baseUrl":"https:\/\/s.w.org\/images\/core\/emoji\/14.0.0\/72x72\/","ext":".png","svgUrl":"https:\/\/s.w.org\/images\/core\/emoji\/14.0.0\/svg\/","svgExt":".svg","source":{"concatemoji":"https:\/\/www.cloudthat.com\/resources\/wp-includes\/js\/wp-emoji-release.min.js?ver=6.4.3"}};
+/*! This file is auto-generated */
+!function(i,n){var o,s,e;function c(e){try{var t={supportTests:e,timestamp:(new Date).valueOf()};sessionStorage.setItem(o,JSON.stringify(t))}catch(e){}}function p(e,t,n){e.clearRect(0,0,e.canvas.width,e.canvas.height),e.fillText(t,0,0);var t=new Uint32Array(e.getImageData(0,0,e.canvas.width,e.canvas.height).data),r=(e.clearRect(0,0,e.canvas.width,e.canvas.height),e.fillText(n,0,0),new Uint32Array(e.getImageData(0,0,e.canvas.width,e.canvas.height).data));return t.every(function(e,t){return e===r[t]})}function u(e,t,n){switch(t){case"flag":return n(e,"\ud83c\udff3\ufe0f\u200d\u26a7\ufe0f","\ud83c\udff3\ufe0f\u200b\u26a7\ufe0f")?!1:!n(e,"\ud83c\uddfa\ud83c\uddf3","\ud83c\uddfa\u200b\ud83c\uddf3")&&!n(e,"\ud83c\udff4\udb40\udc67\udb40\udc62\udb40\udc65\udb40\udc6e\udb40\udc67\udb40\udc7f","\ud83c\udff4\u200b\udb40\udc67\u200b\udb40\udc62\u200b\udb40\udc65\u200b\udb40\udc6e\u200b\udb40\udc67\u200b\udb40\udc7f");case"emoji":return!n(e,"\ud83e\udef1\ud83c\udffb\u200d\ud83e\udef2\ud83c\udfff","\ud83e\udef1\ud83c\udffb\u200b\ud83e\udef2\ud83c\udfff")}return!1}function f(e,t,n){var r="undefined"!=typeof WorkerGlobalScope&&self instanceof WorkerGlobalScope?new OffscreenCanvas(300,150):i.createElement("canvas"),a=r.getContext("2d",{willReadFrequently:!0}),o=(a.textBaseline="top",a.font="600 32px Arial",{});return e.forEach(function(e){o[e]=t(a,e,n)}),o}function t(e){var t=i.createElement("script");t.src=e,t.defer=!0,i.head.appendChild(t)}"undefined"!=typeof Promise&&(o="wpEmojiSettingsSupports",s=["flag","emoji"],n.supports={everything:!0,everythingExceptFlag:!0},e=new Promise(function(e){i.addEventListener("DOMContentLoaded",e,{once:!0})}),new Promise(function(t){var n=function(){try{var e=JSON.parse(sessionStorage.getItem(o));if("object"==typeof e&&"number"==typeof e.timestamp&&(new Date).valueOf()<e.timestamp+604800&&"object"==typeof e.supportTests)return e.supportTests}catch(e){}return null}();if(!n){if("undefined"!=typeof Worker&&"undefined"!=typeof OffscreenCanvas&&"undefined"!=typeof URL&&URL.createObjectURL&&"undefined"!=typeof Blob)try{var e="postMessage("+f.toString()+"("+[JSON.stringify(s),u.toString(),p.toString()].join(",")+"));",r=new Blob([e],{type:"text/javascript"}),a=new Worker(URL.createObjectURL(r),{name:"wpTestEmojiSupports"});return void(a.onmessage=function(e){c(n=e.data),a.terminate(),t(n)})}catch(e){}c(n=f(s,u,p))}t(n)}).then(function(e){for(var t in e)n.supports[t]=e[t],n.supports.everything=n.supports.everything&&n.supports[t],"flag"!==t&&(n.supports.everythingExceptFlag=n.supports.everythingExceptFlag&&n.supports[t]);n.supports.everythingExceptFlag=n.supports.everythingExceptFlag&&!n.supports.flag,n.DOMReady=!1,n.readyCallback=function(){n.DOMReady=!0}}).then(function(){return e}).then(function(){var e;n.supports.everything||(n.readyCallback(),(e=n.source||{}).concatemoji?t(e.concatemoji):e.wpemoji&&e.twemoji&&(t(e.twemoji),t(e.wpemoji)))}))}((window,document),window._wpemojiSettings);
+/* ]]> */
+</script>
+<link rel='stylesheet' id='urvanov_syntax_highlighter-css' href='https://www.cloudthat.com/resources/wp-content/plugins/urvanov-syntax-highlighter/css/min/urvanov_syntax_highlighter.min.css?ver=2.8.28' type='text/css' media='all' />
+<style id='wp-emoji-styles-inline-css' type='text/css'>
+
+	img.wp-smiley, img.emoji {
+		display: inline !important;
+		border: none !important;
+		box-shadow: none !important;
+		height: 1em !important;
+		width: 1em !important;
+		margin: 0 0.07em !important;
+		vertical-align: -0.1em !important;
+		background: none !important;
+		padding: 0 !important;
+	}
+</style>
+<link rel='stylesheet' id='wp-block-library-css' href='https://www.cloudthat.com/resources/wp-includes/css/dist/block-library/style.min.css?ver=6.4.3' type='text/css' media='all' />
+<style id='classic-theme-styles-inline-css' type='text/css'>
+/*! This file is auto-generated */
+.wp-block-button__link{color:#fff;background-color:#32373c;border-radius:9999px;box-shadow:none;text-decoration:none;padding:calc(.667em + 2px) calc(1.333em + 2px);font-size:1.125em}.wp-block-file__button{background:#32373c;color:#fff;text-decoration:none}
+</style>
+<style id='global-styles-inline-css' type='text/css'>
+body{--wp--preset--color--black: #000000;--wp--preset--color--cyan-bluish-gray: #abb8c3;--wp--preset--color--white: #ffffff;--wp--preset--color--pale-pink: #f78da7;--wp--preset--color--vivid-red: #cf2e2e;--wp--preset--color--luminous-vivid-orange: #ff6900;--wp--preset--color--luminous-vivid-amber: #fcb900;--wp--preset--color--light-green-cyan: #7bdcb5;--wp--preset--color--vivid-green-cyan: #00d084;--wp--preset--color--pale-cyan-blue: #8ed1fc;--wp--preset--color--vivid-cyan-blue: #0693e3;--wp--preset--color--vivid-purple: #9b51e0;--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple: linear-gradient(135deg,rgba(6,147,227,1) 0%,rgb(155,81,224) 100%);--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan: linear-gradient(135deg,rgb(122,220,180) 0%,rgb(0,208,130) 100%);--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange: linear-gradient(135deg,rgba(252,185,0,1) 0%,rgba(255,105,0,1) 100%);--wp--preset--gradient--luminous-vivid-orange-to-vivid-red: linear-gradient(135deg,rgba(255,105,0,1) 0%,rgb(207,46,46) 100%);--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray: linear-gradient(135deg,rgb(238,238,238) 0%,rgb(169,184,195) 100%);--wp--preset--gradient--cool-to-warm-spectrum: linear-gradient(135deg,rgb(74,234,220) 0%,rgb(151,120,209) 20%,rgb(207,42,186) 40%,rgb(238,44,130) 60%,rgb(251,105,98) 80%,rgb(254,248,76) 100%);--wp--preset--gradient--blush-light-purple: linear-gradient(135deg,rgb(255,206,236) 0%,rgb(152,150,240) 100%);--wp--preset--gradient--blush-bordeaux: linear-gradient(135deg,rgb(254,205,165) 0%,rgb(254,45,45) 50%,rgb(107,0,62) 100%);--wp--preset--gradient--luminous-dusk: linear-gradient(135deg,rgb(255,203,112) 0%,rgb(199,81,192) 50%,rgb(65,88,208) 100%);--wp--preset--gradient--pale-ocean: linear-gradient(135deg,rgb(255,245,203) 0%,rgb(182,227,212) 50%,rgb(51,167,181) 100%);--wp--preset--gradient--electric-grass: linear-gradient(135deg,rgb(202,248,128) 0%,rgb(113,206,126) 100%);--wp--preset--gradient--midnight: linear-gradient(135deg,rgb(2,3,129) 0%,rgb(40,116,252) 100%);--wp--preset--font-size--small: 13px;--wp--preset--font-size--medium: 20px;--wp--preset--font-size--large: 36px;--wp--preset--font-size--x-large: 42px;--wp--preset--spacing--20: 0.44rem;--wp--preset--spacing--30: 0.67rem;--wp--preset--spacing--40: 1rem;--wp--preset--spacing--50: 1.5rem;--wp--preset--spacing--60: 2.25rem;--wp--preset--spacing--70: 3.38rem;--wp--preset--spacing--80: 5.06rem;--wp--preset--shadow--natural: 6px 6px 9px rgba(0, 0, 0, 0.2);--wp--preset--shadow--deep: 12px 12px 50px rgba(0, 0, 0, 0.4);--wp--preset--shadow--sharp: 6px 6px 0px rgba(0, 0, 0, 0.2);--wp--preset--shadow--outlined: 6px 6px 0px -3px rgba(255, 255, 255, 1), 6px 6px rgba(0, 0, 0, 1);--wp--preset--shadow--crisp: 6px 6px 0px rgba(0, 0, 0, 1);}:where(.is-layout-flex){gap: 0.5em;}:where(.is-layout-grid){gap: 0.5em;}body .is-layout-flow > .alignleft{float: left;margin-inline-start: 0;margin-inline-end: 2em;}body .is-layout-flow > .alignright{float: right;margin-inline-start: 2em;margin-inline-end: 0;}body .is-layout-flow > .aligncenter{margin-left: auto !important;margin-right: auto !important;}body .is-layout-constrained > .alignleft{float: left;margin-inline-start: 0;margin-inline-end: 2em;}body .is-layout-constrained > .alignright{float: right;margin-inline-start: 2em;margin-inline-end: 0;}body .is-layout-constrained > .aligncenter{margin-left: auto !important;margin-right: auto !important;}body .is-layout-constrained > :where(:not(.alignleft):not(.alignright):not(.alignfull)){max-width: var(--wp--style--global--content-size);margin-left: auto !important;margin-right: auto !important;}body .is-layout-constrained > .alignwide{max-width: var(--wp--style--global--wide-size);}body .is-layout-flex{display: flex;}body .is-layout-flex{flex-wrap: wrap;align-items: center;}body .is-layout-flex > *{margin: 0;}body .is-layout-grid{display: grid;}body .is-layout-grid > *{margin: 0;}:where(.wp-block-columns.is-layout-flex){gap: 2em;}:where(.wp-block-columns.is-layout-grid){gap: 2em;}:where(.wp-block-post-template.is-layout-flex){gap: 1.25em;}:where(.wp-block-post-template.is-layout-grid){gap: 1.25em;}.has-black-color{color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-color{color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-color{color: var(--wp--preset--color--white) !important;}.has-pale-pink-color{color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-color{color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-color{color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-color{color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-color{color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-color{color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-color{color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-color{color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-color{color: var(--wp--preset--color--vivid-purple) !important;}.has-black-background-color{background-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-background-color{background-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-background-color{background-color: var(--wp--preset--color--white) !important;}.has-pale-pink-background-color{background-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-background-color{background-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-background-color{background-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-background-color{background-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-background-color{background-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-background-color{background-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-background-color{background-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-background-color{background-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-background-color{background-color: var(--wp--preset--color--vivid-purple) !important;}.has-black-border-color{border-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-border-color{border-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-border-color{border-color: var(--wp--preset--color--white) !important;}.has-pale-pink-border-color{border-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-border-color{border-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-border-color{border-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-border-color{border-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-border-color{border-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-border-color{border-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-border-color{border-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-border-color{border-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-border-color{border-color: var(--wp--preset--color--vivid-purple) !important;}.has-vivid-cyan-blue-to-vivid-purple-gradient-background{background: var(--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple) !important;}.has-light-green-cyan-to-vivid-green-cyan-gradient-background{background: var(--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan) !important;}.has-luminous-vivid-amber-to-luminous-vivid-orange-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange) !important;}.has-luminous-vivid-orange-to-vivid-red-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-orange-to-vivid-red) !important;}.has-very-light-gray-to-cyan-bluish-gray-gradient-background{background: var(--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray) !important;}.has-cool-to-warm-spectrum-gradient-background{background: var(--wp--preset--gradient--cool-to-warm-spectrum) !important;}.has-blush-light-purple-gradient-background{background: var(--wp--preset--gradient--blush-light-purple) !important;}.has-blush-bordeaux-gradient-background{background: var(--wp--preset--gradient--blush-bordeaux) !important;}.has-luminous-dusk-gradient-background{background: var(--wp--preset--gradient--luminous-dusk) !important;}.has-pale-ocean-gradient-background{background: var(--wp--preset--gradient--pale-ocean) !important;}.has-electric-grass-gradient-background{background: var(--wp--preset--gradient--electric-grass) !important;}.has-midnight-gradient-background{background: var(--wp--preset--gradient--midnight) !important;}.has-small-font-size{font-size: var(--wp--preset--font-size--small) !important;}.has-medium-font-size{font-size: var(--wp--preset--font-size--medium) !important;}.has-large-font-size{font-size: var(--wp--preset--font-size--large) !important;}.has-x-large-font-size{font-size: var(--wp--preset--font-size--x-large) !important;}
+.wp-block-navigation a:where(:not(.wp-element-button)){color: inherit;}
+:where(.wp-block-post-template.is-layout-flex){gap: 1.25em;}:where(.wp-block-post-template.is-layout-grid){gap: 1.25em;}
+:where(.wp-block-columns.is-layout-flex){gap: 2em;}:where(.wp-block-columns.is-layout-grid){gap: 2em;}
+.wp-block-pullquote{font-size: 1.5em;line-height: 1.6;}
+</style>
+<link rel='stylesheet' id='amazonpolly-css' href='https://www.cloudthat.com/resources/wp-content/plugins/amazon-polly/public/css/amazonpolly-public.css?ver=1.0.0' type='text/css' media='all' />
+<link rel='stylesheet' id='contact-form-7-css' href='https://www.cloudthat.com/resources/wp-content/plugins/contact-form-7/includes/css/styles.css?ver=5.6.4' type='text/css' media='all' />
+<link rel='stylesheet' id='wp-user-profile-avatar-frontend-css' href='https://www.cloudthat.com/resources/wp-content/plugins/wp-user-profile-avatar/assets/css/frontend.min.css?ver=6.4.3' type='text/css' media='all' />
+<link rel='stylesheet' id='style-css' href='https://www.cloudthat.com/resources/wp-content/themes/CloudThat/style.css?ver=6.4.3' type='text/css' media='all' />
+<link rel='stylesheet' id='jquery-ui-css' href='https://www.cloudthat.com/resources/wp-content/themes/CloudThat/css/jquery-ui.css?ver=6.4.3' type='text/css' media='' />
+<script type="text/javascript" src="https://www.cloudthat.com/resources/wp-includes/js/jquery/jquery.min.js?ver=3.7.1" id="jquery-core-js"></script>
+<script type="text/javascript" src="https://www.cloudthat.com/resources/wp-includes/js/jquery/jquery-migrate.min.js?ver=3.4.1" id="jquery-migrate-js"></script>
+<script type="text/javascript" id="urvanov_syntax_highlighter_js-js-extra">
+/* <![CDATA[ */
+var UrvanovSyntaxHighlighterSyntaxSettings = {"version":"2.8.28","is_admin":"0","ajaxurl":"https:\/\/www.cloudthat.com\/resources\/wp-admin\/admin-ajax.php","prefix":"urvanov-syntax-highlighter-","setting":"urvanov-syntax-highlighter-setting","selected":"urvanov-syntax-highlighter-setting-selected","changed":"urvanov-syntax-highlighter-setting-changed","special":"urvanov-syntax-highlighter-setting-special","orig_value":"data-orig-value","debug":""};
+var UrvanovSyntaxHighlighterSyntaxStrings = {"copy":"Copied to the clipboard","minimize":"Click To Expand Code"};
+/* ]]> */
+</script>
+<script type="text/javascript" src="https://www.cloudthat.com/resources/wp-content/plugins/urvanov-syntax-highlighter/js/min/urvanov_syntax_highlighter.min.js?ver=2.8.28" id="urvanov_syntax_highlighter_js-js"></script>
+<script type="text/javascript" src="https://www.cloudthat.com/resources/wp-content/plugins/amazon-polly/public/js/amazonpolly-public.js?ver=1.0.0" id="amazonpolly-js"></script>
+<link rel="https://api.w.org/" href="https://www.cloudthat.com/resources/wp-json/" /><link rel="alternate" type="application/json" href="https://www.cloudthat.com/resources/wp-json/wp/v2/blog/47732" /><link rel="EditURI" type="application/rsd+xml" title="RSD" href="https://www.cloudthat.com/resources/xmlrpc.php?rsd" />
+<meta name="generator" content="WordPress 6.4.3" />
+<link rel='shortlink' href='https://www.cloudthat.com/resources/?p=47732' />
+<link rel="alternate" type="application/json+oembed" href="https://www.cloudthat.com/resources/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fwww.cloudthat.com%2Fresources%2Fblog%2Fattention-mechanisms-in-transformers" />
+<link rel="alternate" type="text/xml+oembed" href="https://www.cloudthat.com/resources/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fwww.cloudthat.com%2Fresources%2Fblog%2Fattention-mechanisms-in-transformers&#038;format=xml" />
+	<script type="text/javascript" >
+		function wpmautic_send(){
+			if ('undefined' === typeof mt) {
+				if (console !== undefined) {
+					console.warn('WPMautic: mt not defined. Did you load mtc.js ?');
+				}
+				return false;
+			}
+			// Add the mt('send', 'pageview') script with optional tracking attributes.
+			mt('send', 'pageview');
+		}
+
+			(function(w,d,t,u,n,a,m){w['MauticTrackingObject']=n;
+			w[n]=w[n]||function(){(w[n].q=w[n].q||[]).push(arguments)},a=d.createElement(t),
+			m=d.getElementsByTagName(t)[0];a.async=1;a.src=u;m.parentNode.insertBefore(a,m)
+		})(window,document,'script','https://mautic.cloudthat.com/mtc.js','mt');
+
+		wpmautic_send();
+			</script>
+	<link rel="icon" href="https://content.cloudthat.com/resources/wp-content/uploads/2022/11/favicon-32x32-1.png" sizes="32x32" />
+<link rel="icon" href="https://content.cloudthat.com/resources/wp-content/uploads/2022/11/favicon-32x32-1.png" sizes="192x192" />
+<link rel="apple-touch-icon" href="https://content.cloudthat.com/resources/wp-content/uploads/2022/11/favicon-32x32-1.png" />
+<meta name="msapplication-TileImage" content="https://content.cloudthat.com/resources/wp-content/uploads/2022/11/favicon-32x32-1.png" />
+		<style type="text/css" id="wp-custom-css">
+			.blog_content_center img {
+
+    border-radius: 0% !important;
+}
+
+/* remove above code after local code made Live */
+
+
+.zoom-instagram-widget__item a.zoom-instagram-link img {
+    width: 100%;
+    height: auto;
+}
+#imageModal{
+	display:none !important;
+}
+/* div#certified_logos {
+    display: flex;
+    margin-left: 0px;
+    width: 100%;
+    gap: 6px;
+		flex-wrap: wrap;
+} */
+/* div#certified_logos img{
+	  margin-bottom: 10px;
+    width: 20%;
+		height: 54px;
+} */
+/* @media screen and (max-width: 767px) {
+	div#certified_logos {
+		width: 50%;
+		margin-left: 0px;
+	}
+	div#certified_logos img{
+    margin-bottom: 10px;
+    width: 25%;
+	}
+} */
+
+/* @media screen and (max-width: 464px) {
+	div#certified_logos {
+			width: 100%;
+			margin-left: 0px;
+	}
+	div#certified_logos img{
+    margin-bottom: 10px;
+    width: 50%;
+	}
+} */		</style>
+		        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.5.1/css/all.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+        <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+        <link rel="stylesheet" type="text/css" href="https://www.cloudthat.com/resources/wp-content/themes/CloudThat/css/select2.min.css"/>
+        <link rel="stylesheet" type="text/css" href="https://www.cloudthat.com/resources/wp-content/themes/CloudThat/css/bootstrap.min.css">
+        <link rel="stylesheet" type="text/css" href="https://www.cloudthat.com/resources/wp-content/themes/CloudThat/css/slick.css"/>
+        <link rel="stylesheet" type="text/css" href="https://www.cloudthat.com/resources/wp-content/themes/CloudThat/css/slick-theme.css"/>
+        <link rel="stylesheet" type="text/css" href="https://www.cloudthat.com/resources/wp-content/themes/CloudThat/css/style.css">
+        <link rel="stylesheet" type="text/css" href="https://www.cloudthat.com/resources/wp-content/themes/CloudThat/css/resource.css">
+		        <link rel="stylesheet" type="text/css" href="https://www.cloudthat.com/resources/wp-content/themes/CloudThat/css/case-study-details-page.css">
+        <link rel="stylesheet" type="text/css" href="https://www.cloudthat.com/resources/wp-content/themes/CloudThat/css/news.css">
+        <link rel="stylesheet" type="text/css" href="https://www.cloudthat.com/resources/wp-content/themes/CloudThat/css/e-book.css">
+        <link rel="stylesheet" type="text/css" href="https://www.cloudthat.com/resources/wp-content/themes/CloudThat/css/blog-detail-page.css">
+		        <link rel="stylesheet" type="text/css" href="https://www.cloudthat.com/resources/wp-content/themes/CloudThat/css/blog-listing.css">
+        <link rel="stylesheet" type="text/css" href="https://www.cloudthat.com/resources/wp-content/themes/CloudThat/css/webinar-detail-page-design-upcoming.css">
+                <link rel="icon" type="image/png" href="https://www.cloudthat.com/resources/wp-content/themes/CloudThat/thankyou/assets/images/favicon.png">
+                <!-- <title>Resource | Cloudthat</title> -->
+        <meta property='og:title' content='Attention Mechanisms in Transformers'/>
+        <meta property='og:url' content='https://www.cloudthat.com/resources/blog/attention-mechanisms-in-transformers'/>
+        <!-- Global site tag (gtag.js) - Google Ads: 1004828318 -->
+
+	<script async src="https://www.googletagmanager.com/gtag/js?id=AW-1004828318" ></script>
+	<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag(){dataLayer.push(arguments);}
+		gtag('js', new Date());
+		gtag('config', 'AW-1004828318');
+	</script>
+	<!-- Google Tag Manager -->
+
+	<script>
+		(function(w,d,s,l,i){
+			w[l]=w[l]||[];
+			w[l].push({'gtm.start':
+			new Date().getTime(),event:'gtm.js'});
+			var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';
+			j.async=true;
+			j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+		})(window,document,'script','dataLayer','GTM-TNF87WR');
+	</script>
+	<!-- End Google Tag Manager -->
+
+	<meta name="google-site-verification" content="Xlk7NEic81JoLgIDpkx0JxupObtrf8sH-HHghkUeI8w" />
+	<meta name="facebook-domain-verification" content="n3pqsu70c9676a7jrw80bj2u6xvjlr"/>
+    </head>
+    <body>
+        <!-- Google Tag Manager (noscript) -->
+        <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TNF87WR"
+        height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+        <!-- End Google Tag Manager (noscript) -->
+    <header id="header">
+        <div class="top_bar">
+            <div id="custom_html-3" class="widget_text widget widget_custom_html"><div class="textwidget custom-html-widget"><ul class="top_menu1">
+	<li><a href="tel: 8880002200"><img src="https://www.cloudthat.com/resources/wp-content/uploads/2022/09/call.png"> <span>+91 8880002200</span></a></li>
+ 	<li><a href="mailto: sales@cloudthat.com"><img src="https://www.cloudthat.com/resources/wp-content/uploads/2022/09/mail.png"> <span>sales@cloudthat.com</span></a></li>
+</ul></div></div>            <div id="custom_html-2" class="widget_text widget widget_custom_html"><div class="textwidget custom-html-widget"><ul class="top_menu3">
+	<li><a href="https://www.cloudthat.com/resources/wp-login.php"><img src="https://www.cloudthat.com/resources/wp-content/uploads/2022/09/user.png"> Login</a>	</li>
+ </ul></div></div><div class="menu-header-right-container"><ul id="menu-header-right" class="top_menu2"><li id="menu-item-260" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home menu-item-260"><a href="https://www.cloudthat.com/resources/" class="submenu-title has-arrow" id="a_wrapper-0">Resources</a></li>
+<li id="menu-item-33852" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-33852"><a href="https://www.cloudthat.com/resources/blogs" class="submenu-title has-arrow" id="a_wrapper-0">Blog</a></li>
+<li id="menu-item-261" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-261"><a target="_blank" rel="noopener" href="https://www.cloudthat.com/careers/" class="submenu-title has-arrow" id="a_wrapper-0">Careers</a></li>
+<li id="menu-item-262" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-262"><a href="https://www.cloudthat.com/contact-us/" class="submenu-title has-arrow" id="a_wrapper-0">Contact Us</a></li>
+</ul></div>        </div>
+                <div class="navigation_bar blog_nav">
+            <div class="logo">
+            <a href="https://www.cloudthat.com/"><img src="https://www.cloudthat.com/resources/wp-content/themes/CloudThat/images/logo.png" alt="CloudThat Logo"></a>
+        </div>
+        <div class="menus_right">
+            <div class="search_bar">
+                <input type="search" name="search" id="keyword" placeholder="Search Resources">
+                <ul id = "ui-id-1" tabindex="0" class="ui-menu ui-widget ui-widget-content ui-autocomplete ui-front"></ul>
+            </div>
+            <div class="main_menu">
+                <ul id="menu-main-menu" class="menu"><li id="menu-item-9" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-9"><a href="https://www.cloudthat.com/consulting/" class="submenu-title has-arrow" id="a_wrapper-0">Consulting</a>
+<ul class="sub-menu nested-submenu">
+	<li id="menu-item-55112" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-55112"><a href="https://www.cloudthat.com/consulting/center-of-generative-ai-innovation/" class="submenu-title has-arrow" id="a_wrapper-9">GenAI Innovation Center</a></li>
+	<li id="menu-item-10" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-10"><a href="https://www.cloudthat.com/training/#" class="submenu-title has-arrow" id="a_wrapper-9">Services</a>
+	<ul class="sub-menu">
+		<li id="menu-item-11" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-11"><a href="https://www.cloudthat.com/consulting/services/consultancy-and-migration/" class="submenu-title has-arrow" id="a_wrapper-10">Consultancy and Migration</a></li>
+		<li id="menu-item-12" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-12"><a href="https://www.cloudthat.com/consulting/services/contract-staffing/" class="submenu-title has-arrow" id="a_wrapper-10">Contract Staffing</a></li>
+		<li id="menu-item-13" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-13"><a href="https://www.cloudthat.com/consulting/services/data-analytics/" class="submenu-title has-arrow" id="a_wrapper-10">Data Analytics</a></li>
+		<li id="menu-item-29" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-29"><a href="https://www.cloudthat.com/consulting/services/devops-and-devsecops/" class="submenu-title has-arrow" id="a_wrapper-10">DevOps and DevSecOps</a></li>
+		<li id="menu-item-30" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-30"><a href="https://www.cloudthat.com/consulting/services/managed-services/" class="submenu-title has-arrow" id="a_wrapper-10">Managed Services</a></li>
+		<li id="menu-item-31" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-31"><a href="https://www.cloudthat.com/consulting/services/media-services/" class="submenu-title has-arrow" id="a_wrapper-10">Media Services</a></li>
+		<li id="menu-item-60223" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-60223"><a href="https://www.cloudthat.com/consulting/services/app-modernization-services/" class="submenu-title has-arrow" id="a_wrapper-10">App Modernization</a></li>
+	</ul>
+</li>
+	<li id="menu-item-14" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-14"><a href="https://www.cloudthat.com/training/#" class="submenu-title has-arrow" id="a_wrapper-9">Expertise</a>
+	<ul class="sub-menu">
+		<li id="menu-item-46735" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-46735"><a href="https://www.cloudthat.com/consulting/expertise/generative-ai-with-aws/" class="submenu-title has-arrow" id="a_wrapper-14">Generative AI with AWS</a></li>
+		<li id="menu-item-15" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-15"><a href="https://www.cloudthat.com/consulting/expertise/ai-ml-iot/" class="submenu-title has-arrow" id="a_wrapper-14">AI, ML &#038; IOT</a></li>
+		<li id="menu-item-16" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-16"><a href="https://www.cloudthat.com/consulting/expertise/cloud-native/" class="submenu-title has-arrow" id="a_wrapper-14">Cloud Native</a></li>
+		<li id="menu-item-17" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-17"><a href="https://www.cloudthat.com/consulting/expertise/containerization/" class="submenu-title has-arrow" id="a_wrapper-14">Containerization</a></li>
+		<li id="menu-item-32" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-32"><a href="https://www.cloudthat.com/consulting/expertise/devops/" class="submenu-title has-arrow" id="a_wrapper-14">DevOps</a></li>
+		<li id="menu-item-33" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-33"><a href="https://www.cloudthat.com/consulting/expertise/well-architected-review/" class="submenu-title has-arrow" id="a_wrapper-14">Well Architected Review</a></li>
+		<li id="menu-item-34" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-34"><a href="https://www.cloudthat.com/consulting/expertise/well-architected-infrastructure/" class="submenu-title has-arrow" id="a_wrapper-14">Well Architected Infrastructure</a></li>
+		<li id="menu-item-37741" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-37741"><a href="https://www.cloudthat.com/consulting/expertise/aws-know-your-architecture/" class="submenu-title has-arrow" id="a_wrapper-14">AWS Know Your Architecture</a></li>
+	</ul>
+</li>
+	<li id="menu-item-36051" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-36051"><a href="#" class="submenu-title has-arrow" id="a_wrapper-9">Competency</a>
+	<ul class="sub-menu">
+		<li id="menu-item-36052" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-36052"><a href="https://www.cloudthat.com/consulting/competency/aws-data-analytics/" class="submenu-title has-arrow" id="a_wrapper-36051">Data Analytics</a></li>
+		<li id="menu-item-40530" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-40530"><a href="https://www.cloudthat.com/consulting/competency/aws-migration/" class="submenu-title has-arrow" id="a_wrapper-36051">Migration Services</a></li>
+		<li id="menu-item-40529" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-40529"><a href="https://www.cloudthat.com/consulting/competency/aws-devops/" class="submenu-title has-arrow" id="a_wrapper-36051">DevOps Services</a></li>
+		<li id="menu-item-42618" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-42618"><a href="https://www.cloudthat.com/consulting/competency/aws-microsoft-workloads/" class="submenu-title has-arrow" id="a_wrapper-36051">AWS Microsoft Workloads</a></li>
+		<li id="menu-item-41499" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-41499"><a href="https://www.cloudthat.com/consulting/competency/aws-mlops/" class="submenu-title has-arrow" id="a_wrapper-36051">AWS MLOps</a></li>
+		<li id="menu-item-51594" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-51594"><a href="https://www.cloudthat.com/consulting/competency/aws-machine-learning/" class="submenu-title has-arrow" id="a_wrapper-36051">AWS Machine Learning</a></li>
+		<li id="menu-item-51979" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-51979"><a href="https://www.cloudthat.com/consulting/competency/aws-storage/" class="submenu-title has-arrow" id="a_wrapper-36051">AWS Storage</a></li>
+		<li id="menu-item-55266" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-55266"><a href="https://www.cloudthat.com/consulting/competency/aws-security/" class="submenu-title has-arrow" id="a_wrapper-36051">AWS Security</a></li>
+		<li id="menu-item-55267" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-55267"><a href="https://www.cloudthat.com/consulting/service-delivery-program/aws-genai/" class="submenu-title has-arrow" id="a_wrapper-36051">AWS GenAI</a></li>
+		<li id="menu-item-63205" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-63205"><a href="https://www.cloudthat.com/consulting/competency/aws-education/" class="submenu-title has-arrow" id="a_wrapper-36051">AWS Education</a></li>
+	</ul>
+</li>
+	<li id="menu-item-48940" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-48940"><a href="#" class="submenu-title has-arrow" id="a_wrapper-9">Service Delivery Program</a>
+	<ul class="sub-menu">
+		<li id="menu-item-36176" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-36176"><a href="https://www.cloudthat.com/consulting/service-delivery-program/amazon-quicksight/" class="submenu-title has-arrow" id="a_wrapper-48940">Amazon QuickSight</a></li>
+		<li id="menu-item-41396" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-41396"><a href="https://www.cloudthat.com/consulting/service-delivery-program/amazon-api-gateway/" class="submenu-title has-arrow" id="a_wrapper-48940">Amazon API Gateway</a></li>
+		<li id="menu-item-36844" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-36844"><a href="https://www.cloudthat.com/consulting/service-delivery-program/amazon-eks/" class="submenu-title has-arrow" id="a_wrapper-48940">Amazon EKS</a></li>
+		<li id="menu-item-40202" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-40202"><a href="https://www.cloudthat.com/consulting/service-delivery-program/aws-lambda/" class="submenu-title has-arrow" id="a_wrapper-48940">AWS Lambda</a></li>
+		<li id="menu-item-41201" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-41201"><a href="https://www.cloudthat.com/consulting/service-delivery-program/amazon-dynamodb/" class="submenu-title has-arrow" id="a_wrapper-48940">Amazon DynamoDB</a></li>
+		<li id="menu-item-42439" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-42439"><a href="https://www.cloudthat.com/consulting/service-delivery-program/amazon-ec2/" class="submenu-title has-arrow" id="a_wrapper-48940">Amazon EC2</a></li>
+		<li id="menu-item-43314" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-43314"><a href="https://www.cloudthat.com/consulting/service-delivery-program/amazon-ecs/" class="submenu-title has-arrow" id="a_wrapper-48940">Amazon ECS</a></li>
+		<li id="menu-item-54884" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-54884"><a href="https://www.cloudthat.com/consulting/service-delivery-program/aws-glue/" class="submenu-title has-arrow" id="a_wrapper-48940">AWS Glue</a></li>
+		<li id="menu-item-54977" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-54977"><a href="https://www.cloudthat.com/consulting/service-delivery-program/amazon-redshift/" class="submenu-title has-arrow" id="a_wrapper-48940">Amazon Redshift</a></li>
+		<li id="menu-item-55099" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-55099"><a href="https://www.cloudthat.com/consulting/service-delivery-program/aws-control-tower/" class="submenu-title has-arrow" id="a_wrapper-48940">AWS Control Tower</a></li>
+		<li id="menu-item-55104" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-55104"><a href="https://www.cloudthat.com/consulting/service-delivery-program/aws-waf/" class="submenu-title has-arrow" id="a_wrapper-48940">AWS WAF</a></li>
+		<li id="menu-item-61318" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-61318"><a href="https://www.cloudthat.com/consulting/service-delivery-program/amazon-opensearch/" class="submenu-title has-arrow" id="a_wrapper-48940">Amazon OpenSearch</a></li>
+		<li id="menu-item-62290" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-62290"><a href="https://www.cloudthat.com/consulting/service-delivery-program/aws-database-migration-service/" class="submenu-title has-arrow" id="a_wrapper-48940">AWS Database Migration</a></li>
+	</ul>
+</li>
+	<li id="menu-item-38381" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-38381"><a href="#" class="submenu-title has-arrow" id="a_wrapper-9">Solutions</a>
+	<ul class="sub-menu">
+		<li id="menu-item-37733" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-37733"><a href="https://www.cloudthat.com/consulting/solutions/observability-with-aws/" class="submenu-title has-arrow" id="a_wrapper-38381">Observability With AWS</a></li>
+		<li id="menu-item-48514" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-48514"><a href="https://www.cloudthat.com/consulting/solutions/genai-stacq/" class="submenu-title has-arrow" id="a_wrapper-38381">GenAI STACQ</a></li>
+		<li id="menu-item-48515" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-48515"><a href="https://www.cloudthat.com/consulting/solutions/smart-document-search-with-genai/" class="submenu-title has-arrow" id="a_wrapper-38381">Smart Document Search with GenAI</a></li>
+		<li id="menu-item-52155" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-52155"><a href="https://www.cloudthat.com/consulting/solutions/intelligent-document-processing/" class="submenu-title has-arrow" id="a_wrapper-38381">Intelligent Document Processing</a></li>
+		<li id="menu-item-52157" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-52157"><a href="https://www.cloudthat.com/consulting/solutions/real-time-customer-call-analysis/" class="submenu-title has-arrow" id="a_wrapper-38381">Real-time Customer Call Analysis</a></li>
+		<li id="menu-item-52184" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-52184"><a href="https://www.cloudthat.com/consulting/solutions/smartmail-solution/" class="submenu-title has-arrow" id="a_wrapper-38381">SmartMail Solution</a></li>
+	</ul>
+</li>
+	<li id="menu-item-41762" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-41762"><a target="_blank" rel="noopener" href="https://demos.cloudthat.com" class="submenu-title has-arrow" id="a_wrapper-9">Demos</a></li>
+</ul>
+</li>
+<li id="menu-item-18" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-18"><a href="https://www.cloudthat.com/training/#" class="submenu-title has-arrow" id="a_wrapper-0">Training</a>
+<ul class="sub-menu nested-submenu">
+	<li id="menu-item-20" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-20"><a href="https://www.cloudthat.com/corporate-training/" class="submenu-title has-arrow" id="a_wrapper-18">Corporate Training</a></li>
+	<li id="menu-item-19" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-19"><a href="https://www.cloudthat.com/training/" class="submenu-title has-arrow" id="a_wrapper-18">Training for Myself</a></li>
+	<li id="menu-item-58345" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-58345"><a href="https://www.cloudthat.com/educational-institute-training/" class="submenu-title has-arrow" id="a_wrapper-18">Training for Institutes</a></li>
+	<li id="menu-item-36845" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-36845"><a href="#" class="submenu-title has-arrow" id="a_wrapper-18">Training Subsciption</a>
+	<ul class="sub-menu">
+		<li id="menu-item-36846" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-36846"><a href="https://www.cloudthat.com/training/azure-mastery-pass/" class="submenu-title has-arrow" id="a_wrapper-36845">Azure Mastery Pass</a></li>
+		<li id="menu-item-36847" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-36847"><a href="https://www.cloudthat.com/training/aws-mastery-pass/" class="submenu-title has-arrow" id="a_wrapper-36845">AWS Mastery Pass</a></li>
+		<li id="menu-item-36848" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-36848"><a href="https://www.cloudthat.com/training/devops-mastery-pass/" class="submenu-title has-arrow" id="a_wrapper-36845">DevOps Mastery Pass</a></li>
+		<li id="menu-item-36849" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-36849"><a href="https://www.cloudthat.com/training/microsoftdynamics-mastery-pass/" class="submenu-title has-arrow" id="a_wrapper-36845">Microsoft Dynamics Mastery Pass</a></li>
+		<li id="menu-item-36850" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-36850"><a href="https://www.cloudthat.com/training/microsoft-security-mastery-pass/" class="submenu-title has-arrow" id="a_wrapper-36845">Microsoft Security Mastery Pass</a></li>
+		<li id="menu-item-36851" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-36851"><a href="https://www.cloudthat.com/training/power-platform-mastery-pass/" class="submenu-title has-arrow" id="a_wrapper-36845">Power Platform Mastery Pass</a></li>
+	</ul>
+</li>
+	<li id="menu-item-51254" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-51254"><a href="#" class="submenu-title has-arrow" id="a_wrapper-18">Job Assistance Program</a>
+	<ul class="sub-menu">
+		<li id="menu-item-79365" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-79365"><a href="https://www.cloudthat.com/training/advanced-generative-and-agentic-ai-professional-certification" class="submenu-title has-arrow" id="a_wrapper-51254">Advanced Gen &#038; Agentic AI Certification</a></li>
+		<li id="menu-item-79366" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-79366"><a href="https://www.cloudthat.com/training/gen-ai-data-scientist-career-accelerator-program" class="submenu-title has-arrow" id="a_wrapper-51254">Gen AI Data Scientist Program</a></li>
+		<li id="menu-item-75775" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-75775"><a href="https://www.cloudthat.com/training/job-ready-cloud-operations-engineer-program/" class="submenu-title has-arrow" id="a_wrapper-51254">Cloud Operations Engineer</a></li>
+		<li id="menu-item-76945" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-76945"><a href="https://www.cloudthat.com/training/aws-genai-interview-guarantee-program" class="submenu-title has-arrow" id="a_wrapper-51254">AWS GenAI Interview Guarantee Program</a></li>
+		<li id="menu-item-57276" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-57276"><a href="https://www.cloudthat.com/training/cloud-and-devops-expert-program/" class="submenu-title has-arrow" id="a_wrapper-51254">Cloud and DevOps</a></li>
+	</ul>
+</li>
+	<li id="menu-item-21" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-21"><a target="_blank" rel="noopener" href="https://www.cloudthat.com/training/calendar/" class="submenu-title has-arrow" id="a_wrapper-18">Training Calendar</a></li>
+	<li id="menu-item-41877" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-41877"><a href="https://www.cloudthat.com/training/hire-from-us" class="submenu-title has-arrow" id="a_wrapper-18">Hire From Us</a></li>
+	<li id="menu-item-35" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-35"><a target="_blank" rel="noopener" href="https://testprep.cloudthat.com/" class="submenu-title has-arrow" id="a_wrapper-18">Test Prep</a></li>
+	<li id="menu-item-36" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-36"><a target="_blank" rel="noopener" href="https://freecloudcourses.com/" class="submenu-title has-arrow" id="a_wrapper-18">eLearning</a></li>
+</ul>
+</li>
+<li id="menu-item-161" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-161"><a href="https://www.cloudthat.com/our-partners/" class="submenu-title has-arrow" id="a_wrapper-0">Partners</a>
+<ul class="sub-menu nested-submenu">
+	<li id="menu-item-46549" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-46549"><a href="https://www.cloudthat.com/partners/microsoft/" class="submenu-title has-arrow" id="a_wrapper-161">Microsoft</a></li>
+	<li id="menu-item-46550" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-46550"><a href="https://www.cloudthat.com/partners/aws/" class="submenu-title has-arrow" id="a_wrapper-161">AWS</a></li>
+	<li id="menu-item-46552" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-46552"><a href="https://www.cloudthat.com/partners/google-cloud-partnership/" class="submenu-title has-arrow" id="a_wrapper-161">GCP</a></li>
+	<li id="menu-item-73038" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-73038"><a href="https://www.cloudthat.com/partners/nvidia-partnership/" class="submenu-title has-arrow" id="a_wrapper-161">NVIDIA</a></li>
+</ul>
+</li>
+<li id="menu-item-24" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-24"><a href="https://www.cloudthat.com/training/#" class="submenu-title has-arrow" id="a_wrapper-0">About Us</a>
+<ul class="sub-menu nested-submenu">
+	<li id="menu-item-25" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-25"><a href="https://www.cloudthat.com/about-us/" class="submenu-title has-arrow" id="a_wrapper-24">About CloudThat</a></li>
+	<li id="menu-item-26" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-26"><a href="https://www.cloudthat.com/career/" class="submenu-title has-arrow" id="a_wrapper-24">Join Our Team</a></li>
+	<li id="menu-item-46548" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-46548"><a href="https://www.cloudthat.com/resources/news-events" class="submenu-title has-arrow" id="a_wrapper-24">News and Events</a></li>
+	<li id="menu-item-27" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-27"><a target="_blank" rel="noopener" href="https://forum.cloudthat.com/" class="submenu-title has-arrow" id="a_wrapper-24">Forum</a></li>
+</ul>
+</li>
+</ul>                <div class="close_menu">x</div>
+            </div><!-- end of main menu -->
+            <!-- Mobile Menu Below -->
+			<div class="side-menu" id="sideMenu">
+				<div class="close-btn" id="closeBtn"><span class="cross-btn">&times;</span></div>
+				<div class="menu-img">
+					<img src="https://www.cloudthat.com/resources/wp-content/themes/CloudThat/images/logo.png" class="moblogo" alt="CloudThat Logo">
+				</div>
+				<ul id="menu-main-menu-1" class="main-menu"><li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-9"><a href="https://www.cloudthat.com/consulting/" class="submenu-title has-arrow" id="a_wrapper-0">Consulting</a>
+<ul class="sub-menu nested-submenu">
+	<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-55112"><a href="https://www.cloudthat.com/consulting/center-of-generative-ai-innovation/" class="submenu-title has-arrow" id="a_wrapper-9">GenAI Innovation Center</a></li>
+	<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-10"><a href="https://www.cloudthat.com/training/#" class="submenu-title has-arrow" id="a_wrapper-9">Services</a>
+	<ul class="sub-menu">
+		<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-11"><a href="https://www.cloudthat.com/consulting/services/consultancy-and-migration/" class="submenu-title has-arrow" id="a_wrapper-10">Consultancy and Migration</a></li>
+		<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-12"><a href="https://www.cloudthat.com/consulting/services/contract-staffing/" class="submenu-title has-arrow" id="a_wrapper-10">Contract Staffing</a></li>
+		<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-13"><a href="https://www.cloudthat.com/consulting/services/data-analytics/" class="submenu-title has-arrow" id="a_wrapper-10">Data Analytics</a></li>
+		<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-29"><a href="https://www.cloudthat.com/consulting/services/devops-and-devsecops/" class="submenu-title has-arrow" id="a_wrapper-10">DevOps and DevSecOps</a></li>
+		<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-30"><a href="https://www.cloudthat.com/consulting/services/managed-services/" class="submenu-title has-arrow" id="a_wrapper-10">Managed Services</a></li>
+		<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-31"><a href="https://www.cloudthat.com/consulting/services/media-services/" class="submenu-title has-arrow" id="a_wrapper-10">Media Services</a></li>
+		<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-60223"><a href="https://www.cloudthat.com/consulting/services/app-modernization-services/" class="submenu-title has-arrow" id="a_wrapper-10">App Modernization</a></li>
+	</ul>
+</li>
+	<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-14"><a href="https://www.cloudthat.com/training/#" class="submenu-title has-arrow" id="a_wrapper-9">Expertise</a>
+	<ul class="sub-menu">
+		<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-46735"><a href="https://www.cloudthat.com/consulting/expertise/generative-ai-with-aws/" class="submenu-title has-arrow" id="a_wrapper-14">Generative AI with AWS</a></li>
+		<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-15"><a href="https://www.cloudthat.com/consulting/expertise/ai-ml-iot/" class="submenu-title has-arrow" id="a_wrapper-14">AI, ML &#038; IOT</a></li>
+		<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-16"><a href="https://www.cloudthat.com/consulting/expertise/cloud-native/" class="submenu-title has-arrow" id="a_wrapper-14">Cloud Native</a></li>
+		<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-17"><a href="https://www.cloudthat.com/consulting/expertise/containerization/" class="submenu-title has-arrow" id="a_wrapper-14">Containerization</a></li>
+		<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-32"><a href="https://www.cloudthat.com/consulting/expertise/devops/" class="submenu-title has-arrow" id="a_wrapper-14">DevOps</a></li>
+		<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-33"><a href="https://www.cloudthat.com/consulting/expertise/well-architected-review/" class="submenu-title has-arrow" id="a_wrapper-14">Well Architected Review</a></li>
+		<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-34"><a href="https://www.cloudthat.com/consulting/expertise/well-architected-infrastructure/" class="submenu-title has-arrow" id="a_wrapper-14">Well Architected Infrastructure</a></li>
+		<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-37741"><a href="https://www.cloudthat.com/consulting/expertise/aws-know-your-architecture/" class="submenu-title has-arrow" id="a_wrapper-14">AWS Know Your Architecture</a></li>
+	</ul>
+</li>
+	<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-36051"><a href="#" class="submenu-title has-arrow" id="a_wrapper-9">Competency</a>
+	<ul class="sub-menu">
+		<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-36052"><a href="https://www.cloudthat.com/consulting/competency/aws-data-analytics/" class="submenu-title has-arrow" id="a_wrapper-36051">Data Analytics</a></li>
+		<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-40530"><a href="https://www.cloudthat.com/consulting/competency/aws-migration/" class="submenu-title has-arrow" id="a_wrapper-36051">Migration Services</a></li>
+		<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-40529"><a href="https://www.cloudthat.com/consulting/competency/aws-devops/" class="submenu-title has-arrow" id="a_wrapper-36051">DevOps Services</a></li>
+		<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-42618"><a href="https://www.cloudthat.com/consulting/competency/aws-microsoft-workloads/" class="submenu-title has-arrow" id="a_wrapper-36051">AWS Microsoft Workloads</a></li>
+		<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-41499"><a href="https://www.cloudthat.com/consulting/competency/aws-mlops/" class="submenu-title has-arrow" id="a_wrapper-36051">AWS MLOps</a></li>
+		<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-51594"><a href="https://www.cloudthat.com/consulting/competency/aws-machine-learning/" class="submenu-title has-arrow" id="a_wrapper-36051">AWS Machine Learning</a></li>
+		<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-51979"><a href="https://www.cloudthat.com/consulting/competency/aws-storage/" class="submenu-title has-arrow" id="a_wrapper-36051">AWS Storage</a></li>
+		<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-55266"><a href="https://www.cloudthat.com/consulting/competency/aws-security/" class="submenu-title has-arrow" id="a_wrapper-36051">AWS Security</a></li>
+		<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-55267"><a href="https://www.cloudthat.com/consulting/service-delivery-program/aws-genai/" class="submenu-title has-arrow" id="a_wrapper-36051">AWS GenAI</a></li>
+		<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-63205"><a href="https://www.cloudthat.com/consulting/competency/aws-education/" class="submenu-title has-arrow" id="a_wrapper-36051">AWS Education</a></li>
+	</ul>
+</li>
+	<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-48940"><a href="#" class="submenu-title has-arrow" id="a_wrapper-9">Service Delivery Program</a>
+	<ul class="sub-menu">
+		<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-36176"><a href="https://www.cloudthat.com/consulting/service-delivery-program/amazon-quicksight/" class="submenu-title has-arrow" id="a_wrapper-48940">Amazon QuickSight</a></li>
+		<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-41396"><a href="https://www.cloudthat.com/consulting/service-delivery-program/amazon-api-gateway/" class="submenu-title has-arrow" id="a_wrapper-48940">Amazon API Gateway</a></li>
+		<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-36844"><a href="https://www.cloudthat.com/consulting/service-delivery-program/amazon-eks/" class="submenu-title has-arrow" id="a_wrapper-48940">Amazon EKS</a></li>
+		<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-40202"><a href="https://www.cloudthat.com/consulting/service-delivery-program/aws-lambda/" class="submenu-title has-arrow" id="a_wrapper-48940">AWS Lambda</a></li>
+		<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-41201"><a href="https://www.cloudthat.com/consulting/service-delivery-program/amazon-dynamodb/" class="submenu-title has-arrow" id="a_wrapper-48940">Amazon DynamoDB</a></li>
+		<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-42439"><a href="https://www.cloudthat.com/consulting/service-delivery-program/amazon-ec2/" class="submenu-title has-arrow" id="a_wrapper-48940">Amazon EC2</a></li>
+		<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-43314"><a href="https://www.cloudthat.com/consulting/service-delivery-program/amazon-ecs/" class="submenu-title has-arrow" id="a_wrapper-48940">Amazon ECS</a></li>
+		<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-54884"><a href="https://www.cloudthat.com/consulting/service-delivery-program/aws-glue/" class="submenu-title has-arrow" id="a_wrapper-48940">AWS Glue</a></li>
+		<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-54977"><a href="https://www.cloudthat.com/consulting/service-delivery-program/amazon-redshift/" class="submenu-title has-arrow" id="a_wrapper-48940">Amazon Redshift</a></li>
+		<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-55099"><a href="https://www.cloudthat.com/consulting/service-delivery-program/aws-control-tower/" class="submenu-title has-arrow" id="a_wrapper-48940">AWS Control Tower</a></li>
+		<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-55104"><a href="https://www.cloudthat.com/consulting/service-delivery-program/aws-waf/" class="submenu-title has-arrow" id="a_wrapper-48940">AWS WAF</a></li>
+		<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-61318"><a href="https://www.cloudthat.com/consulting/service-delivery-program/amazon-opensearch/" class="submenu-title has-arrow" id="a_wrapper-48940">Amazon OpenSearch</a></li>
+		<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-62290"><a href="https://www.cloudthat.com/consulting/service-delivery-program/aws-database-migration-service/" class="submenu-title has-arrow" id="a_wrapper-48940">AWS Database Migration</a></li>
+	</ul>
+</li>
+	<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-38381"><a href="#" class="submenu-title has-arrow" id="a_wrapper-9">Solutions</a>
+	<ul class="sub-menu">
+		<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-37733"><a href="https://www.cloudthat.com/consulting/solutions/observability-with-aws/" class="submenu-title has-arrow" id="a_wrapper-38381">Observability With AWS</a></li>
+		<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-48514"><a href="https://www.cloudthat.com/consulting/solutions/genai-stacq/" class="submenu-title has-arrow" id="a_wrapper-38381">GenAI STACQ</a></li>
+		<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-48515"><a href="https://www.cloudthat.com/consulting/solutions/smart-document-search-with-genai/" class="submenu-title has-arrow" id="a_wrapper-38381">Smart Document Search with GenAI</a></li>
+		<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-52155"><a href="https://www.cloudthat.com/consulting/solutions/intelligent-document-processing/" class="submenu-title has-arrow" id="a_wrapper-38381">Intelligent Document Processing</a></li>
+		<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-52157"><a href="https://www.cloudthat.com/consulting/solutions/real-time-customer-call-analysis/" class="submenu-title has-arrow" id="a_wrapper-38381">Real-time Customer Call Analysis</a></li>
+		<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-52184"><a href="https://www.cloudthat.com/consulting/solutions/smartmail-solution/" class="submenu-title has-arrow" id="a_wrapper-38381">SmartMail Solution</a></li>
+	</ul>
+</li>
+	<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-41762"><a target="_blank" rel="noopener" href="https://demos.cloudthat.com" class="submenu-title has-arrow" id="a_wrapper-9">Demos</a></li>
+</ul>
+</li>
+<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-18"><a href="https://www.cloudthat.com/training/#" class="submenu-title has-arrow" id="a_wrapper-0">Training</a>
+<ul class="sub-menu nested-submenu">
+	<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-20"><a href="https://www.cloudthat.com/corporate-training/" class="submenu-title has-arrow" id="a_wrapper-18">Corporate Training</a></li>
+	<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-19"><a href="https://www.cloudthat.com/training/" class="submenu-title has-arrow" id="a_wrapper-18">Training for Myself</a></li>
+	<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-58345"><a href="https://www.cloudthat.com/educational-institute-training/" class="submenu-title has-arrow" id="a_wrapper-18">Training for Institutes</a></li>
+	<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-36845"><a href="#" class="submenu-title has-arrow" id="a_wrapper-18">Training Subsciption</a>
+	<ul class="sub-menu">
+		<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-36846"><a href="https://www.cloudthat.com/training/azure-mastery-pass/" class="submenu-title has-arrow" id="a_wrapper-36845">Azure Mastery Pass</a></li>
+		<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-36847"><a href="https://www.cloudthat.com/training/aws-mastery-pass/" class="submenu-title has-arrow" id="a_wrapper-36845">AWS Mastery Pass</a></li>
+		<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-36848"><a href="https://www.cloudthat.com/training/devops-mastery-pass/" class="submenu-title has-arrow" id="a_wrapper-36845">DevOps Mastery Pass</a></li>
+		<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-36849"><a href="https://www.cloudthat.com/training/microsoftdynamics-mastery-pass/" class="submenu-title has-arrow" id="a_wrapper-36845">Microsoft Dynamics Mastery Pass</a></li>
+		<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-36850"><a href="https://www.cloudthat.com/training/microsoft-security-mastery-pass/" class="submenu-title has-arrow" id="a_wrapper-36845">Microsoft Security Mastery Pass</a></li>
+		<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-36851"><a href="https://www.cloudthat.com/training/power-platform-mastery-pass/" class="submenu-title has-arrow" id="a_wrapper-36845">Power Platform Mastery Pass</a></li>
+	</ul>
+</li>
+	<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-51254"><a href="#" class="submenu-title has-arrow" id="a_wrapper-18">Job Assistance Program</a>
+	<ul class="sub-menu">
+		<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-79365"><a href="https://www.cloudthat.com/training/advanced-generative-and-agentic-ai-professional-certification" class="submenu-title has-arrow" id="a_wrapper-51254">Advanced Gen &#038; Agentic AI Certification</a></li>
+		<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-79366"><a href="https://www.cloudthat.com/training/gen-ai-data-scientist-career-accelerator-program" class="submenu-title has-arrow" id="a_wrapper-51254">Gen AI Data Scientist Program</a></li>
+		<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-75775"><a href="https://www.cloudthat.com/training/job-ready-cloud-operations-engineer-program/" class="submenu-title has-arrow" id="a_wrapper-51254">Cloud Operations Engineer</a></li>
+		<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-76945"><a href="https://www.cloudthat.com/training/aws-genai-interview-guarantee-program" class="submenu-title has-arrow" id="a_wrapper-51254">AWS GenAI Interview Guarantee Program</a></li>
+		<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-57276"><a href="https://www.cloudthat.com/training/cloud-and-devops-expert-program/" class="submenu-title has-arrow" id="a_wrapper-51254">Cloud and DevOps</a></li>
+	</ul>
+</li>
+	<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-21"><a target="_blank" rel="noopener" href="https://www.cloudthat.com/training/calendar/" class="submenu-title has-arrow" id="a_wrapper-18">Training Calendar</a></li>
+	<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-41877"><a href="https://www.cloudthat.com/training/hire-from-us" class="submenu-title has-arrow" id="a_wrapper-18">Hire From Us</a></li>
+	<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-35"><a target="_blank" rel="noopener" href="https://testprep.cloudthat.com/" class="submenu-title has-arrow" id="a_wrapper-18">Test Prep</a></li>
+	<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-36"><a target="_blank" rel="noopener" href="https://freecloudcourses.com/" class="submenu-title has-arrow" id="a_wrapper-18">eLearning</a></li>
+</ul>
+</li>
+<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-161"><a href="https://www.cloudthat.com/our-partners/" class="submenu-title has-arrow" id="a_wrapper-0">Partners</a>
+<ul class="sub-menu nested-submenu">
+	<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-46549"><a href="https://www.cloudthat.com/partners/microsoft/" class="submenu-title has-arrow" id="a_wrapper-161">Microsoft</a></li>
+	<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-46550"><a href="https://www.cloudthat.com/partners/aws/" class="submenu-title has-arrow" id="a_wrapper-161">AWS</a></li>
+	<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-46552"><a href="https://www.cloudthat.com/partners/google-cloud-partnership/" class="submenu-title has-arrow" id="a_wrapper-161">GCP</a></li>
+	<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-73038"><a href="https://www.cloudthat.com/partners/nvidia-partnership/" class="submenu-title has-arrow" id="a_wrapper-161">NVIDIA</a></li>
+</ul>
+</li>
+<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-24"><a href="https://www.cloudthat.com/training/#" class="submenu-title has-arrow" id="a_wrapper-0">About Us</a>
+<ul class="sub-menu nested-submenu">
+	<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-25"><a href="https://www.cloudthat.com/about-us/" class="submenu-title has-arrow" id="a_wrapper-24">About CloudThat</a></li>
+	<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-26"><a href="https://www.cloudthat.com/career/" class="submenu-title has-arrow" id="a_wrapper-24">Join Our Team</a></li>
+	<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-46548"><a href="https://www.cloudthat.com/resources/news-events" class="submenu-title has-arrow" id="a_wrapper-24">News and Events</a></li>
+	<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-27"><a target="_blank" rel="noopener" href="https://forum.cloudthat.com/" class="submenu-title has-arrow" id="a_wrapper-24">Forum</a></li>
+</ul>
+</li>
+</ul>			</div>
+			<div class="hamburger" id="hamburger"><i class="fas fa-bars"></i></div>
+            <div class="overlay_bg"></div>
+        </div><!-- end of main menus -->
+    </div><!-- end of right menu -->
+</header><div class="blog_banner">
+  <div class="container">
+    <div class="blog_banner_main">
+            <div class="blog_banner_cont blog_banner_cont1">
+        <div class="blog_banr_img">
+          <img alt="" src="https://content.cloudthat.com/resources/wp-content/uploads/2023/11/Attention-Mechanisms-in-Transformers.webp">
+        </div>
+      </div> <!-- end of blog banner cont 1 -->
+            <div class="blog_banner_cont blog_banner_cont2 ">
+        <div class="blog_banr_subsec">
+          <div class="blg_bnr_lb">
+                              <p class="blog_bnr_lable">AI/ML, Cloud Computing</p>
+                            <p class="bnr_read">
+              <img src="https://www.cloudthat.com/resources/wp-content/themes/CloudThat/images/blog_clock.png" alt=""><span> <span class="span-reading-time rt-reading-time"><span class="rt-label rt-prefix"></span> <span class="rt-time"> 3</span> <span class="rt-label rt-postfix">Mins Read</span></span></span></p>
+          </div>
+          <h1 class="blog_title">Attention Mechanisms in Transformers</h1>
+          <div class="audio_sec">
+          </div><!--  end of audio sec -->
+          <ul class="bnr_list">
+            <li class="profile_img"><img src="https://content.cloudthat.com/resources/wp-content/uploads/2025/08/Hitesh-150x150.png" alt=""></li>
+            <li>By  <a href="https://www.cloudthat.com/resources/author/hitesh-verma/">Hitesh Verma</a></li>
+            <li><span><img src="https://www.cloudthat.com/resources/wp-content/themes/CloudThat/images/upcmg-calender.png" alt=""> November 22, 2023</span></li>
+          </ul>
+        </div>
+      </div><!-- end of blog banner cont 2 -->
+    </div> <!-- end of blog banner main section -->
+  </div> <!-- end of container -->
+</div>
+<!-- banner section end -->
+
+<!-- blog content section start -->
+<div class="blog_content_sec">
+  <div class="container-fluid">
+    <div class="blog_content_main">
+
+      <div class="blog_content_submain">
+        <!-- fixed table of content section start -->
+        <div id="navigation">
+        <nav>
+          <h3>Table of Contents</h3>
+                    <ul id="navList">
+                          <li><a href="#introduction">Introduction</a></li>
+                          <li><a href="#model-architecture">Model Architecture</a></li>
+                          <li><a href="#the-birth-of-transformers">The Birth of Transformers</a></li>
+                          <li><a href="#the-building-blocks-of-attention-mechanisms">The Building Blocks of Attention Mechanisms</a></li>
+                          <li><a href="#why-self-attention-matters-">Why Self-Attention Matters?</a></li>
+                          <li><a href="#attention-mechanisms-in-real-life">Attention Mechanisms in Real-Life</a></li>
+                          <li><a href="#potential-and-pitfalls">Potential and Pitfalls</a></li>
+                          <li><a href="#conclusion">Conclusion</a></li>
+                      </ul>
+                  </nav>
+      </div> <!-- end of navigation sec -->
+
+      <!-- blog center section start -->
+
+      <div class="blog_content_center">
+        
+					<div id="amazonPollyContent">
+					<table id="amazon-polly-audio-table">
+						<tr>
+						<td id="amazon-polly-audio-tab">
+							<div id="amazon-ai-player-label"></div>
+							<div id="amazon-ai-player-container">
+			<audio class="amazon-ai-player" id="amazon-ai-player" preload="none" controls   controlsList="nodownload" >
+				<source type="audio/mpeg" src="https://content.cloudthat.com/2023/11/amazon_polly_47732.mp3?version=1719310661">
+			</audio>
+		</div>
+							<div id="amazon-polly-subscribe-tab"></div>
+							<div id="amazon-polly-by-tab"><p class="voice">Voiced by <a href="https://aws.amazon.com/polly/" target="_blank" rel="noopener noreferrer"><span>Amazon Polly</span></a></p></div>
+						</td>
+						</tr>
+					</table>
+				</div>          <div id="blog_content" class="flexItem">
+                                          <div id="introduction" class="featureContainer">
+                                                            <h2 class="blog-title">Introduction</h2>
+                            <p>In deep learning, few innovations have had as profound an impact as Transformers. These models have revolutionized the field of NLP and have found applications in diverse domains, from image recognition to speech synthesis. At the heart of Transformers lies an intricate component known as the &#8220;attention mechanism.&#8221; In this blog post, we will delve deep into attention mechanisms, demystify their workings, and understand why they are a pivotal feature of Transformers.</p>
+                            </div>
+                                                        <div id="model-architecture" class="featureContainer">
+                                                                <div class="blog_enroll blog_enroll-2" style="background-image: url('https://www.cloudthat.com/resources/wp-content/themes/CloudThat/images/blog_innr-background.png')">
+                                      <h3>Pioneers in Cloud Consulting & Migration Services</h3>
+                                      <ul>
+                                                                          <li>Reduced infrastructural costs</li>
+                                                                          <li>Accelerated application deployment</li>
+                                                                          </ul>
+                                      <a href="https://www.cloudthat.com/consulting/" target="_blank">Get Started</a>
+                                  </div>
+                                                            <h2 class="blog-title">Model Architecture</h2>
+                            <p><img fetchpriority="high" decoding="async" class="aligncenter size-full wp-image-47733" src="https://content.cloudthat.com/resources/wp-content/uploads/2023/11/transformer.webp" alt="transformer" width="419" height="484" srcset="https://content.cloudthat.com/resources/wp-content/uploads/2023/11/transformer.webp 419w, https://content.cloudthat.com/resources/wp-content/uploads/2023/11/transformer-260x300.webp 260w" sizes="(max-width: 419px) 100vw, 419px" /></p>
+                            </div>
+                                                        <div id="the-birth-of-transformers" class="featureContainer">
+                                                            <h2 class="blog-title">The Birth of Transformers</h2>
+                            <p>The Transformer architecture, introduced in the paper &#8220;Attention Is All You Need&#8221; by Vaswani et al. in 2017, redefined the game. It relied on the self-attention mechanism to process sequences in parallel, making it highly efficient. This was the birth of the Transformer model.</p>
+                            </div>
+                                                        <div id="the-building-blocks-of-attention-mechanisms" class="featureContainer">
+                                                            <h2 class="blog-title">The Building Blocks of Attention Mechanisms</h2>
+                            <p><strong>Self-Attention: The Basics</strong></p>
+<p>Self-attention, also known as scaled dot-product attention, is a mechanism that allows a Transformer to weigh the importance of different words in a sentence when processing a specific word. It can be likened to a spotlight focusing on different sentence parts as the model processes each word. This mechanism is mathematically defined as follows:</p>
+<ul>
+<li><strong>Query, Key, and Value:</strong> For a given word, the self-attention mechanism computes three vectors: Query (Q), Key (K), and Value (V). These vectors are learned during training.</li>
+<li><strong>Attention Scores:</strong> The model calculates attention scores by taking the dot product of the Query vector for the current word and the Key vectors for all the words in the input sequence. These scores indicate how much focus each word should receive.</li>
+<li><strong>Softmax and Scaling:</strong> The attention scores are passed through a softmax function to get a probability distribution. This distribution is then used to weigh the Value vectors, deciding how much each word&#8217;s information should contribute to the current word&#8217;s representation.</li>
+<li><strong>Weighted Sum:</strong> Finally, the Value vectors are weighted by the attention scores and summed to create the new representation of the current word.</li>
+</ul>
+<p><strong>Multi-Head Attention</strong></p>
+<p>In practice, Transformers use what is known as multi-head attention. Instead of relying on a single attention mechanism, the model uses multiple heads or sets of Query, Key, and Value vectors. Each head can focus on different input parts, capturing different aspects of word relationships.</p>
+<p><strong>Positional Encoding</strong></p>
+<p>One challenge with self-attention is that it doesn&#8217;t inherently capture the order of words in a sequence. To address this, Transformers incorporate positional encoding into their input embeddings. Positional encodings are added to the word embeddings, allowing the model to consider the position of each word in the sequence.</p>
+                            </div>
+                                                        <div id="why-self-attention-matters-" class="featureContainer">
+                                                            <h2 class="blog-title">Why Self-Attention Matters?</h2>
+                            <p>The self-attention mechanism is at the core of what makes Transformers powerful. Here are some reasons why it&#8217;s so essential:</p>
+<p><strong>Long-Range Dependencies</strong></p>
+<p>Self-attention can capture relationships between words that are far apart in a sequence. In contrast, RNNs struggle with long-range dependencies because information must flow step by step.</p>
+<p><strong>Parallelization</strong></p>
+<p>Traditional sequence models like RNNs process data sequentially, one step at a time. Self-attention, on the other hand, can process the entire sequence in parallel, making it more computationally efficient.</p>
+<p><strong>Adaptability</strong></p>
+<p>The attention mechanism is not limited to language processing. It can be adapted for various tasks and domains. For instance, in computer vision, self-attention mechanisms can capture relationships between pixels in an image.</p>
+                            </div>
+                                                        <div id="attention-mechanisms-in-real-life" class="featureContainer">
+                                                            <h2 class="blog-title">Attention Mechanisms in Real-Life</h2>
+                            <p><strong>BERT: The Language Understanding Transformer</strong></p>
+<p>The BERT model, developed by Google, uses self-attention to pre-train on a massive text corpus. BERT has set new benchmarks in various NLP tasks, from sentiment analysis to text classification.</p>
+<p><strong>GPT-3: Language Generation at Scale</strong></p>
+<p>OpenAI&#8217;s GPT-3 is one of the largest language models in existence. It uses self-attention to generate coherent and contextually relevant text, making it ideal for applications like chatbots and language translation.</p>
+<p><strong>Image Analysis</strong></p>
+<p>The power of attention mechanisms isn&#8217;t limited to text. In computer vision, models like the Vision Transformer have demonstrated that self-attention can capture complex relationships between pixels in an image, enabling state-of-the-art image recognition.</p>
+                            </div>
+                                                        <div id="potential-and-pitfalls" class="featureContainer">
+                                                            <h2 class="blog-title">Potential and Pitfalls</h2>
+                            <p><strong>Model Size</strong></p>
+<p>Large-scale models with multiple heads and layers can become computationally expensive. This can limit the accessibility of these models to a broader range of applications.</p>
+<p><strong>Interpretability</strong></p>
+<p>The internal workings of attention mechanisms can be challenging to interpret. Understanding why a model made a specific prediction can be challenging, especially in critical applications like healthcare.</p>
+                            </div>
+                                                        <div id="conclusion" class="featureContainer">
+                                                            <h2 class="blog-title">Conclusion</h2>
+                            <div class="blog_jumb">Attention mechanisms in Transformers are a pivotal force in modern deep learning. Their capacity to capture complex relationships within data has revolutionized many applications, from natural language processing to computer vision. As we navigate the path forward, it is clear that these mechanisms will continue to shape the landscape of artificial intelligence, albeit with challenges to address, such as model size and interpretability.</div>
+<p>Understanding and harnessing the potential of attention mechanisms is essential in our quest for more powerful and responsible AI solutions.</p>
+<p>Drop a query if you have any questions regarding Attention Mechanisms in Transformers, and we will get back to you quickly.</p>
+                            </div>
+                                    </div>
+                            <div class="blog_enroll blog_enroll-2" style="background-image: url('https://www.cloudthat.com/resources/wp-content/themes/CloudThat/images/blog_innr-background2.png')">
+              <h3>Making IT Networks Enterprise-ready – Cloud Management Services </h3>
+              <ul>
+                          <li>Accelerated cloud migration</li>
+                          <li>End-to-end view of the cloud environment</li>
+                          </ul>
+              <a href="https://www.cloudthat.com/consulting/" target="_blank">Get Started</a>
+          </div>
+      				<div id="about-cloudthat" class="featureContainer">
+											<h2 class="blog-title">About CloudThat</h2>
+					
+											<div class="global-content">
+							<a href="https://www.cloudthat.com/">CloudThat</a> is an award-winning company and the first in India to offer <a href="https://www.cloudthat.com/">cloud training</a> and <a href="https://www.cloudthat.com/consulting/">consulting services</a> worldwide. As an AWS Premier Tier Services Partner, AWS Advanced Training Partner, Microsoft Solutions Partner, and Google Cloud Platform Partner, CloudThat has empowered over 1.1 million professionals through 1000+ cloud certifications, winning global recognition for its training excellence, including 20 MCT Trainers in Microsoft’s Global Top 100 and an impressive 14 awards in the last 9 years. CloudThat specializes in Cloud Migration, Data Platforms, DevOps, Security, IoT, and advanced technologies like Gen AI &amp; AI/ML. It has delivered over 750 consulting projects for 850+ organizations in 30+ countries as it continues to empower professionals and enterprises to thrive in the digital-first world.						</div>
+									</div>
+						
+                    <div class="blog_faq">
+            <h2 class="blog-title">FAQs</h2>
+                          <div class="faq-cont">
+                <p><strong>1. How do attention mechanisms work in Transformers?</strong></p>
+                <p>ANS: – Attention mechanisms compute attention scores between words in the input sequence, determining the importance of each word for a specific word. These scores are used to create weighted representations, which are then combined to form the output.
+</p>
+            </div>
+                         <div class="faq-cont">
+                <p><strong>2. Why are attention mechanisms important?</strong></p>
+                <p>ANS: – Attention mechanisms are crucial because they allow Transformers to capture long-range dependencies, process sequences in parallel, and adapt to various domains. They are foundational for natural language processing, computer vision, and more tasks.
+</p>
+            </div>
+                         <div class="faq-cont">
+                <p><strong>3. What is multi-head attention in Transformers?</strong></p>
+                <p>ANS: – Multi-head attention is a variation where the model uses multiple sets of Query, Key, and Value vectors to capture different aspects of the relationships within the data. This enhances the model&#8217;s ability to focus on diverse patterns in the input.
+</p>
+            </div>
+                     </div>
+                    <div class="blog_pin_sec">
+            <ul class="pin_list">
+              <li><img alt="" src="https://www.cloudthat.com/resources/wp-content/themes/CloudThat/images/pin-icon.png"></li>
+                              <li><a href="javascript:void(0)">
+                  AI/ML                  </a></li>
+                                 <li><a href="javascript:void(0)">
+                  Attention Mechanisms                  </a></li>
+                                 <li><a href="javascript:void(0)">
+                  BERT                  </a></li>
+                                 <li><a href="javascript:void(0)">
+                  Cloud Computing                  </a></li>
+                                 <li><a href="javascript:void(0)">
+                  GPT                  </a></li>
+                                 <li><a href="javascript:void(0)">
+                  NLP                  </a></li>
+                                 <li><a href="javascript:void(0)">
+                  Transformers                  </a></li>
+                             </ul>
+          </div>
+                    <div class="writter_sec">
+            <div class="writter_img">
+              <img alt="" src="https://content.cloudthat.com/resources/wp-content/uploads/2025/08/Hitesh-150x150.png">
+            </div>
+            <div class="writter_details">
+              <h4><span>WRITTEN BY</span> <a href="https://www.cloudthat.com/resources/author/hitesh-verma/">Hitesh Verma</a></h4>
+              <p> Hitesh works as a Senior Research Associate – Data &amp; AI/ML at CloudThat, focusing on developing scalable machine learning solutions and AI-driven analytics. He works on end-to-end ML systems, from data engineering to model deployment, using cloud-native tools. Hitesh is passionate about applying advanced AI research to solve real-world business problems.</p>
+            </div>
+          </div>
+
+      </div> <!-- end of blog center content -->
+      </div> <!-- blog submain section end -->
+
+      <!-- blog right sidebar section start -->
+      <div class="blog_rihtbar">
+        <div class="blog_fixed_share">
+          <h2>Share</h2>
+                  <ul class="share_list">
+            <li><a href="mailto:?subject='Attention-Mechanisms-in-Transformers'&body=Check out this blog: 'https://www.cloudthat.com/resources/blog/attention-mechanisms-in-transformers'"><img alt="" src="https://www.cloudthat.com/resources/wp-content/themes/CloudThat/images/email-blue-icon.png"></a></li>
+            <li><a href="https://www.facebook.com/sharer/sharer.php?u=https://www.cloudthat.com/resources/blog/attention-mechanisms-in-transformers"><img alt="" src="https://www.cloudthat.com/resources/wp-content/themes/CloudThat/images/fb-blue-icon.png"></a></li>
+            <li><a href="https://twitter.com/intent/tweet?text=Attention-Mechanisms-in-Transformers'&url='https://www.cloudthat.com/resources/blog/attention-mechanisms-in-transformers'"><img alt="" src="https://www.cloudthat.com/resources/wp-content/themes/CloudThat/images/twitter-blue-icon.png"></a></li>
+            <li><a href="http://www.linkedin.com/sharing/share-offsite/?url=https://www.cloudthat.com/resources/blog/attention-mechanisms-in-transformers"><img alt="" src="https://www.cloudthat.com/resources/wp-content/themes/CloudThat/images/linkedin-blue-icon.png"></a></li>
+        </ul>
+        </div>
+      </div>
+      <!-- blog right sidebar section end -->
+
+    </div> <!-- end of blog_content_main -->
+  </div> <!-- end of container-fluid -->
+  <div class="container">
+
+    <!-- pagination section start -->
+    <div class="blog_pagination_sec">
+          <p><a href="https://www.cloudthat.com/resources/blog/a-guide-to-user-authentication-in-amazon-cognito-using-python-part-2" title="A Guide to User Authentication in Amazon Cognito using Python – Part 2"><img alt="" src="https://www.cloudthat.com/resources/wp-content/themes/CloudThat/images/blog-left-arrow.png"> PREV</a></p>
+    <p><a href="https://www.cloudthat.com/resources/blog/predictive-analytics-with-amazon-quicksight-and-amazon-sagemaker-canvas" title="Predictive Analytics with Amazon QuickSight and Amazon SageMaker Canvas">NEXT <img alt="" src="https://www.cloudthat.com/resources/wp-content/themes/CloudThat/images/blog-right-arrow.png"></a></p>
+      </div>
+    <!-- pagination section end -->
+    
+
+<div id="comments">
+
+			<div class="blog_comments_sec">
+      <h3 class="blog_sec_head">Comments</h3>
+      <div class="comment_innr_main">
+		<!-- <h2 class="comments-title">
+					</h2> -->
+
+		<ol class="comment-list comments">
+						<p class="click_comt"><img src="https://www.cloudthat.com/resources/wp-content/themes/CloudThat/images/comment-icon.png"> Click to Comment</p>
+
+		</ol><!-- .comment-list -->
+
+		
+	
+	<div id="comment-form" style="display: none;">	<div id="respond" class="comment-respond">
+		<h3 id="reply-title" class="comment-reply-title">Leave a Reply <small><a rel="nofollow" id="cancel-comment-reply-link" href="/resources/blog/attention-mechanisms-in-transformers#respond" style="display:none;">Cancel reply</a></small></h3><form action="https://www.cloudthat.com/resources/wp-comments-post.php" method="post" id="commentform" class="comment-form"><p class="comment-notes"><span id="email-notes">Your email address will not be published.</span> <span class="required-field-message">Required fields are marked <span class="required">*</span></span></p><p class="comment-form-comment"><label for="comment">Comment <span class="required">*</span></label> <textarea id="comment" name="comment" cols="45" rows="8" maxlength="65525" required="required"></textarea></p><p class="comment-form-author"><label for="author">Name <span class="required">*</span></label> <input id="author" name="author" type="text" value="" size="30" maxlength="245" autocomplete="name" required="required" /></p>
+<p class="comment-form-email"><label for="email">Email <span class="required">*</span></label> <input id="email" name="email" type="text" value="" size="30" maxlength="100" aria-describedby="email-notes" autocomplete="email" required="required" /></p>
+<p class="comment-form-url"><label for="url">Website</label> <input id="url" name="url" type="text" value="" size="30" maxlength="200" autocomplete="url" /></p>
+<p class="comment-form-cookies-consent"><input id="wp-comment-cookies-consent" name="wp-comment-cookies-consent" type="checkbox" value="yes" /> <label for="wp-comment-cookies-consent">Save my name, email, and website in this browser for the next time I comment.</label></p>
+<p class="form-submit"><input name="submit" type="submit" id="submit" class="submit" value="Post Comment" /> <input type='hidden' name='comment_post_ID' value='47732' id='comment_post_ID' />
+<input type='hidden' name='comment_parent' id='comment_parent' value='0' />
+</p></form>	</div><!-- #respond -->
+	</div>
+	</div> <!-- end of comment_innr_sec -->
+    </div> <!-- end of blog comment sec -->
+
+</div><!-- #comments -->
+
+<script>
+jQuery(document).ready(function(){
+  jQuery('.click_comt').click(function(){
+    // alert('success');
+    jQuery('#comment-form').show();
+  });
+});
+</script>  </div> <!-- end of container -->
+
+</div>
+<!-- blog content section end -->
+
+  <!-- benefit section start -->
+    <div class="blog_benefit_sec">
+    <div class="container">
+      <div class="benefit_slider">
+        <div class="benefit_slide">
+                    </div>
+        </div>
+      </div> <!-- end of benefit_slider -->
+    </div> <!-- end of container -->
+  </div>
+    <!-- benefit section end -->
+
+  <!-- Related Resources section start -->
+  <div class="popular_courses blog_resources_sec">
+    <div class="container">
+        <h3 class="heading">Related Resources</h3>
+        <div class="related-resource_silder">
+                          <div class="coursse">
+                <div class="blog_course_banner">
+                                    <img alt="" src="https://content.cloudthat.com/resources/wp-content/uploads/2026/09/How-Do-You-Build-Your-First-AI-Agentx3f-A-Step-by-Step-Guide%403x.webp">
+                                  </div>
+                <div class="course_details">
+                  <div class="cat-name">
+                                            <p class="blog_upcmg_lable"><span>Agentic AI</span></p>
+                                            </div>
+                  <h4><a href="https://www.cloudthat.com/resources/blog/how-do-you-build-your-first-ai-agent-a-step-by-step-guide">How Do You Build Your First AI Agent? A</a></h4>
+                  <div class="upmg_btm_sec">
+                    <div class="upmg_btm_left">
+                      <p>By Reshu Goyal</p>
+                    </div>
+                    <div class="upmg_btm_right">
+                      <img alt="" src="https://www.cloudthat.com/resources/wp-content/themes/CloudThat/images/upcmg-calender.png">
+                      <p>Sep 23, 2026</p>
+                    </div>
+                  </div>
+                </div>
+            </div>
+
+                        <div class="coursse">
+                <div class="blog_course_banner">
+                                    <img alt="" src="https://content.cloudthat.com/resources/wp-content/uploads/2026/09/How-Forward-Deployed-Engineers-Turn-AI-Ambition-into-Business-Impact%403x.webp">
+                                  </div>
+                <div class="course_details">
+                  <div class="cat-name">
+                                            <p class="blog_upcmg_lable"><span>AI</span></p>
+                                            </div>
+                  <h4><a href="https://www.cloudthat.com/resources/blog/how-forward-deployed-engineers-turn-ai-ambition-into-business-impact">How Forward-Deployed Engineers Turn AI Ambition into Business Impact</a></h4>
+                  <div class="upmg_btm_sec">
+                    <div class="upmg_btm_left">
+                      <p>By Pooja Sharma</p>
+                    </div>
+                    <div class="upmg_btm_right">
+                      <img alt="" src="https://www.cloudthat.com/resources/wp-content/themes/CloudThat/images/upcmg-calender.png">
+                      <p>Sep 23, 2026</p>
+                    </div>
+                  </div>
+                </div>
+            </div>
+
+                        <div class="coursse">
+                <div class="blog_course_banner">
+                                    <img alt="" src="https://content.cloudthat.com/resources/wp-content/uploads/2026/09/Preparing-Your-Data-for-AI-in-Power-BI%403x-1.webp">
+                                  </div>
+                <div class="course_details">
+                  <div class="cat-name">
+                                            <p class="blog_upcmg_lable"><span>Microsoft CoPilot</span></p>
+                                            </div>
+                  <h4><a href="https://www.cloudthat.com/resources/blog/how-to-prevent-copilot-data-leakage-a-step-by-step-guide">How to Prevent Copilot Data Leakage? A Step-by-Step Guide</a></h4>
+                  <div class="upmg_btm_sec">
+                    <div class="upmg_btm_left">
+                      <p>By Rashi Mehrotra</p>
+                    </div>
+                    <div class="upmg_btm_right">
+                      <img alt="" src="https://www.cloudthat.com/resources/wp-content/themes/CloudThat/images/upcmg-calender.png">
+                      <p>Sep 23, 2026</p>
+                    </div>
+                  </div>
+                </div>
+            </div>
+
+                        <div class="coursse">
+                <div class="blog_course_banner">
+                                    <img alt="" src="https://content.cloudthat.com/resources/wp-content/uploads/2026/09/What-Does-an-AI-Engineer-Actually-Do-All-Dayx3f%403x.webp">
+                                  </div>
+                <div class="course_details">
+                  <div class="cat-name">
+                                            <p class="blog_upcmg_lable"><span>AI</span></p>
+                                            </div>
+                  <h4><a href="https://www.cloudthat.com/resources/blog/what-does-an-ai-engineer-actually-do-all-day">What Does an AI Engineer Actually Do All Day?</a></h4>
+                  <div class="upmg_btm_sec">
+                    <div class="upmg_btm_left">
+                      <p>By Vijayanand K V</p>
+                    </div>
+                    <div class="upmg_btm_right">
+                      <img alt="" src="https://www.cloudthat.com/resources/wp-content/themes/CloudThat/images/upcmg-calender.png">
+                      <p>Sep 23, 2026</p>
+                    </div>
+                  </div>
+                </div>
+            </div>
+
+                        <div class="coursse">
+                <div class="blog_course_banner">
+                                    <img alt="" src="https://content.cloudthat.com/resources/wp-content/uploads/2026/09/Zero-Trust-Architecture-Why-Implementations-Fail%403x.webp">
+                                  </div>
+                <div class="course_details">
+                  <div class="cat-name">
+                                            <p class="blog_upcmg_lable"><span>AI</span></p>
+                                            </div>
+                  <h4><a href="https://www.cloudthat.com/resources/blog/zero-trust-architecture-why-implementations-fail">Zero Trust Architecture: Why Implementations Fail</a></h4>
+                  <div class="upmg_btm_sec">
+                    <div class="upmg_btm_left">
+                      <p>By Nikita Khandal</p>
+                    </div>
+                    <div class="upmg_btm_right">
+                      <img alt="" src="https://www.cloudthat.com/resources/wp-content/themes/CloudThat/images/upcmg-calender.png">
+                      <p>Sep 23, 2026</p>
+                    </div>
+                  </div>
+                </div>
+            </div>
+
+                        <div class="coursse">
+                <div class="blog_course_banner">
+                                    <img alt="" src="https://content.cloudthat.com/resources/wp-content/uploads/2026/09/AI-Security-Awareness-Training-Guide%403x.webp">
+                                  </div>
+                <div class="course_details">
+                  <div class="cat-name">
+                                            <p class="blog_upcmg_lable"><span>AI</span></p>
+                                            </div>
+                  <h4><a href="https://www.cloudthat.com/resources/blog/ai-security-awareness-training-guide">AI Security Awareness Training Guide</a></h4>
+                  <div class="upmg_btm_sec">
+                    <div class="upmg_btm_left">
+                      <p>By Foram Shah</p>
+                    </div>
+                    <div class="upmg_btm_right">
+                      <img alt="" src="https://www.cloudthat.com/resources/wp-content/themes/CloudThat/images/upcmg-calender.png">
+                      <p>Sep 23, 2026</p>
+                    </div>
+                  </div>
+                </div>
+            </div>
+
+                        <div class="coursse">
+                <div class="blog_course_banner">
+                                    <img alt="" src="https://content.cloudthat.com/resources/wp-content/uploads/2026/09/Will-AI-Replace-Cloud-Engineersx3f-Whats-Actually-Changing%403x.webp">
+                                  </div>
+                <div class="course_details">
+                  <div class="cat-name">
+                                            <p class="blog_upcmg_lable"><span>AI</span></p>
+                                            </div>
+                  <h4><a href="https://www.cloudthat.com/resources/blog/will-ai-replace-cloud-engineers-whats-actually-changing">Will AI Replace Cloud Engineers? What's Actually Changing</a></h4>
+                  <div class="upmg_btm_sec">
+                    <div class="upmg_btm_left">
+                      <p>By Aditya Jha</p>
+                    </div>
+                    <div class="upmg_btm_right">
+                      <img alt="" src="https://www.cloudthat.com/resources/wp-content/themes/CloudThat/images/upcmg-calender.png">
+                      <p>Sep 23, 2026</p>
+                    </div>
+                  </div>
+                </div>
+            </div>
+
+                        <div class="coursse">
+                <div class="blog_course_banner">
+                                    <img alt="" src="https://content.cloudthat.com/resources/wp-content/uploads/2026/09/What-Is-Lambda%40Edge-and-How-Does-It-Workx3f%403x.webp">
+                                  </div>
+                <div class="course_details">
+                  <div class="cat-name">
+                                            <p class="blog_upcmg_lable"><span>AWS</span></p>
+                                            </div>
+                  <h4><a href="https://www.cloudthat.com/resources/blog/what-is-lambdaedge-and-how-does-it-work">What Is Lambda@Edge and How Does It Work?</a></h4>
+                  <div class="upmg_btm_sec">
+                    <div class="upmg_btm_left">
+                      <p>By Avinash Singh Bundela</p>
+                    </div>
+                    <div class="upmg_btm_right">
+                      <img alt="" src="https://www.cloudthat.com/resources/wp-content/themes/CloudThat/images/upcmg-calender.png">
+                      <p>Sep 23, 2026</p>
+                    </div>
+                  </div>
+                </div>
+            </div>
+
+                        <div class="coursse">
+                <div class="blog_course_banner">
+                                    <img alt="" src="https://content.cloudthat.com/resources/wp-content/uploads/2026/09/Generative-AI-Tokenomics-Control-Real-Costs%403x.webp">
+                                  </div>
+                <div class="course_details">
+                  <div class="cat-name">
+                                            <p class="blog_upcmg_lable"><span>Gen AI</span></p>
+                                            </div>
+                  <h4><a href="https://www.cloudthat.com/resources/blog/generative-ai-tokenomics-control-real-costs">Generative AI Tokenomics: Control Real Costs</a></h4>
+                  <div class="upmg_btm_sec">
+                    <div class="upmg_btm_left">
+                      <p>By Rajesh KVN</p>
+                    </div>
+                    <div class="upmg_btm_right">
+                      <img alt="" src="https://www.cloudthat.com/resources/wp-content/themes/CloudThat/images/upcmg-calender.png">
+                      <p>Sep 23, 2026</p>
+                    </div>
+                  </div>
+                </div>
+            </div>
+
+                        <div class="coursse">
+                <div class="blog_course_banner">
+                                    <img alt="" src="https://content.cloudthat.com/resources/wp-content/uploads/2026/09/Microsoft-Purview-EDM-How-Exact-Data-Match-Works%403x.webp">
+                                  </div>
+                <div class="course_details">
+                  <div class="cat-name">
+                                            <p class="blog_upcmg_lable"><span>Microsoft Purview</span></p>
+                                            </div>
+                  <h4><a href="https://www.cloudthat.com/resources/blog/microsoft-purview-edm-how-exact-data-match-works">Microsoft Purview EDM: How Exact Data Match Works</a></h4>
+                  <div class="upmg_btm_sec">
+                    <div class="upmg_btm_left">
+                      <p>By Navitha Wilson</p>
+                    </div>
+                    <div class="upmg_btm_right">
+                      <img alt="" src="https://www.cloudthat.com/resources/wp-content/themes/CloudThat/images/upcmg-calender.png">
+                      <p>Sep 23, 2026</p>
+                    </div>
+                  </div>
+                </div>
+            </div>
+
+                    </div><!-- end of course section -->
+    </div><!-- end of container -->
+  </div><!-- Related Resources section end -->
+
+  <!-- Related Offering section start -->
+    <!-- end of related offering section end -->
+
+<!-- subscribe section start -->
+<div class="blog_subscrip_sec">
+  <div class="container">
+    <h3 class="blog_sec_head">Get The Most Out Of Us</h3>
+    <p>Our support doesn't end here. We have monthly newsletters, study guides, practice questions, and more to assist you in upgrading your cloud career. Subscribe to get them all!</p>
+    <div class="subs_form">
+      <script type="text/javascript" src="https://mautic.cloudthat.com/form/generate.js?id=14"></script>    </div>
+  </div>
+</div>
+<!-- subscribe section end -->
+
+<footer id="footer">
+    <div class="footer_sec1">
+        <div class="ft ft1">
+            <div id="custom_html-8" class="widget_text widget widget_custom_html"><div class="textwidget custom-html-widget"><img src="https://www.cloudthat.com/resources/wp-content/themes/CloudThat/images/footer-logo.png" alt="cloudthat-logo"><p>World’s best Cloud Training and Cloud Consulting Services company, offering expert solutions in Cloud, DevOps, AI & ML, IoT, Data Analytics, and Cloud Security for midsize and enterprise clients across the globe.</p></div></div>            <!-- <img src="https://www.cloudthat.com/resources/wp-content/themes/CloudThat/images/footer-logo.png" alt="cloudthat-logo">
+            <p>World’s best Cloud Training and Cloud Consulting Services company, offering expert solutions in Cloud, DevOps, AI & ML, IoT, Data Analytics, and Cloud Security for midsize and enterprise clients across the globe.
+            </p> -->
+            <ul class="footer_social">
+                <li><a href="https://www.facebook.com/cloudthat"><i class="fab fa-facebook-f"></i></a></li>
+                <li><a href="https://www.youtube.com/user/cloudthat"><i class="fab fa-youtube"></i></a></li>
+                <li><a href="https://www.twitter.com/cloudthat"><i class="fab fa-x-twitter"></i></a></li>
+                <li><a href="https://www.instagram.com/cloudthat/"><i class="fab fa-instagram"></i></a></li>
+                <li><a href="https://www.linkedin.com/company/cloudthat"><i class="fab fa-linkedin"></i></a></li>
+            </ul>
+        </div>
+        <div class="ft ft2">
+            <div id="block-5" class="widget widget_block">
+<h4 class="wp-block-heading">Quick links</h4>
+</div><div id="nav_menu-4" class="widget widget_nav_menu"><div class="menu-footer-menu-1-container"><ul id="menu-footer-menu-1" class="menu"><li id="menu-item-100" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-100"><a href="https://www.cloudthat.com/training/" class="submenu-title has-arrow" id="a_wrapper-0">Cloud Computing Courses</a></li>
+<li id="menu-item-101" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-101"><a href="https://www.cloudthat.com/corporate-training/" class="submenu-title has-arrow" id="a_wrapper-0">Corporate Training</a></li>
+<li id="menu-item-102" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-102"><a href="https://www.cloudthat.com/consulting/" class="submenu-title has-arrow" id="a_wrapper-0">Cloud Consulting</a></li>
+<li id="menu-item-44414" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-44414"><a href="https://www.cloudthat.com/training/cloud-and-devops-expert-program/" class="submenu-title has-arrow" id="a_wrapper-0">Job Assistance Program</a></li>
+<li id="menu-item-109" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-109"><a target="_blank" rel="noopener" href="https://www.cloudthat.com/training/calendar/" class="submenu-title has-arrow" id="a_wrapper-0">Training calendar</a></li>
+<li id="menu-item-110" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-110"><a target="_blank" rel="noopener" href="https://testprep.cloudthat.com/" class="submenu-title has-arrow" id="a_wrapper-0">Test Prep</a></li>
+<li id="menu-item-44410" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-44410"><a href="https://www.cloudthat.com/training/aws-mastery-pass" class="submenu-title has-arrow" id="a_wrapper-0">AWS Mastery Pass</a></li>
+<li id="menu-item-111" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-111"><a target="_blank" rel="noopener" href="https://www.cloudthat.com/training/azure-mastery-pass/" class="submenu-title has-arrow" id="a_wrapper-0">Azure Mastery Pass</a></li>
+<li id="menu-item-44412" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-44412"><a href="https://www.cloudthat.com/training/devops-mastery-pass" class="submenu-title has-arrow" id="a_wrapper-0">DevOps Mastery Pass</a></li>
+<li id="menu-item-41878" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-41878"><a href="https://www.cloudthat.com/training/hire-from-us" class="submenu-title has-arrow" id="a_wrapper-0">Hire From Us</a></li>
+</ul></div></div><div id="block-7" class="widget widget_block">
+<div class="wp-block-group is-layout-flow wp-block-group-is-layout-flow"><div class="wp-block-group__inner-container"></div></div>
+</div>        </div>
+        <div class="ft ft3">
+            <div id="block-8" class="widget widget_block">
+<h4 class="wp-block-heading">Categories</h4>
+</div><div id="nav_menu-2" class="widget widget_nav_menu"><div class="menu-footer-menu-2-container"><ul id="menu-footer-menu-2" class="menu"><li id="menu-item-39" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-39"><a href="https://www.cloudthat.com/training/aiandml/" class="submenu-title has-arrow" id="a_wrapper-0">AI &#038; ML Courses</a></li>
+<li id="menu-item-38" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-38"><a href="https://www.cloudthat.com/training/aws/" class="submenu-title has-arrow" id="a_wrapper-0">AWS Certifications and Trainings</a></li>
+<li id="menu-item-37" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-37"><a href="https://www.cloudthat.com/training/azure/" class="submenu-title has-arrow" id="a_wrapper-0">Microsoft Azure Certifications</a></li>
+<li id="menu-item-116" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-116"><a href="https://www.cloudthat.com/training/devops/" class="submenu-title has-arrow" id="a_wrapper-0">DevOps Certifications</a></li>
+<li id="menu-item-42" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-42"><a href="https://www.cloudthat.com/training/gcp/" class="submenu-title has-arrow" id="a_wrapper-0">GCP Certifications and Trainings</a></li>
+<li id="menu-item-43" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-43"><a href="https://www.cloudthat.com/training/microsoftdynamics/" class="submenu-title has-arrow" id="a_wrapper-0">Microsoft Dynamics 365 Certifications</a></li>
+<li id="menu-item-45" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-45"><a href="https://www.cloudthat.com/training/microsoft-security/" class="submenu-title has-arrow" id="a_wrapper-0">Microsoft Security Certifications</a></li>
+<li id="menu-item-44" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-44"><a href="https://www.cloudthat.com/training/modernworkplace/" class="submenu-title has-arrow" id="a_wrapper-0">Modern Workplace Trainings</a></li>
+<li id="menu-item-34573" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-34573"><a href="https://www.cloudthat.com/training/power-platform/pl-300-microsoft-power-bi-data-analyst-training" class="submenu-title has-arrow" id="a_wrapper-0">Power BI Course</a></li>
+<li id="menu-item-34692" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-34692"><a href="https://www.cloudthat.com/training/power-platform" class="submenu-title has-arrow" id="a_wrapper-0">Power Platform Certification</a></li>
+<li id="menu-item-34575" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-34575"><a href="https://www.cloudthat.com/training/vmware" class="submenu-title has-arrow" id="a_wrapper-0">VMware Certifications</a></li>
+</ul></div></div>        </div>
+        <div class="ft ft4">
+            <div id="block-9" class="widget widget_block">
+<h4 class="wp-block-heading">Resources</h4>
+</div><div id="nav_menu-3" class="widget widget_nav_menu"><div class="menu-footer-menu-3-container"><ul id="menu-footer-menu-3" class="menu"><li id="menu-item-46" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-46"><a href="https://www.cloudthat.com/resources/blogs" class="submenu-title has-arrow" id="a_wrapper-0">Blogs</a></li>
+<li id="menu-item-31218" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-31218"><a href="https://www.cloudthat.com/resources/news-events" class="submenu-title has-arrow" id="a_wrapper-0">News and Events</a></li>
+<li id="menu-item-31219" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home menu-item-31219"><a href="https://www.cloudthat.com/resources/" class="submenu-title has-arrow" id="a_wrapper-0">Case Study</a></li>
+<li id="menu-item-31220" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home menu-item-31220"><a href="https://www.cloudthat.com/resources/" class="submenu-title has-arrow" id="a_wrapper-0">E-Book</a></li>
+<li id="menu-item-31221" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home menu-item-31221"><a href="https://www.cloudthat.com/resources/" class="submenu-title has-arrow" id="a_wrapper-0">Webinars</a></li>
+</ul></div></div>        </div>
+        <div class="ft ft5">
+            <h4>Contact </h4>
+            <div class="footer_cont">
+                <p style="margin-bottom: 30px;">
+                    <i class="fas fa-map-marker-alt"></i>
+					<a href="https://g.page/CloudThat?share" target="_blank" rel="noopener">
+                    102, 4th B Cross,
+                    5th Block Koramangala Industrial Area,
+                    Bangalore, Karnataka - 560095
+					</a>
+                </p>
+                <p><a href="mailto:sales@cloudthat.com"><i class="fas fa-envelope"></i>sales@cloudthat.com</a></p>
+				<div id="certified_logos">	
+					<img src="https://content.cloudthat.com/consulting/wp-content/uploads/2024/05/15094951/Logos-02-1.png" alt="">
+					<img src="https://content.cloudthat.com/consulting/wp-content/uploads/2024/05/15094954/LOGOS-01-1.png" alt="">
+                    <br/>
+					<img src="https://content.cloudthat.com/consulting/wp-content/uploads/2024/08/05114139/ISO-new_15010.png" alt="">
+					<img src="https://content.cloudthat.com/consulting/wp-content/uploads/2024/08/05114129/ISO-new_27701-1.png" alt="">
+				</div>
+            </div>
+            <!-- end of country section -->
+        </div>
+    </div><!-- end of footer sec1-->
+    <div class="footer_sec2">
+        <div class="ft">
+            <div id="block-10" class="widget widget_block">
+<h4 class="wp-block-heading">India - Headquarter</h4>
+</div><div id="block-11" class="widget widget_block widget_text">
+
+<p>102, 4th B Cross, 5th Block Koramangala Industrial Area, Bangalore, Karnataka - 560095.</p>
+</div><div id="block-12" class="widget widget_block"></div>        </div>  
+        <div class="ft">
+            <div id="block-13" class="widget widget_block">
+<h4 class="wp-block-heading">East India and SAARC</h4>
+</div><div id="block-14" class="widget widget_block widget_text">
+<p>RDB Boulevard, Level 8, Plot K-1,<br>Block EP &amp; GP, Salt Lake City, Sector V, Kolkata – 700 091.</p>
+</div><div id="block-15" class="widget widget_block"></div>        </div> 
+        <div class="ft">
+            <div id="block-16" class="widget widget_block">
+<h4 class="wp-block-heading">USA</h4>
+</div><div id="block-17" class="widget widget_block widget_text">
+<p>CLOUDTHAT AMERICAS LTD,
+1916 Pike Place, Seattle, <br>WA 98101</p><p>Phone: <a href="tel: +1 8555588830">+1 855 558 8830</a><br> 
+Fax: 206 737-9006</p> 
+</div>        </div> 
+        <div class="ft">
+            <div id="block-19" class="widget widget_block">
+<h4 class="wp-block-heading">UK</h4>
+</div><div id="block-20" class="widget widget_block widget_text">
+<p>7B Popin Business Centre South <br>
+Way Wembley <br>
+Middlesex – HA9 0HF.</p>
+<p><a rel="noreferrer noopener" href="tel: +1-8555588830">+1 855 558 8830</a></p>
+
+</div>        </div>
+        <div class="ft">
+            <div id="custom_html-5" class="widget_text widget widget_custom_html"><div class="textwidget custom-html-widget"><h4>Bangladesh</h4>
+<p>House #107,<br>
+Road #13,<br>
+Block #E,<br>
+Banani,<br>
+Dhaka – 1213</p>
+</div></div>        </div>
+        <div class="ft">
+            <div id="custom_html-7" class="widget_text widget widget_custom_html"><div class="textwidget custom-html-widget"><h4>Ahmedabad</h4>
+<p>D-509, 5th floor, The First,<br>
+behind ITC Narmada Hotel,<br>
+Vastrapur,<br>
+Ahmedabad - 380015</p>
+   </div></div>        </div>
+    </div><!-- end of footer section 2-->
+</footer><!-- end of footer -->
+
+
+
+<div id="copyright">
+    <div id="custom_html-6" class="widget_text widget widget_custom_html"><div class="textwidget custom-html-widget"><p>©COPYRIGHT 2026 CLOUDTHAT TECHNOLOGIES PRIVATE LIMITED · ALL RIGHTS RESERVED · <a target="_blank" class="privacylink" href="https://www.cloudthat.com/courses/privacy-policy/" rel="noopener">PRIVACY POLICY</a> · <a target="_blank" class="privacylink" href="https://www.cloudthat.com/courses/terms-of-use/" rel="noopener">TERMS OF USE</a> · <a target="_blank" class="privacylink" href="https://www.cloudthat.com/courses/disclaimer/" rel="noopener">DISCLAIMER</a> · <a target="_blank" class="privacylink" href="https://www.cloudthat.com/cancellation-and-refund-policy/" rel="noopener">CANCELLATION AND REFUND</a></p></div></div>  </div>
+
+<script src="https://www.cloudthat.com/resources/wp-content/themes/CloudThat/js/jquery.min.js"></script>
+<script src="https://www.cloudthat.com/resources/wp-content/themes/CloudThat/js/bootstrap.min.js"></script>
+<script src="https://www.cloudthat.com/resources/wp-content/themes/CloudThat/js/slick.min.js"></script>
+<script src="https://www.cloudthat.com/resources/wp-content/themes/CloudThat/js/myscript.js"></script>
+<script src="https://www.cloudthat.com/resources/wp-content/themes/CloudThat/js/tab_filter.js"></script>
+<script src="https://www.cloudthat.com/resources/wp-content/themes/CloudThat/js/jquery-ui.js"></script>
+<script src="https://www.cloudthat.com/resources/wp-content/themes/CloudThat/js/select2.min.js"></script>
+<script>
+// Define resources_ajax for tab_filter.js
+var resources_ajax = {
+    ajaxurl: 'https://www.cloudthat.com/resources/wp-admin/admin-ajax.php'
+};
+</script>
+<!-- YouTube Feed JS -->
+<script type="text/javascript">
+
+</script>
+	<noscript>
+		<img src="https://mautic.cloudthat.com/mtracking.gif?d=YTo0OntzOjg6Imxhbmd1YWdlIjtzOjU6ImVuX1VTIjtzOjg6InBhZ2VfdXJsIjtzOjE3NjoiaHR0cHM6Ly93d3cuY2xvdWR0aGF0LmNvbS9yZXNvdXJjZXMvYmxvZy9hdHRlbnRpb24tbWVjaGFuaXNtcy1pbi10cmFuc2Zvcm1lcnM%2FYmxvZz1hdHRlbnRpb24tbWVjaGFuaXNtcy1pbi10cmFuc2Zvcm1lcnMmcG9zdF90eXBlPWJsb2cmbmFtZT1hdHRlbnRpb24tbWVjaGFuaXNtcy1pbi10cmFuc2Zvcm1lcnMiO3M6MTA6InBhZ2VfdGl0bGUiO3M6MzY6IkF0dGVudGlvbiBNZWNoYW5pc21zIGluIFRyYW5zZm9ybWVycyI7czo4OiJyZWZlcnJlciI7czoxNzY6Imh0dHBzOi8vd3d3LmNsb3VkdGhhdC5jb20vcmVzb3VyY2VzL2Jsb2cvYXR0ZW50aW9uLW1lY2hhbmlzbXMtaW4tdHJhbnNmb3JtZXJzP2Jsb2c9YXR0ZW50aW9uLW1lY2hhbmlzbXMtaW4tdHJhbnNmb3JtZXJzJnBvc3RfdHlwZT1ibG9nJm5hbWU9YXR0ZW50aW9uLW1lY2hhbmlzbXMtaW4tdHJhbnNmb3JtZXJzIjt9" style="display:none;" alt="Mautic Tags" />
+	</noscript>
+	<script type="text/javascript">
+var getUrlParameter = function getUrlParameter(sParam) {
+    var sPageURL = decodeURIComponent(window.location.search.substring(1)),
+        sURLVariables = sPageURL.split('&'),
+        sParameterName,
+        i;
+
+    for (i = 0; i < sURLVariables.length; i++) {
+        sParameterName = sURLVariables[i].split('=');
+
+        if (sParameterName[0] === sParam) {
+            return sParameterName[1] === undefined ? true : sParameterName[1];
+        }
+    }
+};	
+var lsqresult =  getUrlParameter('result');
+if(lsqresult == 'success'){
+	jQuery('#sec-message-wrapper').toggle();
+}
+</script><script type="text/javascript" src="https://www.cloudthat.com/resources/wp-content/plugins/contact-form-7/includes/swv/js/index.js?ver=5.6.4" id="swv-js"></script>
+<script type="text/javascript" id="contact-form-7-js-extra">
+/* <![CDATA[ */
+var wpcf7 = {"api":{"root":"https:\/\/www.cloudthat.com\/resources\/wp-json\/","namespace":"contact-form-7\/v1"},"cached":"1"};
+/* ]]> */
+</script>
+<script type="text/javascript" src="https://www.cloudthat.com/resources/wp-content/plugins/contact-form-7/includes/js/index.js?ver=5.6.4" id="contact-form-7-js"></script>
+<script type="text/javascript">
+window.addEventListener("load", function(event) {
+jQuery(".cfx_form_main,.wpcf7-form,.wpforms-form,.gform_wrapper form").each(function(){
+var form=jQuery(this); 
+var screen_width=""; var screen_height="";
+ if(screen_width == ""){
+ if(screen){
+   screen_width=screen.width;  
+ }else{
+     screen_width=jQuery(window).width();
+ }    }  
+  if(screen_height == ""){
+ if(screen){
+   screen_height=screen.height;  
+ }else{
+     screen_height=jQuery(window).height();
+ }    }
+form.append('<input type="hidden" name="vx_width" value="'+screen_width+'">');
+form.append('<input type="hidden" name="vx_height" value="'+screen_height+'">');
+form.append('<input type="hidden" name="vx_url" value="'+window.location.href+'">');  
+}); 
+
+});
+</script> 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.countdown/2.2.0/jquery.countdown.js" integrity="sha512-aWlTsIGUhEq2+LQNA7Wq+OsLaouCcGGaHBWzoU9duKy26ImHe12gRtQnj4688p7QUHG+J4CMb+XwgZ8LYqQ+kQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/6.2.0/tinymce.min.js"></script> -->
+<script>
+
+$('.upcom_evnt_slider').slick({
+    slidesToShow: 3,
+    slidesToScroll: 1,
+    infinite: true,
+    responsive: [
+      {
+        breakpoint: 1100,
+        settings: {
+          slidesToShow: 2
+        }
+      },
+      {
+        breakpoint: 960,
+        settings: {
+          slidesToShow: 1
+        }
+      }
+    ]
+});
+
+$(document).ready(function(){
+    $('.btn-top').on('click', function(){
+        var attract = $(this).attr('label');
+        $('.latestcl').text('Latest '+attract);
+    });
+ 
+    $('.post_silder').slick({
+        slidesToShow: 1,
+        slidesToScroll: 1,
+        autoplay: false,
+        autoplaySpeed: 4000,
+        fade: false,
+        arrows: false,
+        dots: true
+    });
+});
+</script>
+<script>
+    (function(w,d,t,u,n,a,m){w['MauticTrackingObject']=n;
+        w[n]=w[n]||function(){(w[n].q=w[n].q||[]).push(arguments)},a=d.createElement(t),
+        m=d.getElementsByTagName(t)[0];a.async=1;a.src=u;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://mautic.cloudthat.com/mtc.js','mt');
+
+    mt('send', 'pageview');
+</script>
+    <script src="https://www.kenyt.ai/botapp/ChatbotUI/dist/js/bot-loader.js" type="text/javascript" data-bot="192626894"></script>
+
+<!-- Modal -->
+<div id="imageModal" class="modal" style="display:none !important;position:fixed;z-index:1000;left:0;top:50;width:100%;height:100%;background-color:rgba(0,0,0,0.8);">
+    <div class="modal-content" style="position:relative;margin:10% auto;width:80%;max-width:600px;">
+        <span class="close" style="position:absolute;top:10px;right:25px;color:#fff;font-size:35px;font-weight:bold;cursor:pointer;">&times;</span>
+        <a href="https://forms.cloudthat.com/certification-program-sale-2025?utm_source=Website&utm_medium=Blog&utm_campaign=Navratri+sale" id="modalLink" target="_blank">
+            <img id="modalImage" src="https://content.cloudthat.com/resources/wp-content/uploads/2025/09/Pop-up-banner.png" alt="Modal Image" style="width:100%;height:auto;">
+        </a>
+    </div>
+</div>
+
+<script>
+var modal = document.getElementById('imageModal');
+var modalTrigger = document.getElementById('modalTrigger');
+var closeBtn = document.getElementsByClassName('close')[0];
+
+function setCookie(name, value, hours) {
+    var expires = new Date();
+    expires.setTime(expires.getTime() + (hours * 60 * 60 * 1000));
+    document.cookie = name + '=' + value + ';expires=' + expires.toUTCString() + ';path=/';
+}
+
+function getCookie(name) {
+    var nameEQ = name + '=';
+    var ca = document.cookie.split(';');
+    for(var i = 0; i < ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+        if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
+    }
+    return null;
+}
+
+if (!getCookie('modalShown') && !window.location.pathname.includes('thank-you')) {
+    setTimeout(function() {
+        modal.style.display = 'block';
+        setCookie('modalShown', 'true', 24);
+    }, 2000);
+}
+
+if(modalTrigger) {
+    modalTrigger.onclick = function() {
+        modal.style.display = 'block';
+    }
+}
+
+closeBtn.onclick = function() {
+    modal.style.display = 'none';
+}
+
+window.onclick = function(event) {
+    if (event.target == modal) {
+        modal.style.display = 'none';
+    }
+}
+</script>
+
+</body>
+</html>
+  <script>
+    $(document).ready(function(){
+      $('.logo_sec').slick({
+            slidesToShow: 7,
+            arrows: false,
+             responsive: [
+            {
+              breakpoint: 960,
+              settings: {
+                slidesToShow: 3
+              }
+            }
+          ]
+        });
+      $('.benefit_slider').slick({
+          arrows: false,
+          dots: true,
+          autoplay: true,
+          slidesToShow: 1,
+        });
+
+    setTimeout(function(){
+      jQuery('#home_form').modal('show');
+    }, 5000);
+
+    });
+  </script>
+  <script type="text/javascript">
+  // Maybe todo:
+  // Add href automaticly forEach header
+  // perhaps generate the content
+  // console.clear();
+
+
+
+const content = document.querySelector("#content");
+const nav = document.querySelector('#navigation');
+const navList = document.querySelector('#navList');
+
+window.addEventListener('scroll', () => scrollNav(content, nav, navList));
+
+scrollNav = (content, nav, navList) => {
+  content.getBoundingClientRect().top<=200 ?
+    nav.classList.add("fixed") : nav.classList.remove("fixed");
+  
+  let activeIndex = -1;
+ 
+  for (let i=0; i<content.children.length; i++) {
+    navList.children[i].classList.remove('nav-active');
+    
+    let el = content.children[i];
+    if (el.getBoundingClientRect().top<=200){
+      activeIndex = i;
+    }
+    // console.log(activeIndex);
+  }
+  if (activeIndex>=0){
+    navList.children[activeIndex].classList.add('nav-active');
+  }
+};
+
+// let list = document.querySelectorAll('#navigation li');
+// console.log(list);
+// for(let i=0; i<list.length; i++){
+//       list[i].addEventListener('click',function(){
+//           if(list[i].classList.contains('nav-active')){
+//               list[i].classList.remove('nav-active');
+//           }
+//           list[i].classList.add('nav-active');
+//       });
+// }
+</script>
+
+<script type="text/javascript">
+
+$(document).ready(function(){
+
+  $('.related-resource_silder').slick({
+          slidesToShow: 3,
+          slidesToScroll: 1,
+          responsive: [
+            {
+              breakpoint: 1100,
+              settings: {
+                slidesToShow: 3
+              }
+            },
+            {
+              breakpoint: 1024,
+              settings: {
+                slidesToShow: 2
+              }
+            },
+            {
+              breakpoint: 768,
+              settings: {
+                slidesToShow: 1
+              }
+            }
+          ]
+        });
+
+  // $('.related_offer_silder').slick({
+  //         slidesToShow: 3,
+  //         slidesToScroll: 1,
+  //         responsive: [
+  //           {
+  //             breakpoint: 1100,
+  //             settings: {
+  //               slidesToShow: 3
+  //             }
+  //           },
+  //           {
+  //             breakpoint: 1024,
+  //             settings: {
+  //               slidesToShow: 2
+  //             }
+  //           },
+  //           {
+  //             breakpoint: 768,
+  //             settings: {
+  //               slidesToShow: 1
+  //             }
+  //           }
+  //         ]
+  //       });
+  
+});
+// function clickSolution(){
+
+// var x = document.getElementById("comment-form");
+// if (x.style.display === "none") {
+//   x.style.display = "block";
+// } else {
+//   x.style.display = "none";
+// }
+// }
+// jQuery(document).ready(function(){
+  
+// });
+var url = window.location.href;
+var splitUrl = url.split('/');
+var response = splitUrl[7].split('#')[1];
+if(response == 'respond'){
+  jQuery("#comment-form").show();
+}
+
+</script>
+<!--
+Performance optimized by W3 Total Cache. Learn more: https://www.boldgrid.com/w3-total-cache/
+
+Object Caching 467/597 objects using memcached
+Page Caching using disk: enhanced 
+Database Caching 3/33 queries in 0.175 seconds using memcached
+
+Served from: www.cloudthat.com @ 2026-09-23 10:23:12 by W3 Total Cache
+-->

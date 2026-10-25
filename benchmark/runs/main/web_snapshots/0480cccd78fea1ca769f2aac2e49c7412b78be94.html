@@ -1,0 +1,1664 @@
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr" prefix="content: http://purl.org/rss/1.0/modules/content/  dc: http://purl.org/dc/terms/  foaf: http://xmlns.com/foaf/0.1/  og: http://ogp.me/ns#  rdfs: http://www.w3.org/2000/01/rdf-schema#  schema: http://schema.org/  sioc: http://rdfs.org/sioc/ns#  sioct: http://rdfs.org/sioc/types#  skos: http://www.w3.org/2004/02/skos/core#  xsd: http://www.w3.org/2001/XMLSchema# ">
+  <head>
+    <meta charset="utf-8" />
+<meta name="description" content="PostgreSQL have supported Hash Index for a long time, but they are not much used in production mainly because they are not durable. Now, with the next version of PostgreSQL, they will be durable. The immediate question is how do they perform as compared to Btree indexes." />
+<meta name="robots" content="index, follow" />
+<link rel="canonical" href="https://www.enterprisedb.com/postgres-tutorials/are-hash-indexes-faster-btree-indexes-postgres" />
+<meta property="og:site_name" content="EDB" />
+<meta property="og:url" content="https://enterprisedb.com/postgres-tutorials/are-hash-indexes-faster-btree-indexes-postgres" />
+<meta property="og:title" content="Are Hash Indexes Faster than Btree Indexes in Postgres?" />
+<meta property="og:description" content="PostgreSQL have supported Hash Index for a long time, but they are not much used in production mainly because they are not durable. Now, with the next version of PostgreSQL, they will be durable. The immediate question is how do they perform as compared to Btree indexes." />
+<meta property="og:image" content="https://enterprisedb.com/sites/default/files/blogs/read_only_hash_index.png" />
+<meta name="Generator" content="Drupal 10 (https://www.drupal.org)" />
+<meta name="MobileOptimized" content="width" />
+<meta name="HandheldFriendly" content="true" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<script type="application/ld+json">{
+    "@context": "https://schema.org",
+    "@graph": [
+        {
+            "@type": "BlogPosting",
+            "headline": "Are Hash Indexes Faster than Btree Indexes in Postgres?",
+            "name": "Are Hash Indexes Faster than Btree Indexes in Postgres?",
+            "about": [
+                "PostgreSQL have supported Hash Index for a long time",
+                "but they are not much used in production mainly because they are not durable. Now",
+                "with the next version of PostgreSQL",
+                "they will be durable. The immediate question is how do they perform as compared to Btree indexes. There is a lot of work underway for the coming version to make them faster. There are multiple ways in which we can compare the performance of Hash and Btree PostgreSQL index types",
+                "like the time taken for index creation",
+                "search",
+                "or insertion in the index. This blog will mainly focus on the search operation. By definition",
+                "hash indexes are O(1) and Btree indexes are O(log n)",
+                "however with duplicates that is not exactly true.\n\nHash Index Performance\n\nTo start with let us see the impact of work being done to improve the performance of hash indexes. Below is the performance data of the pgbench read-only workload to compare the performance difference of Hash indexes between 9.6 and HEAD on IBM POWER8 with 24 cores",
+                "192 hardware threads",
+                "492GB RAM.\n\n\n\n \n\nThe workload is such that all the data fits in shared buffers (scale factor is 300 (~4.5GB) and shared_buffers is 8GB). As we can see from the above graph",
+                "the performance has increased at all client counts in the range of 7% to 81% and the impact is more pronounced at higher client counts. The main work which has led to this improvement is 6d46f478 (Improve hash index bucket split behavior) and 293e24e5 (Cache hash index\u0027s metapage in rel-\u003Erd_amcache.).\n\nThe first commit 6d46f478 has changed the heavyweight locks (locks that are used for logical database objects to ensure the database ACID properties) to lightweight locks (locks to protect shared data structures) for scanning the bucket pages. In general",
+                "acquiring the heavyweight lock is costlier as compared to lightweight locks. In addition to reducing the locking cost",
+                "this also avoids locking out scans and inserts for the lifetime of the split.\n\nThe second commit 293e24e5 avoids a significant amount of contention for accessing metapage. Each search operation needs to access metapage to find the bucket that contains the tuple being searched which leads to high contention around metapage. Each access to metapage needs to further access buffer manager. This work avoids that contention by caching the metapage information in the backend local cache which helps bypassing all the buffer manager related work and hence the major contention in accessing the metapage.\n\nHash Index Performance Compared to Btree Index\n\nThe next graph shows how the PostgreSQL hash index performs as compared to the btree index. In this run we have changed hash to btree index in pgbench read-only tests.\n\n\n\nWe can see here that the PostgreSQL hash index performs better than the btree index and the performance difference is in the range of 10% to 22%. In some other workloads",
+                "we have seen a better performance like with hash index on varchar columns and even in the community",
+                "it has been reported that there is performance improvement in the range of 40% to 60% when hash indexes are used for unique index columns.\n\nThe important thing to note about the above data is that it is only on some of the specific workloads and it mainly covers Selects as that is the main area where performance improvement work has been done for PostgreSQL10. The other interesting parameters to compare are the size of the PostgreSQL index and the update on the index which needs more study and experiments.\n\nIn the end",
+                "I would like to thank my colleagues who were directly involved in this work and my employer EnterpriseDB who has supported this work. First I would like to thank Robert Haas who has envisioned all this work and is the committer of this work",
+                "and Mithun C Y who was the author of commit 293e24e5. Also",
+                "I would like to extend sincere thanks to all the community members who are involved in this work and especially Jeff Janes and Jesper Pedersen who have reviewed and tested this work.\n\n \n\nThis post originally appeared on Amit\u0027s personal blog."
+            ],
+            "description": "PostgreSQL have supported Hash Index for a long time, but they are not much used in production mainly because they are not durable. Now, with the next version of PostgreSQL, they will be durable. The immediate question is how do they perform as compared to Btree indexes.",
+            "mainEntityOfPage": "https://enterprisedb.com/postgres-tutorials/are-hash-indexes-faster-btree-indexes-postgres"
+        },
+        {
+            "@type": "WebPage",
+            "description": "PostgreSQL have supported Hash Index for a long time, but they are not much used in production mainly because they are not durable. Now, with the next version of PostgreSQL, they will be durable. The immediate question is how do they perform as compared to Btree indexes.",
+            "breadcrumb": {
+                "@type": "BreadcrumbList",
+                "itemListElement": [
+                    {
+                        "@type": "ListItem",
+                        "position": 1,
+                        "name": "Home",
+                        "item": "https://enterprisedb.com/"
+                    },
+                    {
+                        "@type": "ListItem",
+                        "position": 2,
+                        "name": "Postgres Tutorials",
+                        "item": "https://enterprisedb.com/postgres-tutorials"
+                    }
+                ]
+            },
+            "inLanguage": "en"
+        },
+        {
+            "@type": "WebSite",
+            "name": "EDB",
+            "url": "https://enterprisedb.com/",
+            "inLanguage": "en"
+        }
+    ]
+}</script>
+<link rel="preload" href="/themes/custom/edb_theme/dist/fonts/NeueHaasGroteskDisplay-55Roman-Web.woff2" as="font" type="font/woff2" crossorigin="anonymous" />
+<link rel="preload" href="/themes/custom/edb_theme/dist/fonts/NeueHaasGroteskDisplay-75Bold-Web.woff2" as="font" type="font/woff2" crossorigin="anonymous" />
+<link rel="preconnect" href="https://use.fontawesome.com" crossorigin="anonymous" />
+<link rel="preconnect" href="https://consent.trustarc.com" crossorigin="anonymous" />
+<link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+<link rel="dns-prefetch" href="https://static.addtoany.com" />
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"EDB","alternateName":"EnterpriseDB","url":"https://www.enterprisedb.com","logo":"https://enterprisedb.com/themes/custom/edb_theme/logo2.svg","foundingDate":"2004-03","sameAs":["https://www.crunchbase.com/organization/enterprisedb","https://www.linkedin.com/company/edbpostgres/","https://github.com/EnterpriseDB"]}</script>
+<link rel="icon" href="/themes/custom/edb_theme/favicon.ico" type="image/vnd.microsoft.icon" />
+<link rel="alternate" hreflang="en" href="https://enterprisedb.com/postgres-tutorials/are-hash-indexes-faster-btree-indexes-postgres" />
+
+    <title>Are Hash Indexes Faster than Btree Indexes in Postgres? | EDB</title>
+    <link rel="stylesheet" media="print" href="/sites/default/files/css/css_LlV-AOphdzzmilO9tLx8hxbL-VuRG8JPoiRStnVPxh8.css?delta=0&amp;language=en&amp;theme=edb_theme&amp;include=eJxNjFEKwCAMQy808EilnVHHOiu192d-DOZfkpcEWaiiw1nTyOXTYX5gkWh4kEStbhb_hBzKgUyn9UAPWtXz3rrFFxhcQbJfVDVh3YLZ2BHtmi_daDgK" />
+<link rel="stylesheet" media="all" href="/sites/default/files/css/css_t545ycnr48bGz2pXj_HVfcDeraqtVVKL99SbWfNlhOU.css?delta=1&amp;language=en&amp;theme=edb_theme&amp;include=eJxNjFEKwCAMQy808EilnVHHOiu192d-DOZfkpcEWaiiw1nTyOXTYX5gkWh4kEStbhb_hBzKgUyn9UAPWtXz3rrFFxhcQbJfVDVh3YLZ2BHtmi_daDgK" />
+<link rel="stylesheet" media="print" href="/sites/default/files/css/css_JbtBU9Voj38J603PZ6u_fG5T48vLxGn91aziONuGVDI.css?delta=2&amp;language=en&amp;theme=edb_theme&amp;include=eJxNjFEKwCAMQy808EilnVHHOiu192d-DOZfkpcEWaiiw1nTyOXTYX5gkWh4kEStbhb_hBzKgUyn9UAPWtXz3rrFFxhcQbJfVDVh3YLZ2BHtmi_daDgK" />
+<link rel="stylesheet" media="all" href="/sites/default/files/css/css_NGxjbpFVllKWN7H32gCHSja5-2cG4ucDgSyeyV2bAZM.css?delta=3&amp;language=en&amp;theme=edb_theme&amp;include=eJxNjFEKwCAMQy808EilnVHHOiu192d-DOZfkpcEWaiiw1nTyOXTYX5gkWh4kEStbhb_hBzKgUyn9UAPWtXz3rrFFxhcQbJfVDVh3YLZ2BHtmi_daDgK" />
+<link rel="stylesheet" media="print" href="/sites/default/files/css/css_tVC22lNhLM0SOPdImFG_wG8UwRTrGhNSk7221rHOEzg.css?delta=4&amp;language=en&amp;theme=edb_theme&amp;include=eJxNjFEKwCAMQy808EilnVHHOiu192d-DOZfkpcEWaiiw1nTyOXTYX5gkWh4kEStbhb_hBzKgUyn9UAPWtXz3rrFFxhcQbJfVDVh3YLZ2BHtmi_daDgK" />
+
+    <script type="application/json" data-drupal-selector="drupal-settings-json">{"path":{"baseUrl":"\/","pathPrefix":"","currentPath":"node\/1260716","currentPathIsAdmin":false,"isFront":false,"currentLanguage":"en"},"pluralDelimiter":"\u0003","suppressDeprecationErrors":true,"ajaxPageState":{"libraries":"eJxdT9GOwyAM-yE6PgkZSClrSiqSSet9_W1dpeP2Ejm25TjI2QTt8LjAbe7SzKF61FBYIthRjqFQow72e54vbNJPRVaDZ_wcEwvypJSsSvuTHkq95imJrJVO2hbayEeWMqwfPSRpSs3CXQdtKBA6MYzy22hv4ysmrYP37L-jUIhj_PDKh9AFnWyp6mbpW9gZiRbhTN1_E66IFKZgKL68xvd-wx3P_-Tm1JDW6-ykdnBtxemhRpuPUPoFGhOSKA","theme":"edb_theme","theme_token":null},"ajaxTrustedUrl":{"\/search":true},"gtag":{"tagId":"","consentMode":false,"otherIds":[],"events":[],"additionalConfigInfo":[]},"gtm":{"tagId":null,"settings":{"data_layer":"dataLayer","include_classes":false,"allowlist_classes":"","blocklist_classes":"","include_environment":false,"environment_id":"","environment_token":""},"tagIds":["GTM-5W8M67"]},"endpoint_okta_api":"https:\/\/apis.enterprisedb.com\/api\/","userInfo":{"uid":0,"full_name":"","formatted_name":"","mail":null,"teamMemberNid":null,"isTeamMember":false,"isOktaUser":false,"isDrupalUser":false,"isAuthenticated":false,"isAnonymous":true,"imageUrl":null},"form_placeholder":{"include":"#user-login-form *,#user-register-form *,#block-requestnewpasswordform *,#block-simplenewssubscription *","exclude":"","required_indicator":"leave"},"csp":{"nonce":"0xECqCHXMd3sPMOqXxqrvQ"},"user":{"uid":0,"permissionsHash":"ca06f6bbdb0b5d1ba9acb402242025bff574e3eb6518beaa7f63bdade8f65589"}}</script>
+<script src="/sites/default/files/js/js_IPaR56y6dU7EQCgpqYB1K6naAPV82bOj7bKOcoSEReQ.js?scope=header&amp;delta=0&amp;language=en&amp;theme=edb_theme&amp;include=eJxdjkEOgzAMBD-U4CdFJjEmYGKUuFLp61vRSKVcrN2ZwxpTMsVyAPYwTFWLOcyAObDoiOIojYGpUEWBPU09m9bT6GoIgq_Di2LyjaJlLT_1aFRz8lF1zXRim2kjGEX5Ur8-RC2NioWlXVz_Y9K6hV0w0qySqMIdOFZloWDIwJ9z7wMu-PyHm2uGce0TvtkhufAbvhBrgA"></script>
+<script src="//consent.trustarc.com/notice?domain=enterprisedb.com&amp;c=teconsent&amp;js=nj&amp;noticeType=bb&amp;gtm=1&amp;pcookie&amp;text=true" async="async"></script>
+<script src="/sites/default/files/js/js_kUWq_YUYBN6u1K6IkK49NVVZCXx_9u2WtolwTIwuGw8.js?scope=header&amp;delta=2&amp;language=en&amp;theme=edb_theme&amp;include=eJxdjkEOgzAMBD-U4CdFJjEmYGKUuFLp61vRSKVcrN2ZwxpTMsVyAPYwTFWLOcyAObDoiOIojYGpUEWBPU09m9bT6GoIgq_Di2LyjaJlLT_1aFRz8lF1zXRim2kjGEX5Ur8-RC2NioWlXVz_Y9K6hV0w0qySqMIdOFZloWDIwJ9z7wMu-PyHm2uGce0TvtkhufAbvhBrgA"></script>
+<script src="/modules/contrib/google_tag/js/gtag.js?tleaj3"></script>
+<script src="/modules/contrib/google_tag/js/gtm.js?tleaj3"></script>
+
+  </head>
+  <body class="page path-node page--node-type-blog-post">
+        <a href="#main-content" class="visually-hidden focusable skip-link">
+      Skip to main content
+    </a>
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5W8M67"
+                  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+
+      <div class="dialog-off-canvas-main-canvas" data-off-canvas-main-canvas>
+    
+<header role="banner">
+	<div class="container header">
+		  <div class="region region--branding">
+        <div id="block-edb-theme-branding" class="block block--system block--system-branding-block">
+  
+    
+        <a href="/" rel="home" class="site-logo">
+      <img src="/themes/custom/edb_theme/logo2.svg" alt="Home" />
+    </a>
+      </div>
+<div id="block-edbmainnavigation" class="block block--we-megamenu block--we-megamenu-blockedb-main-navigation">
+  
+    
+      <div class="region-we-mega-menu">
+	<a class="navbar-toggle collapsed" role="button" tabindex="0" aria-label="Toggle navigation">
+	    <span class="icon-bar"></span>
+	    <span class="icon-bar"></span>
+	    <span class="icon-bar"></span>
+	</a>
+	<nav  class="edb-main-navigation navbar navbar-default navbar-we-mega-menu mobile-collapse click-action" data-menu-name="edb-main-navigation" data-block-theme="edb_theme" data-style="Default" data-animation="None" data-delay="" data-duration="" data-autoarrow="" data-alwayshowsubmenu="" data-action="clicked" data-mobile-collapse="0">
+	  <div class="container-fluid">
+	    <div class="dropdown-content">
+  
+  <div id="mobile-headercta">
+                  <ul class="menu">
+                          
+                        
+                          
+                          
+      <li tabindex="0" class="menu__item menu__item--expanded">
+                  <span class="myaccount_cta"><svg id="Group_2" data-name="Group 2" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="16" height="16" viewBox="0 0 16 16"><defs><clipPath id="clip-path"><rect id="Rectangle_1" data-name="Rectangle 1" width="16" height="16" fill="none"/></clipPath></defs><g id="Group_1" data-name="Group 1" clip-path="url(#clip-path)"><path id="Path_1" data-name="Path 1" d="M.5,15.5A7.479,7.479,0,0,1,6.318,8.429a4.144,4.144,0,1,1,3.364,0A7.479,7.479,0,0,1,15.5,15.5" fill="none" stroke="#000" stroke-linejoin="round" stroke-width="0.65"/></g></svg><span class="visually-hidden">My Account</span>
+        </span>
+                                        <ul class="menu">
+                          
+                        
+            
+                          
+      <li class="menu__item">
+                  <a href="https://techsupport.enterprisedb.com/">Support Portal</a>
+                      </li>
+                      
+                        
+            
+                          
+      <li class="menu__item">
+                  <a href="https://training.enterprisedb.com/">Training Portal</a>
+                      </li>
+                      
+                        
+            
+                          
+      <li class="menu__item">
+                  <a href="https://migration.enterprisedb.com/">Migration Portal</a>
+                      </li>
+                      
+                        
+            
+                          
+      <li class="menu__item">
+                  <a href="https://partners.enterprisedb.com/#/page/login">Partner Portal</a>
+                      </li>
+                      
+                        
+            
+                          
+      <li class="menu__item">
+                  <a href="/accounts/profile">Account Settings</a>
+                      </li>
+                      
+                        
+            
+                          
+      <li class="menu__item">
+                  <a href="https://www.enterprisedb.com/?fromURILogout=https://www.enterprisedb.com/postgres-tutorials/are-hash-indexes-faster-btree-indexes-postgres">Sign Out</a>
+                      </li>
+        </ul>
+  
+              </li>
+                      
+                        
+                          
+                          
+      <li tabindex="0" class="menu__item menu__item--expanded">
+                  <span class="single_sigin edb_login cta-data-layer" data-event-category="Sign in" data-event-action="Click" data-event-label="EDB Login" data-click-id="logclick-edb-login"><svg id="Group_2" data-name="Group 2" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="16" height="16" viewBox="0 0 16 16"><defs><clipPath id="clip-path"><rect id="Rectangle_1" data-name="Rectangle 1" width="16" height="16" fill="none"/></clipPath></defs><g id="Group_1" data-name="Group 1" clip-path="url(#clip-path)"><path id="Path_1" data-name="Path 1" d="M.5,15.5A7.479,7.479,0,0,1,6.318,8.429a4.144,4.144,0,1,1,3.364,0A7.479,7.479,0,0,1,15.5,15.5" fill="none" stroke="#000" stroke-linejoin="round" stroke-width="0.65"/></g></svg><span class="visually-hidden">Sign In</span>
+        </span>
+                                        <ul class="menu">
+                          
+                        
+            
+                          
+      <li class="menu__item">
+                  <a href="https://www.enterprisedb.com/accounts/login?fromURI=https://www.enterprisedb.com/postgres-tutorials/are-hash-indexes-faster-btree-indexes-postgres" class="edb_login">Sign In</a>
+                      </li>
+        </ul>
+  
+              </li>
+                      
+                        
+            
+                          
+      <li class="talktoexpert-container menu__item" tabindex="0">
+                  <a href="/contact" class="talktoexpert btn-header cta-data-layer" data-event-category="Contact cta" data-event-action="Click" data-event-label="contact us" data-click-id="conclick-contact-us" data-drupal-link-system-path="node/1260076">Contact Us</a>
+                      </li>
+        </ul>
+  
+
+
+
+  </div>
+</div>
+<ul  class="we-mega-menu-ul nav nav-tabs">
+  <li  class="we-mega-menu-li dropdown-menu edb-postgres-ai-menu" data-level="0" data-element-type="we-mega-menu-li" description="" data-id="0a01ab0f-22d8-4bf7-805a-fd905ec23bd9" data-submenu="1" data-hide-sub-when-collapse="" data-group="0" data-class="edb-postgres-ai-menu" data-icon="" data-caption="" data-alignsub="" data-target="">
+      <a href='#' data-drupal-link-system-path="<front>" class="we-megamenu-nolink">
+      Platform</a>
+    <div  class="we-mega-menu-submenu mainmenu-wrapper" data-element-type="we-mega-menu-submenu" data-submenu-width="" data-class="mainmenu-wrapper" style="width: px">
+  <div class="we-mega-menu-submenu-inner">
+    <div  class="we-mega-menu-row" data-element-type="we-mega-menu-row" data-custom-row="0">
+  <div  class="we-mega-menu-col span4 edb-postgres-ai-menu-column1 edb-menu-gold" data-element-type="we-mega-menu-col" data-width="4" data-block="" data-blocktitle="0" data-hidewhencollapse="" data-class="edb-postgres-ai-menu-column1 edb-menu-gold">
+  <ul class="nav nav-tabs subul">
+  <li  class="we-mega-menu-li dropdown-menu we-mega-menu-group menu-heading edb-postgres-ai-view-platform no-transform" data-level="1" data-element-type="we-mega-menu-li" description="" data-id="c2148bb3-aa76-4e32-909b-23e1a0fe6a5b" data-submenu="1" data-hide-sub-when-collapse="" data-group="1" data-class="menu-heading edb-postgres-ai-view-platform no-transform" data-icon="" data-caption="View the platform »" data-alignsub="" data-target="">
+      <a class="we-mega-menu-li" title="" href="/products/edb-postgres-ai" target="">
+      EDB Postgres AI        <span class="we-mega-menu-caption">View the platform »</span>
+          </a>
+    <div  class="we-mega-menu-submenu" data-element-type="we-mega-menu-submenu" data-submenu-width="" data-class="" style="width: px">
+  <div class="we-mega-menu-submenu-inner">
+    <div  class="we-mega-menu-row" data-element-type="we-mega-menu-row" data-custom-row="0">
+  <div  class="we-mega-menu-col span12" data-element-type="we-mega-menu-col" data-width="12" data-block="" data-blocktitle="0" data-hidewhencollapse="" data-class="">
+  <ul class="nav nav-tabs subul">
+  <li  class="we-mega-menu-li" data-level="2" data-element-type="we-mega-menu-li" description="" data-id="780a2f0b-40a9-4d5c-b99f-eec9c84c9027" data-submenu="0" data-hide-sub-when-collapse="" data-group="0" data-class="" data-icon="" data-caption="" data-alignsub="" data-target="">
+      <a class="we-mega-menu-li" title="" href="/products/database" target="">
+      Core Database    </a>
+    
+</li><li  class="we-mega-menu-li" data-level="2" data-element-type="we-mega-menu-li" description="" data-id="34de1081-9fe4-4a6e-940a-e55af1f02ef7" data-submenu="0" data-hide-sub-when-collapse="" data-group="0" data-class="" data-icon="" data-caption="" data-alignsub="" data-target="">
+      <a class="we-mega-menu-li" title="" href="/products/analytics" target="">
+      Analytics    </a>
+    
+</li><li  class="we-mega-menu-li" data-level="2" data-element-type="we-mega-menu-li" description="" data-id="31127ed9-2c2c-421e-ab54-0b1b22dc2927" data-submenu="0" data-hide-sub-when-collapse="" data-group="0" data-class="" data-icon="" data-caption="" data-alignsub="" data-target="">
+      <a class="we-mega-menu-li" title="" href="/products/agentic-ai" target="">
+      Agentic AI    </a>
+    
+</li><li  class="we-mega-menu-li" data-level="2" data-element-type="we-mega-menu-li" description="" data-id="e1133c00-25ed-4746-a94c-29107b9769c2" data-submenu="0" data-hide-sub-when-collapse="" data-group="0" data-class="" data-icon="" data-caption="" data-alignsub="" data-target="">
+      <a class="we-mega-menu-li" title="" href="/products/deploy-anywhere" target="">
+      Deploy Anywhere    </a>
+    
+</li>
+</ul>
+</div>
+
+</div>
+
+  </div>
+</div>
+</li>
+</ul>
+</div>
+<div  class="we-mega-menu-col span4 edb-postgres-ai-menu-column2 paddingbottom" data-element-type="we-mega-menu-col" data-width="4" data-block="" data-blocktitle="1" data-hidewhencollapse="" data-class="edb-postgres-ai-menu-column2 paddingbottom">
+  <ul class="nav nav-tabs subul">
+  <li  class="we-mega-menu-li dropdown-menu we-mega-menu-group menu-heading" data-level="1" data-element-type="we-mega-menu-li" description="" data-id="9604b67a-cd2e-46c3-ab93-ec694ba64647" data-submenu="1" data-hide-sub-when-collapse="" data-group="1" data-class="menu-heading" data-icon="" data-caption="" data-alignsub="" data-target="">
+      <a href='#' data-drupal-link-system-path="<front>" class="we-megamenu-nolink">
+      FEATURED CAPABILITIES</a>
+    <div  class="we-mega-menu-submenu" data-element-type="we-mega-menu-submenu" data-submenu-width="" data-class="" style="width: px">
+  <div class="we-mega-menu-submenu-inner">
+    <div  class="we-mega-menu-row" data-element-type="we-mega-menu-row" data-custom-row="0">
+  <div  class="we-mega-menu-col span6" data-element-type="we-mega-menu-col" data-width="6" data-block="" data-blocktitle="0" data-hidewhencollapse="" data-class="">
+  <ul class="nav nav-tabs subul">
+  <li  class="we-mega-menu-li" data-level="2" data-element-type="we-mega-menu-li" description="" data-id="51d040c9-4044-4d3c-94a4-785e3ab77eb9" data-submenu="0" data-hide-sub-when-collapse="" data-group="0" data-class="" data-icon="" data-caption="" data-alignsub="" data-target="">
+      <a class="we-mega-menu-li" title="" href="/products/hybrid-manager" target="">
+      Hybrid Manager    </a>
+    
+</li><li  class="we-mega-menu-li" data-level="2" data-element-type="we-mega-menu-li" description="" data-id="fe50fc83-2e48-442e-be03-c32ca9dd700c" data-submenu="0" data-hide-sub-when-collapse="" data-group="0" data-class="" data-icon="" data-caption="" data-alignsub="" data-target="">
+      <a class="we-mega-menu-li" title="" href="/products/agent-factory" target="">
+      Agent Factory    </a>
+    
+</li><li  class="we-mega-menu-li" data-level="2" data-element-type="we-mega-menu-li" description="" data-id="bd8aa023-0a99-4f35-ae6d-1d28f6eb9f45" data-submenu="0" data-hide-sub-when-collapse="" data-group="0" data-class="" data-icon="" data-caption="" data-alignsub="" data-target="">
+      <a class="we-mega-menu-li" title="" href="/products/agentic-database" target="">
+      Agentic Database    </a>
+    
+</li><li  class="we-mega-menu-li" data-level="2" data-element-type="we-mega-menu-li" description="" data-id="1e5dd84f-8ba2-4ecc-8e38-e27aeb4bb827" data-submenu="0" data-hide-sub-when-collapse="" data-group="0" data-class="" data-icon="" data-caption="" data-alignsub="" data-target="">
+      <a class="we-mega-menu-li" title="" href="/products/warehouse-analytics" target="">
+      Warehouse Analytics    </a>
+    
+</li><li  class="we-mega-menu-li" data-level="2" data-element-type="we-mega-menu-li" description="" data-id="b4de2c42-07df-4fec-b523-252cbe3ddb97" data-submenu="0" data-hide-sub-when-collapse="" data-group="0" data-class="" data-icon="" data-caption="" data-alignsub="" data-target="">
+      <a class="we-mega-menu-li" title="" href="/products/distributed-ha" target="">
+      Distributed HA    </a>
+    
+</li>
+</ul>
+</div>
+<div  class="we-mega-menu-col span6" data-element-type="we-mega-menu-col" data-width="6" data-block="" data-blocktitle="1" data-hidewhencollapse="" data-class="">
+  <ul class="nav nav-tabs subul">
+  <li  class="we-mega-menu-li" data-level="2" data-element-type="we-mega-menu-li" description="" data-id="1d341489-44dd-4f0a-9be0-fcf43bfcb9fc" data-submenu="0" data-hide-sub-when-collapse="" data-group="0" data-class="" data-icon="" data-caption="" data-alignsub="" data-target="">
+      <a class="we-mega-menu-li" title="" href="/products/converged-analytics" target="">
+      Converged Analytics    </a>
+    
+</li><li  class="we-mega-menu-li" data-level="2" data-element-type="we-mega-menu-li" description="" data-id="4f65dd63-ecb8-4ee4-bfa2-3ce0b18d9a55" data-submenu="0" data-hide-sub-when-collapse="" data-group="0" data-class="" data-icon="" data-caption="" data-alignsub="" data-target="_self">
+      <a class="we-mega-menu-li" title="" href="/products/sovereign-data-ai-factory" target="_self">
+      Sovereign Data and AI Factory    </a>
+    
+</li><li  class="we-mega-menu-li" data-level="2" data-element-type="we-mega-menu-li" description="" data-id="cb0328f0-2daf-4d76-b328-e044c6a09a8f" data-submenu="0" data-hide-sub-when-collapse="" data-group="0" data-class="" data-icon="" data-caption="" data-alignsub="" data-target="">
+      <a class="we-mega-menu-li" title="" href="/products/data-ai-governance" target="">
+      Data and AI Governance    </a>
+    
+</li><li  class="we-mega-menu-li" data-level="2" data-element-type="we-mega-menu-li" description="" data-id="b209d023-186c-40a2-9fd8-d4daff011af8" data-submenu="0" data-hide-sub-when-collapse="" data-group="0" data-class="" data-icon="" data-caption="" data-alignsub="" data-target="">
+      <a class="we-mega-menu-li" title="" href="/products/agentic-migrations" target="">
+      Agentic Migrations    </a>
+    
+</li><li  class="we-mega-menu-li" data-level="2" data-element-type="we-mega-menu-li" description="" data-id="af44217b-c10d-4db4-992d-400b77d3b0d0" data-submenu="0" data-hide-sub-when-collapse="" data-group="0" data-class="" data-icon="" data-caption="" data-alignsub="" data-target="">
+      <a class="we-mega-menu-li" title="" href="/products/oss-library" target="">
+      OSS Library    </a>
+    
+</li>
+</ul>
+</div>
+
+</div>
+
+  </div>
+</div>
+</li>
+</ul>
+</div>
+<div  class="we-mega-menu-col span4 edb-postgres-ai-menu-column3" data-element-type="we-mega-menu-col" data-width="4" data-block="" data-blocktitle="1" data-hidewhencollapse="" data-class="edb-postgres-ai-menu-column3">
+  <ul class="nav nav-tabs subul">
+  <li  class="we-mega-menu-li dropdown-menu we-mega-menu-group menu-heading" data-level="1" data-element-type="we-mega-menu-li" description="" data-id="6f66bb31-8a1e-4ad6-8f4d-0b89f41b56d4" data-submenu="1" data-hide-sub-when-collapse="" data-group="1" data-class="menu-heading" data-icon="" data-caption="" data-alignsub="" data-target="">
+      <a href='#' data-drupal-link-system-path="<front>" class="we-megamenu-nolink">
+      BUILT ON OPEN SOURCE</a>
+    <div  class="we-mega-menu-submenu" data-element-type="we-mega-menu-submenu" data-submenu-width="" data-class="" style="width: px">
+  <div class="we-mega-menu-submenu-inner">
+    <div  class="we-mega-menu-row" data-element-type="we-mega-menu-row" data-custom-row="0">
+  <div  class="we-mega-menu-col span12" data-element-type="we-mega-menu-col" data-width="12" data-block="" data-blocktitle="0" data-hidewhencollapse="" data-class="">
+  <ul class="nav nav-tabs subul">
+  <li  class="we-mega-menu-li" data-level="2" data-element-type="we-mega-menu-li" description="" data-id="5268cb72-9c3c-47c5-8f04-fdb23b05424a" data-submenu="0" data-hide-sub-when-collapse="" data-group="0" data-class="" data-icon="" data-caption="" data-alignsub="" data-target="">
+      <a class="we-mega-menu-li" title="" href="/products/postgresql" target="">
+      PostgreSQL    </a>
+    
+</li><li  class="we-mega-menu-li" data-level="2" data-element-type="we-mega-menu-li" description="" data-id="489ccfc9-811c-4b2c-9df1-549d0c6f5b5b" data-submenu="0" data-hide-sub-when-collapse="" data-group="0" data-class="" data-icon="" data-caption="" data-alignsub="" data-target="">
+      <a class="we-mega-menu-li" title="" href="/products/warehousepg" target="">
+      WarehousePG    </a>
+    
+</li><li  class="we-mega-menu-li" data-level="2" data-element-type="we-mega-menu-li" description="" data-id="8bb48332-bf4b-47f4-bdef-2e513fe525ce" data-submenu="0" data-hide-sub-when-collapse="" data-group="0" data-class="" data-icon="" data-caption="" data-alignsub="" data-target="">
+      <a class="we-mega-menu-li" title="" href="/products/edb-postgres-ai-for-cloudnativepg" target="">
+      CloudNativePG    </a>
+    
+</li><li  class="we-mega-menu-li" data-level="2" data-element-type="we-mega-menu-li" description="" data-id="978110f3-8bf8-499d-8ae2-34cad2bec327" data-submenu="0" data-hide-sub-when-collapse="" data-group="0" data-class="" data-icon="" data-caption="" data-alignsub="" data-target="">
+      <a class="we-mega-menu-li" title="" href="/products/clickhouse" target="">
+      ClickHouse    </a>
+    
+</li>
+</ul>
+</div>
+
+</div>
+
+  </div>
+</div>
+</li>
+</ul>
+</div>
+
+</div>
+
+  </div>
+</div>
+</li><li  class="we-mega-menu-li dropdown-menu" data-level="0" data-element-type="we-mega-menu-li" description="" data-id="28f7cb51-d7c0-4acb-ad83-798f4eacaf91" data-submenu="1" data-hide-sub-when-collapse="" data-group="0" data-class="" data-icon="" data-caption="" data-alignsub="" data-target="">
+      <a href='#' data-drupal-link-system-path="<front>" class="we-megamenu-nolink">
+      Solutions</a>
+    <div  class="we-mega-menu-submenu mainmenu-wrapper" data-element-type="we-mega-menu-submenu" data-submenu-width="" data-class="mainmenu-wrapper" style="width: px">
+  <div class="we-mega-menu-submenu-inner">
+    <div  class="we-mega-menu-row" data-element-type="we-mega-menu-row" data-custom-row="0">
+  <div  class="we-mega-menu-col span2" data-element-type="we-mega-menu-col" data-width="2" data-block="" data-blocktitle="0" data-hidewhencollapse="" data-class="">
+  <ul class="nav nav-tabs subul">
+  <li  class="we-mega-menu-li dropdown-menu we-mega-menu-group menu-heading" data-level="1" data-element-type="we-mega-menu-li" description="" data-id="4c764e90-e9e9-47f6-9c78-9ba4557c13a6" data-submenu="1" data-hide-sub-when-collapse="" data-group="1" data-class="menu-heading" data-icon="" data-caption="" data-alignsub="" data-target="">
+      <a href='#' data-drupal-link-system-path="<front>" class="we-megamenu-nolink">
+      SERVICES</a>
+    <div  class="we-mega-menu-submenu" data-element-type="we-mega-menu-submenu" data-submenu-width="" data-class="" style="width: px">
+  <div class="we-mega-menu-submenu-inner">
+    <div  class="we-mega-menu-row" data-element-type="we-mega-menu-row" data-custom-row="0">
+  <div  class="we-mega-menu-col span12" data-element-type="we-mega-menu-col" data-width="12" data-block="" data-blocktitle="0" data-hidewhencollapse="" data-class="">
+  <ul class="nav nav-tabs subul">
+  <li  class="we-mega-menu-li" data-level="2" data-element-type="we-mega-menu-li" description="" data-id="306ea255-dd97-481c-843b-4076f5a15e96" data-submenu="0" data-hide-sub-when-collapse="" data-group="0" data-class="" data-icon="" data-caption="" data-alignsub="" data-target="">
+      <a class="we-mega-menu-li" title="" href="/services/sovereign-assurance" target="">
+      Sovereign Assurance    </a>
+    
+</li><li  class="we-mega-menu-li" data-level="2" data-element-type="we-mega-menu-li" description="" data-id="993bb5bc-f3c5-4a87-890b-04cf635fab52" data-submenu="0" data-hide-sub-when-collapse="" data-group="0" data-class="" data-icon="" data-caption="" data-alignsub="" data-target="">
+      <a class="we-mega-menu-li" title="" href="/services/technical-account-management" target="">
+      Technical Account Management    </a>
+    
+</li><li  class="we-mega-menu-li" data-level="2" data-element-type="we-mega-menu-li" description="" data-id="ef4add71-63eb-49f1-bc28-064548728fce" data-submenu="0" data-hide-sub-when-collapse="" data-group="0" data-class="" data-icon="" data-caption="" data-alignsub="" data-target="_self">
+      <a class="we-mega-menu-li" title="" href="/services/managed-database" target="_self">
+      Managed Experiences    </a>
+    
+</li><li  class="we-mega-menu-li" data-level="2" data-element-type="we-mega-menu-li" description="" data-id="eef6c27d-7759-4a36-8485-58e5da3bdfac" data-submenu="0" data-hide-sub-when-collapse="" data-group="0" data-class="" data-icon="" data-caption="" data-alignsub="" data-target="">
+      <a class="we-mega-menu-li" title="" href="/services/support" target="">
+      Customer Support    </a>
+    
+</li>
+</ul>
+</div>
+
+</div>
+
+  </div>
+</div>
+</li>
+</ul>
+</div>
+<div  class="we-mega-menu-col span3" data-element-type="we-mega-menu-col" data-width="3" data-block="" data-blocktitle="1" data-hidewhencollapse="" data-class="">
+  <ul class="nav nav-tabs subul">
+  <li  class="we-mega-menu-li dropdown-menu we-mega-menu-group menu-heading" data-level="1" data-element-type="we-mega-menu-li" description="" data-id="84178837-8aac-405e-be8e-38cdf9c3da34" data-submenu="1" data-hide-sub-when-collapse="" data-group="1" data-class="menu-heading" data-icon="" data-caption="" data-alignsub="" data-target="">
+      <a href='#' data-drupal-link-system-path="<front>" class="we-megamenu-nolink">
+      BLUEPRINTS</a>
+    <div  class="we-mega-menu-submenu" data-element-type="we-mega-menu-submenu" data-submenu-width="" data-class="" style="width: px">
+  <div class="we-mega-menu-submenu-inner">
+    <div  class="we-mega-menu-row" data-element-type="we-mega-menu-row" data-custom-row="0">
+  <div  class="we-mega-menu-col span12" data-element-type="we-mega-menu-col" data-width="12" data-block="" data-blocktitle="0" data-hidewhencollapse="" data-class="">
+  <ul class="nav nav-tabs subul">
+  <li  class="we-mega-menu-li" data-level="2" data-element-type="we-mega-menu-li" description="" data-id="e996f9da-be0a-4861-b1d3-72c96702a226" data-submenu="0" data-hide-sub-when-collapse="" data-group="0" data-class="" data-icon="" data-caption="" data-alignsub="" data-target="_self">
+      <a class="we-mega-menu-li" title="" href="/blueprints" target="_self">
+      All Blueprints    </a>
+    
+</li><li  class="we-mega-menu-li" data-level="2" data-element-type="we-mega-menu-li" description="" data-id="d8891924-2781-423e-8861-0c6af7de5692" data-submenu="0" data-hide-sub-when-collapse="" data-group="0" data-class="" data-icon="" data-caption="" data-alignsub="" data-target="">
+      <a class="we-mega-menu-li" title="" href="/blueprints/real-time-ml-inference" target="">
+      BP 01: Real-Time ML Inference    </a>
+    
+</li><li  class="we-mega-menu-li" data-level="2" data-element-type="we-mega-menu-li" description="" data-id="0803ad77-fdaa-463f-bdae-bb62ccefa43f" data-submenu="0" data-hide-sub-when-collapse="" data-group="0" data-class="" data-icon="" data-caption="" data-alignsub="" data-target="">
+      <a class="we-mega-menu-li" title="" href="/blueprints/agentic-analytics" target="">
+      BP 02: Agentic Analytics    </a>
+    
+</li><li  class="we-mega-menu-li" data-level="2" data-element-type="we-mega-menu-li" description="" data-id="2b198f20-9dcd-4647-ad5c-e0a76786e89a" data-submenu="0" data-hide-sub-when-collapse="" data-group="0" data-class="" data-icon="" data-caption="" data-alignsub="" data-target="">
+      <a class="we-mega-menu-li" title="" href="/blueprints/sovereign-data-lakehouse" target="">
+      BP 03: Sovereign Data Lakehouse    </a>
+    
+</li>
+</ul>
+</div>
+
+</div>
+
+  </div>
+</div>
+</li>
+</ul>
+</div>
+<div  class="we-mega-menu-col span2 padding-bottom" data-element-type="we-mega-menu-col" data-width="2" data-block="" data-blocktitle="1" data-hidewhencollapse="" data-class="padding-bottom">
+  <ul class="nav nav-tabs subul">
+  <li  class="we-mega-menu-li dropdown-menu we-mega-menu-group menu-heading" data-level="1" data-element-type="we-mega-menu-li" description="" data-id="a8e0932a-bb2a-4c80-b8c0-b04044277f7f" data-submenu="1" data-hide-sub-when-collapse="" data-group="1" data-class="menu-heading" data-icon="" data-caption="" data-alignsub="" data-target="">
+      <a href='#' data-drupal-link-system-path="<front>" class="we-megamenu-nolink">
+      Industries</a>
+    <div  class="we-mega-menu-submenu" data-element-type="we-mega-menu-submenu" data-submenu-width="" data-class="" style="width: px">
+  <div class="we-mega-menu-submenu-inner">
+    <div  class="we-mega-menu-row" data-element-type="we-mega-menu-row" data-custom-row="0">
+  <div  class="we-mega-menu-col span12" data-element-type="we-mega-menu-col" data-width="12" data-block="" data-blocktitle="0" data-hidewhencollapse="" data-class="">
+  <ul class="nav nav-tabs subul">
+  <li  class="we-mega-menu-li" data-level="2" data-element-type="we-mega-menu-li" description="" data-id="d64df3e8-3a7e-445e-9e1f-6a95cebb1ee4" data-submenu="0" data-hide-sub-when-collapse="" data-group="0" data-class="" data-icon="" data-caption="" data-alignsub="" data-target="">
+      <a class="we-mega-menu-li" title="" href="/industry/bfsi" target="">
+      Banking    </a>
+    
+</li><li  class="we-mega-menu-li" data-level="2" data-element-type="we-mega-menu-li" description="" data-id="6da53b1d-b085-4c2d-bdd5-0682695db9a0" data-submenu="0" data-hide-sub-when-collapse="" data-group="0" data-class="" data-icon="" data-caption="" data-alignsub="" data-target="">
+      <a class="we-mega-menu-li" title="" href="/industry/government" target="">
+      Government    </a>
+    
+</li><li  class="we-mega-menu-li" data-level="2" data-element-type="we-mega-menu-li" description="" data-id="efa1194e-0cda-42db-9e3c-f30b44bfb1ba" data-submenu="0" data-hide-sub-when-collapse="" data-group="0" data-class="" data-icon="" data-caption="" data-alignsub="" data-target="">
+      <a class="we-mega-menu-li" title="" href="/industry/healthcare" target="">
+      Healthcare    </a>
+    
+</li><li  class="we-mega-menu-li" data-level="2" data-element-type="we-mega-menu-li" description="" data-id="122c5162-b4e7-48dd-a147-5aa8900af18a" data-submenu="0" data-hide-sub-when-collapse="" data-group="0" data-class="" data-icon="" data-caption="" data-alignsub="" data-target="">
+      <a class="we-mega-menu-li" title="" href="/industry/infosec" target="">
+      InfoSec    </a>
+    
+</li><li  class="we-mega-menu-li" data-level="2" data-element-type="we-mega-menu-li" description="" data-id="43c1a039-3104-44dc-9f85-9891c2eab23a" data-submenu="0" data-hide-sub-when-collapse="" data-group="0" data-class="" data-icon="" data-caption="" data-alignsub="" data-target="">
+      <a class="we-mega-menu-li" title="" href="/industry/utiltities" target="">
+      Utilities    </a>
+    
+</li>
+</ul>
+</div>
+
+</div>
+<div  class="we-mega-menu-row" data-element-type="we-mega-menu-row" data-custom-row="1">
+  <div  class="we-mega-menu-col span12" data-element-type="we-mega-menu-col" data-width="12" data-block="" data-blocktitle="1" data-hidewhencollapse="" data-class="">
+  
+</div>
+
+</div>
+
+  </div>
+</div>
+</li>
+</ul>
+</div>
+<div  class="we-mega-menu-col span4 padding-bottom" data-element-type="we-mega-menu-col" data-width="4" data-block="" data-blocktitle="1" data-hidewhencollapse="" data-class="padding-bottom">
+  <ul class="nav nav-tabs subul">
+  <li  class="we-mega-menu-li dropdown-menu we-mega-menu-group menu-heading" data-level="1" data-element-type="we-mega-menu-li" description="" data-id="c6280a2c-a489-44d1-b53f-0b1c8dca9150" data-submenu="1" data-hide-sub-when-collapse="" data-group="1" data-class="menu-heading" data-icon="" data-caption="" data-alignsub="" data-target="">
+      <a href='#' data-drupal-link-system-path="<front>" class="we-megamenu-nolink">
+      USE CASES</a>
+    <div  class="we-mega-menu-submenu" data-element-type="we-mega-menu-submenu" data-submenu-width="" data-class="" style="width: px">
+  <div class="we-mega-menu-submenu-inner">
+    <div  class="we-mega-menu-row" data-element-type="we-mega-menu-row" data-custom-row="0">
+  <div  class="we-mega-menu-col span6" data-element-type="we-mega-menu-col" data-width="6" data-block="" data-blocktitle="0" data-hidewhencollapse="" data-class="">
+  <ul class="nav nav-tabs subul">
+  <li  class="we-mega-menu-li" data-level="2" data-element-type="we-mega-menu-li" description="" data-id="5b702ea3-8a38-4e64-8ac8-19b23ade3c2e" data-submenu="0" data-hide-sub-when-collapse="" data-group="0" data-class="" data-icon="" data-caption="" data-alignsub="" data-target="">
+      <a class="we-mega-menu-li" title="" href="/use-case/sovereign-ai" target="">
+      Sovereign AI    </a>
+    
+</li><li  class="we-mega-menu-li" data-level="2" data-element-type="we-mega-menu-li" description="" data-id="5af3c8c2-f7ce-4da0-8618-671b32c340b9" data-submenu="0" data-hide-sub-when-collapse="" data-group="0" data-class="" data-icon="" data-caption="" data-alignsub="" data-target="">
+      <a class="we-mega-menu-li" title="" href="/use-case/modernize-legacy-applications" target="">
+      Legacy App Modernization    </a>
+    
+</li><li  class="we-mega-menu-li" data-level="2" data-element-type="we-mega-menu-li" description="" data-id="de1a13f8-0d20-4927-990d-e943493cfffe" data-submenu="0" data-hide-sub-when-collapse="" data-group="0" data-class="" data-icon="" data-caption="" data-alignsub="" data-target="">
+      <a class="we-mega-menu-li" title="" href="/use-case/hybrid-dbaas" target="">
+      Hybrid DBaaS    </a>
+    
+</li><li  class="we-mega-menu-li" data-level="2" data-element-type="we-mega-menu-li" description="" data-id="2685e263-9ff3-4a3e-bf4a-b6b425613897" data-submenu="0" data-hide-sub-when-collapse="" data-group="0" data-class="" data-icon="" data-caption="" data-alignsub="" data-target="">
+      <a class="we-mega-menu-li" title="" href="/use-case/omni-data-platform" target="">
+      Omni-Data Platform    </a>
+    
+</li><li  class="we-mega-menu-li" data-level="2" data-element-type="we-mega-menu-li" description="" data-id="a5ddc533-7428-4403-bac0-100fc12487da" data-submenu="0" data-hide-sub-when-collapse="" data-group="0" data-class="" data-icon="" data-caption="" data-alignsub="" data-target="">
+      <a class="we-mega-menu-li" title="" href="/use-case/secure-oss" target="">
+      Secure Open Source Software    </a>
+    
+</li><li  class="we-mega-menu-li" data-level="2" data-element-type="we-mega-menu-li" description="" data-id="ba1c1c4f-b329-4b63-aede-72685d61bc03" data-submenu="0" data-hide-sub-when-collapse="" data-group="0" data-class="" data-icon="" data-caption="" data-alignsub="" data-target="">
+      <a class="we-mega-menu-li" title="" href="/use-case/microservices-and-kubernetes" target="">
+      Microservices with Kubernetes    </a>
+    
+</li>
+</ul>
+</div>
+<div  class="we-mega-menu-col span6" data-element-type="we-mega-menu-col" data-width="6" data-block="" data-blocktitle="1" data-hidewhencollapse="" data-class="">
+  <ul class="nav nav-tabs subul">
+  <li  class="we-mega-menu-li" data-level="2" data-element-type="we-mega-menu-li" description="" data-id="23cce377-be11-4830-9149-8934769aa73e" data-submenu="0" data-hide-sub-when-collapse="" data-group="0" data-class="" data-icon="" data-caption="" data-alignsub="" data-target="">
+      <a class="we-mega-menu-li" title="" href="/use-case" target="">
+      More Use Cases »    </a>
+    
+</li>
+</ul>
+</div>
+
+</div>
+
+  </div>
+</div>
+</li>
+</ul>
+</div>
+
+</div>
+
+  </div>
+</div>
+</li><li  class="we-mega-menu-li dropdown-menu" data-level="0" data-element-type="we-mega-menu-li" description="" data-id="e37cb946-d972-42fb-870b-8c910f009627" data-submenu="1" data-hide-sub-when-collapse="" data-group="0" data-class="" data-icon="" data-caption="" data-alignsub="" data-target="">
+      <a href='#' data-drupal-link-system-path="<front>" class="we-megamenu-nolink">
+      Sovereignty</a>
+    <div  class="we-mega-menu-submenu mainmenu-wrapper" data-element-type="we-mega-menu-submenu" data-submenu-width="" data-class="mainmenu-wrapper" style="width: px">
+  <div class="we-mega-menu-submenu-inner">
+    <div  class="we-mega-menu-row" data-element-type="we-mega-menu-row" data-custom-row="0">
+  <div  class="we-mega-menu-col span4 padding-bottom" data-element-type="we-mega-menu-col" data-width="4" data-block="" data-blocktitle="0" data-hidewhencollapse="" data-class="padding-bottom">
+  <ul class="nav nav-tabs subul">
+  <li  class="we-mega-menu-li edb-has-caption" data-level="1" data-element-type="we-mega-menu-li" description="" data-id="f148797f-92d8-46a2-a552-31f3b79779e8" data-submenu="0" data-hide-sub-when-collapse="" data-group="0" data-class="edb-has-caption" data-icon="" data-caption="Data and AI sovereignty, explained " data-alignsub="" data-target="">
+      <a class="we-mega-menu-li" title="" href="/what-is-sovereign-ai-data-sovereignty" target="">
+      What Is Sovereignty?        <span class="we-mega-menu-caption">Data and AI sovereignty, explained </span>
+          </a>
+    
+</li><li  class="we-mega-menu-li edb-has-caption" data-level="1" data-element-type="we-mega-menu-li" description="" data-id="3173a3bc-bf6c-4f02-a6d5-aebfdcc8e25c" data-submenu="0" data-hide-sub-when-collapse="" data-group="0" data-class="edb-has-caption" data-icon="" data-caption="Our global study with 2,050 execs" data-alignsub="" data-target="">
+      <a class="we-mega-menu-li" title="" href="/sovereignty-matters" target="">
+      Sovereignty Research        <span class="we-mega-menu-caption">Our global study with 2,050 execs</span>
+          </a>
+    
+</li><li  class="we-mega-menu-li edb-has-caption" data-level="1" data-element-type="we-mega-menu-li" description="" data-id="d36d8fa7-428a-4174-8fa7-b9f32a4d1d2d" data-submenu="0" data-hide-sub-when-collapse="" data-group="0" data-class="edb-has-caption" data-icon="" data-caption="Full methodology and statistical analsyis" data-alignsub="" data-target="">
+      <a class="we-mega-menu-li" title="" href="/resources/sovereignty-matters-report" target="">
+      Global Report        <span class="we-mega-menu-caption">Full methodology and statistical analsyis</span>
+          </a>
+    
+</li>
+</ul>
+</div>
+<div  class="we-mega-menu-col span4 padding-bottom" data-element-type="we-mega-menu-col" data-width="4" data-block="" data-blocktitle="1" data-hidewhencollapse="" data-class="padding-bottom">
+  <ul class="nav nav-tabs subul">
+  <li  class="we-mega-menu-li edb-has-caption" data-level="1" data-element-type="we-mega-menu-li" description="" data-id="21e320e1-4cb8-413a-aa9e-a5b4e9e3ab6b" data-submenu="0" data-hide-sub-when-collapse="" data-group="0" data-class="edb-has-caption" data-icon="" data-caption="Summary report of success categories" data-alignsub="" data-target="">
+      <a class="we-mega-menu-li" title="" href="/sites/default/files/pdf/sovereignty_matters_4_segment_summary.pdf" target="">
+      The 4 Segments        <span class="we-mega-menu-caption">Summary report of success categories</span>
+          </a>
+    
+</li><li  class="we-mega-menu-li edb-has-caption" data-level="1" data-element-type="we-mega-menu-li" description="" data-id="f0fb361d-b531-4522-a1a5-7e89bdb0cf9d" data-submenu="0" data-hide-sub-when-collapse="" data-group="0" data-class="edb-has-caption" data-icon="" data-caption="Find out what category you belong in" data-alignsub="" data-target="">
+      <a class="we-mega-menu-li" title="" href="/sovereignty-matters/self-assessment" target="">
+      Self-Assessment Tool        <span class="we-mega-menu-caption">Find out what category you belong in</span>
+          </a>
+    
+</li><li  class="we-mega-menu-li edb-has-caption" data-level="1" data-element-type="we-mega-menu-li" description="" data-id="3b229a66-58f8-45b8-8c96-ba5090ad0743" data-submenu="0" data-hide-sub-when-collapse="" data-group="0" data-class="edb-has-caption" data-icon="" data-caption="Visual summary of key statistics" data-alignsub="" data-target="">
+      <a class="we-mega-menu-li" title="" href="/sites/default/files/pdf/sovereignty_matters_infographic.pdf" target="">
+      Executive Infographic        <span class="we-mega-menu-caption">Visual summary of key statistics</span>
+          </a>
+    
+</li>
+</ul>
+</div>
+<div  class="we-mega-menu-col span4 padding-bottom" data-element-type="we-mega-menu-col" data-width="4" data-block="" data-blocktitle="1" data-hidewhencollapse="" data-class="padding-bottom">
+  <ul class="nav nav-tabs subul">
+  <li  class="we-mega-menu-li edb-has-caption" data-level="1" data-element-type="we-mega-menu-li" description="" data-id="3b452e46-d497-4fb4-b23c-f107e800835f" data-submenu="0" data-hide-sub-when-collapse="" data-group="0" data-class="edb-has-caption" data-icon="" data-caption="Insights specific to the financial sector" data-alignsub="" data-target="">
+      <a class="we-mega-menu-li" title="" href="/sites/default/files/pdf/sovereignty_matters_BFIS.pdf" target="">
+      Sovereignty in Banking        <span class="we-mega-menu-caption">Insights specific to the financial sector</span>
+          </a>
+    
+</li><li  class="we-mega-menu-li edb-has-caption" data-level="1" data-element-type="we-mega-menu-li" description="" data-id="86996977-a12d-4866-9fc1-38150ce27afb" data-submenu="0" data-hide-sub-when-collapse="" data-group="0" data-class="edb-has-caption" data-icon="" data-caption="Developed in partnership with MIT" data-alignsub="" data-target="">
+      <a class="we-mega-menu-li" title="" href="/resources/mit-technology-review-report" target="">
+      Read the Study        <span class="we-mega-menu-caption">Developed in partnership with MIT</span>
+          </a>
+    
+</li>
+</ul>
+</div>
+
+</div>
+
+  </div>
+</div>
+</li><li  class="we-mega-menu-li dropdown-menu" data-level="0" data-element-type="we-mega-menu-li" description="" data-id="ab1e9b82-ebaf-4ca7-a4fc-c863763c7b2b" data-submenu="1" data-hide-sub-when-collapse="" data-group="0" data-class="" data-icon="" data-caption="" data-alignsub="" data-target="">
+      <a href='#' data-drupal-link-system-path="<front>" class="we-megamenu-nolink">
+      Partners</a>
+    <div  class="we-mega-menu-submenu mainmenu-wrapper" data-element-type="we-mega-menu-submenu" data-submenu-width="" data-class="mainmenu-wrapper" style="width: px">
+  <div class="we-mega-menu-submenu-inner">
+    <div  class="we-mega-menu-row" data-element-type="we-mega-menu-row" data-custom-row="0">
+  <div  class="we-mega-menu-col span2 padding-bottom" data-element-type="we-mega-menu-col" data-width="2" data-block="" data-blocktitle="0" data-hidewhencollapse="" data-class="padding-bottom">
+  <ul class="nav nav-tabs subul">
+  <li  class="we-mega-menu-li dropdown-menu we-mega-menu-group menu-heading" data-level="1" data-element-type="we-mega-menu-li" description="" data-id="4b8d2bbb-e90c-4e27-9590-2cdb44d5f753" data-submenu="1" data-hide-sub-when-collapse="" data-group="1" data-class="menu-heading" data-icon="" data-caption="" data-alignsub="" data-target="">
+      <a href='#' data-drupal-link-system-path="<front>" class="we-megamenu-nolink">
+      Partner Program</a>
+    <div  class="we-mega-menu-submenu" data-element-type="we-mega-menu-submenu" data-submenu-width="" data-class="" style="width: px">
+  <div class="we-mega-menu-submenu-inner">
+    <div  class="we-mega-menu-row" data-element-type="we-mega-menu-row" data-custom-row="0">
+  <div  class="we-mega-menu-col span12" data-element-type="we-mega-menu-col" data-width="12" data-block="" data-blocktitle="0" data-hidewhencollapse="" data-class="">
+  <ul class="nav nav-tabs subul">
+  <li  class="we-mega-menu-li" data-level="2" data-element-type="we-mega-menu-li" description="" data-id="118d6392-5218-4f50-a648-fa055fe28336" data-submenu="0" data-hide-sub-when-collapse="" data-group="0" data-class="" data-icon="" data-caption="" data-alignsub="" data-target="">
+      <a class="we-mega-menu-li" title="" href="https://partners.enterprisedb.com/#/page/login" target="">
+      Partner Portal    </a>
+    
+</li><li  class="we-mega-menu-li" data-level="2" data-element-type="we-mega-menu-li" description="" data-id="c3047f2e-e88f-4a7c-8b85-9597dedcb082" data-submenu="0" data-hide-sub-when-collapse="" data-group="0" data-class="" data-icon="" data-caption="" data-alignsub="" data-target="">
+      <a class="we-mega-menu-li" title="" href="/partners/find-a-partner" target="">
+      Find a Partner    </a>
+    
+</li><li  class="we-mega-menu-li" data-level="2" data-element-type="we-mega-menu-li" description="" data-id="11f96699-0e85-4bcd-bada-e582780a9f61" data-submenu="0" data-hide-sub-when-collapse="" data-group="0" data-class="" data-icon="" data-caption="" data-alignsub="" data-target="">
+      <a class="we-mega-menu-li" title="" href="/partners/why-partner-with-edb" target="">
+      Become a Partner    </a>
+    
+</li>
+</ul>
+</div>
+
+</div>
+
+  </div>
+</div>
+</li>
+</ul>
+</div>
+<div  class="we-mega-menu-col span2 padding-bottom" data-element-type="we-mega-menu-col" data-width="2" data-block="" data-blocktitle="1" data-hidewhencollapse="" data-class="padding-bottom">
+  <ul class="nav nav-tabs subul">
+  <li  class="we-mega-menu-li dropdown-menu we-mega-menu-group menu-heading" data-level="1" data-element-type="we-mega-menu-li" description="" data-id="6574d061-4611-441d-852c-9fa7afe52475" data-submenu="1" data-hide-sub-when-collapse="" data-group="1" data-class="menu-heading" data-icon="" data-caption="" data-alignsub="" data-target="">
+      <a class="we-mega-menu-li" title="" href="/partners/strategic-alliances" target="">
+      Strategic Alliances    </a>
+    <div  class="we-mega-menu-submenu" data-element-type="we-mega-menu-submenu" data-submenu-width="" data-class="" style="width: px">
+  <div class="we-mega-menu-submenu-inner">
+    <div  class="we-mega-menu-row" data-element-type="we-mega-menu-row" data-custom-row="0">
+  <div  class="we-mega-menu-col span12" data-element-type="we-mega-menu-col" data-width="12" data-block="" data-blocktitle="0" data-hidewhencollapse="" data-class="">
+  <ul class="nav nav-tabs subul">
+  <li  class="we-mega-menu-li" data-level="2" data-element-type="we-mega-menu-li" description="" data-id="474de02f-313a-49cc-a041-a9db17a6f485" data-submenu="0" data-hide-sub-when-collapse="" data-group="0" data-class="" data-icon="" data-caption="" data-alignsub="" data-target="">
+      <a class="we-mega-menu-li" title="" href="/partners/ibm" target="">
+      IBM    </a>
+    
+</li><li  class="we-mega-menu-li" data-level="2" data-element-type="we-mega-menu-li" description="" data-id="52171879-6edb-4af6-b9cc-d12c1346f767" data-submenu="0" data-hide-sub-when-collapse="" data-group="0" data-class="" data-icon="" data-caption="" data-alignsub="" data-target="">
+      <a class="we-mega-menu-li" title="" href="/partners/NVIDIA" target="">
+      NVIDIA    </a>
+    
+</li><li  class="we-mega-menu-li" data-level="2" data-element-type="we-mega-menu-li" description="" data-id="d7f6869d-f57e-481f-b22c-ef4ff7423ef7" data-submenu="0" data-hide-sub-when-collapse="" data-group="0" data-class="" data-icon="" data-caption="" data-alignsub="" data-target="">
+      <a class="we-mega-menu-li" title="" href="/partners/red-hat" target="">
+      Red Hat    </a>
+    
+</li><li  class="we-mega-menu-li" data-level="2" data-element-type="we-mega-menu-li" description="" data-id="904fb8f5-c694-4d2e-b0e9-4dea6451f0ac" data-submenu="0" data-hide-sub-when-collapse="" data-group="0" data-class="" data-icon="" data-caption="" data-alignsub="" data-target="">
+      <a class="we-mega-menu-li" title="" href="/partners/supermicro" target="">
+      Supermicro    </a>
+    
+</li>
+</ul>
+</div>
+
+</div>
+
+  </div>
+</div>
+</li>
+</ul>
+</div>
+
+</div>
+
+  </div>
+</div>
+</li><li  class="we-mega-menu-li dropdown-menu" data-level="0" data-element-type="we-mega-menu-li" description="" data-id="5e1fafda-bc06-41cf-ae50-7dea903e0ea1" data-submenu="1" data-hide-sub-when-collapse="" data-group="0" data-class="" data-icon="" data-caption="" data-alignsub="" data-target="">
+      <a href='#' data-drupal-link-system-path="<front>" class="we-megamenu-nolink">
+      Resources</a>
+    <div  class="we-mega-menu-submenu mainmenu-wrapper" data-element-type="we-mega-menu-submenu" data-submenu-width="" data-class="mainmenu-wrapper" style="width: px">
+  <div class="we-mega-menu-submenu-inner">
+    <div  class="we-mega-menu-row" data-element-type="we-mega-menu-row" data-custom-row="0">
+  <div  class="we-mega-menu-col span3 padding-bottom" data-element-type="we-mega-menu-col" data-width="3" data-block="" data-blocktitle="0" data-hidewhencollapse="" data-class="padding-bottom">
+  <ul class="nav nav-tabs subul">
+  <li  class="we-mega-menu-li dropdown-menu we-mega-menu-group menu-heading" data-level="1" data-element-type="we-mega-menu-li" description="" data-id="f226d2e1-ec77-4cde-9b02-24c71a9a8fff" data-submenu="1" data-hide-sub-when-collapse="" data-group="1" data-class="menu-heading" data-icon="" data-caption="" data-alignsub="" data-target="">
+      <a href='#' data-drupal-link-system-path="<front>" class="we-megamenu-nolink">
+      Developer Support</a>
+    <div  class="we-mega-menu-submenu" data-element-type="we-mega-menu-submenu" data-submenu-width="" data-class="" style="width: px">
+  <div class="we-mega-menu-submenu-inner">
+    <div  class="we-mega-menu-row" data-element-type="we-mega-menu-row" data-custom-row="0">
+  <div  class="we-mega-menu-col span12" data-element-type="we-mega-menu-col" data-width="12" data-block="" data-blocktitle="0" data-hidewhencollapse="" data-class="">
+  <ul class="nav nav-tabs subul">
+  <li  class="we-mega-menu-li edb-has-caption" data-level="2" data-element-type="we-mega-menu-li" description="" data-id="e5aa09f1-348a-4795-b120-fbb46b2188ed" data-submenu="0" data-hide-sub-when-collapse="" data-group="0" data-class="edb-has-caption" data-icon="" data-caption="EDB product documentation" data-alignsub="" data-target="">
+      <a class="we-mega-menu-li" title="" href="https://www.enterprisedb.com/docs/" target="">
+      Product Documentation        <span class="we-mega-menu-caption">EDB product documentation</span>
+          </a>
+    
+</li><li  class="we-mega-menu-li edb-has-caption" data-level="2" data-element-type="we-mega-menu-li" description="" data-id="d63b17f3-5aaf-46b8-9d70-eec52ce66048" data-submenu="0" data-hide-sub-when-collapse="" data-group="0" data-class="edb-has-caption" data-icon="" data-caption="Searchable articles and updates" data-alignsub="" data-target="">
+      <a class="we-mega-menu-li" title="" href="https://knowledge.enterprisedb.com/" target="">
+      Knowledge Base        <span class="we-mega-menu-caption">Searchable articles and updates</span>
+          </a>
+    
+</li><li  class="we-mega-menu-li edb-has-caption" data-level="2" data-element-type="we-mega-menu-li" description="" data-id="6070605c-3c4a-4cb1-a14d-67675a8772f2" data-submenu="0" data-hide-sub-when-collapse="" data-group="0" data-class="edb-has-caption" data-icon="" data-caption="Support for PostgreSQL everywhere" data-alignsub="" data-target="">
+      <a class="we-mega-menu-li" title="" href="/support-center" target="">
+      Support        <span class="we-mega-menu-caption">Support for PostgreSQL everywhere</span>
+          </a>
+    
+</li><li  class="we-mega-menu-li edb-has-caption" data-level="2" data-element-type="we-mega-menu-li" description="" data-id="3edd6f7d-59a2-4288-875d-5df00bf8bb9e" data-submenu="0" data-hide-sub-when-collapse="" data-group="0" data-class="edb-has-caption" data-icon="" data-caption="Learn Postgres from EDB experts" data-alignsub="" data-target="">
+      <a class="we-mega-menu-li" title="" href="/training" target="">
+      Training        <span class="we-mega-menu-caption">Learn Postgres from EDB experts</span>
+          </a>
+    
+</li><li  class="we-mega-menu-li edb-has-caption" data-level="2" data-element-type="we-mega-menu-li" description="" data-id="7cdc0a8c-f20d-40ad-bf34-833d656e1452" data-submenu="0" data-hide-sub-when-collapse="" data-group="0" data-class="edb-has-caption" data-icon="" data-caption="Key features and support terms" data-alignsub="" data-target="_self">
+      <a class="we-mega-menu-li" title="" href="/products/plans-comparison" target="_self">
+      EDB POSTGRES AI PLANS        <span class="we-mega-menu-caption">Key features and support terms</span>
+          </a>
+    
+</li>
+</ul>
+</div>
+
+</div>
+
+  </div>
+</div>
+</li>
+</ul>
+</div>
+<div  class="we-mega-menu-col span3 padding-bottom" data-element-type="we-mega-menu-col" data-width="3" data-block="" data-blocktitle="1" data-hidewhencollapse="" data-class="padding-bottom">
+  <ul class="nav nav-tabs subul">
+  <li  class="we-mega-menu-li dropdown-menu we-mega-menu-group menu-heading" data-level="1" data-element-type="we-mega-menu-li" description="" data-id="dc8752d6-5f37-46c0-96ab-13d0172c14d5" data-submenu="1" data-hide-sub-when-collapse="" data-group="1" data-class="menu-heading" data-icon="" data-caption="" data-alignsub="" data-target="">
+      <a href='#' data-drupal-link-system-path="<front>" class="we-megamenu-nolink">
+      Legal &amp; Technical</a>
+    <div  class="we-mega-menu-submenu" data-element-type="we-mega-menu-submenu" data-submenu-width="" data-class="" style="width: px">
+  <div class="we-mega-menu-submenu-inner">
+    <div  class="we-mega-menu-row" data-element-type="we-mega-menu-row" data-custom-row="0">
+  <div  class="we-mega-menu-col span12" data-element-type="we-mega-menu-col" data-width="12" data-block="" data-blocktitle="0" data-hidewhencollapse="" data-class="">
+  <ul class="nav nav-tabs subul">
+  <li  class="we-mega-menu-li edb-has-caption" data-level="2" data-element-type="we-mega-menu-li" description="Knowledge base on our security posture" data-id="ee5d7669-85d9-4b60-8c19-b84475a0077f" data-submenu="0" data-hide-sub-when-collapse="" data-group="0" data-class="edb-has-caption" data-icon="" data-caption="Knowledge base on our security posture" data-alignsub="" data-target="">
+      <a class="we-mega-menu-li" title="" href="http://trust.enterprisedb.com" target="">
+      EDB Trust Center        <span class="we-mega-menu-caption">Knowledge base on our security posture</span>
+          </a>
+    
+</li><li  class="we-mega-menu-li edb-has-caption" data-level="2" data-element-type="we-mega-menu-li" description="" data-id="31ad71fc-005f-4566-bdfb-369bcdaad2db" data-submenu="0" data-hide-sub-when-collapse="" data-group="0" data-class="edb-has-caption" data-icon="" data-caption="Supported versions and operating systems" data-alignsub="" data-target="">
+      <a class="we-mega-menu-li" title="" href="https://www.enterprisedb.com/resources/platform-compatibility" target="">
+      Platform Compatibility        <span class="we-mega-menu-caption">Supported versions and operating systems</span>
+          </a>
+    
+</li><li  class="we-mega-menu-li edb-has-caption" data-level="2" data-element-type="we-mega-menu-li" description="Defining EDB license entitlements" data-id="1f33301b-ed96-4a81-8abe-f2c6559903f9" data-submenu="0" data-hide-sub-when-collapse="" data-group="0" data-class="edb-has-caption" data-icon="" data-caption="Defining EDB license entitlements" data-alignsub="" data-target="">
+      <a class="we-mega-menu-li" title="" href="/sites/default/files/pdf/EDB_Licensing_Guide.pdf" target="">
+      Licensing Guide         <span class="we-mega-menu-caption">Defining EDB license entitlements</span>
+          </a>
+    
+</li><li  class="we-mega-menu-li edb-has-caption" data-level="2" data-element-type="we-mega-menu-li" description="" data-id="986a711b-e328-4a7b-ae5d-21366ae55240" data-submenu="0" data-hide-sub-when-collapse="" data-group="0" data-class="edb-has-caption" data-icon="" data-caption="Simple access to the EDB EULA" data-alignsub="" data-target="">
+      <a class="we-mega-menu-li" title="" href="/legal/EDB-Eula" target="">
+      EDB EULA        <span class="we-mega-menu-caption">Simple access to the EDB EULA</span>
+          </a>
+    
+</li><li  class="we-mega-menu-li edb-has-caption" data-level="2" data-element-type="we-mega-menu-li" description="Simple access to products and services" data-id="655bd1b9-c409-4e53-8534-d337baf06e4d" data-submenu="0" data-hide-sub-when-collapse="" data-group="0" data-class="edb-has-caption" data-icon="" data-caption="Simple access to products and services" data-alignsub="" data-target="">
+      <a class="we-mega-menu-li" title="" href="/edb-purchase-program" target="">
+      EDB Purchase Program        <span class="we-mega-menu-caption">Simple access to products and services</span>
+          </a>
+    
+</li>
+</ul>
+</div>
+
+</div>
+
+  </div>
+</div>
+</li>
+</ul>
+</div>
+<div  class="we-mega-menu-col span3 padding-bottom" data-element-type="we-mega-menu-col" data-width="3" data-block="" data-blocktitle="1" data-hidewhencollapse="" data-class="padding-bottom">
+  <ul class="nav nav-tabs subul">
+  <li  class="we-mega-menu-li dropdown-menu we-mega-menu-group menu-heading" data-level="1" data-element-type="we-mega-menu-li" description="" data-id="2d713911-03f4-43db-a1a0-270931104e4d" data-submenu="1" data-hide-sub-when-collapse="" data-group="1" data-class="menu-heading" data-icon="" data-caption="" data-alignsub="" data-target="">
+      <a href='#' data-drupal-link-system-path="<front>" class="we-megamenu-nolink">
+      DOWNLOADS</a>
+    <div  class="we-mega-menu-submenu" data-element-type="we-mega-menu-submenu" data-submenu-width="" data-class="" style="width: px">
+  <div class="we-mega-menu-submenu-inner">
+    <div  class="we-mega-menu-row" data-element-type="we-mega-menu-row" data-custom-row="0">
+  <div  class="we-mega-menu-col span12" data-element-type="we-mega-menu-col" data-width="12" data-block="" data-blocktitle="0" data-hidewhencollapse="" data-class="">
+  <ul class="nav nav-tabs subul">
+  <li  class="we-mega-menu-li edb-has-caption" data-level="2" data-element-type="we-mega-menu-li" description="" data-id="e6c1ced9-69b2-4a29-b0b1-92d07b5720ee" data-submenu="0" data-hide-sub-when-collapse="" data-group="0" data-class="edb-has-caption" data-icon="" data-caption="EDB integrated portfolio of software" data-alignsub="" data-target="">
+      <a class="we-mega-menu-li" title="" href="https://www.enterprisedb.com/software-downloads-postgres" target="">
+      EDB Software Downloads        <span class="we-mega-menu-caption">EDB integrated portfolio of software</span>
+          </a>
+    
+</li><li  class="we-mega-menu-li edb-has-caption" data-level="2" data-element-type="we-mega-menu-li" description="" data-id="ab1fe365-0e38-4db3-934f-ffebeaaac305" data-submenu="0" data-hide-sub-when-collapse="" data-group="0" data-class="edb-has-caption" data-icon="" data-caption="PostgreSQL package and installers" data-alignsub="" data-target="">
+      <a class="we-mega-menu-li" title="" href="https://www.enterprisedb.com/downloads/postgres-postgresql-downloads" target="">
+      Open Source PostgreSQL        <span class="we-mega-menu-caption">PostgreSQL package and installers</span>
+          </a>
+    
+</li>
+</ul>
+</div>
+
+</div>
+
+  </div>
+</div>
+</li>
+</ul>
+</div>
+<div  class="we-mega-menu-col span3 padding-bottom" data-element-type="we-mega-menu-col" data-width="3" data-block="" data-blocktitle="1" data-hidewhencollapse="" data-class="padding-bottom">
+  <ul class="nav nav-tabs subul">
+  <li  class="we-mega-menu-li dropdown-menu we-mega-menu-group menu-heading" data-level="1" data-element-type="we-mega-menu-li" description="" data-id="964acda7-1068-40ac-a449-9d58e17e25f8" data-submenu="1" data-hide-sub-when-collapse="" data-group="1" data-class="menu-heading" data-icon="" data-caption="" data-alignsub="" data-target="">
+      <a href='#' data-drupal-link-system-path="<front>" class="we-megamenu-nolink">
+      LEARN &amp; EXPLORE</a>
+    <div  class="we-mega-menu-submenu" data-element-type="we-mega-menu-submenu" data-submenu-width="" data-class="" style="width: px">
+  <div class="we-mega-menu-submenu-inner">
+    <div  class="we-mega-menu-row" data-element-type="we-mega-menu-row" data-custom-row="0">
+  <div  class="we-mega-menu-col span12" data-element-type="we-mega-menu-col" data-width="12" data-block="" data-blocktitle="0" data-hidewhencollapse="" data-class="">
+  <ul class="nav nav-tabs subul">
+  <li  class="we-mega-menu-li edb-has-caption" data-level="2" data-element-type="we-mega-menu-li" description="" data-id="5bea00c9-8430-4979-85b2-f7429825089d" data-submenu="0" data-hide-sub-when-collapse="" data-group="0" data-class="edb-has-caption" data-icon="" data-caption="Tours of EDB Postgres AI capabilities" data-alignsub="" data-target="">
+      <a class="we-mega-menu-li" title="" href="/demos" target="">
+      Demos        <span class="we-mega-menu-caption">Tours of EDB Postgres AI capabilities</span>
+          </a>
+    
+</li><li  class="we-mega-menu-li edb-has-caption" data-level="2" data-element-type="we-mega-menu-li" description="" data-id="b1690dc6-13a0-4e6e-a8a4-d8ad44bafad5" data-submenu="0" data-hide-sub-when-collapse="" data-group="0" data-class="edb-has-caption" data-icon="" data-caption="Studies of EDB Postgres AI performance" data-alignsub="" data-target="">
+      <a class="we-mega-menu-li" title="" href="/resources/benchmarks" target="">
+      Benchmark Reports        <span class="we-mega-menu-caption">Studies of EDB Postgres AI performance</span>
+          </a>
+    
+</li><li  class="we-mega-menu-li edb-has-caption" data-level="2" data-element-type="we-mega-menu-li" description="" data-id="b7b5752f-8191-43e7-a06d-19a7d95510be" data-submenu="0" data-hide-sub-when-collapse="" data-group="0" data-class="edb-has-caption" data-icon="" data-caption="Industry news and thought leadership" data-alignsub="" data-target="">
+      <a class="we-mega-menu-li" title="" href="/blog" target="">
+      Blog        <span class="we-mega-menu-caption">Industry news and thought leadership</span>
+          </a>
+    
+</li><li  class="we-mega-menu-li edb-has-caption" data-level="2" data-element-type="we-mega-menu-li" description="" data-id="c5496236-2811-4530-bbad-66065bda32f3" data-submenu="0" data-hide-sub-when-collapse="" data-group="0" data-class="edb-has-caption" data-icon="" data-caption="Find us at community and industry events " data-alignsub="" data-target="">
+      <a class="we-mega-menu-li" title="" href="/resources/events" target="">
+      Events        <span class="we-mega-menu-caption">Find us at community and industry events </span>
+          </a>
+    
+</li><li  class="we-mega-menu-li edb-has-caption" data-level="2" data-element-type="we-mega-menu-li" description="" data-id="5d91cc09-b34a-4bc3-b334-777608e6af68" data-submenu="0" data-hide-sub-when-collapse="" data-group="0" data-class="edb-has-caption" data-icon="" data-caption="Upcoming and on-demand webinars" data-alignsub="" data-target="">
+      <a class="we-mega-menu-li" title="" href="/resources/webinars" target="">
+      Webinars        <span class="we-mega-menu-caption">Upcoming and on-demand webinars</span>
+          </a>
+    
+</li><li  class="we-mega-menu-li edb-has-caption" data-level="2" data-element-type="we-mega-menu-li" description="" data-id="d2a4e58c-d127-4037-80db-2325d80353d0" data-submenu="0" data-hide-sub-when-collapse="" data-group="0" data-class="edb-has-caption" data-icon="" data-caption="Postgres analysis from the experts" data-alignsub="" data-target="">
+      <a class="we-mega-menu-li" title="" href="/resources/white-papers" target="">
+      White Papers        <span class="we-mega-menu-caption">Postgres analysis from the experts</span>
+          </a>
+    
+</li><li  class="we-mega-menu-li edb-has-caption" data-level="2" data-element-type="we-mega-menu-li" description="" data-id="90d1138d-92fa-414f-a606-06c01c21515c" data-submenu="0" data-hide-sub-when-collapse="" data-group="0" data-class="edb-has-caption" data-icon="" data-caption="AI and Data Horizons: The Sovereign Future" data-alignsub="" data-target="">
+      <a class="we-mega-menu-li" title="" href="/ai-data-horizons" target="">
+      Podcast        <span class="we-mega-menu-caption">AI and Data Horizons: The Sovereign Future</span>
+          </a>
+    
+</li><li  class="we-mega-menu-li edb-has-caption" data-level="2" data-element-type="we-mega-menu-li" description="Your questions, answered. " data-id="650b3a34-d7b0-4f34-a986-fe1db20874f1" data-submenu="0" data-hide-sub-when-collapse="" data-group="0" data-class="edb-has-caption" data-icon="" data-caption="Introductory guides to Postgres topics" data-alignsub="" data-target="">
+      <a class="we-mega-menu-li" title="" href="/edb-learning-library" target="">
+      Learning Library        <span class="we-mega-menu-caption">Introductory guides to Postgres topics</span>
+          </a>
+    
+</li>
+</ul>
+</div>
+
+</div>
+
+  </div>
+</div>
+</li>
+</ul>
+</div>
+
+</div>
+
+  </div>
+</div>
+</li><li  class="we-mega-menu-li dropdown-menu" data-level="0" data-element-type="we-mega-menu-li" description="" data-id="b32f9293-0873-4220-a1de-b2642ec5db76" data-submenu="1" data-hide-sub-when-collapse="" data-group="0" data-class="" data-icon="" data-caption="" data-alignsub="" data-target="">
+      <a href='#' data-drupal-link-system-path="<front>" class="we-megamenu-nolink">
+      About</a>
+    <div  class="we-mega-menu-submenu mainmenu-wrapper" data-element-type="we-mega-menu-submenu" data-submenu-width="" data-class="mainmenu-wrapper" style="width: px">
+  <div class="we-mega-menu-submenu-inner">
+    <div  class="we-mega-menu-row" data-element-type="we-mega-menu-row" data-custom-row="1">
+  <div  class="we-mega-menu-col span2 padding-bottom" data-element-type="we-mega-menu-col" data-width="2" data-block="" data-blocktitle="0" data-hidewhencollapse="" data-class="padding-bottom">
+  <ul class="nav nav-tabs subul">
+  <li  class="we-mega-menu-li no-leaf" data-level="1" data-element-type="we-mega-menu-li" description="" data-id="e49f8bf6-d78c-4058-bbaf-a6fc70b786bf" data-submenu="0" data-hide-sub-when-collapse="" data-group="0" data-class="no-leaf" data-icon="" data-caption="" data-alignsub="" data-target="">
+      <a class="we-mega-menu-li" title="" href="/company" target="">
+      About EDB    </a>
+    
+</li><li  class="we-mega-menu-li no-leaf" data-level="1" data-element-type="we-mega-menu-li" description="" data-id="6aff1fb5-2064-49c4-b20d-55f12bfeaf47" data-submenu="0" data-hide-sub-when-collapse="" data-group="0" data-class="no-leaf" data-icon="" data-caption="" data-alignsub="" data-target="">
+      <a class="we-mega-menu-li" title="" href="/resources/customer-story" target="">
+      Customers    </a>
+    
+</li><li  class="we-mega-menu-li no-leaf" data-level="1" data-element-type="we-mega-menu-li" description="" data-id="bcff3faa-4fe1-412d-bf69-c3431ed07232" data-submenu="0" data-hide-sub-when-collapse="" data-group="0" data-class="no-leaf" data-icon="" data-caption="" data-alignsub="" data-target="">
+      <a class="we-mega-menu-li" title="" href="/press-room" target="">
+      Newsroom    </a>
+    
+</li>
+</ul>
+</div>
+<div  class="we-mega-menu-col span2 padding-bottom" data-element-type="we-mega-menu-col" data-width="2" data-block="" data-blocktitle="1" data-hidewhencollapse="" data-class="padding-bottom">
+  <ul class="nav nav-tabs subul">
+  <li  class="we-mega-menu-li no-leaf" data-level="1" data-element-type="we-mega-menu-li" description="" data-id="20abee45-e110-43c9-9646-6de07e425405" data-submenu="0" data-hide-sub-when-collapse="" data-group="0" data-class="no-leaf" data-icon="" data-caption="" data-alignsub="" data-target="">
+      <a class="we-mega-menu-li" title="" href="/company/leadership" target="">
+      Leadership    </a>
+    
+</li><li  class="we-mega-menu-li no-leaf" data-level="1" data-element-type="we-mega-menu-li" description="" data-id="d9ff29b2-0406-4532-8acd-3ea0c1af67ad" data-submenu="0" data-hide-sub-when-collapse="" data-group="0" data-class="no-leaf" data-icon="" data-caption="" data-alignsub="" data-target="">
+      <a class="we-mega-menu-li" title="" href="/careers" target="">
+      Careers    </a>
+    
+</li><li  class="we-mega-menu-li no-leaf" data-level="1" data-element-type="we-mega-menu-li" description="" data-id="48186cec-4b92-4964-8dfc-de1fc9206bec" data-submenu="0" data-hide-sub-when-collapse="" data-group="0" data-class="no-leaf" data-icon="" data-caption="" data-alignsub="" data-target="">
+      <a class="we-mega-menu-li" title="" href="/contact" target="">
+      Contact Us    </a>
+    
+</li>
+</ul>
+</div>
+<div  class="we-mega-menu-col span2 padding-bottom" data-element-type="we-mega-menu-col" data-width="2" data-block="" data-blocktitle="1" data-hidewhencollapse="" data-class="padding-bottom">
+  
+</div>
+<div  class="we-mega-menu-col span6" data-element-type="we-mega-menu-col" data-width="6" data-block="" data-blocktitle="1" data-hidewhencollapse="" data-class="">
+  
+</div>
+
+</div>
+
+  </div>
+</div>
+</li>
+</ul>
+	  </div>
+	</nav>
+</div>
+  </div>
+
+  </div>
+
+		  <div class="region region--navigation">
+          <div id="block-edb-theme-searchicon">
+        <svg width="14.389" height="14.389" viewBox="0 0 14.389 14.389" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg">
+          <path d="M43.365,1.019a6.345,6.345,0,1,0,6.347,6.346A6.348,6.348,0,0,0,43.365,1.019Zm7.616,13.962L47.85,11.85"
+            transform="translate(-36.769 -0.769)"
+            fill="none" stroke="currentColor" stroke-linejoin="round" stroke-width="0.65"/>
+        </svg>
+      </div>
+        <nav role="navigation" aria-labelledby="block-headercta-menu" id="block-headercta">
+            
+  <h2 class="visually-hidden" id="block-headercta-menu">Header CTA</h2>
+  
+
+                      <ul class="menu">
+                          
+                        
+                          
+                          
+      <li tabindex="0" class="menu__item menu__item--expanded">
+                  <span class="myaccount_cta"><svg id="Group_2" data-name="Group 2" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="16" height="16" viewBox="0 0 16 16"><defs><clipPath id="clip-path"><rect id="Rectangle_1" data-name="Rectangle 1" width="16" height="16" fill="none"/></clipPath></defs><g id="Group_1" data-name="Group 1" clip-path="url(#clip-path)"><path id="Path_1" data-name="Path 1" d="M.5,15.5A7.479,7.479,0,0,1,6.318,8.429a4.144,4.144,0,1,1,3.364,0A7.479,7.479,0,0,1,15.5,15.5" fill="none" stroke="#000" stroke-linejoin="round" stroke-width="0.65"/></g></svg><span class="visually-hidden">My Account</span>
+        </span>
+                                        <ul class="menu">
+                          
+                        
+            
+                          
+      <li class="menu__item">
+                  <a href="https://techsupport.enterprisedb.com/">Support Portal</a>
+                      </li>
+                      
+                        
+            
+                          
+      <li class="menu__item">
+                  <a href="https://training.enterprisedb.com/">Training Portal</a>
+                      </li>
+                      
+                        
+            
+                          
+      <li class="menu__item">
+                  <a href="https://migration.enterprisedb.com/">Migration Portal</a>
+                      </li>
+                      
+                        
+            
+                          
+      <li class="menu__item">
+                  <a href="https://partners.enterprisedb.com/#/page/login">Partner Portal</a>
+                      </li>
+                      
+                        
+            
+                          
+      <li class="menu__item">
+                  <a href="/accounts/profile">Account Settings</a>
+                      </li>
+                      
+                        
+            
+                          
+      <li class="menu__item">
+                  <a href="https://www.enterprisedb.com/?fromURILogout=https://www.enterprisedb.com/postgres-tutorials/are-hash-indexes-faster-btree-indexes-postgres">Sign Out</a>
+                      </li>
+        </ul>
+  
+              </li>
+                      
+                        
+                          
+                          
+      <li tabindex="0" class="menu__item menu__item--expanded">
+                  <span class="single_sigin edb_login cta-data-layer" data-event-category="Sign in" data-event-action="Click" data-event-label="EDB Login" data-click-id="logclick-edb-login--2"><svg id="Group_2" data-name="Group 2" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="16" height="16" viewBox="0 0 16 16"><defs><clipPath id="clip-path"><rect id="Rectangle_1" data-name="Rectangle 1" width="16" height="16" fill="none"/></clipPath></defs><g id="Group_1" data-name="Group 1" clip-path="url(#clip-path)"><path id="Path_1" data-name="Path 1" d="M.5,15.5A7.479,7.479,0,0,1,6.318,8.429a4.144,4.144,0,1,1,3.364,0A7.479,7.479,0,0,1,15.5,15.5" fill="none" stroke="#000" stroke-linejoin="round" stroke-width="0.65"/></g></svg><span class="visually-hidden">Sign In</span>
+        </span>
+                                        <ul class="menu">
+                          
+                        
+            
+                          
+      <li class="menu__item">
+                  <a href="https://www.enterprisedb.com/accounts/login?fromURI=https://www.enterprisedb.com/postgres-tutorials/are-hash-indexes-faster-btree-indexes-postgres" class="edb_login">Sign In</a>
+                      </li>
+        </ul>
+  
+              </li>
+                      
+                        
+            
+                          
+      <li class="talktoexpert-container menu__item" tabindex="0">
+                  <a href="/contact" class="talktoexpert btn-header cta-data-layer" data-event-category="Contact cta" data-event-action="Click" data-event-label="contact us" data-click-id="conclick-contact-us--2" data-drupal-link-system-path="node/1260076">Contact Us</a>
+                      </li>
+        </ul>
+  
+
+
+
+  </nav>
+<div class="search-api-form header-search block block--search-api-block block--search-api-form-block" data-drupal-selector="search-api-form" id="block-searchapiform">
+  
+    
+      <form action="/search" method="get" id="search-api-form" accept-charset="UTF-8">
+  <div class="js-form-item form-item js-form-type-search form-item-q js-form-item-q form-no-label">
+      <label for="edit-q" class="visually-hidden">Search</label>
+        <input title="Enter the terms you wish to search for." data-drupal-selector="edit-q" type="search" id="edit-q" name="q" value="" size="15" maxlength="128" placeholder="Search products, resources &amp; more" class="form-search" />
+
+        </div>
+<div data-drupal-selector="edit-actions" class="form-actions js-form-wrapper form-wrapper" id="edit-actions"><input data-drupal-selector="edit-submit" type="submit" id="edit-submit" value="Search" class="button js-form-submit form-submit" />
+<input onclick="this.form.reset(); return false;" data-drupal-selector="edit-reset" type="submit" id="edit-reset" name="op" value="Clear" class="button js-form-submit form-submit" />
+</div>
+
+</form>
+
+  </div>
+
+  </div>
+
+	</div>
+</header>
+
+	
+	<div class="custom-variation-1"></div>
+
+<div id="main-wrapper">
+	<div  class="container clearfix">
+		  <div class="region region--help">
+        <div data-drupal-messages-fallback class="hidden"></div>
+
+  </div>
+
+				<main class="main-content" role="main">
+			  <div class="region region--content">
+        <div id="block-edb-theme-content" class="block block--system block--system-main-block">
+  
+    
+      
+<article data-history-node-id="1260716" about="/postgres-tutorials/are-hash-indexes-faster-btree-indexes-postgres" class="node node--type-blog-post node--promoted node--view-mode-full">
+
+  <p class="back-to-blog">
+    <a href="/blog">Back to blog</a>
+  </p>
+
+  
+      <h1 class="blog-post-title">
+      
+<span>Are Hash Indexes Faster than Btree Indexes in Postgres?</span>
+
+    </h1>
+    
+
+  <div class="node__content">
+        <div class="blog-image">
+      
+    </div>
+    <div class="blog-content row">
+      <div class="col-md-9 blog-body">
+                  <div class="blog-meta">
+            <div class="blog-author">
+              
+            </div>
+            <div class="blog-pubdate">
+              January 20, 2023
+            </div>
+          </div>
+                
+            <div class="field field--name-body field--type-text-with-summary field--label-hidden field__item"><p>PostgreSQL have supported Hash Index for a long time, but they are not much used in production mainly because they are not durable. Now, with the next version of PostgreSQL, they will be durable. The immediate question is how do they perform as compared to Btree indexes. There is a lot of work underway for the coming version to make them faster. There are multiple ways in which we can compare the performance of Hash and Btree PostgreSQL index types, like the time taken for index creation, search, or insertion in the index. This blog will mainly focus on the search operation. By definition, hash indexes are O(1) and Btree indexes are O(log n), however with duplicates that is not exactly true.<!--break--></p>
+
+<h2 id="section-1">Hash Index Performance</h2>
+
+<p>To start with let us see the impact of work being done to improve the performance of hash indexes. Below is the performance data of the pgbench read-only workload to compare the performance difference of Hash indexes between 9.6 and HEAD on IBM POWER8 with 24 cores, 192 hardware threads, 492GB RAM.</p>
+
+<p><b><img alt data-entity-type data-entity-uuid src="/sites/default/files/blogs/read_only_hash_index.png" style="width: 100%;"></b></p>
+
+<p><b>&nbsp;</b></p>
+
+<p>The workload is such that all the data fits in shared buffers (scale factor is 300 (~4.5GB) and shared_buffers is 8GB). As we can see from the above graph, the performance has increased at all client counts in the range of 7% to 81% and the impact is more pronounced at higher client counts. The main work which has led to this improvement is 6d46f478 (Improve hash index bucket split behavior) and 293e24e5 (Cache hash index's metapage in rel-&gt;rd_amcache.).</p>
+
+<p>The first commit 6d46f478 has changed the heavyweight locks (locks that are used for logical database objects to ensure the database ACID properties) to lightweight locks (locks to protect shared data structures) for scanning the bucket pages. In general, acquiring the heavyweight lock is costlier as compared to lightweight locks. In addition to reducing the locking cost, this also avoids locking out scans and inserts for the lifetime of the split.</p>
+
+<p>The second commit 293e24e5 avoids a significant amount of contention for accessing metapage. Each search operation needs to access metapage to find the bucket that contains the tuple being searched which leads to high contention around metapage. Each access to metapage needs to further access buffer manager. This work avoids that contention by caching the metapage information in the backend local cache which helps bypassing all the buffer manager related work and hence the major contention in accessing the metapage.</p>
+
+<h2 id="section-2">Hash Index Performance Compared to Btree Index</h2>
+
+<p>The next graph shows how the PostgreSQL hash index performs as compared to the&nbsp;btree index. In this run we have changed hash to btree index in pgbench read-only tests.</p>
+
+<p><b><img alt data-entity-type data-entity-uuid src="/sites/default/files/blogs/read_only_hash_btree.png" style="width: 100%;"></b></p>
+
+<p>We can see here that the PostgreSQL hash index performs better than the btree index and the performance difference is in the range of 10% to 22%. In some other workloads, we have seen a better performance like with hash index on varchar columns and even in the <a href="https://www.postgresql.org/message-id/4575a870-1315-18ac-0516-c21a83a7afdf%40redhat.com" data-event-category="in-blog click" data-event-action="Click" data-event-label="community" data-blog-title="Are Hash Indexes Faster than Btree Indexes in Postgres?" data-blog-author="Amit Kapila" data-blog-publish-date="January 20, 2023" data-click-id="inblogclick-community--2" class="cta-data-layer" target="_blank">community</a>, it has been reported that there is performance improvement in the range of 40% to 60% when hash indexes are used for unique index columns.</p>
+
+<p>The important thing to note about the above data is that it is only on some of the specific workloads and it mainly covers Selects as that is the main area where performance improvement work has been done for PostgreSQL10. The other interesting parameters to compare are the size of the PostgreSQL index&nbsp;and the update on the index which needs more study and experiments.</p>
+
+<p>In the end, I would like to thank my colleagues who were directly involved in this work and my employer <a href="https://www.enterprisedb.com/" data-event-category="in-blog click" data-event-action="Click" data-event-label="EnterpriseDB" data-blog-title="Are Hash Indexes Faster than Btree Indexes in Postgres?" data-blog-author="Amit Kapila" data-blog-publish-date="January 20, 2023" data-click-id="inblogclick-enterprisedb--2" class="cta-data-layer">EnterpriseDB</a> who has supported this work. First&nbsp;I would like to thank Robert Haas who has envisioned all this work and is the committer of this work, and Mithun C Y who was the author of commit 293e24e5. Also, I would like to extend sincere thanks to all the community members who are involved in this work and especially Jeff Janes and Jesper Pedersen who have reviewed and tested this work.</p>
+
+<p>&nbsp;</p>
+
+<p><em>This post originally appeared on Amit's personal <a href="http://amitkapila16.blogspot.in/2017/03/hash-indexes-are-faster-than-btree.html" data-event-category="in-blog click" data-event-action="Click" data-event-label="blog" data-blog-title="Are Hash Indexes Faster than Btree Indexes in Postgres?" data-blog-author="Amit Kapila" data-blog-publish-date="January 20, 2023" data-click-id="inblogclick-blog--2" class="cta-data-layer" target="_blank">blog</a>.</em></p>
+</div>
+      
+        
+
+
+
+<div class="sharethis-wrapper">
+  <span class="sharethis-label">Share this</span>
+        
+  <span class="a2a_kit a2a_kit_size_27 addtoany_list" data-a2a-url="https://enterprisedb.com/postgres-tutorials/are-hash-indexes-faster-btree-indexes-postgres" data-a2a-title="Are Hash Indexes Faster than Btree Indexes in Postgres?">
+    
+          <a class="a2a_button_facebook"></a><a class="a2a_button_x"></a><a class="a2a_button_linkedin"></a><a class="a2a_button_email"></a>
+    
+                <a class="a2a_dd addtoany_share" href="https://www.addtoany.com/share#url=https%3A%2F%2Fenterprisedb.com%2Fpostgres-tutorials%2Fare-hash-indexes-faster-btree-indexes-postgres&amp;title=Are%20Hash%20Indexes%20Faster%20than%20Btree%20Indexes%20in%20Postgres%3F">
+              </a>
+    
+      </span>
+</div>
+
+        
+        <div id="comment-bottom" class="visually-hidden"></div>
+        <div class="lazy-load-comments-section" data-node="1260716"><div class="ajax-field-content"></div></div>
+
+      </div>
+      <div class="col-md-3 blog-index">
+                  <div id="navigationMenu">
+            <p>In this Article</p>
+            <ul>
+                              <li class="navigation-item"><a href="#section-1">Hash Index Performance</a></li>
+                              <li class="navigation-item"><a href="#section-2">Hash Index Performance Compared to Btree Index</a></li>
+                          </ul>
+          </div>
+              </div>
+    </div>
+          
+        <div class="col-md-12 blog-lists">
+      <div class="block block--edb-general block--edb-general-related-content-block">
+  
+      <h2>More Blogs</h2>
+    
+      
+  <div class="blogs-posts">
+    <div class="view__header">
+      <h3>More Blogs</h3>
+    </div>
+    <div class="view__content">
+      <div class="views-view-grid horizontal cols-3 clearfix">
+        <div class="views-row clearfix row-1">
+                      <div class="col-sm-4">
+              <article
+                class="node--type-blog-post">
+                <h3>
+                  <a href="/blog/postgresql-18-scram-pass-through-authentication-fdw-connections" rel="bookmark">PostgreSQL 18 - SCRAM pass-through authentication for fdw connections</a>
+                </h3>
+                                  <div class="related-node-body">
+                    PostgreSQL 18 brings a nice improvement for folks using postgres_fdw or dblink_fdw: SCRAM pass-through authentication. You no longer need to store plain-text passwords in your USER MAPPING options when setting...
+                  </div>
+                                <div class="other-info">
+                                      <span>August 21, 2025</span>
+                                  </div>
+              </article>
+            </div>
+                      <div class="col-sm-4">
+              <article
+                class="node--type-blog-post">
+                <h3>
+                  <a href="/postgres-tutorials/comprehensive-guide-how-tune-database-parameters-and-configuration-postgresql" rel="bookmark">How to Tune PostgreSQL Parameters and Configuration For Optimal Performance</a>
+                </h3>
+                                  <div class="related-node-body">
+                    Fine-tune your PostgreSQL setup with performance tuning parameters that drive faster queries and efficient database operations.
+                  </div>
+                                <div class="other-info">
+                                      <span>October 11, 2024</span>
+                                  </div>
+              </article>
+            </div>
+                      <div class="col-sm-4">
+              <article
+                class="node--type-blog-post">
+                <h3>
+                  <a href="/postgres-tutorials/introduction-postgresql-performance-tuning-and-optimization" rel="bookmark">PostgreSQL Performance Tuning: Optimize Your Database Server</a>
+                </h3>
+                                  <div class="related-node-body">
+                    Enhance your PostgreSQL database performance with EDB&#039;s expert tuning tips. Optimize queries, autovacuum, and more for a faster, more efficient database.
+                  </div>
+                                <div class="other-info">
+                                      <span>September 20, 2024</span>
+                                  </div>
+              </article>
+            </div>
+                  </div>
+      </div>
+    </div>
+  </div>
+
+  </div>
+
+    </div>
+  </div>
+
+</article>
+  </div>
+
+  </div>
+
+		</main>
+	</div>
+</div>
+	<footer role="contentinfo">
+		<div class="container">
+			  <div class="region region--footer">
+        <div id="block-edb-theme-footerlogo" class="edb_footer_logo block block--block-content block--block-content069e7c07-765c-4142-9625-ef7257402106">
+  
+    
+      
+            <div class="field field--name-field-block-background-image field--type-image field--label-hidden field__item">  <img loading="lazy" src="/sites/default/files/images/edb_postgres_ai_darkmode.svg" alt="edb postgres ai darkmode" typeof="foaf:Image" />
+
+</div>
+      
+            <div class="field field--name-field-content-vertical-center field--type-boolean field--label-hidden field__item">Off</div>
+      
+            <div class="field field--name-field-block-container field--type-boolean field--label-hidden field__item">Off</div>
+      
+  </div>
+<div id="block-edb-theme-socialmediablock" class="block block--block-content block--block-content8d3775da-d8cd-4c57-81c1-ff2144c9a172">
+  
+    
+      
+            <div class="field field--name-body field--type-text-with-summary field--label-hidden field__item"><style>#block-edb-theme-socialmediablock{ width: 100%; } </style><nav class="social-nav-footer" role="navigation" aria-labelledby="block-socialnavfooter-menu" id="block-socialnavfooter"><ul class="menu"><li class="menu__item" data-list-item-id="e96699c4808f26bd4b5b3a74a3daff158"><a href="https://www.linkedin.com/company/enterprisedb" aria-label="LinkedIn" target="_blank"><svg class="svg-inline--fa fa-linkedin-in" aria-hidden="true" focusable="false" data-prefix="fab" data-icon="linkedin-in" role="img" viewBox="0 0 448 512" data-fa-i2svg><path fill="currentColor" d="M100.28 448H7.4V148.9h92.88zM53.79 108.1C24.09 108.1 0 83.5 0 53.8a53.79 53.79 0 0 1 107.58 0c0 29.7-24.1 54.3-53.79 54.3zM447.9 448h-92.68V302.4c0-34.7-.7-79.2-48.29-79.2-48.29 0-55.69 37.7-55.69 76.7V448h-92.78V148.9h89.08v40.8h1.3c12.4-23.5 42.69-48.3 87.88-48.3 94 0 111.28 61.9 111.28 142.3V448z" /></svg></a><!-- <i class="fa fa-linkedin" aria-hidden="true"></i> Font Awesome fontawesome.com --></li><li class="menu__item" data-list-item-id="e43e47636a89c05faa945db86280449e9"><a href="https://twitter.com/EDBPostgres" aria-label="Twitter" target="_blank"><svg class="svg-inline--fa fa-x-twitter" aria-hidden="true" focusable="false" data-prefix="fab" data-icon="x-twitter" role="img" viewBox="0 0 512 512" data-fa-i2svg><path fill="currentColor" d="M389.2 48h70.6L305.6 224.2 487 464H345L233.7 318.6 106.5 464H35.8L200.7 275.5 26.8 48H172.4L272.9 180.9 389.2 48zM364.4 421.8h39.1L151.1 88h-42L364.4 421.8z" /></svg></a><!-- <i class="fa fa-brands fa-x-twitter" aria-hidden="true"></i> Font Awesome fontawesome.com --></li><li class="menu__item" data-list-item-id="e11b92dc32eb803609124595165bff939"><a href="https://www.youtube.com/user/EnterpriseDB" aria-label="Youtube" target="_blank"><svg class="svg-inline--fa fa-youtube" aria-hidden="true" focusable="false" data-prefix="fab" data-icon="youtube" role="img" viewBox="0 0 576 512" data-fa-i2svg><path fill="currentColor" d="M549.655 124.083c-6.281-23.65-24.787-42.276-48.284-48.597C458.781 64 288 64 288 64S117.22 64 74.629 75.486c-23.497 6.322-42.003 24.947-48.284 48.597-11.412 42.867-11.412 132.305-11.412 132.305s0 89.438 11.412 132.305c6.281 23.65 24.787 41.5 48.284 47.821C117.22 448 288 448 288 448s170.78 0 213.371-11.486c23.497-6.321 42.003-24.171 48.284-47.821 11.412-42.867 11.412-132.305 11.412-132.305s0-89.438-11.412-132.305zm-317.51 213.508V175.185l142.739 81.205-142.739 81.201z" /></svg></a><!-- <i class="fa fa-youtube" aria-hidden="true"></i> Font Awesome fontawesome.com --></li><li class="menu__item" data-list-item-id="e0025155cff81eae3b9c2dd090f99b77f"><a href="https://mastodon.social/@edbpostgres" aria-label="Mastodon" target="_blank"><svg class="svg-inline--fa fa-mastodon" aria-hidden="true" focusable="false" data-prefix="fab" data-icon="mastodon" role="img" viewBox="0 0 448 512" data-fa-i2svg><path fill="currentColor" d="M433 179.11c0-97.2-63.71-125.7-63.71-125.7-62.52-28.7-228.56-28.4-290.48 0 0 0-63.72 28.5-63.72 125.7 0 115.7-6.6 259.4 105.63 289.1 40.51 10.7 75.32 13 103.33 11.4 50.81-2.8 79.32-18.1 79.32-18.1l-1.7-36.9s-36.31 11.4-77.12 10.1c-40.41-1.4-83-4.4-89.63-54a102.54 102.54 0 0 1-.9-13.9c85.63 20.9 158.65 9.1 178.75 6.7 56.12-6.7 105-41.3 111.23-72.9 9.8-49.8 9-121.5 9-121.5zm-75.12 125.2h-46.63v-114.2c0-49.7-64-51.6-64 6.9v62.5h-46.33V197c0-58.5-64-56.6-64-6.9v114.2H90.19c0-122.1-5.2-147.9 18.41-175 25.9-28.9 79.82-30.8 103.83 6.1l11.6 19.5 11.6-19.5c24.11-37.1 78.12-34.8 103.83-6.1 23.71 27.3 18.4 53 18.4 175z" /></svg></a><!-- <i class="fa fa-brands fa-mastodon" aria-hidden="true"></i> Font Awesome fontawesome.com --></li><li class="menu__item" data-list-item-id="ed91b9ac2bd52578dbb66b57fd092df92"><a href="https://bsky.app/profile/edbpostgres.bsky.social" aria-label="Bluesky" target="_blank"><svg class="svg-inline--fa fa-bluesky" aria-hidden="true" focusable="false" data-prefix="fab" data-icon="bluesky" role="img" viewBox="0 0 576 512" data-fa-i2svg><path fill="currentColor" d="M407.8 294.7c-3.3-.4-6.7-.8-10-1.3c3.4 .4 6.7 .9 10 1.3zM288 227.1C261.9 176.4 190.9 81.9 124.9 35.3C61.6-9.4 37.5-1.7 21.6 5.5C3.3 13.8 0 41.9 0 58.4S9.1 194 15 213.9c19.5 65.7 89.1 87.9 153.2 80.7c3.3-.5 6.6-.9 10-1.4c-3.3 .5-6.6 1-10 1.4C74.3 308.6-9.1 342.8 100.3 464.5C220.6 589.1 265.1 437.8 288 361.1c22.9 76.7 49.2 222.5 185.6 103.4c102.4-103.4 28.1-156-65.8-169.9c-3.3-.4-6.7-.8-10-1.3c3.4 .4 6.7 .9 10 1.3c64.1 7.1 133.6-15.1 153.2-80.7C566.9 194 576 75 576 58.4s-3.3-44.7-21.6-52.9c-15.8-7.1-40-14.9-103.2 29.8C385.1 81.9 314.1 176.4 288 227.1z" /></svg></a><!-- <i class="fa fa-brands fa-bluesky" aria-hidden="true"></i> Font Awesome fontawesome.com --></li></ul></nav></div>
+      
+  </div>
+<div id="block-gtranslate" class="block block--gtranslate block--gtranslate-block">
+  
+    
+      
+<div class="gtranslate_wrapper"></div><script>window.gtranslateSettings = {"switcher_horizontal_position":"left","switcher_vertical_position":"bottom","horizontal_position":"inline","vertical_position":"inline","float_switcher_open_direction":"top","switcher_open_direction":"bottom","default_language":"en","native_language_names":1,"detect_browser_language":0,"add_new_line":1,"select_language_label":"Select Language","flag_size":16,"flag_style":"2d","globe_size":60,"alt_flags":[],"wrapper_selector":".gtranslate_wrapper","url_structure":"none","custom_domains":null,"languages":["en","nl","fr","de","ja","ko","pt","es"],"custom_css":"","flags_location":"\/modules\/contrib\/gtranslate\/flags\/"}</script><script>(function(){var js = document.createElement('script');js.setAttribute('src', '/modules/contrib/gtranslate/js/dwf.js');js.setAttribute('data-gt-orig-url', '/postgres-tutorials/are-hash-indexes-faster-btree-indexes-postgres');js.setAttribute('data-gt-orig-domain', 'enterprisedb.com');document.body.appendChild(js);})();</script>
+  </div>
+<nav role="navigation" aria-labelledby="block-footernavmain-2-menu" id="block-footernavmain-2" class="footer-nav-main">
+            
+  <h2 class="visually-hidden" id="block-footernavmain-2-menu">Footer Nav Main</h2>
+  
+
+                      <ul class="menu">
+                          
+                        
+            
+                          
+      <li class="menu__item menu__item--expanded">
+                  <span>Platform</span>
+                                        <ul class="menu">
+                          
+                        
+            
+                          
+      <li class="menu__item">
+                  <a href="/products/edb-postgres-ai" data-drupal-link-system-path="node/1273206">EDB Postgres AI</a>
+                      </li>
+                      
+                        
+            
+                          
+      <li class="menu__item">
+                  <a href="/products/database" data-drupal-link-system-path="node/1273241">Core Database</a>
+                      </li>
+                      
+                        
+            
+                          
+      <li class="menu__item">
+                  <a href="/products/analytics" data-drupal-link-system-path="node/1278111">Analytics</a>
+                      </li>
+                      
+                        
+            
+                          
+      <li class="menu__item">
+                  <a href="/products/agentic-ai" data-drupal-link-system-path="node/1278106">Agentic AI</a>
+                      </li>
+                      
+                        
+            
+                          
+      <li class="menu__item">
+                  <a href="/products/database/flexible-deployments">Deploy Anywhere</a>
+                      </li>
+        </ul>
+  
+              </li>
+                      
+                        
+            
+                          
+      <li class="menu__item menu__item--expanded">
+                  <span>Solutions</span>
+                                        <ul class="menu">
+                          
+                        
+            
+                          
+      <li class="menu__item">
+                  <a href="/blueprints" data-drupal-link-system-path="node/1277546">Blueprints</a>
+                      </li>
+                      
+                        
+            
+                          
+      <li class="menu__item">
+                  <a href="/use-case" data-drupal-link-system-path="node/1270991">Use Cases</a>
+                      </li>
+                      
+                        
+            
+                          
+      <li class="menu__item">
+                  <a href="/services-support/technical-account-management">Technical Account Management</a>
+                      </li>
+                      
+                        
+            
+                          
+      <li class="menu__item">
+                  <a href="/services-support">Customer Support</a>
+                      </li>
+                      
+                        
+            
+                          
+      <li class="menu__item">
+                  <a href="/products/sovereign-assurance">Sovereign Assurance</a>
+                      </li>
+                      
+                        
+            
+                          
+      <li class="menu__item">
+                  <a href="/services/managed-database" data-drupal-link-system-path="node/291">Managed Experiences</a>
+                      </li>
+        </ul>
+  
+              </li>
+                      
+                        
+            
+                          
+      <li class="menu__item menu__item--expanded">
+                  <span>Technical Resources</span>
+                                        <ul class="menu">
+                          
+                        
+            
+                          
+      <li class="menu__item">
+                  <a href="https://enterprisedb.com/docs">Product Documentation</a>
+                      </li>
+                      
+                        
+            
+                          
+      <li class="menu__item">
+                  <a href="/software-downloads-postgres">EDB Software Downloads</a>
+                      </li>
+                      
+                        
+            
+                          
+      <li class="menu__item">
+                  <a href="/services-support">Support Portal</a>
+                      </li>
+                      
+                        
+            
+                          
+      <li class="menu__item">
+                  <a href="/training" data-drupal-link-system-path="node/321">Training</a>
+                      </li>
+                      
+                        
+            
+                          
+      <li class="menu__item">
+                  <a href="https://trust.enterprisedb.com/">Trust Center</a>
+                      </li>
+                      
+                        
+            
+                          
+      <li class="menu__item">
+                  <a href="/products/plans-comparison" data-drupal-link-system-path="node/151">EDB Postgres AI Plans</a>
+                      </li>
+        </ul>
+  
+              </li>
+                      
+                        
+            
+                          
+      <li class="menu__item menu__item--expanded">
+                  <span>Learn &amp; Explore</span>
+                                        <ul class="menu">
+                          
+                        
+            
+                          
+      <li class="menu__item">
+                  <a href="/what-is-sovereign-ai-data-sovereignty" data-drupal-link-system-path="node/1273251">Sovereignty</a>
+                      </li>
+                      
+                        
+            
+                          
+      <li class="menu__item">
+                  <a href="/blog" data-drupal-link-system-path="blog">Blog</a>
+                      </li>
+                      
+                        
+            
+                          
+      <li class="menu__item">
+                  <a href="/resources/customer-story" data-drupal-link-system-path="resources/customer-story">Customer Success Stories</a>
+                      </li>
+                      
+                        
+            
+                          
+      <li class="menu__item">
+                  <a href="/resources/events" data-drupal-link-system-path="node/1260061">Events</a>
+                      </li>
+                      
+                        
+            
+                          
+      <li class="menu__item">
+                  <a href="/resources/webinars" data-drupal-link-system-path="resources/webinars">Webinars</a>
+                      </li>
+                      
+                        
+            
+                          
+      <li class="menu__item">
+                  <a href="/resources/white-papers" data-drupal-link-system-path="resources/white-papers">White Papers</a>
+                      </li>
+        </ul>
+  
+              </li>
+                      
+                        
+            
+                          
+      <li class="menu__item menu__item--expanded">
+                  <span>Company</span>
+                                        <ul class="menu">
+                          
+                        
+            
+                          
+      <li class="menu__item">
+                  <a href="/company" data-drupal-link-system-path="node/756">About</a>
+                      </li>
+                      
+                        
+            
+                          
+      <li class="menu__item">
+                  <a href="/press-room" data-drupal-link-system-path="node/1259921">Press &amp; News</a>
+                      </li>
+                      
+                        
+            
+                          
+      <li class="menu__item">
+                  <a href="/careers" data-drupal-link-system-path="node/726">Careers</a>
+                      </li>
+                      
+                        
+            
+                          
+      <li class="menu__item">
+                  <a href="/partners/strategic-alliances" data-drupal-link-system-path="node/1277426">Strategic Alliances</a>
+                      </li>
+                      
+                        
+            
+                          
+      <li class="menu__item">
+                  <a href="/contact" data-drupal-link-system-path="node/1260076">Contact Us</a>
+                      </li>
+        </ul>
+  
+              </li>
+        </ul>
+  
+
+
+
+  </nav>
+<nav role="navigation" aria-labelledby="block-footercopyrightcta-menu" id="block-footercopyrightcta" class="copyright-cta">
+            
+  <h2 class="visually-hidden" id="block-footercopyrightcta-menu">Footer Copyright CTA</h2>
+  
+
+                      <ul class="menu">
+                          
+                        
+            
+                          
+      <li class="menu__item">
+                  <span>© 2026 EDB</span>
+                      </li>
+                      
+                        
+            
+                          
+      <li class="menu__item">
+                  <a href="/legal" data-drupal-link-system-path="node/96">Legal Notices</a>
+                      </li>
+                      
+                        
+            
+                          
+      <li class="menu__item">
+                  <a href="/edb-sustainability-report" data-drupal-link-system-path="node/1269786">ESG</a>
+                      </li>
+                      
+                        
+            
+                          
+      <li class="menu__item">
+                  <a href="/privacy-policy" data-drupal-link-system-path="node/56">Privacy Policy</a>
+                      </li>
+                      
+                        
+            
+                          
+      <li class="menu__item">
+                  <a href="https://info.enterprisedb.com/manage-email-preferences-unknown">Marketing Preferences</a>
+                      </li>
+                      
+                        
+            
+                          
+      <li class="menu__item">
+                  <a href="/edb-cookie-preferences" class="cookie-pref" data-drupal-link-system-path="node/1261296">Cookie Preferences</a>
+                      </li>
+                      
+                        
+            
+                          
+      <li class="menu__item">
+                  <a href="/edb-cookie-preferences" class="cookie-pref privacy-choices" data-drupal-link-system-path="node/1261296">Your Privacy Choices</a>
+                      </li>
+        </ul>
+  
+
+
+
+  </nav>
+<div id="block-edb-theme-storecustomblock" class="block block--block-content block--block-contente2b54696-18da-42db-9738-26341efc7d5b">
+  
+    
+      
+            <div class="field field--name-body field--type-text-with-summary field--label-hidden field__item"><script>
+  (function() {
+    document.addEventListener('DOMContentLoaded', function() {
+      var storeLinks = document.querySelectorAll('li.store_link_mobile a.we-mega-menu-li');
+      storeLinks.forEach(function(link) {
+        link.addEventListener('click', function(e) {
+          if (window.innerWidth < 1366) {
+            var url = this.getAttribute('href');
+            
+            if (url && url !== '#' && url !== '') {
+              e.stopPropagation();
+              window.location.href = url;
+            }
+          }
+        }, true);
+      });
+    });
+  })();
+</script></div>
+      
+  </div>
+
+  </div>
+
+		</div>
+	</footer>
+  <div class="cookie-consent">
+    <div id="consent_blackbar"></div>
+    <div id="teconsent"></div>
+  </div>
+</div>
+
+  </div>
+
+    
+    <script src="/themes/custom/edb_theme/dist/js/css-swap.js?tleaj3" defer></script>
+<script src="/sites/default/files/js/js_vFZxPuvIEyedPGvT1VQli2BPwC9dNDclT1Ouew7Z7EQ.js?scope=footer&amp;delta=1&amp;language=en&amp;theme=edb_theme&amp;include=eJxdjkEOgzAMBD-U4CdFJjEmYGKUuFLp61vRSKVcrN2ZwxpTMsVyAPYwTFWLOcyAObDoiOIojYGpUEWBPU09m9bT6GoIgq_Di2LyjaJlLT_1aFRz8lF1zXRim2kjGEX5Ur8-RC2NioWlXVz_Y9K6hV0w0qySqMIdOFZloWDIwJ9z7wMu-PyHm2uGce0TvtkhufAbvhBrgA"></script>
+<script src="https://static.addtoany.com/menu/page.js" defer></script>
+<script src="/sites/default/files/js/js_KGzHHL1isyjTWyEW6qv4NryRd0G3ODrgxmqfYgCi3Rw.js?scope=footer&amp;delta=3&amp;language=en&amp;theme=edb_theme&amp;include=eJxdjkEOgzAMBD-U4CdFJjEmYGKUuFLp61vRSKVcrN2ZwxpTMsVyAPYwTFWLOcyAObDoiOIojYGpUEWBPU09m9bT6GoIgq_Di2LyjaJlLT_1aFRz8lF1zXRim2kjGEX5Ur8-RC2NioWlXVz_Y9K6hV0w0qySqMIdOFZloWDIwJ9z7wMu-PyHm2uGce0TvtkhufAbvhBrgA"></script>
+<script src="/themes/custom/edb_theme/dist/js/main.js?tleaj3" defer></script>
+<script src="/themes/custom/edb_theme/dist/js/menu.js?tleaj3" defer></script>
+<script src="/sites/default/files/js/js_OrFpPg3Khzw0OalvAvDKj13rGHYv6_2-PQ8xg1yUk30.js?scope=footer&amp;delta=6&amp;language=en&amp;theme=edb_theme&amp;include=eJxdjkEOgzAMBD-U4CdFJjEmYGKUuFLp61vRSKVcrN2ZwxpTMsVyAPYwTFWLOcyAObDoiOIojYGpUEWBPU09m9bT6GoIgq_Di2LyjaJlLT_1aFRz8lF1zXRim2kjGEX5Ur8-RC2NioWlXVz_Y9K6hV0w0qySqMIdOFZloWDIwJ9z7wMu-PyHm2uGce0TvtkhufAbvhBrgA"></script>
+
+  </body>
+</html>

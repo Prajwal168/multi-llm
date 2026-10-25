@@ -1,0 +1,2531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=yes">
+<title>Memoization in C++ | AlgoCademy</title>
+<meta name="description" content="Learn &quot;Memoization in C++&quot; with an interactive walkthrough. Try the first step for free — no signup required.">
+<meta name="robots" content="index, follow">
+<meta property="og:title" content="Memoization in C++">
+<meta property="og:description" content="Learn &quot;Memoization in C++&quot; with an interactive walkthrough. Try the first step for free — no signup required.">
+<link rel="canonical" href="https://algocademy.com/link/?lang=cpp&amp;problem=memoization&amp;solution=1">
+
+<!-- CSS — kept in <head> for fastest first paint. Bootstrap + our overrides
+     are render-critical; the rest are below-the-fold but small enough to
+     ship together. -->
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css">
+<link rel="stylesheet" href="../resources/anno.css?v=1.1">
+<link rel="stylesheet" href="../landing/dashboard/assets/vendor/nucleo/css/nucleo.css">
+<link rel="stylesheet" href="../landing/vendor/prismjs/themes/prism.css">
+<link rel="stylesheet" href="../landing/front/css/front.css?v=1.14">
+<link rel="stylesheet" href="../style.css?v=1.39">
+
+<!-- JS moved to bottom of <body> so HTML parses + lesson body paints before
+     ~600KB of jQuery + Bootstrap + Ace block the main thread. See bottom of
+     this file for the script tag block. -->
+<link rel="preload" as="script" href="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js">
+<link rel="preload" as="script" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js">
+
+<style>
+body { background: #fff; }
+
+/* Sticky header — same brand as /link */
+.course-header        { padding: 8px 0; border-bottom: 1px solid #e5e5e5; background: #f8f9fa; position: sticky; top: 0; z-index: 1020; }
+.course-header-inner  { max-width: 1400px; margin: 0 auto; padding: 0 20px; display: flex; align-items: center; gap: 16px; }
+.course-brand img     { display: block; }
+.course-lang          { color: #6c757d; font-size: 0.95rem; }
+.course-lang-dropdown { position: relative; display: inline-block; }
+.course-lang-dropdown .course-lang-btn { background: #fff; border: 1px solid #d1d5db; color: #1f2937; font-weight: 600; padding: 6px 14px; font-size: 0.95rem; height: 36px; min-width: 140px; text-align: left; display: inline-flex; align-items: center; justify-content: space-between; gap: 8px; cursor: pointer; }
+.course-lang-dropdown .course-lang-btn:hover, .course-lang-dropdown .course-lang-btn:focus { background: #f3f4f6; box-shadow: none; outline: none; }
+.course-lang-dropdown .course-lang-btn::after { display: inline-block; margin-left: 8px; vertical-align: middle; content: ""; border-top: 5px solid #6c757d; border-right: 5px solid transparent; border-bottom: 0; border-left: 5px solid transparent; }
+.course-lang-menu { position: absolute; top: calc(100% + 4px); left: 0; min-width: 180px; max-height: 360px; overflow-y: auto; background: #fff; border: 1px solid #e5e7eb; border-radius: 6px; box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08); padding: 6px 0; z-index: 1030; display: none; }
+.course-lang-dropdown.open .course-lang-menu { display: block; }
+.course-lang-item { display: block; padding: 8px 16px; color: #1f2937; font-weight: 500; text-decoration: none; font-size: 0.95rem; }
+.course-lang-item:hover { background: #f3f4f6; color: #1f2937; text-decoration: none; }
+.course-lang-item.active { background: #007bff; color: #fff; }
+.course-lang-item.active:hover { background: #0069d9; color: #fff; }
+.cta-text-mobile { display: none; }
+@media (max-width: 575px) {
+    .cta-text-desktop { display: none; }
+    .cta-text-mobile  { display: inline; }
+}
+.course-auth          { margin-left: auto; display: flex; gap: 6px; align-items: center; }
+
+/* Layout shell: sidebar + lesson body + editor (3 col on desktop).
+   Explicit grid-column placement on each child so they CAN'T wrap to row 2 —
+   even if content insists on being wider than its track, the grid keeps each
+   item in its assigned cell of row 1. */
+.course-shell  { display: grid; grid-template-columns: 240px minmax(0, 1fr) minmax(0, 1fr); grid-template-rows: auto; padding: 16px; gap: 16px; align-items: start; max-width: 1600px; margin: 0 auto; }
+.course-sidebar{ grid-column: 1; grid-row: 1; min-width: 0; position: sticky; top: 76px; max-height: calc(100vh - 100px); overflow-y: auto; }
+.left-col      { grid-column: 2; grid-row: 1; min-width: 0; overflow: hidden; }
+.right-col     { grid-column: 3; grid-row: 1; min-width: 0; display: flex; flex-direction: column; gap: 10px; overflow: hidden; }
+
+/* Sidebar (course outline) — mirrors /link */
+.course-sidebar              { background: #f8f9fa; padding: 16px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+.course-sidebar h4           { color: #2d3748; font-size: 1.15rem; margin-bottom: 1rem; font-weight: 600; }
+.course-sidebar .card        { border: none; margin-bottom: 0.5rem; background: transparent; }
+.course-sidebar .card-header { background: #fff; border: 1px solid #e2e8f0; border-radius: 6px !important; padding: 0; }
+.course-sidebar .btn-link    { color: #4a5568; font-weight: 500; text-decoration: none; padding: 0.7rem 1rem; position: relative; width: 100%; text-align: left; font-size: 0.9rem; }
+.course-sidebar .btn-link::after { content: '▼'; position: absolute; right: 1rem; top: 50%; transform: translateY(-50%); font-size: 0.65rem; transition: transform 0.2s ease; }
+.course-sidebar .btn-link.collapsed::after { transform: translateY(-50%) rotate(-90deg); }
+.course-sidebar .list-group-item { border: none; border-left: 2px solid #e2e8f0; margin: 0.2rem 0; padding: 0.5rem 0.8rem; transition: all 0.15s ease; background: transparent; }
+.course-sidebar .list-group-item:hover { background: #edf2f7 !important; border-left-color: #4299e1; }
+.course-sidebar .list-group-item.active { background: #2b6cb0 !important; border-left-color: #2b6cb0; }
+.course-sidebar a            { color: #4a5568; text-decoration: none; display: block; font-size: 0.88rem; }
+.course-sidebar a:hover      { color: #2b6cb0; }
+.course-sidebar .list-group-item.active a { color: #fff; }
+
+/* Navy course menu — always applied (matches /link's navy palette).
+   Hover backgrounds stay in the navy family so text remains legible
+   (the original dark-mode block had hover bg #edf2f7 = light + light text). */
+.course-sidebar              { background: #1a202c; }
+.course-sidebar h4           { color: #e2e8f0; }
+.course-sidebar .card-header { background: #2d3748; border-color: #4a5568; }
+.course-sidebar .btn-link    { color: #e2e8f0; }
+.course-sidebar .btn-link:hover { color: #90cdf4; }
+/* Sub-items — flat text rows, like /app's drawer. No backgrounds, no left
+   stripes, no card-like styling. The chapter card above carries the visual
+   weight; lessons are just nested text the user reads as a list. Subtle
+   bottom border separates them. */
+.course-sidebar .list-group-item {
+    background: transparent !important;
+    border: none !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06) !important;
+    margin: 0 !important;
+    padding: 0.7rem 1rem 0.7rem 1.2rem !important;
+    font-size: 0.88rem !important;
+}
+.course-sidebar .list-group-item:last-child { border-bottom: none !important; }
+.course-sidebar .list-group-item:hover { background: rgba(144, 205, 244, 0.07) !important; }
+.course-sidebar .list-group-item.active {
+    background: #2b6cb0 !important;
+    border-bottom-color: transparent !important;
+}
+.course-sidebar a            { color: #e2e8f0; }
+.course-sidebar a:hover      { color: #90cdf4; }
+.course-sidebar .list-group-item.active { background: #2b6cb0 !important; border-left-color: #2b6cb0; }
+.course-sidebar .list-group-item.active a { color: #fff; }
+
+/* Hamburger button — only shown on mobile */
+.sidebar-toggle { display: none; background: none; border: none; padding: 6px 10px; font-size: 1.5rem; color: #4a5568; cursor: pointer; margin-right: 8px; }
+
+/* Bottom prev/next nav — inline at end of page (NOT fixed). The fixed version
+   covered Validate Step on short content. Inline always flows after content. */
+.lesson-navigation-fixed { background: #f8f9fa; border-top: 1px solid #e5e5e5; padding: 1rem 0; margin-top: 0; }
+.lesson-navigation-fixed .container { max-width: 1600px; padding: 0 24px; }
+.lesson-navigation-fixed .btn { padding: 0.6rem 1.2rem; font-weight: 600; border-radius: 8px; }
+
+/* Right column hosts /app's #right-side block (editor + nav + result).
+   #inner-result is float:left, so we add a clearfix so the container grows
+   to contain it (otherwise the float pokes below sibling content). */
+#right-side    { width: 100% !important; float: none !important; padding-bottom: 24px; }
+#right-side::after { content: ''; display: table; clear: both; }
+
+/* Editor — explicit dark bg matching ace/theme/algocademy (#101421) so the
+   panel is visible even before Ace mounts/applies its theme, and height
+   adapts to viewport so tutorial steps stay visible without scrolling. */
+#editor        { width: 100% !important; height: clamp(320px, 55vh, 500px) !important; background: #101421 !important; }
+@media (max-width: 1023px) {
+    #editor    { height: clamp(280px, 45vh, 420px) !important; }
+}
+
+/* /app's "Start Coding Tutorial" overlay gates the editor until the user clicks
+   to begin. /course drops anonymous visitors directly into the experience, no
+   gate. Belt and suspenders: CSS kill switch + JS neutralizes activateEditorOverlay(). */
+#overlay-editor { display: none !important; }
+/* #main-solution is the panel fetchSolutionTab populates. Its contents
+   (inner-problem, hints/video player, Prev/Next Video, Discussions/Disqus)
+   are redundant on /course/ — the lesson body (left col) already carries
+   the SEO content + Vimeo, and the actual tutorial steps live in #inner-result
+   inside #right-side. Hide it entirely so the editor block isn't followed by
+   clutter that overlaps with the bottom prev/next bar. */
+#main-solution { display: none; }
+
+/* /app sets #result {height: 0} inline and resizes it via resizeResult() once
+   step content lands in #inner-result. fetchTutorial() doesn't trigger
+   resizeResult, so on mobile the tutorial steps stay invisible inside the
+   0-height container. Force natural sizing in the course shell. */
+#right-side  { height: auto !important; }
+#editor      { height: 360px !important; min-height: 280px; }
+#result      { height: auto !important; min-height: 0 !important; margin-top: 0 !important; padding-bottom: 20px; overflow: visible; }
+#inner-result { float: none !important; width: 100%; }
+#failed-result { width: 100%; }
+
+/* Mobile: tabs */
+.tab-strip { display: none; }
+@media (max-width: 1023px) {
+    .course-shell    { display: block; padding: 16px; }
+    .left-col,
+    .right-col       { width: 100%; }
+    .tab-strip       { display: flex; border-bottom: 1px solid #dee2e6; margin-bottom: 12px; position: sticky; top: 60px; background: #fff; z-index: 1010; }
+    .tab-strip .tab  { flex: 1; padding: 12px 8px; text-align: center; cursor: pointer; color: #6c757d; user-select: none; }
+    .tab-strip .tab.active { color: #007bff; border-bottom: 2px solid #007bff; font-weight: 600; }
+    .pane            { display: none; }
+    .pane.active     { display: block; }
+    /* Sidebar becomes a slide-in overlay */
+    .sidebar-toggle  { display: inline-block; }
+    .course-sidebar  { display: none; position: fixed; top: 60px; left: 0; right: 0; bottom: 0; z-index: 1015; background: #1a202c; padding: 16px; overflow-y: auto; max-height: none; border-radius: 0; }
+    .course-sidebar.active { display: block; }
+}
+@media (max-width: 575px) { .course-lang-dropdown .course-lang-btn { min-width: 0; padding: 4px 10px; font-size: 0.85rem; } }
+
+/* Mobile header: tighten layout so the row doesn't wrap on small screens. */
+@media (max-width: 767px) {
+    .course-header-inner { padding: 0 12px; gap: 8px; }
+    .course-header-inner .course-brand img { height: 32px; }
+    .course-auth .btn-primary { padding: 6px 12px; font-size: 0.9rem; white-space: nowrap; }
+
+    /* Validate Step / View Solution come from /ajax/getTutorial.php with inline
+       margin-left: 50px on #view-solution — that pushes the wrapped button to
+       the right awkwardly. Stack them full-width on mobile. */
+    #validate-tooltip,
+    #view-solution {
+        display: block !important;
+        width: 100% !important;
+        margin-left: 0 !important;
+        margin-top: 8px !important;
+    }
+}
+
+/* Lesson body — render the /link/pages HTML cleanly */
+.lesson-body     { font-size: 1rem; line-height: 1.6; }
+.lesson-body p   { margin-bottom: 0.9rem; }
+.lesson-body img { max-width: 100%; height: auto; }
+.lesson-body pre { background: #f6f8fa; padding: 12px; border-radius: 6px; overflow-x: auto; font-size: 0.92rem; max-width: 100%; min-width: 0; }
+.lesson-body h2  { font-size: 1.3rem; margin-top: 1.6rem; }
+.lesson-body h3  { font-size: 1.1rem; margin-top: 1.2rem; }
+@media (max-width: 1023px) {
+    .lesson-body     { font-size: 1.05rem; line-height: 1.65; }
+    .lesson-body pre { font-size: 0.95rem; padding: 14px; }
+    .lesson-body h1  { font-size: 1.55rem !important; line-height: 1.3; }
+}
+
+/* Vimeo embed */
+.video-gallery   { margin-top: 14px; }
+#video-container { position: relative; padding-top: 56.25%; background: #000; border-radius: 6px; overflow: hidden; }
+#video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
+
+.try-cta { background: linear-gradient(135deg, #007bff, #6610f2); color: #fff; padding: 14px 18px; border-radius: 8px; display: inline-block; margin: 14px 0; font-weight: 600; text-decoration: none; }
+.try-cta:hover { color: #fff; opacity: 0.93; text-decoration: none; }
+
+/* /course landing intro (shown when there's no $problem) */
+.course-intro              { padding: 20px 0 40px; }
+.course-intro-hero         { text-align: center; padding-top: 40px; }
+.course-intro-title        { font-size: 2.2rem; font-weight: 700; color: #1f2937; margin-bottom: 12px; line-height: 1.2; }
+.course-intro-lead         { font-size: 1.1rem; color: #6c757d; margin-bottom: 24px; }
+.course-intro-cta          { padding: 14px 32px; font-size: 1.05rem; font-weight: 600; box-shadow: 0 4px 12px rgba(0, 123, 255, 0.25); }
+.course-intro-cta:hover    { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(0, 123, 255, 0.35); }
+.course-lang-card          { display: block; height: 100%; padding: 22px 18px; background: #fff; border: 1px solid #e5e7eb; border-radius: 10px; color: inherit; text-decoration: none; transition: border-color 0.15s, transform 0.15s, box-shadow 0.15s; }
+.course-lang-card:hover    { border-color: #007bff; box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06); transform: translateY(-2px); color: inherit; text-decoration: none; }
+.course-lang-card-title    { font-size: 1.25rem; font-weight: 700; color: #1f2937; margin-bottom: 6px; }
+.course-lang-card-blurb    { font-size: 0.92rem; color: #6c757d; margin: 0; }
+@media (max-width: 575px) {
+    .course-intro-title    { font-size: 1.6rem; }
+    .course-intro-lead     { font-size: 1rem; }
+}
+
+/* Hide /app DOM stubs we keep only for script.js selectors */
+#mySidenav, .paypal-modal, .billing-modal { display: none !important; }
+
+/* `<code>` chips inline in step text + lesson body. front.css sets these to
+   #f3a4b5 (salmon) which reads as red. Override to a clean dark-chip look
+   so inline code reads as code, not as an error/warning. */
+.course-shell code,
+#inner-result code,
+.lesson-body code {
+    color: #fff;
+    background: #2d3748;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 0.88em;
+    font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', monospace;
+    word-break: normal;
+}
+/* Block code (<pre><code>) stays as-is — prettify owns the highlighting. */
+.course-shell pre code,
+#inner-result pre code,
+.lesson-body pre code { background: transparent; color: inherit; padding: 0; }
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<header class="course-header">
+    <div class="course-header-inner">
+        <button class="sidebar-toggle" id="sidebar-toggle" aria-label="Course menu">
+            <i class="fas fa-bars"></i>
+        </button>
+        <a href="/" class="course-brand">
+            <img src="https://algocademy.com/images/logo-dark.svg" alt="AlgoCademy" height="40">
+        </a>
+        <div class="course-lang-dropdown" id="courseLangDropdown">
+            <button class="btn btn-light course-lang-btn" type="button" id="courseLangBtn"
+                    aria-haspopup="true" aria-expanded="false">
+                C++            </button>
+            <div class="course-lang-menu" id="courseLangMenu">
+                                    <a class="course-lang-item "
+                       href="?lang=py&problem=memoization&solution=1">Python</a>
+                                    <a class="course-lang-item "
+                       href="?lang=js&problem=memoization&solution=1">JavaScript</a>
+                                    <a class="course-lang-item "
+                       href="?lang=java&problem=memoization&solution=1">Java</a>
+                                    <a class="course-lang-item active"
+                       href="?lang=cpp&problem=memoization&solution=1">C++</a>
+                            </div>
+        </div>
+        <div class="course-auth">
+            <a href="https://algocademy.com/app?campaign=seo" class="btn btn-primary course-cta-btn">
+                <span class="cta-text-desktop">Start Coding for Free</span>
+                <span class="cta-text-mobile">Code for Free</span>
+            </a>
+        </div>
+    </div>
+</header>
+
+<!-- Mobile tab strip — just Lesson + Code, like /app's single-column flow -->
+<div class="tab-strip">
+    <div class="tab active" data-pane="pane-lesson">Lesson</div>
+    <div class="tab"        data-pane="pane-code">Code</div>
+</div>
+
+<!-- main-content wrapper — script.js's showPage() removes 'hidden' on this. -->
+<div id="main-content">
+<div class="course-shell">
+
+    <!-- SIDEBAR: course outline (chapter accordion) -->
+    <aside class="course-sidebar" id="course-sidebar">
+        <h4>Course Outline</h4>
+        <div class="accordion" id="courseAccordion">
+                        <div class="card">
+                <div class="card-header" id="heading-ch-1">
+                    <h2 class="mb-0">
+                        <button class="btn btn-link collapsed" type="button"
+                                data-toggle="collapse" data-target="#collapse-ch-1"
+                                aria-expanded="false">
+                            Welcome To C++                        </button>
+                    </h2>
+                </div>
+                <div id="collapse-ch-1"
+                     class="collapse "
+                     data-parent="#courseAccordion">
+                    <div class="card-body p-0">
+                        <ul class="list-group list-group-flush">
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=print&amp;lang=cpp&amp;solution=1">Print</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=introduction-to-strings&amp;lang=cpp&amp;solution=1">Introduction To Strings</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=comments&amp;lang=cpp&amp;solution=1">Comments</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=variables&amp;lang=cpp&amp;solution=1">Variables</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=create-variables&amp;lang=cpp&amp;solution=1">Create Variables</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=access-variables&amp;lang=cpp&amp;solution=1">Access Variables</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=syntax-errors&amp;lang=cpp&amp;solution=1">Syntax Errors</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=name-errors&amp;lang=cpp&amp;solution=1">Name Errors</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=strings-vs-numbers&amp;lang=cpp&amp;solution=1">Strings Vs Numbers</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=string-concatenation&amp;lang=cpp&amp;solution=1">String Concatenation</a>
+                            </li>
+                                                    </ul>
+                    </div>
+                </div>
+            </div>
+                        <div class="card">
+                <div class="card-header" id="heading-ch-2">
+                    <h2 class="mb-0">
+                        <button class="btn btn-link collapsed" type="button"
+                                data-toggle="collapse" data-target="#collapse-ch-2"
+                                aria-expanded="false">
+                            Variables                        </button>
+                    </h2>
+                </div>
+                <div id="collapse-ch-2"
+                     class="collapse "
+                     data-parent="#courseAccordion">
+                    <div class="card-body p-0">
+                        <ul class="list-group list-group-flush">
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=the-power-of-variables&amp;lang=cpp&amp;solution=1">The Power Of Variables</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=data-types&amp;lang=cpp&amp;solution=1">Data Types</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=variable-naming-rules&amp;lang=cpp&amp;solution=1">Variable Naming Rules</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=variable-reassignment&amp;lang=cpp&amp;solution=1">Variable Reassignment</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=constants&amp;lang=cpp&amp;solution=1">Constants</a>
+                            </li>
+                                                    </ul>
+                    </div>
+                </div>
+            </div>
+                        <div class="card">
+                <div class="card-header" id="heading-ch-3">
+                    <h2 class="mb-0">
+                        <button class="btn btn-link collapsed" type="button"
+                                data-toggle="collapse" data-target="#collapse-ch-3"
+                                aria-expanded="false">
+                            Calculations With Numbers                        </button>
+                    </h2>
+                </div>
+                <div id="collapse-ch-3"
+                     class="collapse "
+                     data-parent="#courseAccordion">
+                    <div class="card-body p-0">
+                        <ul class="list-group list-group-flush">
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=arithmetic-operators&amp;lang=cpp&amp;solution=1">Arithmetic Operators</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=area-of-rectangle&amp;lang=cpp&amp;solution=1">Area Of Rectangle</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=mathematical-expressions&amp;lang=cpp&amp;solution=1">Mathematical Expressions</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=find-discount&amp;lang=cpp&amp;solution=1">Find Discount</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=operator-precedence&amp;lang=cpp&amp;solution=1">Operator Precedence</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=price-after-discount&amp;lang=cpp&amp;solution=1">Price After Discount</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=convert-hours-and-mins-into-seconds&amp;lang=cpp&amp;solution=1">Convert Hours And Mins Into Seconds</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=floor-division&amp;lang=cpp&amp;solution=1">Floor Division</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=free-coffee-cups&amp;lang=cpp&amp;solution=1">Free Coffee Cups</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=modulo-operator&amp;lang=cpp&amp;solution=1">Modulo Operator</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=augmented-assignment-operators&amp;lang=cpp&amp;solution=1">Augmented Assignment Operators</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=increment-and-decrement-operators&amp;lang=cpp&amp;solution=1">Increment And Decrement Operators</a>
+                            </li>
+                                                    </ul>
+                    </div>
+                </div>
+            </div>
+                        <div class="card">
+                <div class="card-header" id="heading-ch-4">
+                    <h2 class="mb-0">
+                        <button class="btn btn-link collapsed" type="button"
+                                data-toggle="collapse" data-target="#collapse-ch-4"
+                                aria-expanded="false">
+                            Functions I                        </button>
+                    </h2>
+                </div>
+                <div id="collapse-ch-4"
+                     class="collapse "
+                     data-parent="#courseAccordion">
+                    <div class="card-body p-0">
+                        <ul class="list-group list-group-flush">
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=functions&amp;lang=cpp&amp;solution=1">Functions</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=buggy-code-defining-a-function&amp;lang=cpp&amp;solution=1">Buggy Code Defining A Function</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=quiz-defining-without-calling&amp;lang=cpp&amp;solution=1">Quiz Defining Without Calling</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=buggy-code-call-before-definition&amp;lang=cpp&amp;solution=1">Buggy Code Call Before Definition</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=quiz-calling-a-function&amp;lang=cpp&amp;solution=1">Quiz Calling A Function</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=quiz-indentation-1&amp;lang=cpp&amp;solution=1">Quiz Indentation 1</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=why-functions&amp;lang=cpp&amp;solution=1">Why Functions</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=exercise-create-function&amp;lang=cpp&amp;solution=1">Exercise Create Function</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=function-parameters-and-arguments&amp;lang=cpp&amp;solution=1">Function Parameters And Arguments</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=buggy-code-non-existing-variable&amp;lang=cpp&amp;solution=1">Buggy Code Non Existing Variable</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=buggy-code-5&amp;lang=cpp&amp;solution=1">Buggy Code 5</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=why-parameters-and-arguments&amp;lang=cpp&amp;solution=1">Why Parameters And Arguments</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=exercise-create-function-with-parameters&amp;lang=cpp&amp;solution=1">Exercise Create Function With Parameters</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=returning-from-a-function&amp;lang=cpp&amp;solution=1">Returning From A Function</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=quiz-forgotten-return&amp;lang=cpp&amp;solution=1">Quiz Forgotten Return</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=buggy-code-forgotten-return&amp;lang=cpp&amp;solution=1">Buggy Code Forgotten Return</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=quiz-print-instead-of-return&amp;lang=cpp&amp;solution=1">Quiz Print Instead Of Return</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=buggy-code-print-instead-of-return&amp;lang=cpp&amp;solution=1">Buggy Code Print Instead Of Return</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=quiz-return-instead-of-print&amp;lang=cpp&amp;solution=1">Quiz Return Instead Of Print</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=buggy-code-return-instead-of-print&amp;lang=cpp&amp;solution=1">Buggy Code Return Instead Of Print</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=quiz-return-7&amp;lang=cpp&amp;solution=1">Quiz Return 7</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=buggy-code-6&amp;lang=cpp&amp;solution=1">Buggy Code 6</a>
+                            </li>
+                                                    </ul>
+                    </div>
+                </div>
+            </div>
+                        <div class="card">
+                <div class="card-header" id="heading-ch-5">
+                    <h2 class="mb-0">
+                        <button class="btn btn-link collapsed" type="button"
+                                data-toggle="collapse" data-target="#collapse-ch-5"
+                                aria-expanded="false">
+                            Calculations - Challenges                        </button>
+                    </h2>
+                </div>
+                <div id="collapse-ch-5"
+                     class="collapse "
+                     data-parent="#courseAccordion">
+                    <div class="card-body p-0">
+                        <ul class="list-group list-group-flush">
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=your-first-challenge&amp;lang=cpp&amp;solution=1">Your First Challenge</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=buy-candy&amp;lang=cpp&amp;solution=1">Buy Candy</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=hand-shakes&amp;lang=cpp&amp;solution=1">Hand Shakes</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=last-two-digit-sum&amp;lang=cpp&amp;solution=1">Last Two Digit Sum</a>
+                            </li>
+                                                    </ul>
+                    </div>
+                </div>
+            </div>
+                        <div class="card">
+                <div class="card-header" id="heading-ch-6">
+                    <h2 class="mb-0">
+                        <button class="btn btn-link collapsed" type="button"
+                                data-toggle="collapse" data-target="#collapse-ch-6"
+                                aria-expanded="false">
+                            Strings I                        </button>
+                    </h2>
+                </div>
+                <div id="collapse-ch-6"
+                     class="collapse "
+                     data-parent="#courseAccordion">
+                    <div class="card-body p-0">
+                        <ul class="list-group list-group-flush">
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=escaping-characters&amp;lang=cpp&amp;solution=1">Escaping Characters</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=string-concatenation-ii&amp;lang=cpp&amp;solution=1">String Concatenation Ii</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=accessing-characters&amp;lang=cpp&amp;solution=1">Accessing Characters</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=string-slicing&amp;lang=cpp&amp;solution=1">String Slicing</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=updating-strings&amp;lang=cpp&amp;solution=1">Updating Strings</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=string-length&amp;lang=cpp&amp;solution=1">String Length</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=exceeding-string-bounds&amp;lang=cpp&amp;solution=1">Exceeding String Bounds</a>
+                            </li>
+                                                    </ul>
+                    </div>
+                </div>
+            </div>
+                        <div class="card">
+                <div class="card-header" id="heading-ch-7">
+                    <h2 class="mb-0">
+                        <button class="btn btn-link collapsed" type="button"
+                                data-toggle="collapse" data-target="#collapse-ch-7"
+                                aria-expanded="false">
+                            Conditional Statements                        </button>
+                    </h2>
+                </div>
+                <div id="collapse-ch-7"
+                     class="collapse "
+                     data-parent="#courseAccordion">
+                    <div class="card-body p-0">
+                        <ul class="list-group list-group-flush">
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=if-statements&amp;lang=cpp&amp;solution=1">If Statements</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=if-else&amp;lang=cpp&amp;solution=1">If Else</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=comparison-operators&amp;lang=cpp&amp;solution=1">Comparison Operators</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=is-number-negative&amp;lang=cpp&amp;solution=1">Is Number Negative</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=student-passed&amp;lang=cpp&amp;solution=1">Student Passed</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=return-negative&amp;lang=cpp&amp;solution=1">Return Negative</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=redundant-else-statement&amp;lang=cpp&amp;solution=1">Redundant Else Statement</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=parity-of-number&amp;lang=cpp&amp;solution=1">Parity Of Number</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=and-operator&amp;lang=cpp&amp;solution=1">And Operator</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=reducing-if-else-to-boolean-expression&amp;lang=cpp&amp;solution=1">Reducing If Else To Boolean Expression</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=allow-to-contest&amp;lang=cpp&amp;solution=1">Allow To Contest</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=or-operator&amp;lang=cpp&amp;solution=1">Or Operator</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=not-operator&amp;lang=cpp&amp;solution=1">Not Operator</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=combining-logical-operators&amp;lang=cpp&amp;solution=1">Combining Logical Operators</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=chaining-conditionals&amp;lang=cpp&amp;solution=1">Chaining Conditionals</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=nested-conditionals&amp;lang=cpp&amp;solution=1">Nested Conditionals</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=nested-vs-chained-conditionals&amp;lang=cpp&amp;solution=1">Nested Vs Chained Conditionals</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=variable-scope&amp;lang=cpp&amp;solution=1">Variable Scope</a>
+                            </li>
+                                                    </ul>
+                    </div>
+                </div>
+            </div>
+                        <div class="card">
+                <div class="card-header" id="heading-ch-8">
+                    <h2 class="mb-0">
+                        <button class="btn btn-link collapsed" type="button"
+                                data-toggle="collapse" data-target="#collapse-ch-8"
+                                aria-expanded="false">
+                            Conditional Statements - Challenges                        </button>
+                    </h2>
+                </div>
+                <div id="collapse-ch-8"
+                     class="collapse "
+                     data-parent="#courseAccordion">
+                    <div class="card-body p-0">
+                        <ul class="list-group list-group-flush">
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=recreating-abs&amp;lang=cpp&amp;solution=1">Recreating Abs</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=recreating-absolute-difference&amp;lang=cpp&amp;solution=1">Recreating Absolute Difference</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=leap-year&amp;lang=cpp&amp;solution=1">Leap Year</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=minimum-value-of-three&amp;lang=cpp&amp;solution=1">Minimum Value Of Three</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=interval-intersection&amp;lang=cpp&amp;solution=1">Interval Intersection</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=second-largest-value&amp;lang=cpp&amp;solution=1">Second Largest Value</a>
+                            </li>
+                                                    </ul>
+                    </div>
+                </div>
+            </div>
+                        <div class="card">
+                <div class="card-header" id="heading-ch-9">
+                    <h2 class="mb-0">
+                        <button class="btn btn-link collapsed" type="button"
+                                data-toggle="collapse" data-target="#collapse-ch-9"
+                                aria-expanded="false">
+                            Arrays I                        </button>
+                    </h2>
+                </div>
+                <div id="collapse-ch-9"
+                     class="collapse "
+                     data-parent="#courseAccordion">
+                    <div class="card-body p-0">
+                        <ul class="list-group list-group-flush">
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=static-arrays&amp;lang=cpp&amp;solution=1">Static Arrays</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=arrays&amp;lang=cpp&amp;solution=1">Arrays</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=accessing-static-array-elements&amp;lang=cpp&amp;solution=1">Accessing Static Array Elements</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=accessing-elements&amp;lang=cpp&amp;solution=1">Accessing Elements</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=updating-static-array-elements&amp;lang=cpp&amp;solution=1">Updating Static Array Elements</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=updating-elements&amp;lang=cpp&amp;solution=1">Updating Elements</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=array-length&amp;lang=cpp&amp;solution=1">Array Length</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=exceeding-static-array-bounds&amp;lang=cpp&amp;solution=1">Exceeding Static Array Bounds</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=exceeding-array-bounds&amp;lang=cpp&amp;solution=1">Exceeding Array Bounds</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=array-push&amp;lang=cpp&amp;solution=1">Array Push</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=array-pop&amp;lang=cpp&amp;solution=1">Array Pop</a>
+                            </li>
+                                                    </ul>
+                    </div>
+                </div>
+            </div>
+                        <div class="card">
+                <div class="card-header" id="heading-ch-10">
+                    <h2 class="mb-0">
+                        <button class="btn btn-link collapsed" type="button"
+                                data-toggle="collapse" data-target="#collapse-ch-10"
+                                aria-expanded="false">
+                            For Loops - Looping Over Arrays                        </button>
+                    </h2>
+                </div>
+                <div id="collapse-ch-10"
+                     class="collapse "
+                     data-parent="#courseAccordion">
+                    <div class="card-body p-0">
+                        <ul class="list-group list-group-flush">
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=why-for-loops&amp;lang=cpp&amp;solution=1">Why For Loops</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=looping-through-arrays&amp;lang=cpp&amp;solution=1">Looping Through Arrays</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=buggy-code-for-loops-1&amp;lang=cpp&amp;solution=1">Buggy Code For Loops 1</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=buggy-code-for-loops-2&amp;lang=cpp&amp;solution=1">Buggy Code For Loops 2</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=exercise-create-a-for-loop&amp;lang=cpp&amp;solution=1">Exercise Create A For Loop</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=buggy-code-for-loops-execution-flow-1&amp;lang=cpp&amp;solution=1">Buggy Code For Loops Execution Flow 1</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=buggy-code-for-loops-execution-flow-2&amp;lang=cpp&amp;solution=1">Buggy Code For Loops Execution Flow 2</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=buggy-code-for-loops-execution-flow-3&amp;lang=cpp&amp;solution=1">Buggy Code For Loops Execution Flow 3</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=infinite-for-loops-2&amp;lang=cpp&amp;solution=1">Infinite For Loops 2</a>
+                            </li>
+                                                    </ul>
+                    </div>
+                </div>
+            </div>
+                        <div class="card">
+                <div class="card-header" id="heading-ch-11">
+                    <h2 class="mb-0">
+                        <button class="btn btn-link collapsed" type="button"
+                                data-toggle="collapse" data-target="#collapse-ch-11"
+                                aria-expanded="false">
+                            While Loops &amp; For Loops                        </button>
+                    </h2>
+                </div>
+                <div id="collapse-ch-11"
+                     class="collapse "
+                     data-parent="#courseAccordion">
+                    <div class="card-body p-0">
+                        <ul class="list-group list-group-flush">
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=why-loops&amp;lang=cpp&amp;solution=1">Why Loops</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=the-while-loop&amp;lang=cpp&amp;solution=1">The While Loop</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=printing-numbers&amp;lang=cpp&amp;solution=1">Printing Numbers</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=printing-numbers-2&amp;lang=cpp&amp;solution=1">Printing Numbers 2</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=infinite-while-loops&amp;lang=cpp&amp;solution=1">Infinite While Loops</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=the-for-loop&amp;lang=cpp&amp;solution=1">The For Loop</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=printing-numbers-3&amp;lang=cpp&amp;solution=1">Printing Numbers 3</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=printing-numbers-4&amp;lang=cpp&amp;solution=1">Printing Numbers 4</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=looping-in-reverse&amp;lang=cpp&amp;solution=1">Looping In Reverse</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=infinite-for-loops&amp;lang=cpp&amp;solution=1">Infinite For Loops</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=print-multiples&amp;lang=cpp&amp;solution=1">Print Multiples</a>
+                            </li>
+                                                    </ul>
+                    </div>
+                </div>
+            </div>
+                        <div class="card">
+                <div class="card-header" id="heading-ch-12">
+                    <h2 class="mb-0">
+                        <button class="btn btn-link collapsed" type="button"
+                                data-toggle="collapse" data-target="#collapse-ch-12"
+                                aria-expanded="false">
+                            Loops &amp; Conditionals                        </button>
+                    </h2>
+                </div>
+                <div id="collapse-ch-12"
+                     class="collapse "
+                     data-parent="#courseAccordion">
+                    <div class="card-body p-0">
+                        <ul class="list-group list-group-flush">
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=print-positive-numbers-from-array&amp;lang=cpp&amp;solution=1">Print Positive Numbers From Array</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=buggy-code-print-even-numbers&amp;lang=cpp&amp;solution=1">Buggy Code Print Even Numbers</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=print-even-odd&amp;lang=cpp&amp;solution=1">Print Even Odd</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=buggy-code-print-odd-numbers&amp;lang=cpp&amp;solution=1">Buggy Code Print Odd Numbers</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=buggy-code-print-positive-negative&amp;lang=cpp&amp;solution=1">Buggy Code Print Positive Negative</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=array-contains&amp;lang=cpp&amp;solution=1">Array Contains</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=buggy-code-check-for-positive-numbers&amp;lang=cpp&amp;solution=1">Buggy Code Check For Positive Numbers</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=hurdle-jump&amp;lang=cpp&amp;solution=1">Hurdle Jump</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=prime-number&amp;lang=cpp&amp;solution=1">Prime Number</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=collatz-conjecture&amp;lang=cpp&amp;solution=1">Collatz Conjecture</a>
+                            </li>
+                                                    </ul>
+                    </div>
+                </div>
+            </div>
+                        <div class="card">
+                <div class="card-header" id="heading-ch-13">
+                    <h2 class="mb-0">
+                        <button class="btn btn-link collapsed" type="button"
+                                data-toggle="collapse" data-target="#collapse-ch-13"
+                                aria-expanded="false">
+                            Loops &amp; Global Variables                        </button>
+                    </h2>
+                </div>
+                <div id="collapse-ch-13"
+                     class="collapse "
+                     data-parent="#courseAccordion">
+                    <div class="card-body p-0">
+                        <ul class="list-group list-group-flush">
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=sum-of-numbers&amp;lang=cpp&amp;solution=1">Sum Of Numbers</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=buggy-code-numbers-sum&amp;lang=cpp&amp;solution=1">Buggy Code Numbers Sum</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=sum-of-squares&amp;lang=cpp&amp;solution=1">Sum Of Squares</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=factorial&amp;lang=cpp&amp;solution=1">Factorial</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=buggy-code-array-sum&amp;lang=cpp&amp;solution=1">Buggy Code Array Sum</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=student-grades&amp;lang=cpp&amp;solution=1">Student Grades</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=array-count&amp;lang=cpp&amp;solution=1">Array Count</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=hacker-speak&amp;lang=cpp&amp;solution=1">Hacker Speak</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=max-in-array&amp;lang=cpp&amp;solution=1">Max In Array</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=odd-even&amp;lang=cpp&amp;solution=1">Odd Even</a>
+                            </li>
+                                                    </ul>
+                    </div>
+                </div>
+            </div>
+                        <div class="card">
+                <div class="card-header" id="heading-ch-14">
+                    <h2 class="mb-0">
+                        <button class="btn btn-link collapsed" type="button"
+                                data-toggle="collapse" data-target="#collapse-ch-14"
+                                aria-expanded="false">
+                            Looping Over Array Indices                        </button>
+                    </h2>
+                </div>
+                <div id="collapse-ch-14"
+                     class="collapse "
+                     data-parent="#courseAccordion">
+                    <div class="card-body p-0">
+                        <ul class="list-group list-group-flush">
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=looping-through-arrays-with-indices&amp;lang=cpp&amp;solution=1">Looping Through Arrays With Indices</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=linear-search&amp;lang=cpp&amp;solution=1">Linear Search</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=linear-lower-bound&amp;lang=cpp&amp;solution=1">Linear Lower Bound</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=buggy-code-manipulate-array&amp;lang=cpp&amp;solution=1">Buggy Code Manipulate Array</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=get-full-names&amp;lang=cpp&amp;solution=1">Get Full Names</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=reverse-array&amp;lang=cpp&amp;solution=1">Reverse Array</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=break-in-for-loops&amp;lang=cpp&amp;solution=1">Break In For Loops</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=continue-in-for-loops&amp;lang=cpp&amp;solution=1">Continue In For Loops</a>
+                            </li>
+                                                    </ul>
+                    </div>
+                </div>
+            </div>
+                        <div class="card">
+                <div class="card-header" id="heading-ch-15">
+                    <h2 class="mb-0">
+                        <button class="btn btn-link collapsed" type="button"
+                                data-toggle="collapse" data-target="#collapse-ch-15"
+                                aria-expanded="false">
+                            Big O Notation                        </button>
+                    </h2>
+                </div>
+                <div id="collapse-ch-15"
+                     class="collapse "
+                     data-parent="#courseAccordion">
+                    <div class="card-body p-0">
+                        <ul class="list-group list-group-flush">
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=time-complexity&amp;lang=cpp&amp;solution=0">Time Complexity</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=time-complexity-guidelines&amp;lang=cpp&amp;solution=0">Time Complexity Guidelines</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=time-complexity-practice-1&amp;lang=cpp&amp;solution=0">Time Complexity Practice 1</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=introduction-to-logarithm&amp;lang=cpp&amp;solution=0">Introduction To Logarithm</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=time-complexity-practice-2&amp;lang=cpp&amp;solution=0">Time Complexity Practice 2</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=time-complexity-practice-3&amp;lang=cpp&amp;solution=0">Time Complexity Practice 3</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=space-complexity&amp;lang=cpp&amp;solution=0">Space Complexity</a>
+                            </li>
+                                                    </ul>
+                    </div>
+                </div>
+            </div>
+                        <div class="card">
+                <div class="card-header" id="heading-ch-16">
+                    <h2 class="mb-0">
+                        <button class="btn btn-link collapsed" type="button"
+                                data-toggle="collapse" data-target="#collapse-ch-16"
+                                aria-expanded="false">
+                            Loops - Challenges                        </button>
+                    </h2>
+                </div>
+                <div id="collapse-ch-16"
+                     class="collapse "
+                     data-parent="#courseAccordion">
+                    <div class="card-body p-0">
+                        <ul class="list-group list-group-flush">
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=print-powers&amp;lang=cpp&amp;solution=1">Print Powers</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=fizz-buzz&amp;lang=cpp&amp;solution=1">Fizz Buzz</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=longest-common-prefix-of-two-strings&amp;lang=cpp&amp;solution=1">Longest Common Prefix Of Two Strings</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=get-full-names-2&amp;lang=cpp&amp;solution=1">Get Full Names 2</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=find-largest-number&amp;lang=cpp&amp;solution=1">Find Largest Number</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=fibonacci&amp;lang=cpp&amp;solution=1">Fibonacci</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=tribonacci&amp;lang=cpp&amp;solution=1">Tribonacci</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=max-val-and-number-of-occurrences&amp;lang=cpp&amp;solution=1">Max Val And Number Of Occurrences</a>
+                            </li>
+                                                    </ul>
+                    </div>
+                </div>
+            </div>
+                        <div class="card">
+                <div class="card-header" id="heading-ch-17">
+                    <h2 class="mb-0">
+                        <button class="btn btn-link collapsed" type="button"
+                                data-toggle="collapse" data-target="#collapse-ch-17"
+                                aria-expanded="false">
+                            Strings                        </button>
+                    </h2>
+                </div>
+                <div id="collapse-ch-17"
+                     class="collapse "
+                     data-parent="#courseAccordion">
+                    <div class="card-body p-0">
+                        <ul class="list-group list-group-flush">
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=intro-to-strings&amp;lang=cpp&amp;solution=0">Intro To Strings</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=strings&amp;lang=cpp&amp;solution=1">Strings</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=reverse-string&amp;lang=cpp&amp;solution=2">Reverse String</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=reverse-string&amp;lang=cpp&amp;solution=3">Reverse String</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=palindrome-check&amp;lang=cpp&amp;solution=2">Palindrome Check</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=reverse-words&amp;lang=cpp&amp;solution=1">Reverse Words</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=print-triangle-of-stars&amp;lang=cpp&amp;solution=1">Print Triangle Of Stars</a>
+                            </li>
+                                                    </ul>
+                    </div>
+                </div>
+            </div>
+                        <div class="card">
+                <div class="card-header" id="heading-ch-18">
+                    <h2 class="mb-0">
+                        <button class="btn btn-link collapsed" type="button"
+                                data-toggle="collapse" data-target="#collapse-ch-18"
+                                aria-expanded="false">
+                            Functions &amp; Classes                        </button>
+                    </h2>
+                </div>
+                <div id="collapse-ch-18"
+                     class="collapse "
+                     data-parent="#courseAccordion">
+                    <div class="card-body p-0">
+                        <ul class="list-group list-group-flush">
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=functions&amp;lang=cpp&amp;solution=1">Functions</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=classes&amp;lang=cpp&amp;solution=1">Classes</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=magical-number&amp;lang=cpp&amp;solution=1">Magical Number</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=print-rhombus&amp;lang=cpp&amp;solution=1">Print Rhombus</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=print-x&amp;lang=cpp&amp;solution=1">Print X</a>
+                            </li>
+                                                    </ul>
+                    </div>
+                </div>
+            </div>
+                        <div class="card">
+                <div class="card-header" id="heading-ch-19">
+                    <h2 class="mb-0">
+                        <button class="btn btn-link collapsed" type="button"
+                                data-toggle="collapse" data-target="#collapse-ch-19"
+                                aria-expanded="false">
+                            Nested Loops &amp; Brute Force                        </button>
+                    </h2>
+                </div>
+                <div id="collapse-ch-19"
+                     class="collapse "
+                     data-parent="#courseAccordion">
+                    <div class="card-body p-0">
+                        <ul class="list-group list-group-flush">
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=nested-loops&amp;lang=cpp&amp;solution=1">Nested Loops</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=pair-count&amp;lang=cpp&amp;solution=1">Pair Count</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=two-sum&amp;lang=cpp&amp;solution=1">Two Sum</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=selection-sort&amp;lang=cpp&amp;solution=1">Selection Sort</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=remove-duplicates-from-array&amp;lang=cpp&amp;solution=1">Remove Duplicates From Array</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=longest-subarray-without-reapeating&amp;lang=cpp&amp;solution=1">Longest Subarray Without Reapeating</a>
+                            </li>
+                                                    </ul>
+                    </div>
+                </div>
+            </div>
+                        <div class="card">
+                <div class="card-header" id="heading-ch-20">
+                    <h2 class="mb-0">
+                        <button class="btn btn-link collapsed" type="button"
+                                data-toggle="collapse" data-target="#collapse-ch-20"
+                                aria-expanded="false">
+                            Sorting                        </button>
+                    </h2>
+                </div>
+                <div id="collapse-ch-20"
+                     class="collapse "
+                     data-parent="#courseAccordion">
+                    <div class="card-body p-0">
+                        <ul class="list-group list-group-flush">
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=sorting&amp;lang=cpp&amp;solution=1">Sorting</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=smallest-k&amp;lang=cpp&amp;solution=1">Smallest K</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=distinct-values&amp;lang=cpp&amp;solution=1">Distinct Values</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=remove-duplicates-from-array&amp;lang=cpp&amp;solution=2">Remove Duplicates From Array</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=longest-consecutive-sequence&amp;lang=cpp&amp;solution=1">Longest Consecutive Sequence</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=group-anagrams&amp;lang=cpp&amp;solution=1">Group Anagrams</a>
+                            </li>
+                                                    </ul>
+                    </div>
+                </div>
+            </div>
+                        <div class="card">
+                <div class="card-header" id="heading-ch-21">
+                    <h2 class="mb-0">
+                        <button class="btn btn-link collapsed" type="button"
+                                data-toggle="collapse" data-target="#collapse-ch-21"
+                                aria-expanded="false">
+                            Partial Sums #1                        </button>
+                    </h2>
+                </div>
+                <div id="collapse-ch-21"
+                     class="collapse "
+                     data-parent="#courseAccordion">
+                    <div class="card-body p-0">
+                        <ul class="list-group list-group-flush">
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=partial-sums-theory&amp;lang=cpp&amp;solution=0">Partial Sums Theory</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=maximum-sum-subarray&amp;lang=cpp&amp;solution=1">Maximum Sum Subarray</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=maximum-sum-subarray&amp;lang=cpp&amp;solution=2">Maximum Sum Subarray</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=maximum-sum-subarray&amp;lang=cpp&amp;solution=3">Maximum Sum Subarray</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=max-sum-of-three-subarrays&amp;lang=cpp&amp;solution=1">Max Sum Of Three Subarrays</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=maximum-sum-subarray-of-length-k&amp;lang=cpp&amp;solution=1">Maximum Sum Subarray Of Length K</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=maximum-sum-subarray-of-length-k&amp;lang=cpp&amp;solution=2">Maximum Sum Subarray Of Length K</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=longest-subarray-with-sum-at-most-s&amp;lang=cpp&amp;solution=1">Longest Subarray With Sum At Most S</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=remove-min-sum&amp;lang=cpp&amp;solution=1">Remove Min Sum</a>
+                            </li>
+                                                    </ul>
+                    </div>
+                </div>
+            </div>
+                        <div class="card">
+                <div class="card-header" id="heading-ch-22">
+                    <h2 class="mb-0">
+                        <button class="btn btn-link collapsed" type="button"
+                                data-toggle="collapse" data-target="#collapse-ch-22"
+                                aria-expanded="false">
+                            Partial Sums #2                        </button>
+                    </h2>
+                </div>
+                <div id="collapse-ch-22"
+                     class="collapse "
+                     data-parent="#courseAccordion">
+                    <div class="card-body p-0">
+                        <ul class="list-group list-group-flush">
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=subarray-of-given-sum&amp;lang=cpp&amp;solution=2">Subarray Of Given Sum</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=maximum-sum-submatrix&amp;lang=cpp&amp;solution=2">Maximum Sum Submatrix</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=maximum-sum-submatrix&amp;lang=cpp&amp;solution=3">Maximum Sum Submatrix</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=remove-min-sum-ii&amp;lang=cpp&amp;solution=1">Remove Min Sum Ii</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=max-sum-of-three-subarrays&amp;lang=cpp&amp;solution=2">Max Sum Of Three Subarrays</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=max-sum-of-three-subarrays&amp;lang=cpp&amp;solution=3">Max Sum Of Three Subarrays</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=max-sum-of-three-subarrays&amp;lang=cpp&amp;solution=4">Max Sum Of Three Subarrays</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=max-sum-square&amp;lang=cpp&amp;solution=1">Max Sum Square</a>
+                            </li>
+                                                    </ul>
+                    </div>
+                </div>
+            </div>
+                        <div class="card">
+                <div class="card-header" id="heading-ch-23">
+                    <h2 class="mb-0">
+                        <button class="btn btn-link collapsed" type="button"
+                                data-toggle="collapse" data-target="#collapse-ch-23"
+                                aria-expanded="false">
+                            Two Pointers                        </button>
+                    </h2>
+                </div>
+                <div id="collapse-ch-23"
+                     class="collapse "
+                     data-parent="#courseAccordion">
+                    <div class="card-body p-0">
+                        <ul class="list-group list-group-flush">
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=palindrome-check&amp;lang=cpp&amp;solution=1">Palindrome Check</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=reverse-string&amp;lang=cpp&amp;solution=1">Reverse String</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=palindrome-substrings&amp;lang=cpp&amp;solution=1">Palindrome Substrings</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=palindrome-substrings&amp;lang=cpp&amp;solution=2">Palindrome Substrings</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=reverse-words&amp;lang=cpp&amp;solution=2">Reverse Words</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=two-sum&amp;lang=cpp&amp;solution=3">Two Sum</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=merge-sorted-arrays&amp;lang=cpp&amp;solution=1">Merge Sorted Arrays</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=array-diff&amp;lang=cpp&amp;solution=1">Array Diff</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=container-with-most-water&amp;lang=cpp&amp;solution=1">Container With Most Water</a>
+                            </li>
+                                                    </ul>
+                    </div>
+                </div>
+            </div>
+                        <div class="card">
+                <div class="card-header" id="heading-ch-24">
+                    <h2 class="mb-0">
+                        <button class="btn btn-link collapsed" type="button"
+                                data-toggle="collapse" data-target="#collapse-ch-24"
+                                aria-expanded="false">
+                            Hash Table                        </button>
+                    </h2>
+                </div>
+                <div id="collapse-ch-24"
+                     class="collapse "
+                     data-parent="#courseAccordion">
+                    <div class="card-body p-0">
+                        <ul class="list-group list-group-flush">
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=hash-map&amp;lang=cpp&amp;solution=1">Hash Map</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=collection-of-numbers&amp;lang=cpp&amp;solution=1">Collection Of Numbers</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=ransom-note&amp;lang=cpp&amp;solution=1">Ransom Note</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=two-sum&amp;lang=cpp&amp;solution=4">Two Sum</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=hash-set&amp;lang=cpp&amp;solution=1">Hash Set</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=distinct-values&amp;lang=cpp&amp;solution=2">Distinct Values</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=remove-duplicates-from-array&amp;lang=cpp&amp;solution=3">Remove Duplicates From Array</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=find-duplicates&amp;lang=cpp&amp;solution=1">Find Duplicates</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=longest-subarray-without-reapeating&amp;lang=cpp&amp;solution=2">Longest Subarray Without Reapeating</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=longest-subarray-with-at-most-k-distinct-integers&amp;lang=cpp&amp;solution=1">Longest Subarray With At Most K Distinct Integers</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=longest-consecutive-sequence&amp;lang=cpp&amp;solution=2">Longest Consecutive Sequence</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=group-anagrams&amp;lang=cpp&amp;solution=2">Group Anagrams</a>
+                            </li>
+                                                    </ul>
+                    </div>
+                </div>
+            </div>
+                        <div class="card">
+                <div class="card-header" id="heading-ch-25">
+                    <h2 class="mb-0">
+                        <button class="btn btn-link collapsed" type="button"
+                                data-toggle="collapse" data-target="#collapse-ch-25"
+                                aria-expanded="false">
+                            Binary Search                        </button>
+                    </h2>
+                </div>
+                <div id="collapse-ch-25"
+                     class="collapse "
+                     data-parent="#courseAccordion">
+                    <div class="card-body p-0">
+                        <ul class="list-group list-group-flush">
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=binary-search&amp;lang=cpp&amp;solution=1">Binary Search</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=lower-bound&amp;lang=cpp&amp;solution=1">Lower Bound</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=number-of-occurrences&amp;lang=cpp&amp;solution=1">Number Of Occurrences</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=two-sum&amp;lang=cpp&amp;solution=2">Two Sum</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=find-peak&amp;lang=cpp&amp;solution=1">Find Peak</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=the-factory&amp;lang=cpp&amp;solution=1">The Factory</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=the-factory&amp;lang=cpp&amp;solution=2">The Factory</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=uber-rides&amp;lang=cpp&amp;solution=1">Uber Rides</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=smallest-k&amp;lang=cpp&amp;solution=5">Smallest K</a>
+                            </li>
+                                                    </ul>
+                    </div>
+                </div>
+            </div>
+                        <div class="card">
+                <div class="card-header" id="heading-ch-26">
+                    <h2 class="mb-0">
+                        <button class="btn btn-link collapsed" type="button"
+                                data-toggle="collapse" data-target="#collapse-ch-26"
+                                aria-expanded="false">
+                            Recursion                        </button>
+                    </h2>
+                </div>
+                <div id="collapse-ch-26"
+                     class="collapse "
+                     data-parent="#courseAccordion">
+                    <div class="card-body p-0">
+                        <ul class="list-group list-group-flush">
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=recursion&amp;lang=cpp&amp;solution=1">Recursion</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=recursive-fibonacci&amp;lang=cpp&amp;solution=1">Recursive Fibonacci</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=power&amp;lang=cpp&amp;solution=1">Power</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=decompress-file-paths&amp;lang=cpp&amp;solution=1">Decompress File Paths</a>
+                            </li>
+                                                    </ul>
+                    </div>
+                </div>
+            </div>
+                        <div class="card">
+                <div class="card-header" id="heading-ch-27">
+                    <h2 class="mb-0">
+                        <button class="btn btn-link collapsed" type="button"
+                                data-toggle="collapse" data-target="#collapse-ch-27"
+                                aria-expanded="false">
+                            Divide And Conquer                        </button>
+                    </h2>
+                </div>
+                <div id="collapse-ch-27"
+                     class="collapse "
+                     data-parent="#courseAccordion">
+                    <div class="card-body p-0">
+                        <ul class="list-group list-group-flush">
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=binary-search&amp;lang=cpp&amp;solution=2">Binary Search</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=z-pattern&amp;lang=cpp&amp;solution=1">Z Pattern</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=merge-sort&amp;lang=cpp&amp;solution=1">Merge Sort</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=quick-sort&amp;lang=cpp&amp;solution=1">Quick Sort</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=smallest-k&amp;lang=cpp&amp;solution=3">Smallest K</a>
+                            </li>
+                                                    </ul>
+                    </div>
+                </div>
+            </div>
+                        <div class="card">
+                <div class="card-header" id="heading-ch-28">
+                    <h2 class="mb-0">
+                        <button class="btn btn-link collapsed" type="button"
+                                data-toggle="collapse" data-target="#collapse-ch-28"
+                                aria-expanded="false">
+                            Backtracking                        </button>
+                    </h2>
+                </div>
+                <div id="collapse-ch-28"
+                     class="collapse "
+                     data-parent="#courseAccordion">
+                    <div class="card-body p-0">
+                        <ul class="list-group list-group-flush">
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=jump-game&amp;lang=cpp&amp;solution=1">Jump Game</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=minimum-path-sum&amp;lang=cpp&amp;solution=1">Minimum Path Sum</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=n-queens&amp;lang=cpp&amp;solution=1">N Queens</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=sudoku&amp;lang=cpp&amp;solution=1">Sudoku</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=generate-parentheses&amp;lang=cpp&amp;solution=1">Generate Parentheses</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=generate-binary-strings-with-k-ones&amp;lang=cpp&amp;solution=1">Generate Binary Strings With K Ones</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=generate-valley-permutations&amp;lang=cpp&amp;solution=1">Generate Valley Permutations</a>
+                            </li>
+                                                    </ul>
+                    </div>
+                </div>
+            </div>
+                        <div class="card">
+                <div class="card-header" id="heading-ch-29">
+                    <h2 class="mb-0">
+                        <button class="btn btn-link " type="button"
+                                data-toggle="collapse" data-target="#collapse-ch-29"
+                                aria-expanded="true">
+                            Memoization                        </button>
+                    </h2>
+                </div>
+                <div id="collapse-ch-29"
+                     class="collapse show"
+                     data-parent="#courseAccordion">
+                    <div class="card-body p-0">
+                        <ul class="list-group list-group-flush">
+                                                        <li class="list-group-item active">
+                                <a href="/link/?problem=memoization&amp;lang=cpp&amp;solution=1">Memoization</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=jump-game&amp;lang=cpp&amp;solution=2">Jump Game</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=jump-game&amp;lang=cpp&amp;solution=3">Jump Game</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=minimum-path-sum&amp;lang=cpp&amp;solution=2">Minimum Path Sum</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=minimum-path-sum&amp;lang=cpp&amp;solution=3">Minimum Path Sum</a>
+                            </li>
+                                                    </ul>
+                    </div>
+                </div>
+            </div>
+                        <div class="card">
+                <div class="card-header" id="heading-ch-30">
+                    <h2 class="mb-0">
+                        <button class="btn btn-link collapsed" type="button"
+                                data-toggle="collapse" data-target="#collapse-ch-30"
+                                aria-expanded="false">
+                            Linked Lists                        </button>
+                    </h2>
+                </div>
+                <div id="collapse-ch-30"
+                     class="collapse "
+                     data-parent="#courseAccordion">
+                    <div class="card-body p-0">
+                        <ul class="list-group list-group-flush">
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=linked-lists&amp;lang=cpp&amp;solution=0">Linked Lists</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=reverse-linked-list&amp;lang=cpp&amp;solution=1">Reverse Linked List</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=remove-linked-list-elements&amp;lang=cpp&amp;solution=1">Remove Linked List Elements</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=remove-nth-node-from-end-of-list&amp;lang=cpp&amp;solution=1">Remove Nth Node From End Of List</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=remove-duplicates-from-sorted-linked-list&amp;lang=cpp&amp;solution=1">Remove Duplicates From Sorted Linked List</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=linked-list-cycle&amp;lang=cpp&amp;solution=1">Linked List Cycle</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=palindrome-linked-list&amp;lang=cpp&amp;solution=1">Palindrome Linked List</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=intersection-of-two-linked-lists&amp;lang=cpp&amp;solution=1">Intersection Of Two Linked Lists</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=add-two-numbers&amp;lang=cpp&amp;solution=1">Add Two Numbers</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=flatten-multilevel-list&amp;lang=cpp&amp;solution=1">Flatten Multilevel List</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=flatten-multilevel-list&amp;lang=cpp&amp;solution=2">Flatten Multilevel List</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=copy-list-random-pointer&amp;lang=cpp&amp;solution=1">Copy List Random Pointer</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=copy-list-random-pointer&amp;lang=cpp&amp;solution=2">Copy List Random Pointer</a>
+                            </li>
+                                                    </ul>
+                    </div>
+                </div>
+            </div>
+                        <div class="card">
+                <div class="card-header" id="heading-ch-31">
+                    <h2 class="mb-0">
+                        <button class="btn btn-link collapsed" type="button"
+                                data-toggle="collapse" data-target="#collapse-ch-31"
+                                aria-expanded="false">
+                            Sliding Window                        </button>
+                    </h2>
+                </div>
+                <div id="collapse-ch-31"
+                     class="collapse "
+                     data-parent="#courseAccordion">
+                    <div class="card-body p-0">
+                        <ul class="list-group list-group-flush">
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=two-pointers-technique&amp;lang=cpp&amp;solution=0">Two Pointers Technique</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=longest-subarray-with-sum-at-most-s&amp;lang=cpp&amp;solution=2">Longest Subarray With Sum At Most S</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=longest-subarray-with-at-most-k-distinct-integers&amp;lang=cpp&amp;solution=2">Longest Subarray With At Most K Distinct Integers</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=longest-subarray-without-reapeating&amp;lang=cpp&amp;solution=4">Longest Subarray Without Reapeating</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=subarray-of-given-sum-ii&amp;lang=cpp&amp;solution=1">Subarray Of Given Sum Ii</a>
+                            </li>
+                                                    </ul>
+                    </div>
+                </div>
+            </div>
+                        <div class="card">
+                <div class="card-header" id="heading-ch-32">
+                    <h2 class="mb-0">
+                        <button class="btn btn-link collapsed" type="button"
+                                data-toggle="collapse" data-target="#collapse-ch-32"
+                                aria-expanded="false">
+                            Heap                        </button>
+                    </h2>
+                </div>
+                <div id="collapse-ch-32"
+                     class="collapse "
+                     data-parent="#courseAccordion">
+                    <div class="card-body p-0">
+                        <ul class="list-group list-group-flush">
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=smallest-k&amp;lang=cpp&amp;solution=2">Smallest K</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=last-stone-weight&amp;lang=cpp&amp;solution=1">Last Stone Weight</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=kill-monsters&amp;lang=cpp&amp;solution=1">Kill Monsters</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=minimum-number-of-boats&amp;lang=cpp&amp;solution=1">Minimum Number Of Boats</a>
+                            </li>
+                                                    </ul>
+                    </div>
+                </div>
+            </div>
+                        <div class="card">
+                <div class="card-header" id="heading-ch-33">
+                    <h2 class="mb-0">
+                        <button class="btn btn-link collapsed" type="button"
+                                data-toggle="collapse" data-target="#collapse-ch-33"
+                                aria-expanded="false">
+                            Stack                        </button>
+                    </h2>
+                </div>
+                <div id="collapse-ch-33"
+                     class="collapse "
+                     data-parent="#courseAccordion">
+                    <div class="card-body p-0">
+                        <ul class="list-group list-group-flush">
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=stacks&amp;lang=cpp&amp;solution=0">Stacks</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=valid-parentheses&amp;lang=cpp&amp;solution=1">Valid Parentheses</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=next-greater-element&amp;lang=cpp&amp;solution=1">Next Greater Element</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=remove-k-digits&amp;lang=cpp&amp;solution=1">Remove K Digits</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=create-maximum-number&amp;lang=cpp&amp;solution=1">Create Maximum Number</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=largest-rectangle-in-histogram&amp;lang=cpp&amp;solution=1">Largest Rectangle In Histogram</a>
+                            </li>
+                                                    </ul>
+                    </div>
+                </div>
+            </div>
+                        <div class="card">
+                <div class="card-header" id="heading-ch-34">
+                    <h2 class="mb-0">
+                        <button class="btn btn-link collapsed" type="button"
+                                data-toggle="collapse" data-target="#collapse-ch-34"
+                                aria-expanded="false">
+                            Binary Trees                        </button>
+                    </h2>
+                </div>
+                <div id="collapse-ch-34"
+                     class="collapse "
+                     data-parent="#courseAccordion">
+                    <div class="card-body p-0">
+                        <ul class="list-group list-group-flush">
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=post-order-tree-traversal&amp;lang=cpp&amp;solution=1">Post Order Tree Traversal</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=zigzag-tree-traversal&amp;lang=cpp&amp;solution=1">Zigzag Tree Traversal</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=symmetric-tree&amp;lang=cpp&amp;solution=1">Symmetric Tree</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=lca-in-bst&amp;lang=cpp&amp;solution=1">Lca In Bst</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=convert-sorted-array-to-bst&amp;lang=cpp&amp;solution=1">Convert Sorted Array To Bst</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=binary-tree-diameter&amp;lang=cpp&amp;solution=1">Binary Tree Diameter</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=kth-smallest-element-in-bst&amp;lang=cpp&amp;solution=1">Kth Smallest Element In Bst</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=max-sum-bst&amp;lang=cpp&amp;solution=1">Max Sum Bst</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=max-sum-bst&amp;lang=cpp&amp;solution=2">Max Sum Bst</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=post-order-tree-traversal&amp;lang=cpp&amp;solution=2">Post Order Tree Traversal</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=recover-tree-from-preorder&amp;lang=cpp&amp;solution=1">Recover Tree From Preorder</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=zigzag-tree-traversal&amp;lang=cpp&amp;solution=2">Zigzag Tree Traversal</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=inorder-traversal&amp;lang=cpp&amp;solution=1">Inorder Traversal</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=level-order-traversal&amp;lang=cpp&amp;solution=1">Level Order Traversal</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=flatten-binary-tree&amp;lang=cpp&amp;solution=1">Flatten Binary Tree</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=encoded-tree-sums&amp;lang=cpp&amp;solution=1">Encoded Tree Sums</a>
+                            </li>
+                                                    </ul>
+                    </div>
+                </div>
+            </div>
+                        <div class="card">
+                <div class="card-header" id="heading-ch-35">
+                    <h2 class="mb-0">
+                        <button class="btn btn-link collapsed" type="button"
+                                data-toggle="collapse" data-target="#collapse-ch-35"
+                                aria-expanded="false">
+                            Dynamic Programming                        </button>
+                    </h2>
+                </div>
+                <div id="collapse-ch-35"
+                     class="collapse "
+                     data-parent="#courseAccordion">
+                    <div class="card-body p-0">
+                        <ul class="list-group list-group-flush">
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=binary-strings-of-given-length&amp;lang=cpp&amp;solution=1">Binary Strings Of Given Length</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=permutations-of-given-length&amp;lang=cpp&amp;solution=1">Permutations Of Given Length</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=valley-permutations&amp;lang=cpp&amp;solution=1">Valley Permutations</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=binary-strings-without-consecutive-ones&amp;lang=cpp&amp;solution=1">Binary Strings Without Consecutive Ones</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=binary-strings-with-k-ones&amp;lang=cpp&amp;solution=1">Binary Strings With K Ones</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=binary-strings-with-k-ones-on-even-positions&amp;lang=cpp&amp;solution=1">Binary Strings With K Ones On Even Positions</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=binary-strings-with-at-most-k-consecutive-ones&amp;lang=cpp&amp;solution=1">Binary Strings With At Most K Consecutive Ones</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=permutations-with-k-inversions&amp;lang=cpp&amp;solution=1">Permutations With K Inversions</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=digit-product-numbers&amp;lang=cpp&amp;solution=1">Digit Product Numbers</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=swap-permutations&amp;lang=cpp&amp;solution=1">Swap Permutations</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=best-time-to-buy-stock&amp;lang=cpp&amp;solution=1">Best Time To Buy Stock</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=best-time-to-buy-stock&amp;lang=cpp&amp;solution=2">Best Time To Buy Stock</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=trapping-rain-water&amp;lang=cpp&amp;solution=1">Trapping Rain Water</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=unique-paths&amp;lang=cpp&amp;solution=1">Unique Paths</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=min-cost-climbing-stairs&amp;lang=cpp&amp;solution=1">Min Cost Climbing Stairs</a>
+                            </li>
+                                                    </ul>
+                    </div>
+                </div>
+            </div>
+                        <div class="card">
+                <div class="card-header" id="heading-ch-36">
+                    <h2 class="mb-0">
+                        <button class="btn btn-link collapsed" type="button"
+                                data-toggle="collapse" data-target="#collapse-ch-36"
+                                aria-expanded="false">
+                            Greedy                        </button>
+                    </h2>
+                </div>
+                <div id="collapse-ch-36"
+                     class="collapse "
+                     data-parent="#courseAccordion">
+                    <div class="card-body p-0">
+                        <ul class="list-group list-group-flush">
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=non-overlapping-intervals&amp;lang=cpp&amp;solution=1">Non Overlapping Intervals</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=meeting-rooms&amp;lang=cpp&amp;solution=2">Meeting Rooms</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=jump-game&amp;lang=cpp&amp;solution=5">Jump Game</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=best-time-to-buy-stock&amp;lang=cpp&amp;solution=3">Best Time To Buy Stock</a>
+                            </li>
+                                                    </ul>
+                    </div>
+                </div>
+            </div>
+                        <div class="card">
+                <div class="card-header" id="heading-ch-37">
+                    <h2 class="mb-0">
+                        <button class="btn btn-link collapsed" type="button"
+                                data-toggle="collapse" data-target="#collapse-ch-37"
+                                aria-expanded="false">
+                            Graphs                        </button>
+                    </h2>
+                </div>
+                <div id="collapse-ch-37"
+                     class="collapse "
+                     data-parent="#courseAccordion">
+                    <div class="card-body p-0">
+                        <ul class="list-group list-group-flush">
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=number-of-islands&amp;lang=cpp&amp;solution=1">Number Of Islands</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=size-of-islands&amp;lang=cpp&amp;solution=1">Size Of Islands</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=01-matrix&amp;lang=cpp&amp;solution=1">01 Matrix</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=word-ladder&amp;lang=cpp&amp;solution=1">Word Ladder</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=word-ladder&amp;lang=cpp&amp;solution=2">Word Ladder</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=word-ladder&amp;lang=cpp&amp;solution=3">Word Ladder</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=word-ladder&amp;lang=cpp&amp;solution=4">Word Ladder</a>
+                            </li>
+                                                        <li class="list-group-item ">
+                                <a href="/link/?problem=jump-game&amp;lang=cpp&amp;solution=4">Jump Game</a>
+                            </li>
+                                                    </ul>
+                    </div>
+                </div>
+            </div>
+                    </div>
+    </aside>
+
+    <!-- RIGHT: editor + tutorial pane. Placed BEFORE .left-col in the DOM so
+         that if a lesson body has unclosed tags, the leakage happens AT THE END
+         of .course-shell (where it can't orphan .right-col). CSS grid-column
+         placement keeps the visual order: sidebar | left | right. -->
+    <div class="right-col pane pane-code" id="pane-code">
+
+        <!-- /app's #right-side block, verbatim. script.js owns this DOM. -->
+        <div>
+            <div id="right-side" style="height:auto;">
+                <div id="editor" style="width:100%; height: 500px; margin-bottom:10px;"></div>
+
+                <div id="overlay-editor" style="display:none;">
+                    <div id="overlay-text" style="margin-left:15%; margin-top: 32%; font-weight:normal;">
+                        <div id="overlay-normal-text">
+                            <button id="overlay-btn" class="btn btn-outline-warning"
+                                onclick="$('#coding-tutorial').removeClass('hidden'); if (typeof deactivateEditorOverlay==='function') deactivateEditorOverlay();">
+                                Start Coding Tutorial
+                            </button>
+                        </div>
+                        <div id="overlay-video-text" class="hidden">No Coding for this lesson available!</div>
+                    </div>
+                </div>
+
+                <nav class="nav" style="display:block; padding-left:20px; width:100%;">
+                    <span style='font-weight:bold; color:black; font-size: 1.1rem; font-family: "Roboto", sans-serif;'>Coding Tutorial: </span>
+                    <label id="toggle-label" class="checkbox-inline" style="margin-left:40px;">
+                        <input id="tutorial-toggle" style="margin-top:-5px;" type="checkbox" checked
+                            data-onstyle="success" data-height="38" data-width="80" data-style="ios" data-offstyle="info">
+                    </label>
+
+                    <button class="btn btn-primary submit-code" id="submit-code"
+                        style="margin-left: 20px; margin-top: -5px;"
+                        data-toggle="tooltip" data-placement="top" title="CTRL + enter"
+                        onClick="submitCode(); return false;">Submit</button>
+
+                    <span id="hide-submission-tooltip" class="hidden" style="padding-top: 3px;">
+                        <span id="hide-submission" class="btn fa fa-arrow-up"></span>
+                    </span>
+                    <span class="hidden reset-code" id="reset-code-tooltip">
+                        <span type="button" id="reset-code" class="btn">
+                            <i class="fa fa-sync-alt" style="font-size:14px; color:#dc3545;"></i>
+                        </span>
+                    </span>
+                    <span id="reset-tutorial-tooltip" class="reset-tutorial">
+                        <span type="button" class="btn" data-toggle="modal" data-target=".reset-tutorial-modal">
+                            <i class="fa fa-sync-alt" style="font-size:14px; color:#dc3545;"></i>
+                        </span>
+                    </span>
+                </nav>
+                <hr style="margin-top: 0px;">
+
+                <div id="result" style="width:100%; height: 0px; margin-top:-20px;">
+                    <div style="margin-left:20px; margin-right:20px;" class="alert alert-danger hidden" id="danger-alert">
+                        <button type="button" class="close" data-dismiss="alert">x</button>
+                        <strong>Failed: &emsp;&emsp;<span id="error-msg">Your code is a bit off!</span></strong>
+                    </div>
+                    <div style="margin-left:20px; margin-right:20px;" class="alert alert-success hidden" id="success-alert">
+                        <button type="button" class="close" data-dismiss="alert">x</button>
+                        <strong>Success! </strong> You passed to the next step.
+                    </div>
+                    <div id="failed-result" style="padding-left: 20px;"></div>
+                    <div id="inner-result" style="float:left; padding-left: 20px; padding-right:10px;"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tutorial overview (#main-solution) — sits below the editor on desktop,
+             stays in the same Code tab on mobile so steps and editor are together. -->
+        <div id="main-solution"></div>
+    </div>
+
+    <!-- LEFT: SEO content — placed LAST in the DOM so unbalanced HTML in the
+         lesson body can only leak at the end of .course-shell, harmless. -->
+    <div class="left-col pane pane-lesson active" id="pane-lesson">
+        <div class="lesson-body">
+                    <h1 style='font-size:calc(1.325rem + 0.9vw);'>Memoization  <span class='text-primary' style='font-weight:bold; font-size:12pt;'> </span></h1>
+<br/>
+<p>In this video lesson we will learn about <b>memoization</b> and use it to improve the recursive fibonacci algorithm written in the previous lesson:</p>
+<div style="padding:56.25% 0 0 0;position:relative;"><iframe src="https://player.vimeo.com/video/647375960?h=c1bfb5a02a&amp;badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen style="position:absolute;top:0;left:0;width:100%;height:100%;" title="Memoization.mp4"></iframe></div><script src="https://player.vimeo.com/api/player.js"></script>
+<hr>
+
+<p><strong>Problem - Fibonacci:</strong></p>
+<div class="content__u3I1 question-content__JfgR"><div><p>The <b>Fibonacci numbers</b>, commonly denoted <code>F(n)</code> form a sequence, called the <b>Fibonacci sequence</b>, such that each number is the sum of the two preceding ones, starting from <code>0</code> and <code>1</code>. That is,</p>
+
+<pre>F(0) = 0, F(1) = 1
+F(n) = F(n - 1) + F(n - 2), for n &gt; 1.
+</pre>
+
+<p>Write a <b>recursive function</b> with <b>memoization</b> that given <code>n</code>, returns <code>F(n)</code>.</p>
+
+<p><strong>Example 1:</strong></p>
+
+<pre><strong>Input:</strong> n = 2
+<strong>Output:</strong> 1
+<strong>Explanation:</strong> F(2) = F(1) + F(0) = 1 + 0 = 1.
+</pre>
+
+<p><strong>Example 2:</strong></p>
+
+<pre><strong>Input:</strong> n = 3
+<strong>Output:</strong> 2
+<strong>Explanation:</strong> F(3) = F(2) + F(1) = 1 + 1 = 2.
+</pre>
+
+<p><strong>Example 3:</strong></p>
+
+<pre><strong>Input:</strong> n = 4
+<strong>Output:</strong> 3
+<strong>Explanation:</strong> F(4) = F(3) + F(2) = 2 + 1 = 3.
+</pre>
+<br/>
+
+<strong>Constraints:</strong><br/>
+<ul>
+	<li><code>0 &lt;= n &lt;= 30</code></li>
+</ul>
+</div></div>
+
+<strong>Note:</strong><br/>
+<p>Your algorithm should run in <b>O(n)</b> time and use <b>O(n)</b> extra space.</p><br/>
+
+<h2>Introduction</h2>
+<p>Memoization is a powerful optimization technique used to speed up recursive algorithms by storing the results of expensive function calls and reusing them when the same inputs occur again. This technique is particularly useful in dynamic programming and can significantly reduce the time complexity of algorithms.</p>
+<p>One common scenario where memoization is beneficial is in computing the Fibonacci sequence. The naive recursive approach to calculate Fibonacci numbers has an exponential time complexity, making it inefficient for large inputs. By using memoization, we can improve the time complexity to linear time.</p>
+
+<h2>Understanding the Basics</h2>
+<p>The Fibonacci sequence is a series of numbers where each number is the sum of the two preceding ones, starting from 0 and 1. The sequence is defined as follows:</p>
+<pre>F(0) = 0, F(1) = 1
+F(n) = F(n - 1) + F(n - 2), for n &gt; 1.
+</pre>
+<p>Understanding this basic definition is crucial before moving on to more complex aspects like memoization. The naive recursive approach to compute Fibonacci numbers involves a lot of redundant calculations, which can be optimized using memoization.</p>
+
+<h2>Main Concepts</h2>
+<p>Memoization involves storing the results of function calls in a data structure (usually an array or a hash map) and reusing these results when the same inputs occur again. This avoids redundant calculations and significantly improves the efficiency of the algorithm.</p>
+<p>To apply memoization to the Fibonacci sequence, we can use an array to store the computed values of Fibonacci numbers. When the function is called with a particular input, we first check if the result is already stored in the array. If it is, we return the stored result. If not, we compute the result, store it in the array, and then return it.</p>
+
+<h2>Examples and Use Cases</h2>
+<p>Let's look at some examples to understand how memoization can be applied to the Fibonacci sequence:</p>
+
+<p><strong>Example 1:</strong></p>
+<pre><strong>Input:</strong> n = 2
+<strong>Output:</strong> 1
+<strong>Explanation:</strong> F(2) = F(1) + F(0) = 1 + 0 = 1.
+</pre>
+
+<p><strong>Example 2:</strong></p>
+<pre><strong>Input:</strong> n = 3
+<strong>Output:</strong> 2
+<strong>Explanation:</strong> F(3) = F(2) + F(1) = 1 + 1 = 2.
+</pre>
+
+<p><strong>Example 3:</strong></p>
+<pre><strong>Input:</strong> n = 4
+<strong>Output:</strong> 3
+<strong>Explanation:</strong> F(4) = F(3) + F(2) = 2 + 1 = 3.
+</pre>
+
+<h2>Common Pitfalls and Best Practices</h2>
+<p>One common mistake when implementing memoization is not initializing the memoization data structure properly. Ensure that the data structure is initialized with a size that can accommodate all possible inputs.</p>
+<p>Another pitfall is not checking if the result is already stored in the memoization data structure before performing the computation. Always check the data structure first to avoid redundant calculations.</p>
+<p>Best practices for writing clear, efficient, and maintainable code include using descriptive variable names, adding comments to explain the logic, and breaking down the code into smaller functions if necessary.</p>
+
+<h2>Advanced Techniques</h2>
+<p>For more advanced techniques, consider using iterative approaches with memoization to further optimize the space complexity. Additionally, explore other dynamic programming problems where memoization can be applied to improve efficiency.</p>
+
+<h2>Code Implementation</h2>
+<p>Here is the C++ implementation of the Fibonacci sequence using memoization:</p>
+<pre class='language-cpp'><code class='prettyprint'>#include &lt;iostream&gt;
+#include &lt;vector&gt;
+
+// Function to compute Fibonacci number using memoization
+int fibonacci(int n, std::vector&lt;int&gt; &amp;memo) {
+    // Base cases
+    if (n == 0) return 0;
+    if (n == 1) return 1;
+
+    // Check if result is already computed
+    if (memo[n] != -1) return memo[n];
+
+    // Compute the result and store it in memo
+    memo[n] = fibonacci(n - 1, memo) + fibonacci(n - 2, memo);
+    return memo[n];
+}
+
+int main() {
+    int n = 10; // Example input
+    std::vector&lt;int&gt; memo(n + 1, -1); // Initialize memoization array with -1
+
+    std::cout &lt;&lt; "Fibonacci(" &lt;&lt; n &lt;&lt; ") = " &lt;&lt; fibonacci(n, memo) &lt;&lt; std::endl;
+    return 0;
+}
+</code></pre>
+
+<h2>Debugging and Testing</h2>
+<p>When debugging code related to memoization, ensure that the memoization data structure is being updated correctly. Use print statements to check the values stored in the data structure at different stages of the computation.</p>
+<p>To test the function, write test cases with different inputs and verify that the output matches the expected results. Consider edge cases such as n = 0 and n = 1.</p>
+
+<h2>Thinking and Problem-Solving Tips</h2>
+<p>When approaching problems related to memoization, start by identifying the subproblems that can be solved independently. Break down the problem into smaller parts and think about how the results of these parts can be reused.</p>
+<p>Practice solving dynamic programming problems to improve your understanding of memoization. Work on coding exercises and projects that involve optimization techniques.</p>
+
+<h2>Conclusion</h2>
+<p>Memoization is a powerful technique that can significantly improve the efficiency of recursive algorithms. By storing and reusing the results of expensive function calls, we can avoid redundant calculations and reduce the time complexity of the algorithm.</p>
+<p>Mastering memoization is essential for solving dynamic programming problems and optimizing recursive algorithms. Practice applying memoization to different problems to strengthen your understanding and skills.</p>
+
+<h2>Additional Resources</h2>
+<p>For further reading and practice problems related to memoization, consider the following resources:</p>
+<ul>
+    <li><a href="https://en.wikipedia.org/wiki/Memoization">Memoization - Wikipedia</a></li>
+    <li><a href="https://www.geeksforgeeks.org/memoization-1d-2d-and-3d/">Memoization Techniques - GeeksforGeeks</a></li>
+    <li><a href="https://leetcode.com/">LeetCode - Coding Challenges</a></li>
+    <li><a href="https://www.hackerrank.com/">HackerRank - Practice Problems</a></li>
+</ul>                </div>
+
+            </div>
+
+</div>
+</div><!-- /#main-content -->
+
+<!-- Bottom prev/next nav — same pattern /link uses -->
+<div class="lesson-navigation-fixed">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center">
+            <div>
+                                    <a href="/link/?problem=generate-valley-permutations&lang=cpp&solution=1"
+                       class="btn btn-outline-primary">
+                        <i class="fas fa-arrow-left mr-2"></i>
+                        <span class="d-none d-sm-inline">Previous Lesson</span>
+                        <span class="d-inline d-sm-none">Prev</span>
+                    </a>
+                            </div>
+            <div>
+                                    <a href="/link/?problem=jump-game&lang=cpp&solution=2"
+                       class="btn btn-primary">
+                        <span class="d-none d-sm-inline">Next Lesson</span>
+                        <span class="d-inline d-sm-none">Next</span>
+                        <i class="fas fa-arrow-right ml-2"></i>
+                    </a>
+                            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ====== Exit-intent / signup modal — same one /link uses ====== -->
+<div class="exit-intent-wrapper">
+    <div class="modal fade" id="exitIntentModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header border-0">
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body text-center px-4 pb-5">
+                    <h3 class="h4 mb-4" style="font-size:1.7em;">Sign up to keep going</h3>
+                    <p class="mb-4">
+                        Save your progress and unlock the rest of this tutorial. Free.
+                    </p>
+                    <a href="https://algocademy.com/app?campaign=seo" class="btn btn-primary mb-4">Start Coding for Free</a>
+                    <br>
+                    <div class="video-wrapper mt-4">
+                        <video style="width:100%; border-radius:15px;" autoplay loop muted playsinline>
+                            <source src="https://algocademy.com/resources/animation-algocademy-21.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<style>
+.exit-intent-wrapper .modal-content { border-radius: 16px; border: none; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25); }
+.exit-intent-wrapper .modal-header  { position: absolute; right: 0; top: 0; z-index: 1; border: none; }
+.exit-intent-wrapper .close         { width: 40px; height: 40px; border-radius: 50%; background: #fff; opacity: 1; display: flex; align-items: center; justify-content: center; font-size: 1.6rem; }
+.exit-intent-wrapper .btn-primary   { padding: 12px 28px; font-weight: 600; font-size: 1.05rem; }
+</style>
+
+<!-- ====== DOM stubs script.js references (kept hidden) ====== -->
+<div id="mySidenav"></div>
+<div id="hint-editor" style="position:absolute; left:-99999px; width:1px; height:1px;"></div>
+<div class="modal fade paypal-modal" tabindex="-1" role="dialog" aria-hidden="true"><div class="modal-dialog"><div class="modal-content"></div></div></div>
+<div class="modal fade billing-modal" tabindex="-1" role="dialog" aria-hidden="true"><div class="modal-dialog"><div class="modal-content"></div></div></div>
+<div id="steps-div" class="hidden"></div>
+
+<!-- ====== External libraries — moved here from <head> for fast FCP ====== -->
+<!-- jQuery + popper + bootstrap BEFORE script.js (popper must precede bootstrap) -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="../js/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+<script src="../ace-builds/src-noconflict/ace.js?v=1"></script>
+<script src="../js/swap.js"></script>
+<script src="../js/toggle.js"></script>
+<script src="../js/anno.js?v=1"></script>
+<!-- Google Code Prettify — auto-highlights <pre> blocks in the lesson body
+     (same script /link and /app load). PR.prettyPrint() is also re-invoked
+     by script.js's fetchSolutionTab on the right-side tutorial content. -->
+<script src="../js/run_prettify.js"></script>
+
+<!-- ====== PRE-script bootstrap: only globals script.js does NOT reset ====== -->
+<script>
+// script.js builds every AJAX URL as `BASE + 'ajax/...'`. /app defines this
+// in an inline script before loading script.js. Without it every fetch throws
+// ReferenceError silently and the editor + tutorial pane stay empty.
+var BASE = '../';
+
+// Seed the hash so parseURLParams() finds the lesson. We re-assert this after
+// script.js loads too, because script.js's top-level code may dispatch hash
+// reads on its own.
+history.replaceState(null, '', location.pathname + location.search + '#problem/memoization/lang/cpp/solution/1-1/tab/solution-hints');
+</script>
+
+<!-- ====== Analytics snippets — same as /app/index.html ======
+     script.js's sendGoogleAnalyticsEvent() calls gtag(...) and mixpanel.track(...)
+     whenever isProd() is true (host algocademy.com / algocademy.app). /app defines
+     both globals; this course page did not, so on prod gtag/mixpanel were undefined
+     and initPage threw "ReferenceError: gtag is not defined". Define them BEFORE
+     script.js loads so the functions exist by the time $(document).ready fires. -->
+<!-- Google Analytics (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-169815270-1"></script>
+<script>
+    // Define gtag unconditionally so script.js never throws; only push real
+    // hits on the prod hostnames (mirrors script.js's isProd()).
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    if (location.hostname == 'algocademy.com' || location.hostname == 'algocademy.app') {
+        gtag('js', new Date());
+        gtag('config', 'UA-169815270-1');
+    }
+</script>
+<!-- Mixpanel (defines window.mixpanel stub immediately, async-loads the lib) -->
+<script>(function(f,b){if(!b.__SV){var e,g,i,h;window.mixpanel=b;b._i=[];b.init=function(e,f,c){function g(a,d){var b=d.split(".");2==b.length&&(a=a[b[0]],d=b[1]);a[d]=function(){a.push([d].concat(Array.prototype.slice.call(arguments,0)))}}var a=b;"undefined"!==typeof c?a=b[c]=[]:c="mixpanel";a.people=a.people||[];a.toString=function(a){var d="mixpanel";"mixpanel"!==c&&(d+="."+c);a||(d+=" (stub)");return d};a.people.toString=function(){return a.toString(1)+".people (stub)"};i="disable time_event track track_pageview track_links track_forms track_with_groups add_group set_group remove_group register register_once alias unregister identify name_tag set_config reset opt_in_tracking opt_out_tracking has_opted_in_tracking has_opted_out_tracking clear_opt_in_out_tracking start_batch_senders people.set people.set_once people.unset people.increment people.append people.union people.track_charge people.clear_charges people.delete_user people.remove".split(" ");for(h=0;h<i.length;h++)g(a,i[h]);var j="set set_once union unset remove delete".split(" ");a.get_group=function(){function b(c){d[c]=function(){call2_args=arguments;call2=[c].concat(Array.prototype.slice.call(call2_args,0));a.push([e,call2])}}for(var d={},e=["get_group"].concat(Array.prototype.slice.call(arguments,0)),c=0;c<j.length;c++)b(j[c]);return d};b._i.push([e,f,c])};b.__SV=1.2;e=f.createElement("script");e.type="text/javascript";e.async=!0;e.src="undefined"!==typeof MIXPANEL_CUSTOM_LIB_URL?MIXPANEL_CUSTOM_LIB_URL:"file:"===f.location.protocol&&"//cdn.mxpnl.com/libs/mixpanel-2-latest.min.js".match(/^\/\//)?"https://cdn.mxpnl.com/libs/mixpanel-2-latest.min.js":"//cdn.mxpnl.com/libs/mixpanel-2-latest.min.js";g=f.getElementsByTagName("script")[0];g.parentNode.insertBefore(e,g)}})(document,window.mixpanel||[]);
+mixpanel.init("da74e80c351e39c8549bf8fb69d78352", {"api_host": "https://api-eu.mixpanel.com", batch_requests: true});</script>
+
+<!-- script.js — same file /app uses. -->
+<script src="../script.js?v=course2"></script>
+
+<!-- ====== POST-script bootstrap: overrides script.js's top-level resets ====== -->
+<!--
+    script.js lines 4-28 set window.userId/externalURL/premium/etc. to their
+    defaults at load time. THOSE assignments would clobber any flags we set in
+    the pre-script block, so we set them HERE instead, after script.js has run
+    but before $(document).ready fires (since this <script> tag is parsed
+    inline, ready handlers haven't fired yet).
+-->
+<script src="https://player.vimeo.com/api/player.js"></script>
+<script>
+// CRITICAL: externalURL=true tells getURLParams() to honor location.hash
+// instead of the localStorage-cached hash from a prior /app visit. script.js
+// resets this to false at line 7 — we MUST set it after script.js loads.
+window.externalURL   = true;
+
+// Mark this as a /course anonymous render. script.js's auth-bound writes
+// short-circuit on this flag (guards added separately in script.js).
+window.anonymousMode = true;
+
+// Re-assert defaults (script.js already sets these to the values we want, but
+// be explicit for clarity and to survive any future script.js refactor).
+window.userId        = 'undefined';   // ajax endpoints serve free-tier content
+window.tutorial      = true;
+window.premium       = false;
+window.starter       = false;
+window.everPaid      = false;
+
+// Re-assert hash in case script.js's top-level code read or modified it.
+history.replaceState(null, '', location.pathname + location.search + '#problem/memoization/lang/cpp/solution/1-1/tab/solution-hints');
+
+window.courseLesson  = { problem: "memoization", lang: "cpp", solution: "1" };
+
+// Route tutorial fetches to this page's own /api/ proxies (premium gate removed).
+// script.js is unaware — we rewrite the URL transparently. basePath is the
+// current page's path (e.g. "/link" or "/course"), so the rewrite stays
+// page-local and survives /link vs /course mirroring.
+(function() {
+    var apiBase = "\/link\/api";
+    $.ajaxPrefilter(function(options) {
+        if (!window.anonymousMode || typeof options.url !== 'string') return;
+        options.url = options.url
+            .replace(/ajax\/getTutorialTab\.php/, apiBase + '/getTutorialTab.php')
+            .replace(/ajax\/getTutorial\.php/,    apiBase + '/getTutorial.php');
+    });
+})();
+
+// Validate Step (.submit-code buttons) — override window.submitCode. The
+// buttons fire `submitCode()` via inline onclick; replacing the global wins.
+(function() {
+    var original = window.submitCode;
+    window.submitCode = function() {
+        if (window.anonymousMode) {
+            $('#exitIntentModal').modal('show');
+            return false;
+        }
+        return original && original.apply(this, arguments);
+    };
+})();
+
+// View Solution / .open-hint / Need a Hint? — these are injected by AJAX
+// (fetchSolutionTab → #main-solution, fetchTutorial → #inner-result) AFTER
+// page load, with inline onclick handlers and (for Need a Hint) an empty
+// href='' that reloads the page. We re-write their onclick to show the modal
+// and strip the href whenever either container mutates.
+function hijackInjectedButtons() {
+    if (!window.anonymousMode) return;
+    var sel = '#view-solution, .open-hint, #need-a-hint, #open-hint-tooltip';
+    document.querySelectorAll(sel).forEach(function(el) {
+        if (el.dataset.courseHijacked) return;
+        el.dataset.courseHijacked = '1';
+        if (el.tagName === 'A') el.removeAttribute('href');
+        el.onclick = function(e) {
+            if (e && e.preventDefault) e.preventDefault();
+            $('#exitIntentModal').modal('show');
+            return false;
+        };
+    });
+}
+['main-solution', 'inner-result'].forEach(function(id) {
+    var node = document.getElementById(id);
+    if (node) new MutationObserver(hijackInjectedButtons).observe(node, { childList: true, subtree: true });
+});
+
+// Coding Tutorial toggle — bootstrap-toggle binds a bubble-phase click on
+// `div[data-toggle^=toggle]` to flip checked state. We intercept at capture
+// phase so the toggle never flips and the modal opens instead.
+document.addEventListener('click', function(e) {
+    if (!window.anonymousMode) return;
+    if (!e.target.closest('#tutorial-toggle, #toggle-label, .toggle.btn, [data-toggle="toggle"]')) return;
+    e.preventDefault();
+    e.stopImmediatePropagation();
+    e.stopPropagation();
+    $('#exitIntentModal').modal('show');
+}, true);
+
+
+// script.js binds $(document).click(return false), which cancels default
+// navigation on every <a>. Intercept our own CTA links at capture phase so
+// they navigate before the bubble-phase doc handler swallows the event.
+document.addEventListener('click', function(e) {
+    var link = e.target.closest(
+        '.course-lang-item,' +
+        '.course-auth a[href],' +
+        '.course-intro-cta,' +
+        '.course-lang-card,' +
+        '.course-sidebar a[href],' +
+        '.lesson-navigation-fixed a[href],' +
+        '.exit-intent-wrapper a[href]'
+    );
+    if (!link) return;
+    e.stopPropagation();
+    e.preventDefault();
+    window.location.href = link.getAttribute('href');
+}, true);
+
+// Language dropdown — vanilla toggle, doesn't depend on Bootstrap's dropdown JS
+// (script.js's $(document).click(return false) was killing data-toggle).
+(function() {
+    var dd  = document.getElementById('courseLangDropdown');
+    var btn = document.getElementById('courseLangBtn');
+    if (!dd || !btn) return;
+    btn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        e.preventDefault();
+        dd.classList.toggle('open');
+        btn.setAttribute('aria-expanded', dd.classList.contains('open') ? 'true' : 'false');
+    }, true);
+    // Close when clicking outside
+    document.addEventListener('click', function(e) {
+        if (!dd.contains(e.target)) {
+            dd.classList.remove('open');
+            btn.setAttribute('aria-expanded', 'false');
+        }
+    }, true);
+})();
+
+// Exit-intent modal — same trigger pattern as /link
+(function() {
+    var hasShown = false;
+    function showExitIntent() {
+        if (hasShown) return;
+        hasShown = true;
+        sessionStorage.setItem('exitShown', 'true');
+        $('#exitIntentModal').modal('show');
+    }
+    if (!sessionStorage.getItem('exitShown')) {
+        // Desktop: cursor leaves through the top of the viewport
+        $(document).on('mouseleave', function(e) {
+            if (e.clientY < 10) showExitIntent();
+        });
+        // Mobile: fast upward flick
+        var lastY = null, lastT = null;
+        $(document).on('touchstart', function(e) {
+            lastY = e.originalEvent.touches[0].clientY;
+            lastT = Date.now();
+        });
+        $(document).on('touchmove', function(e) {
+            if (lastY === null) return;
+            var dy = e.originalEvent.touches[0].clientY - lastY;
+            var dt = Date.now() - lastT;
+            if (dt > 0 && dy / dt > 1.5) showExitIntent();
+        });
+    }
+})();
+
+// Mobile sidebar (hamburger) toggle
+(function() {
+    var btn = document.getElementById('sidebar-toggle');
+    var bar = document.getElementById('course-sidebar');
+    if (btn && bar) {
+        btn.addEventListener('click', function() { bar.classList.toggle('active'); });
+        // Close when a lesson link is clicked
+        bar.addEventListener('click', function(e) {
+            if (e.target.tagName === 'A') bar.classList.remove('active');
+        });
+    }
+})();
+
+// Mobile tab strip
+document.querySelectorAll('.tab-strip .tab').forEach(t => {
+    t.addEventListener('click', () => {
+        document.querySelectorAll('.tab-strip .tab').forEach(x => x.classList.remove('active'));
+        document.querySelectorAll('.pane')          .forEach(x => x.classList.remove('active'));
+        t.classList.add('active');
+        document.getElementById(t.dataset.pane).classList.add('active');
+        // Reset scroll so switching tabs feels like fresh content
+        window.scrollTo(0, 0);
+        if (window.editor) window.editor.resize();
+    });
+});
+
+// Neutralize /app's overlay activation paths. Both functions show #overlay-editor
+// AND disable Submit AND set the editor read-only — a CSS hide isn't enough on
+// its own. Called from initLearningPath (line 958), fetchSolutionTab (line 2329),
+// and the lesson-unsupported branch (line 2885).
+['activateEditorOverlay', 'activateLessonOverlay'].forEach(function(fn) {
+    if (typeof window[fn] === 'function') window[fn] = function() {};
+});
+
+// scaleOutView() (script.js line 994) is called from showPage() and rewrites the
+// viewport meta to initial-scale=0.45, which zooms the page out to ~45% so /app's
+// fixed desktop layout fits a phone screen. /course/ is responsive — we want the
+// native viewport, not /app's zoom-out hack.
+if (typeof window.scaleOutView === 'function') window.scaleOutView = function() {};
+if (typeof window.scaleInView  === 'function') window.scaleInView  = function() {};
+
+// Hidden lessons — those flagged "hidden":true in menu-*.json, e.g. access-variables
+// — are stripped from the sidenav by getMenu.php's removeHidden(). script.js's
+// updateDropdowns() then loops #mySidenav <a> links looking for the current
+// problem+solution; not finding a hidden lesson there, it decides the lesson is
+// "not supported" and calls disableTutorial() — so the Coding Tutorial turns OFF,
+// but ONLY for hidden lessons. On /course/ every lesson we render is valid (served
+// via the api/ proxy), so inject a matching (display:none) menu anchor before
+// updateDropdowns runs, keeping its foundInMenu check true.
+(function() {
+    var origUpdateDropdowns = window.updateDropdowns;
+    if (typeof origUpdateDropdowns !== 'function') return;
+
+    function ensureCourseMenuAnchor() {
+        var cl = window.courseLesson || {};
+        var problem = cl.problem || (window.urlParams && window.urlParams.problem);
+        if (!problem) return;
+        // Mirror script.js's getSolution(): urlParams.solution.split('-')[0].
+        var sol = (window.urlParams && typeof window.urlParams.solution === 'string')
+            ? window.urlParams.solution.split('-')[0]
+            : String(cl.solution);
+        var nav = document.getElementById('mySidenav');
+        if (!nav) return;
+        if (nav.querySelector('a[problem="' + problem + '"][solution="' + sol + '"]')) return;
+        var a = document.createElement('a');
+        a.setAttribute('problem', problem);
+        a.setAttribute('solution', sol);
+        a.className = 'course-hidden-lesson-anchor';
+        a.style.display = 'none';
+        nav.appendChild(a);
+    }
+
+    window.updateDropdowns = function() {
+        ensureCourseMenuAnchor();
+        return origUpdateDropdowns.apply(this, arguments);
+    };
+})();
+
+// script.js registers its $(document).ready handler first (line 136 area). Ours
+// runs after, so initOnReady() has mounted Ace by the time we drive initPage.
+$(function() {
+    // One more guard — in case anything between document-ready handlers touched
+    // the hash, reassert it before initPage's getURLParams reads it.
+        if (location.hash !== '#problem/memoization/lang/cpp/solution/1-1/tab/solution-hints') {
+        history.replaceState(null, '', location.pathname + location.search + '#problem/memoization/lang/cpp/solution/1-1/tab/solution-hints');
+    }
+        window.externalURL = true;
+
+    if (typeof initPage === 'function') {
+        try { initPage(true); }
+        catch (e) { console.error('[course] initPage failed:', e); }
+    } else {
+        console.error('[course] script.js did not expose initPage');
+    }
+});
+</script>
+
+</body>
+</html>

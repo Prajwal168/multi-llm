@@ -11,8 +11,8 @@ class Executor:
 
     def __init__(
         self,
-        host="http://10.35.206.244:11434",
-        model="qwen3.8:27b",
+        host="http://10.99.39.48:11434",
+        model="qwen3:8b",
         verifier=None,
         verifier_host=None,
         max_retries=1,

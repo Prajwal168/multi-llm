@@ -9,7 +9,7 @@ class Verifier:
 
     def __init__(
         self,
-        host="http://10.35.206.48:11434",
+        host="http://10.99.39.48:11434",
         model="qwen3:8b"
     ):
         self.client = Client(host=host)
@@ -85,7 +85,7 @@ Return ONLY valid JSON:
                 # on an invisible <think> block before ever reaching
                 # the {"status": ...} JSON, same issue as the
                 # mediator had.
-                think=True,
+                think=False,
                 options={
                     # Deterministic judging: we want consistent
                     # pass/fail verdicts, not creative variation.
